@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design System Demo - AI Automation Website</title>
+
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Design System Styles -->
+  <link rel="stylesheet" href="./src/styles/design-system.css">
+
+  <style>
+    /* Demo-specific styles */
+    .demo-section {
+      padding: var(--space-12) 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--space-6);
+      margin-top: var(--space-6);
+    }
+
+    .color-swatch {
+      height: 100px;
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-white);
+      font-weight: var(--font-weight-semibold);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .typography-sample {
+      margin-bottom: var(--space-4);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Skip to main content (accessibility) -->
+  <a href="#main-content" class="skip-to-main">Skip to main content</a>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="flex flex-col items-center gap-6 text-center hero-content">
+        <h1 class="animate-fade-in-up">Design System Demo</h1>
+        <p class="text-readable text-secondary" style="font-size: var(--font-size-xl);">
+          High-contrast, accessible design system for AI automation websites
+        </p>
+        <div class="flex gap-4">
+          <button class="btn btn-primary btn-lg">Get Started</button>
+          <button class="btn btn-secondary btn-lg">Learn More</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main id="main-content">
+
+    <!-- Color System Section -->
+    <section class="demo-section" style="background-color: var(--color-primary);">
+      <div class="container">
+        <h2 class="text-center mb-8">Color System</h2>
+
+        <h3 class="text-secondary mb-4">Primary Colors</h3>
+        <div class="demo-grid">
+          <div class="color-swatch" style="background-color: var(--color-primary);">
+            Deep Space Blue<br>#0A174E
+          </div>
+          <div class="color-swatch" style="background-color: var(--color-secondary);">
+            Electric Cyan<br>#00D4FF
+          </div>
+          <div class="color-swatch" style="background-color: var(--color-accent);">
+            Quantum Purple<br>#6A00FF
+          </div>
+        </div>
+
+        <h3 class="text-secondary mt-8 mb-4">Semantic Colors</h3>
+        <div class="demo-grid">
+          <div class="color-swatch" style="background-color: var(--color-error);">
+            Error<br>#FF4444
+          </div>
+          <div class="color-swatch" style="background-color: var(--color-warning);">
+            Warning<br>#FFAA00
+          </div>
+          <div class="color-swatch" style="background-color: var(--color-success);">
+            Success<br>#00C851
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Typography Section -->
+    <section class="demo-section" style="background-color: var(--color-primary-light);">
+      <div class="container">
+        <h2 class="text-center mb-8">Typography Scale</h2>
+
+        <div class="typography-sample">
+          <h1>Heading 1 - Display Headlines</h1>
+          <p style="color: var(--color-gray-400); font-size: var(--font-size-sm);">
+            72px / Inter ExtraBold / Line Height 1.25
+          </p>
+        </div>
+
+        <div class="typography-sample">
+          <h2>Heading 2 - Section Titles</h2>
+          <p style="color: var(--color-gray-400); font-size: var(--font-size-sm);">
+            48px / Inter Bold / Line Height 1.25
+          </p>
+        </div>
+
+        <div class="typography-sample">
+          <h3>Heading 3 - Subsection Headers</h3>
+          <p style="color: var(--color-gray-400); font-size: var(--font-size-sm);">
+            30px / Inter SemiBold / Line Height 1.375
+          </p>
+        </div>
+
+        <div class="typography-sample">
+          <h4>Heading 4 - Component Titles</h4>
+          <p style="color: var(--color-gray-400); font-size: var(--font-size-sm);">
+            24px / Inter SemiBold / Line Height 1.375
+          </p>
+        </div>
+
+        <div class="typography-sample">
+          <p style="font-size: var(--font-size-lg); line-height: var(--line-height-relaxed);">
+            Body Large - This is large body text used for introductory paragraphs or emphasis.
+            It maintains excellent readability with 18px size and 1.625 line height for comfortable reading.
+          </p>
+          <p style="color: var(--color-gray-400); font-size: var(--font-size-sm);">
+            18px / Inter Regular / Line Height 1.625
+          </p>
+        </div>
+
+        <div class="typography-sample">
+          <p>
+            Body Text - This is the standard body text size used throughout the application.
+            It provides optimal readability with a 16px base size and comfortable 1.625 line height.
+            The Inter font family ensures clarity across all devices.
+          </p>
+          <p style="color: var(--color-gray-400); font-size: var(--font-size-sm);">
+            16px / Inter Regular / Line Height 1.625
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Button Components -->
+    <section class="demo-section" style="background-color: var(--color-primary);">
+      <div class="container">
+        <h2 class="text-center mb-8">Button Components</h2>
+
+        <h3 class="text-secondary mb-4">Button Styles</h3>
+        <div class="flex gap-4 mb-8 flex-wrap">
+          <button class="btn btn-primary">Primary Button</button>
+          <button class="btn btn-secondary">Secondary Button</button>
+          <button class="btn btn-outline">Outline Button</button>
+          <button class="btn btn-ghost">Ghost Button</button>
+        </div>
+
+        <h3 class="text-secondary mb-4">Button Sizes</h3>
+        <div class="flex gap-4 items-center flex-wrap">
+          <button class="btn btn-primary btn-sm">Small</button>
+          <button class="btn btn-primary">Default</button>
+          <button class="btn btn-primary btn-lg">Large</button>
+          <button class="btn btn-primary btn-xl">Extra Large</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Card Components -->
+    <section class="demo-section" style="background-color: var(--color-primary-light);">
+      <div class="container">
+        <h2 class="text-center mb-8">Card Components</h2>
+
+        <div class="demo-grid">
+          <div class="card">
+            <h3 class="text-secondary">Basic Card</h3>
+            <p>This is a standard card with subtle background and border.
+               Hover over it to see the interactive effect with color change and elevation.</p>
+            <button class="btn btn-primary mt-4">Learn More</button>
+          </div>
+
+          <div class="card card-gradient">
+            <h3 class="text-accent">Gradient Border Card</h3>
+            <p>This premium card features an animated gradient border effect.
+               Perfect for highlighting special features or premium content.</p>
+            <button class="btn btn-secondary mt-4">Explore</button>
+          </div>
+
+          <div class="card">
+            <h3 class="text-white">Interactive Card</h3>
+            <p>Cards automatically lift on hover with smooth transitions.
+               The border color changes to cyan for clear visual feedback.</p>
+            <button class="btn btn-outline mt-4">View Details</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Animation Examples -->
+    <section class="demo-section" style="background-color: var(--color-primary);">
+      <div class="container">
+        <h2 class="text-center mb-8">Animation System</h2>
+
+        <div class="demo-grid">
+          <div class="card animate-fade-in">
+            <h3 class="text-secondary">Fade In</h3>
+            <p>Smooth fade-in animation using opacity transition.</p>
+          </div>
+
+          <div class="card animate-fade-in-up">
+            <h3 class="text-secondary">Fade In Up</h3>
+            <p>Combines fade with upward movement for elegant entrance.</p>
+          </div>
+
+          <div class="card animate-slide-in-left">
+            <h3 class="text-secondary">Slide In Left</h3>
+            <p>Slides in from the left with smooth easing.</p>
+          </div>
+        </div>
+
+        <div class="flex justify-center mt-8">
+          <button class="btn btn-primary animate-pulse-glow">
+            Pulsing Glow Effect
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Grid System -->
+    <section class="demo-section" style="background-color: var(--color-primary-light);">
+      <div class="container">
+        <h2 class="text-center mb-8">Grid System</h2>
+
+        <div class="grid mb-6">
+          <div class="col-12 card text-center">col-12 (Full width)</div>
+        </div>
+
+        <div class="grid mb-6">
+          <div class="col-6 card text-center">col-6</div>
+          <div class="col-6 card text-center">col-6</div>
+        </div>
+
+        <div class="grid mb-6">
+          <div class="col-4 card text-center">col-4</div>
+          <div class="col-4 card text-center">col-4</div>
+          <div class="col-4 card text-center">col-4</div>
+        </div>
+
+        <div class="grid">
+          <div class="col-3 card text-center">col-3</div>
+          <div class="col-3 card text-center">col-3</div>
+          <div class="col-3 card text-center">col-3</div>
+          <div class="col-3 card text-center">col-3</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Accessibility Features -->
+    <section class="demo-section" style="background-color: var(--color-primary);">
+      <div class="container">
+        <h2 class="text-center mb-8">Accessibility Features</h2>
+
+        <div class="card mb-6">
+          <h3 class="text-secondary mb-4">Focus Indicators</h3>
+          <p class="mb-4">
+            Try tabbing through these buttons to see the 3px cyan focus outline:
+          </p>
+          <div class="flex gap-4 flex-wrap">
+            <button class="btn btn-primary">Tab to me</button>
+            <button class="btn btn-secondary">And me</button>
+            <button class="btn btn-outline">And me too</button>
+            <a href="#" class="btn btn-ghost">I'm a link button</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="text-secondary mb-4">WCAG AA+ Compliance</h3>
+          <div class="grid">
+            <div class="col-6">
+              <h4 class="text-white mb-2">All Text Passes 4.5:1</h4>
+              <p>Primary text on primary background</p>
+              <p class="text-secondary">Secondary text is highly visible</p>
+              <p class="text-error">Error messages are clear</p>
+              <p class="text-success">Success states are readable</p>
+            </div>
+            <div class="col-6">
+              <h4 class="text-white mb-2">Screen Reader Support</h4>
+              <p>
+                All interactive elements have ARIA labels and semantic HTML.
+                Skip-to-content link at top of page. Proper heading hierarchy throughout.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3 class="footer-title">Design System</h3>
+        <p class="footer-text">
+          High-contrast, accessible design system for world-class AI automation websites.
+        </p>
+      </div>
+
+      <div class="footer-section">
+        <h3 class="footer-title">Quick Links</h3>
+        <nav class="footer-nav" aria-label="Footer navigation">
+          <a href="#" class="footer-link">Documentation</a>
+          <a href="#" class="footer-link">Component Library</a>
+          <a href="#" class="footer-link">Design Tokens</a>
+          <a href="#" class="footer-link">Accessibility</a>
+        </nav>
+      </div>
+
+      <div class="footer-section">
+        <h3 class="footer-title">Resources</h3>
+        <nav class="footer-nav" aria-label="Resources">
+          <a href="./DESIGN-SYSTEM.md" class="footer-link">Full Documentation</a>
+          <a href="./DESIGN-TOKENS-QUICK-REFERENCE.md" class="footer-link">Quick Reference</a>
+        </nav>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="copyright">
+        Design System v1.0.0 - Built for excellence
+      </p>
+    </div>
+  </footer>
+
+</body>
+</html>

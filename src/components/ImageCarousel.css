@@ -1,0 +1,219 @@
+/* Keyframe for continuous horizontal scrolling */
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    /* Moves the track by the width of the first half of the images */
+    transform: translateX(-50%); 
+  }
+}
+
+/* Main container for the carousel */
+.carousel-container {
+  width: 100%;
+  overflow: hidden;
+  padding: 2rem 0;
+  position: relative;
+  /* Fades the edges for a seamless appearance */
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+}
+
+/* The track that holds and animates the image cards */
+.carousel-track {
+  display: flex;
+  width: fit-content; /* Ensures track is wide enough for all images */
+  animation: scroll-left 120s linear infinite; /* Adjust duration to change speed */
+}
+
+.carousel-track.bottom-track {
+  animation-direction: reverse; /* Makes the bottom row move right */
+  margin-top: 1rem;
+}
+
+/* Class to pause the animation on hover */
+.carousel-track.paused {
+  animation-play-state: paused;
+}
+
+/* Individual image cards */
+.carousel-card {
+  flex-shrink: 0;
+  width: 350px;
+  height: 250px;
+  margin: 0 0.5rem;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  cursor: pointer;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.carousel-card:hover {
+  transform: scale(1.05) translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.carousel-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* --- MODAL STYLES --- */
+
+/* Full-screen Modal/Lightbox */
+.carousel-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2000;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* This creates the blurred background effect */
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px); /* For Safari support */
+  
+  padding: 2rem;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+/* The main content of the modal (the image) */
+.modal-content {
+  max-width: 95vw;
+  max-height: 95vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: default;
+  animation: zoomIn 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+/* The full-screen image itself. Simplified for clarity. */
+.modal-content img {
+  max-width: 100%;
+  max-height: 95vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Close button for the modal */
+.modal-close-button {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  transition: all 0.3s ease;
+  z-index: 2001;
+  padding: 0;
+  margin: 0;
+}
+
+.modal-close-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(90deg);
+}
+
+.modal-close-button svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Navigation arrows */
+.modal-navigation {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 60px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2001;
+  background: rgba(0, 0, 0, 0.3);
+  border: none;
+  color: white;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+}
+
+.modal-navigation:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-navigation.left {
+  left: 2rem;
+}
+
+.modal-navigation.right {
+  right: 2rem;
+}
+
+.modal-navigation svg {
+  width: 32px;
+  height: 32px;
+  stroke-width: 2;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .modal-navigation {
+    width: 40px;
+    height: 60px;
+  }
+  
+  .modal-navigation svg {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .modal-navigation.left {
+    left: 0.5rem;
+  }
+  
+  .modal-navigation.right {
+    right: 0.5rem;
+  }
+  
+  .modal-close-button {
+    top: 1rem;
+    right: 1rem;
+    width: 36px;
+    height: 36px;
+  }
+  
+  .modal-close-button svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* Animation for the modal appearing */
+@keyframes zoomIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}

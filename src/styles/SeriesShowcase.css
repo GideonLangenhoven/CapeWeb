@@ -1,0 +1,328 @@
+/* Series Showcase Styles */
+.series-showcase-section {
+  position: relative;
+  z-index: 10;
+  margin-bottom: 0;
+  padding-bottom: 4rem;
+}
+
+.series-showcase-section * {
+  box-sizing: border-box;
+}
+
+.series-showcase-section .fullscreen {
+  width: 100vw;
+  min-height: 85vh;
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+}
+
+.series-showcase-section .fullscreen .container {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.series-showcase-section .card {
+  overflow: hidden;
+  width: 32%;
+  height: 65vh;
+  background: #fff;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), 0 10px 25px rgba(0, 0, 0, 0.3);
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border-radius: 16px;
+  position: relative;
+  display: flex;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.series-showcase-section .card:hover {
+  transform: translateY(-20px) scale(1.02);
+  box-shadow: 0 35px 70px rgba(0, 0, 0, 0.5), 0 15px 35px rgba(0, 0, 0, 0.4);
+}
+
+.series-showcase-section .card:hover .sinopse {
+  opacity: 1;
+  transition-delay: 0.4s;
+}
+
+.series-showcase-section .card:hover .sinopse .view {
+  opacity: 1;
+  transform: translateY(0%);
+  transition: 0.6s;
+  transition-delay: 1s;
+}
+
+.series-showcase-section .card:hover .sinopse .content-sinopse .text {
+  transform: translateY(0);
+  transition-delay: 0.6s;
+}
+
+.series-showcase-section .card:hover .sinopse .content-sinopse .title {
+  transform: translateY(0);
+  transition-delay: 0.2s;
+}
+
+.series-showcase-section .card:hover .date {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+.series-showcase-section .card:hover .content {
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+.series-showcase-section .date {
+  position: absolute;
+  top: 25px;
+  right: 25px;
+  color: #fff;
+  font-weight: 300;
+  font-size: 14px;
+  transition: 0.8s;
+}
+
+.series-showcase-section .tv_ico img {
+  width: 12px;
+  vertical-align: baseline;
+  margin-left: 6px;
+}
+
+.series-showcase-section .content {
+  transition: 0.8s;
+  display: flex;
+  flex-wrap: wrap;
+  align-self: flex-end;
+  padding: 25px 25px 50px 25px;
+}
+
+.series-showcase-section .content .title {
+  width: 100%;
+  color: #fff;
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 50px;
+  margin-bottom: 12px;
+}
+
+.series-showcase-section .content .text {
+  width: 100%;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.series-showcase-section .sinopse {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 25px 25px 50px 25px;
+  background: rgba(0, 0, 0, 0.78);
+  color: #fff;
+  font-weight: 300;
+  opacity: 0;
+  transition: 0.8s;
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.series-showcase-section .sinopse iframe {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  margin-left: -30px;
+  height: 260px;
+}
+
+.series-showcase-section .sinopse .view {
+  position: absolute;
+  bottom: 15px;
+  right: 25px;
+  color: #fff;
+  font-size: 14px;
+  border-bottom: 1px solid #fff;
+  opacity: 0;
+  transform: translateY(100%);
+  transition: 0.6s;
+  cursor: pointer;
+}
+
+.series-showcase-section .sinopse .content-sinopse .title {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  transform: translateY(-100%);
+  transition: 0.6s;
+}
+
+.series-showcase-section .sinopse .content-sinopse .text {
+  transform: translateY(100%);
+  transition: 0.6s;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 300;
+  font-size: 14px;
+}
+
+.series-showcase-section .card_1 {
+  background: url('https://w.wallhaven.cc/full/j8/wallhaven-j8gqyq.jpg') no-repeat center/cover;
+}
+
+.series-showcase-section .card_2 {
+  background: url('https://w.wallhaven.cc/full/5d/wallhaven-5dpo51.jpg') no-repeat 45%/cover;
+}
+
+.series-showcase-section .card_3 {
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.88)), url('https://w.wallhaven.cc/full/43/wallhaven-43y676.jpg') no-repeat center/cover;
+}
+
+.series-showcase-section .fullserie {
+  background-color: #333;
+  -webkit-clip-path: circle(0% at 0 100%);
+  clip-path: circle(0% at 0 100%);
+  min-height: 550px;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  transition: 0.6s;
+}
+
+.series-showcase-section .fullserie.active {
+  background-color: #333;
+  transition: 0.6s;
+  transition-delay: 0.45s;
+  -webkit-clip-path: circle(270% at 220px 88%);
+  clip-path: circle(270% at 220px 88%);
+}
+
+.series-showcase-section .fullserie .close {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  height: 50px;
+  width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.series-showcase-section .fullserie .close img {
+  width: 22px;
+}
+
+.series-showcase-section .episodes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-rows: repeat(4, minmax(230px, auto));
+  grid-gap: 30px;
+  grid-auto-flow: dense;
+  grid-auto-rows: minmax(260px, auto);
+  width: 100%;
+  height: 100%;
+  padding: 60px 60px 120px 60px;
+}
+
+.series-showcase-section .episode {
+  background: red;
+}
+
+/* Responsive Styles */
+@media (min-width: 580px) and (max-width: 992px) {
+  .series-showcase-section .fullscreen {
+    min-height: auto;
+    padding: 3rem 0;
+  }
+
+  .series-showcase-section .fullscreen .container {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    padding: 1rem;
+  }
+
+  .series-showcase-section .card {
+    width: 45%;
+    height: 50vh;
+    margin-bottom: 2rem;
+  }
+
+  .series-showcase-section .card:nth-child(-n+2) {
+    margin-top: 0;
+  }
+
+  .series-showcase-section .content .title {
+    font-size: 28px;
+    line-height: 36px;
+  }
+
+  .series-showcase-section .content .text {
+    font-size: 14px;
+  }
+
+  .series-showcase-section .card_2 {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.98)), url('https://w.wallhaven.cc/full/5d/wallhaven-5dpo51.jpg') no-repeat 45%/cover;
+  }
+}
+
+@media (min-width: 320px) and (max-width: 580px) {
+  .series-showcase-section .fullscreen {
+    min-height: auto;
+    padding: 2rem 0;
+  }
+
+  .series-showcase-section .fullscreen .container {
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1rem;
+  }
+
+  .series-showcase-section .card {
+    width: 100%;
+    height: 60vh;
+    margin-bottom: 0;
+  }
+
+  .series-showcase-section .content .title {
+    font-size: 28px;
+    line-height: 36px;
+  }
+
+  .series-showcase-section .content .text {
+    font-size: 14px;
+  }
+
+  .series-showcase-section .sinopse .content-sinopse {
+    pointer-events: none;
+  }
+
+  .series-showcase-section .sinopse .content-sinopse .text {
+    pointer-events: none;
+  }
+
+  .series-showcase-section .card_1 {
+    background: url('https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-616574.jpg') no-repeat center/cover;
+  }
+
+  .series-showcase-section .card_2 {
+    background: url('https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-539333.png') no-repeat 45%/cover;
+  }
+
+  .series-showcase-section .card_3 {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.88)), url('https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-5379.png') no-repeat center/cover;
+  }
+}

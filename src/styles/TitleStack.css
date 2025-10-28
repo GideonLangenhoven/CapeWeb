@@ -1,0 +1,110 @@
+.title-stack {
+  --highlight-scale: 1;
+  --title-highlight-bg: rgba(255, 255, 255, 0.92);
+  --title-text-color: inherit;
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  gap: clamp(0.25rem, 1.2vw, 0.5rem);
+  font-weight: 600;
+  line-height: 1.05;
+}
+
+.title-stack--left {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.title-stack--center {
+  align-items: center;
+  text-align: center;
+}
+
+.title-stack--hero {
+  font-size: clamp(2.4rem, 6vw, 5rem);
+  letter-spacing: -0.02em;
+}
+
+.title-stack--label {
+  font-size: clamp(1rem, 2.8vw, 1.6rem);
+  text-transform: uppercase;
+  letter-spacing: 0.32em;
+  font-weight: 500;
+}
+
+.title-stack--intro {
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  letter-spacing: 0.02em;
+}
+
+.title-stack__line {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  isolation: isolate;
+  transform: translateY(24px);
+  opacity: 0;
+  transition: transform 0.95s cubic-bezier(0.23, 1, 0.32, 1),
+    opacity 0.95s ease;
+  transition-delay: calc(var(--line-index) * 80ms + 120ms);
+}
+
+.title-stack__text {
+  position: relative;
+  padding: 0.05em 0.16em;
+  z-index: 2;
+  color: var(--title-text-color);
+}
+
+.title-stack__line::before {
+  content: '';
+  position: absolute;
+  inset: -0.18em -0.25em;
+  border-radius: 0.35em;
+  background: var(--title-highlight-bg);
+  transform-origin: left center;
+  transform: scaleX(0.2);
+  opacity: 0;
+  transition: transform 0.9s cubic-bezier(0.33, 1, 0.68, 1),
+    opacity 0.6s ease;
+  transition-delay: calc(var(--line-index) * 80ms);
+  z-index: 1;
+}
+
+.title-stack.is-visible .title-stack__line,
+[data-scroll-reveal].is-visible .title-stack__line {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.title-stack.is-visible .title-stack__line::before,
+[data-scroll-reveal].is-visible .title-stack__line::before {
+  transform: scaleX(var(--highlight-scale));
+  opacity: 1;
+}
+
+.title-stack--label {
+  --title-highlight-bg: rgba(255, 255, 255, 0.85);
+  --title-text-color: #08090d;
+  letter-spacing: 0.34em;
+}
+
+.title-stack--hero {
+  --title-highlight-bg: rgba(255, 255, 255, 0.94);
+  --title-text-color: #080a0f;
+}
+
+.title-stack--intro {
+  --title-highlight-bg: rgba(0, 0, 0, 0.9);
+  --title-text-color: #ffffff;
+}
+
+@media (max-width: 720px) {
+  .title-stack--hero {
+    font-size: clamp(2rem, 10vw, 3rem);
+  }
+
+  .title-stack--intro {
+    font-size: clamp(1.4rem, 6vw, 2.1rem);
+  }
+}

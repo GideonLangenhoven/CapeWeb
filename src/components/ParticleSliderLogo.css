@@ -1,0 +1,90 @@
+.particle-slider-logo {
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.particle-slider-logo:hover {
+  transform: scale(1.02);
+}
+
+.particle-canvas {
+  display: block;
+  background: transparent;
+  border-radius: 8px;
+}
+
+/* Header specific styling */
+.particle-logo-header {
+  width: 140px;
+  height: 40px;
+}
+
+.particle-logo-header .particle-canvas {
+  border-radius: 6px;
+}
+
+/* Hero specific styling */
+.particle-logo-hero {
+  width: 280px;
+  height: 80px;
+}
+
+.particle-logo-hero .particle-canvas {
+  border-radius: 12px;
+}
+
+/* Interactive ParticleSlider for center hero */
+.particle-logo-interactive {
+  width: 600px;
+  height: 200px;
+}
+
+.particle-logo-interactive .particle-canvas {
+  border-radius: 20px;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .particle-logo-hero {
+    width: 220px;
+    height: 60px;
+  }
+
+  .particle-logo-header {
+    width: 120px;
+    height: 35px;
+  }
+
+  .particle-logo-interactive {
+    width: 90vw;
+    max-width: 400px;
+    height: 120px;
+  }
+
+  .particle-logo-interactive .particle-canvas {
+    border-radius: 16px;
+  }
+}
+
+/* Animation effects */
+.particle-slider-logo {
+  position: relative;
+  overflow: hidden;
+}
+
+.particle-slider-logo::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(125, 251, 255, 0.1), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.particle-slider-logo:hover::before {
+  opacity: 1;
+}

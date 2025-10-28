@@ -1,0 +1,205 @@
+.contact-page {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.contact-hero__container {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(2.6rem, 6vw, 4.2rem);
+  align-items: start;
+}
+
+.contact-hero__copy {
+  display: grid;
+  gap: clamp(1.4rem, 3.6vw, 2.2rem);
+}
+
+.contact-hero__meta {
+  display: grid;
+  gap: 1.2rem;
+  color: var(--color-text-muted);
+}
+
+.contact-hero__meta strong {
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.78rem;
+  color: rgba(31, 92, 240, 0.75);
+  margin-bottom: 0.4rem;
+}
+
+.contact-hero__aside {
+  display: grid;
+  gap: 1.3rem;
+  color: var(--color-text-muted);
+}
+
+.contact-line {
+  font-size: 1.1rem;
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.contact-form__wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(2rem, 6vw, 3.4rem);
+  align-items: start;
+}
+
+.contact-form {
+  display: grid;
+  gap: 1.2rem;
+  padding: clamp(2rem, 4.8vw, 2.6rem);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.contact-form label {
+  display: grid;
+  gap: 0.7rem;
+  font-size: 0.95rem;
+  color: var(--color-text);
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 1rem;
+  padding: 0.85rem 1rem;
+  outline: none;
+  transition: border-color var(--transition-med), box-shadow var(--transition-med);
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-color: rgba(31, 92, 240, 0.4);
+  box-shadow: 0 0 0 3px rgba(31, 92, 240, 0.18);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.priority-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.priority-pill {
+  padding: 0.55rem 1.2rem;
+  border-radius: 999px;
+  border: 1px solid rgba(31, 92, 240, 0.24);
+  background: rgba(31, 92, 240, 0.08);
+  color: var(--color-accent);
+  cursor: pointer;
+  transition: all var(--transition-med);
+  font-weight: 600;
+}
+
+.priority-pill:hover {
+  border-color: rgba(31, 92, 240, 0.4);
+  background: rgba(31, 92, 240, 0.12);
+}
+
+.priority-pill.is-active {
+  background: var(--color-gradient);
+  color: var(--color-text-inverse);
+  border-color: transparent;
+  box-shadow: 0 18px 36px rgba(31, 92, 240, 0.25);
+}
+
+.contact-form textarea {
+  min-height: 160px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.contact-form button {
+  justify-self: flex-start;
+}
+
+.contact-form .form-note {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin-top: 0.4rem;
+}
+
+.contact-form.success button {
+  background: rgba(21, 128, 61, 0.85);
+  box-shadow: none;
+}
+
+.contact-form.error button {
+  background: rgba(220, 38, 38, 0.85);
+  box-shadow: none;
+}
+
+.contact-insights {
+  display: grid;
+  gap: 1.2rem;
+  padding: clamp(2.2rem, 5vw, 2.8rem);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.contact-insights ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+.contact-insights li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.7rem;
+  align-items: start;
+}
+
+.contact-insights li::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid rgba(31, 92, 240, 0.35);
+  background: rgba(31, 92, 240, 0.18);
+  margin-top: 0.35rem;
+}
+
+@media (max-width: 1024px) {
+  .contact-hero__container {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-form__wrapper {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .priority-group {
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+}

@@ -1,0 +1,118 @@
+/* Hide default cursor globally */
+* {
+  cursor: none !important;
+}
+
+html {
+  cursor: none;
+  background: #666;
+}
+
+/* Custom cursor follower */
+#follower {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+}
+
+/* Cursor circles */
+.cursor-circle {
+  position: absolute;
+  border-radius: 50%;
+  height: 1em;
+  width: 1em;
+  margin-top: -0.5em;
+  margin-left: -0.5em;
+  opacity: 0.6;
+}
+
+.cursor-circle-1 {
+  animation: pulse 2s infinite;
+  background: white;
+  height: 0.5em;
+  width: 0.5em;
+  margin-top: -0.25em;
+  margin-left: -0.25em;
+}
+
+.cursor-circle-2 {
+  animation: pulse 4s infinite;
+  background: rgba(200, 0, 0, 0.8);
+  transition: background-color 0.3s ease;
+}
+
+/* Pulse animation */
+@keyframes pulse {
+  0% {
+    opacity: 0.2;
+    height: 1em;
+    width: 1em;
+    margin-top: -0.5em;
+    margin-left: -0.5em;
+  }
+  50% {
+    opacity: 0.9;
+    height: 3em;
+    width: 3em;
+    margin-top: -1.5em;
+    margin-left: -1.5em;
+  }
+  100% {
+    opacity: 0.2;
+    height: 1em;
+    width: 1em;
+    margin-top: -0.5em;
+    margin-left: -0.5em;
+  }
+}
+
+/* Enhanced animations for different states */
+.cursor-circle-1:hover {
+  animation-duration: 1s;
+}
+
+.cursor-circle-2:hover {
+  animation-duration: 2s;
+}
+
+/* Specific section cursor styles */
+[data-cursor-section="hero"] .cursor-circle-2 {
+  background: rgba(125, 251, 255, 0.8) !important;
+}
+
+[data-cursor-section="introduction"] .cursor-circle-2 {
+  background: rgba(34, 197, 94, 0.8) !important;
+}
+
+[data-cursor-section="work"] .cursor-circle-2 {
+  background: rgba(168, 85, 247, 0.8) !important;
+}
+
+[data-cursor-section="services"] .cursor-circle-2 {
+  background: rgba(168, 85, 247, 0.8) !important;
+}
+
+[data-cursor-section="contact"] .cursor-circle-2 {
+  background: rgba(249, 115, 22, 0.8) !important;
+}
+
+/* Button hover effects */
+.btn:hover ~ #follower .cursor-circle-1,
+button:hover ~ #follower .cursor-circle-1 {
+  animation-duration: 0.5s;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.btn:hover ~ #follower .cursor-circle-2,
+button:hover ~ #follower .cursor-circle-2 {
+  animation-duration: 1s;
+}
+
+/* Link hover effects */
+a:hover ~ #follower .cursor-circle-1 {
+  background: rgba(255, 255, 255, 1);
+  animation-duration: 0.8s;
+}

@@ -1,0 +1,77 @@
+.logo-ribbon-container {
+  width: 100%;
+  overflow: hidden;
+  background-color: #ffffff;
+  padding: 2rem 0;
+  position: relative;
+}
+
+.logo-ribbon-container::before,
+.logo-ribbon-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 150px;
+  height: 100%;
+  z-index: 2;
+}
+
+.logo-ribbon-container::before {
+  left: 0;
+  background: linear-gradient(to right, #ffffff, transparent);
+}
+
+.logo-ribbon-container::after {
+  right: 0;
+  background: linear-gradient(to left, #ffffff, transparent);
+}
+
+.logo-ribbon-track {
+  display: flex;
+  animation: scrollLogos 30s linear infinite;
+  width: fit-content;
+}
+
+.logo-ribbon-track:hover {
+  animation-play-state: paused;
+}
+
+.logo-item {
+  flex-shrink: 0;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-item img {
+  height: 40px;
+  width: auto;
+  filter: grayscale(100%);
+  opacity: 0.6;
+  transition: all 0.3s ease;
+}
+
+.logo-item:hover img {
+  filter: grayscale(0%);
+  opacity: 1;
+}
+
+@keyframes scrollLogos {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 768px) {
+  .logo-item {
+    padding: 0 1rem;
+  }
+  
+  .logo-item img {
+    height: 30px;
+  }
+} 
