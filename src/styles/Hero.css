@@ -147,7 +147,7 @@ header { padding: 30px 0; position: relative; z-index: 100; }
   position: relative;
   z-index: 1;
   flex-shrink: 0;
-  transform: translateX(30rem);
+  transform: translateX(15rem);
 }
 
 .hero-container .right-part::before {

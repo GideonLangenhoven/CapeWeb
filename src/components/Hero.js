@@ -72,7 +72,7 @@ function Hero() {
       <div className="hero-content">
         <div className="left-part">
           <h1>
-            <span>Websites that</span><br/>
+            <span>Websites that </span>
             <span className="text"></span>
           </h1>
           <p className="subtitle">
