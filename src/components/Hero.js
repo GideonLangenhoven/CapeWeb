@@ -96,43 +96,45 @@ function Hero() {
 
           <div className="main-grid">
             <div className="d-flex">
-              {/* 1: Text box */}
-              <div className="box"><span>Web Design</span></div>
-
-              {/* 2: Image */}
               <div className="box">
                 <div className="bg-img">
-                  <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&h=600&fit=crop" alt="Web development"/>
+                  <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?w=400" alt="Web Design" />
                 </div>
               </div>
 
-              {/* 3: Text box */}
-              <div className="box"><span>AI Agents</span></div>
+              <div className="box">
+                <span>Automate</span>
+              </div>
 
-              {/* 4: Text box */}
-              <div className="box"><span>Automation</span></div>
+              <div className="box">
+                <span>Websites</span>
+              </div>
 
-              {/* 5: Image */}
               <div className="box">
                 <div className="bg-img">
-                  <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=600&fit=crop" alt="Data and analytics"/>
+                  <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400" alt="AI" />
                 </div>
               </div>
 
-              {/* 6: Image */}
               <div className="box">
                 <div className="bg-img">
-                  <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?w=600&h=600&fit=crop" alt="Automation workflows"/>
+                  <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=400" alt="Design" />
                 </div>
               </div>
 
-              {/* 7: Text */}
-              <div className="box"><span>E‑Commerce</span></div>
+              <div className="box">
+                <span>AI</span>
+              </div>
 
-              {/* 8: Image */}
               <div className="box">
                 <div className="bg-img">
-                  <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=600&fit=crop" alt="Analytics dashboards"/>
+                  <img src="https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=400" alt="Automation" />
+                </div>
+              </div>
+
+              <div className="box">
+                <div className="bg-img">
+                  <img src="https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=400" alt="Development" />
                 </div>
               </div>
             </div>
