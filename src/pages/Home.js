@@ -1,7 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import LocomotiveScroll from 'locomotive-scroll';
-import 'locomotive-scroll/dist/locomotive-scroll.css';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './Home.css';
@@ -81,69 +79,36 @@ const faqs = [
 
 function Home() {
   const [leadSubmitted, setLeadSubmitted] = useState(false);
-  const scrollRef = useRef(null);
-  const locomotiveScrollRef = useRef(null);
 
   useEffect(() => {
-    // Initialize Locomotive Scroll
-    locomotiveScrollRef.current = new LocomotiveScroll({
-      el: scrollRef.current,
-      smooth: true,
-      smartphone: {
-        smooth: true
-      },
-      tablet: {
-        smooth: true
-      }
-    });
+    // Smooth scroll behavior
+    document.documentElement.style.scrollBehavior = 'smooth';
 
-    // Set up ScrollTrigger with Locomotive Scroll
-    const scroller = locomotiveScrollRef.current;
-
-    scroller.on('scroll', ScrollTrigger.update);
-
-    ScrollTrigger.scrollerProxy(scrollRef.current, {
-      scrollTop(value) {
-        return arguments.length
-          ? scroller.scrollTo(value, 0, 0)
-          : scroller.scroll.instance.scroll.y;
-      },
-      getBoundingClientRect() {
-        return {
-          left: 0,
-          top: 0,
-          width: window.innerWidth,
-          height: window.innerHeight
-        };
-      },
-      pinType: scrollRef.current.style.transform ? 'transform' : 'fixed'
-    });
-
-    ScrollTrigger.addEventListener('refresh', () => scroller.update());
-    ScrollTrigger.refresh();
-
-    // Color change animation
+    // Color change animation with GSAP ScrollTrigger
     const scrollColorElems = document.querySelectorAll('[data-bgcolor]');
+
     scrollColorElems.forEach((colorSection, i) => {
       const prevBg = i === 0 ? '#ffffff' : scrollColorElems[i - 1].dataset.bgcolor;
       const prevText = i === 0 ? '#0A174E' : scrollColorElems[i - 1].dataset.textcolor;
 
       ScrollTrigger.create({
         trigger: colorSection,
-        scroller: scrollRef.current,
         start: 'top 50%',
+        end: 'bottom 50%',
         onEnter: () =>
           gsap.to('body', {
             backgroundColor: colorSection.dataset.bgcolor,
             color: colorSection.dataset.textcolor,
-            duration: 0.3,
+            duration: 0.5,
+            ease: 'power2.inOut',
             overwrite: 'auto'
           }),
         onLeaveBack: () =>
           gsap.to('body', {
             backgroundColor: prevBg,
             color: prevText,
-            duration: 0.3,
+            duration: 0.5,
+            ease: 'power2.inOut',
             overwrite: 'auto'
           })
       });
@@ -151,10 +116,8 @@ function Home() {
 
     // Cleanup
     return () => {
-      if (locomotiveScrollRef.current) {
-        locomotiveScrollRef.current.destroy();
-      }
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      document.documentElement.style.scrollBehavior = 'auto';
     };
   }, []);
 
@@ -172,7 +135,7 @@ function Home() {
     <div className="home">
       <Hero />
 
-      <div className="scroll-container" ref={scrollRef} data-scroll-container>
+      <div className="scroll-container">
         <section
           className="scroll-section problem"
           id="problem"
