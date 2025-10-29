@@ -94,7 +94,7 @@ function Home() {
 
     // Clear any hash from URL to prevent auto-scrolling to anchors
     if (window.location.hash) {
-      history.replaceState(null, null, ' ');
+      window.history.replaceState(null, null, ' ');
     }
 
     const locoScroll = new LocomotiveScroll({
