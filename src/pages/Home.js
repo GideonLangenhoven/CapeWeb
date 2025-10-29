@@ -92,13 +92,38 @@ function Home() {
     document.documentElement.style.scrollBehavior = 'auto';
     document.body.classList.add('home-scroll-active');
 
+    // Clear any hash from URL to prevent auto-scrolling to anchors
+    if (window.location.hash) {
+      history.replaceState(null, null, ' ');
+    }
+
     const locoScroll = new LocomotiveScroll({
       el: scrollContainer,
       smooth: true,
       lerp: 0.09,
       tablet: { smooth: true },
-      smartphone: { smooth: false }
+      smartphone: { smooth: false },
+      resetNativeScroll: true
     });
+
+    // Handle anchor link clicks
+    const handleAnchorClick = (e) => {
+      const target = e.target.closest('a[href^="#"]');
+      if (target) {
+        e.preventDefault();
+        const id = target.getAttribute('href').substring(1);
+        const element = scrollContainer.querySelector(`#${id}`);
+        if (element) {
+          locoScroll.scrollTo(element, {
+            offset: 0,
+            duration: 1000,
+            easing: [0.25, 0.0, 0.35, 1.0]
+          });
+        }
+      }
+    };
+
+    scrollContainer.addEventListener('click', handleAnchorClick);
 
     const handleScroll = () => ScrollTrigger.update();
     locoScroll.on('scroll', handleScroll);
@@ -156,9 +181,14 @@ function Home() {
 
     const refresh = () => locoScroll.update();
     ScrollTrigger.addEventListener('refresh', refresh);
-    ScrollTrigger.refresh();
+
+    // Delay refresh to allow Locomotive Scroll to fully initialize and prevent jumping
+    setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 100);
 
     return () => {
+      scrollContainer.removeEventListener('click', handleAnchorClick);
       triggers.forEach(trigger => trigger.kill());
       ScrollTrigger.removeEventListener('refresh', refresh);
       locoScroll.off('scroll', handleScroll);
