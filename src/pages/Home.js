@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import LocomotiveScroll from 'locomotive-scroll';
+import 'locomotive-scroll/dist/locomotive-scroll.css';
 import './Home.css';
 import Hero from '../components/Hero';
+import Footer from '../components/Footer';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -79,45 +82,100 @@ const faqs = [
 
 function Home() {
   const [leadSubmitted, setLeadSubmitted] = useState(false);
+  const scrollContainerRef = useRef(null);
 
   useEffect(() => {
-    // Smooth scroll behavior
-    document.documentElement.style.scrollBehavior = 'smooth';
+    if (!scrollContainerRef.current) return undefined;
+    const scrollContainer = scrollContainerRef.current;
 
-    // Color change animation with GSAP ScrollTrigger
-    const scrollColorElems = document.querySelectorAll('[data-bgcolor]');
+    const previousScrollBehavior = document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = 'auto';
+    document.body.classList.add('home-scroll-active');
+
+    const locoScroll = new LocomotiveScroll({
+      el: scrollContainer,
+      smooth: true,
+      lerp: 0.09,
+      tablet: { smooth: true },
+      smartphone: { smooth: false }
+    });
+
+    const handleScroll = () => ScrollTrigger.update();
+    locoScroll.on('scroll', handleScroll);
+
+    ScrollTrigger.scrollerProxy(scrollContainer, {
+      scrollTop(value) {
+        if (arguments.length) {
+          locoScroll.scrollTo(value, { duration: 0, disableLerp: true });
+        } else {
+          return locoScroll.scroll.instance.scroll.y;
+        }
+      },
+      getBoundingClientRect() {
+        return {
+          left: 0,
+          top: 0,
+          width: window.innerWidth,
+          height: window.innerHeight
+        };
+      },
+      pinType: scrollContainer.style.transform ? 'transform' : 'fixed'
+    });
+
+    const scrollColorElems = scrollContainer.querySelectorAll('[data-bgcolor]');
+    const triggers = [];
+    const applyTheme = (bg, text) => {
+      if (!bg || !text) return;
+      gsap.to(document.body, {
+        duration: 0.6,
+        ease: 'power2.inOut',
+        overwrite: 'auto',
+        '--home-bg-color': bg,
+        '--home-text-color': text,
+        background: bg,
+        color: text
+      });
+    };
 
     scrollColorElems.forEach((colorSection, i) => {
       const prevBg = i === 0 ? '#ffffff' : scrollColorElems[i - 1].dataset.bgcolor;
       const prevText = i === 0 ? '#0A174E' : scrollColorElems[i - 1].dataset.textcolor;
 
-      ScrollTrigger.create({
-        trigger: colorSection,
-        start: 'top 50%',
-        end: 'bottom 50%',
-        onEnter: () =>
-          gsap.to('body', {
-            backgroundColor: colorSection.dataset.bgcolor,
-            color: colorSection.dataset.textcolor,
-            duration: 0.5,
-            ease: 'power2.inOut',
-            overwrite: 'auto'
-          }),
-        onLeaveBack: () =>
-          gsap.to('body', {
-            backgroundColor: prevBg,
-            color: prevText,
-            duration: 0.5,
-            ease: 'power2.inOut',
-            overwrite: 'auto'
-          })
-      });
+      triggers.push(
+        ScrollTrigger.create({
+          trigger: colorSection,
+          scroller: scrollContainer,
+          start: 'top top',
+          end: 'bottom top',
+          onEnter: () => applyTheme(colorSection.dataset.bgcolor, colorSection.dataset.textcolor),
+          onEnterBack: () => applyTheme(colorSection.dataset.bgcolor, colorSection.dataset.textcolor),
+          onLeaveBack: () => applyTheme(prevBg, prevText)
+        })
+      );
     });
 
-    // Cleanup
+    const refresh = () => locoScroll.update();
+    ScrollTrigger.addEventListener('refresh', refresh);
+    ScrollTrigger.refresh();
+
     return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-      document.documentElement.style.scrollBehavior = 'auto';
+      triggers.forEach(trigger => trigger.kill());
+      ScrollTrigger.removeEventListener('refresh', refresh);
+      locoScroll.off('scroll', handleScroll);
+      locoScroll.destroy();
+      const cleanupTween = gsap.to(document.body, {
+        duration: 0.3,
+        ease: 'power2.out',
+        overwrite: 'auto',
+        '--home-bg-color': '#ffffff',
+        '--home-text-color': '#0A174E',
+        background: '#ffffff',
+        color: '#0A174E'
+      });
+      cleanupTween.eventCallback('onComplete', () => {
+        document.body.classList.remove('home-scroll-active');
+      });
+      document.documentElement.style.scrollBehavior = previousScrollBehavior;
     };
   }, []);
 
@@ -133,14 +191,19 @@ function Home() {
 
   return (
     <div className="home">
-      <Hero />
+      <div
+        className="scroll-container"
+        data-scroll-container
+        ref={scrollContainerRef}
+      >
+        <Hero />
 
-      <div className="scroll-container">
         <section
           className="scroll-section problem"
           id="problem"
           data-bgcolor="#0A174E"
           data-textcolor="#ffffff"
+          data-scroll-section
         >
           <div className="section-inner container">
             <h2>Stop losing leads to a tired website</h2>
@@ -159,6 +222,7 @@ function Home() {
           id="value"
           data-bgcolor="#00D4FF"
           data-textcolor="#0A174E"
+          data-scroll-section
         >
           <div className="section-inner container">
             <h2>Build a site that sells while you sleep</h2>
@@ -182,6 +246,7 @@ function Home() {
           id="plan"
           data-bgcolor="#6A00FF"
           data-textcolor="#ffffff"
+          data-scroll-section
         >
           <div className="section-inner container">
             <h2>Our three-step plan</h2>
@@ -204,6 +269,7 @@ function Home() {
           id="about"
           data-bgcolor="#1a1a1a"
           data-textcolor="#00D4FF"
+          data-scroll-section
         >
           <div className="section-inner container">
             <h2>Meet your guide</h2>
@@ -223,6 +289,7 @@ function Home() {
           id="proof"
           data-bgcolor="#f1f1f1"
           data-textcolor="#0A174E"
+          data-scroll-section
         >
           <div className="section-inner container">
             <h2>Proof it works</h2>
@@ -250,6 +317,7 @@ function Home() {
           id="services"
           data-bgcolor="#00D4FF"
           data-textcolor="#0A174E"
+          data-scroll-section
         >
           <div className="section-inner container">
             <h2>What we deliver</h2>
@@ -269,6 +337,7 @@ function Home() {
           id="ai-guide"
           data-bgcolor="#6A00FF"
           data-textcolor="#ffffff"
+          data-scroll-section
         >
           <div className="section-inner container">
             <h2>Get the AI Time-Saver Guide</h2>
@@ -305,6 +374,7 @@ function Home() {
           id="faq"
           data-bgcolor="#0A174E"
           data-textcolor="#ffffff"
+          data-scroll-section
         >
           <div className="section-inner container">
             <h2>FAQ</h2>
@@ -323,6 +393,7 @@ function Home() {
           className="scroll-section cta-band"
           data-bgcolor="#00D4FF"
           data-textcolor="#0A174E"
+          data-scroll-section
         >
           <div className="section-inner container">
             <h2>Ready to launch a site that works as hard as you do?</h2>
@@ -339,6 +410,8 @@ function Home() {
             </div>
           </div>
         </section>
+
+        <Footer />
       </div>
     </div>
   );
