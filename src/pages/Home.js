@@ -1,7 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import LocomotiveScroll from 'locomotive-scroll';
+import 'locomotive-scroll/dist/locomotive-scroll.css';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './Home.css';
 import Hero from '../components/Hero';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const planSteps = [
   {
@@ -75,36 +81,80 @@ const faqs = [
 
 function Home() {
   const [leadSubmitted, setLeadSubmitted] = useState(false);
-  const sectionsRef = useRef([]);
+  const scrollRef = useRef(null);
+  const locomotiveScrollRef = useRef(null);
 
   useEffect(() => {
-    // Intersection Observer for scroll animations
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -100px 0px'
-    };
+    // Initialize Locomotive Scroll
+    locomotiveScrollRef.current = new LocomotiveScroll({
+      el: scrollRef.current,
+      smooth: true,
+      smartphone: {
+        smooth: true
+      },
+      tablet: {
+        smooth: true
+      }
+    });
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          // Stagger children animations
-          const children = entry.target.querySelectorAll('.animate-child');
-          children.forEach((child, index) => {
-            setTimeout(() => {
-              child.classList.add('visible');
-            }, index * 100);
-          });
-        }
+    // Set up ScrollTrigger with Locomotive Scroll
+    const scroller = locomotiveScrollRef.current;
+
+    scroller.on('scroll', ScrollTrigger.update);
+
+    ScrollTrigger.scrollerProxy(scrollRef.current, {
+      scrollTop(value) {
+        return arguments.length
+          ? scroller.scrollTo(value, 0, 0)
+          : scroller.scroll.instance.scroll.y;
+      },
+      getBoundingClientRect() {
+        return {
+          left: 0,
+          top: 0,
+          width: window.innerWidth,
+          height: window.innerHeight
+        };
+      },
+      pinType: scrollRef.current.style.transform ? 'transform' : 'fixed'
+    });
+
+    ScrollTrigger.addEventListener('refresh', () => scroller.update());
+    ScrollTrigger.refresh();
+
+    // Color change animation
+    const scrollColorElems = document.querySelectorAll('[data-bgcolor]');
+    scrollColorElems.forEach((colorSection, i) => {
+      const prevBg = i === 0 ? '#ffffff' : scrollColorElems[i - 1].dataset.bgcolor;
+      const prevText = i === 0 ? '#0A174E' : scrollColorElems[i - 1].dataset.textcolor;
+
+      ScrollTrigger.create({
+        trigger: colorSection,
+        scroller: scrollRef.current,
+        start: 'top 50%',
+        onEnter: () =>
+          gsap.to('body', {
+            backgroundColor: colorSection.dataset.bgcolor,
+            color: colorSection.dataset.textcolor,
+            duration: 0.3,
+            overwrite: 'auto'
+          }),
+        onLeaveBack: () =>
+          gsap.to('body', {
+            backgroundColor: prevBg,
+            color: prevText,
+            duration: 0.3,
+            overwrite: 'auto'
+          })
       });
-    }, observerOptions);
+    });
 
-    // Observe all sections
-    const sections = document.querySelectorAll('.fade-in-up, .scale-in');
-    sections.forEach(section => observer.observe(section));
-
+    // Cleanup
     return () => {
-      sections.forEach(section => observer.unobserve(section));
+      if (locomotiveScrollRef.current) {
+        locomotiveScrollRef.current.destroy();
+      }
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
   }, []);
 
@@ -122,165 +172,211 @@ function Home() {
     <div className="home">
       <Hero />
 
-      <section className="problem fade-in-up" id="problem" data-nav-fill-trigger>
-        <div className="section-inner container">
-          <h2>Stop losing leads to a tired website</h2>
-          <p className="section-lead">
-            An outdated, cluttered site costs you leads. Manual tasks steal your focus and slow growth.
-          </p>
-          <div className="stakes-callout scale-in">
-            If you wait, you keep losing customers, keep wasting hours, and keep falling behind competitors
-            who automate first.
-          </div>
-        </div>
-      </section>
-
-      <section className="value fade-in-up" id="value">
-        <div className="section-inner container">
-          <h2>Build a site that sells while you sleep</h2>
-          <p className="section-lead">
-            Imagine a website that sells 24/7 while smart automations handle the busywork.
-            Grow faster with less effort.
-          </p>
-          <ul className="value-benefits">
-            {benefits.map((benefit, index) => (
-              <li key={benefit} className="animate-child">
-                <span className="value-benefits__icon" aria-hidden="true">◆</span>
-                <span>{benefit}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      <section className="plan fade-in-up" id="plan">
-        <div className="section-inner container">
-          <h2>Our three-step plan</h2>
-          <div className="plan-steps">
-            {planSteps.map((step, index) => (
-              <article className="plan-step animate-child" key={step.title}>
-                <span className="plan-step__icon" aria-hidden="true">
-                  {index + 1}
-                </span>
-                <h3>{step.title}</h3>
-                <p>{step.description}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="guide fade-in-up" id="about">
-        <div className="section-inner container">
-          <h2>Meet your guide</h2>
-          <p className="section-lead">
-            We know how frustrating it is to feel invisible online. For years, Capeweb has helped Cape Town
-            businesses ship clean, fast sites with automation that frees up hours.
-          </p>
-          <div className="guide-highlight scale-in">
-            <p>Local expertise with global standards in web design, development, and AI-powered automation.</p>
-            <p>Certified StoryBrand and automation specialists ready to translate your vision into measurable growth.</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="proof fade-in-up" id="proof">
-        <div className="section-inner container">
-          <h2>Proof it works</h2>
-          <div className="proof-grid">
-            <div className="proof-stat scale-in">
-              <p className="proof-stat__figure">+58%</p>
-              <p className="proof-stat__caption">Average lift in qualified leads within 90 days.</p>
+      <div className="scroll-container" ref={scrollRef} data-scroll-container>
+        <section
+          className="scroll-section problem"
+          id="problem"
+          data-bgcolor="#0A174E"
+          data-textcolor="#ffffff"
+        >
+          <div className="section-inner container">
+            <h2>Stop losing leads to a tired website</h2>
+            <p className="section-lead">
+              An outdated, cluttered site costs you leads. Manual tasks steal your focus and slow growth.
+            </p>
+            <div className="stakes-callout">
+              If you wait, you keep losing customers, keep wasting hours, and keep falling behind competitors
+              who automate first.
             </div>
-            <ul className="testimonials">
-              {testimonials.map((testimonial, index) => (
-                <li className="testimonial animate-child" key={testimonial.name}>
-                  <p className="testimonial__quote">"{testimonial.quote}"</p>
-                  <p className="testimonial__meta">
-                    {testimonial.name} · {testimonial.role}
-                  </p>
+          </div>
+        </section>
+
+        <section
+          className="scroll-section value"
+          id="value"
+          data-bgcolor="#00D4FF"
+          data-textcolor="#0A174E"
+        >
+          <div className="section-inner container">
+            <h2>Build a site that sells while you sleep</h2>
+            <p className="section-lead">
+              Imagine a website that sells 24/7 while smart automations handle the busywork.
+              Grow faster with less effort.
+            </p>
+            <ul className="value-benefits">
+              {benefits.map((benefit) => (
+                <li key={benefit}>
+                  <span className="value-benefits__icon" aria-hidden="true">◆</span>
+                  <span>{benefit}</span>
                 </li>
               ))}
             </ul>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="services fade-in-up" id="services">
-        <div className="section-inner container">
-          <h2>What we deliver</h2>
-          <div className="services-grid">
-            {services.map((service, index) => (
-              <article className="service-card animate-child" key={service.title}>
-                <h3>{service.title}</h3>
-                <p>{service.description}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="lead-magnet fade-in-up" id="ai-guide">
-        <div className="section-inner container">
-          <h2>Get the AI Time-Saver Guide</h2>
-          <p className="section-lead">
-            Download 5 ways AI can save your business time and uncover the tasks to automate first.
-          </p>
-          <form className="lead-form scale-in" onSubmit={handleLeadSubmit} noValidate>
-            <div className="lead-form__field">
-              <label htmlFor="lead-email">Email address</label>
-              <input
-                id="lead-email"
-                type="email"
-                name="email"
-                placeholder="you@business.co.za"
-                required
-                aria-describedby="lead-consent"
-              />
+        <section
+          className="scroll-section plan"
+          id="plan"
+          data-bgcolor="#6A00FF"
+          data-textcolor="#ffffff"
+        >
+          <div className="section-inner container">
+            <h2>Our three-step plan</h2>
+            <div className="plan-steps">
+              {planSteps.map((step, index) => (
+                <article className="plan-step" key={step.title}>
+                  <span className="plan-step__icon" aria-hidden="true">
+                    {index + 1}
+                  </span>
+                  <h3>{step.title}</h3>
+                  <p>{step.description}</p>
+                </article>
+              ))}
             </div>
-            <button type="submit" className="btn btn-primary">
-              Download the AI Time-Saver Guide
-            </button>
-            <p id="lead-consent" className="lead-form__consent">
-              We respect your inbox. One useful email, zero spam. Opt out anytime.
-            </p>
-            <p className="lead-form__success" aria-live="polite">
-              {leadSubmitted ? 'Thanks! Your download link is on its way to your inbox.' : ''}
-            </p>
-          </form>
-        </div>
-      </section>
-
-      <section className="faq fade-in-up" id="faq">
-        <div className="section-inner container">
-          <h2>FAQ</h2>
-          <div className="faq-list">
-            {faqs.map((faqItem, index) => (
-              <details key={faqItem.question} className="animate-child">
-                <summary>{faqItem.question}</summary>
-                <p>{faqItem.answer}</p>
-              </details>
-            ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="cta-band scale-in">
-        <div className="section-inner container">
-          <h2>Ready to launch a site that works as hard as you do?</h2>
-          <p>
-            Book a Free Strategy Call and get a clear roadmap, pricing, and timeline in your inbox within 48 hours.
-          </p>
-          <div className="cta-band__actions">
-            <Link to="/contact" className="btn btn-primary">
-              Book a Free Strategy Call
-            </Link>
-            <a href="#ai-guide" className="btn btn-ghost">
-              Download the AI Time-Saver Guide
-            </a>
+        <section
+          className="scroll-section guide"
+          id="about"
+          data-bgcolor="#1a1a1a"
+          data-textcolor="#00D4FF"
+        >
+          <div className="section-inner container">
+            <h2>Meet your guide</h2>
+            <p className="section-lead">
+              We know how frustrating it is to feel invisible online. For years, Capeweb has helped Cape Town
+              businesses ship clean, fast sites with automation that frees up hours.
+            </p>
+            <div className="guide-highlight">
+              <p>Local expertise with global standards in web design, development, and AI-powered automation.</p>
+              <p>Certified StoryBrand and automation specialists ready to translate your vision into measurable growth.</p>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+
+        <section
+          className="scroll-section proof"
+          id="proof"
+          data-bgcolor="#f1f1f1"
+          data-textcolor="#0A174E"
+        >
+          <div className="section-inner container">
+            <h2>Proof it works</h2>
+            <div className="proof-grid">
+              <div className="proof-stat">
+                <p className="proof-stat__figure">+58%</p>
+                <p className="proof-stat__caption">Average lift in qualified leads within 90 days.</p>
+              </div>
+              <ul className="testimonials">
+                {testimonials.map((testimonial) => (
+                  <li className="testimonial" key={testimonial.name}>
+                    <p className="testimonial__quote">"{testimonial.quote}"</p>
+                    <p className="testimonial__meta">
+                      {testimonial.name} · {testimonial.role}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section
+          className="scroll-section services"
+          id="services"
+          data-bgcolor="#00D4FF"
+          data-textcolor="#0A174E"
+        >
+          <div className="section-inner container">
+            <h2>What we deliver</h2>
+            <div className="services-grid">
+              {services.map((service) => (
+                <article className="service-card" key={service.title}>
+                  <h3>{service.title}</h3>
+                  <p>{service.description}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section
+          className="scroll-section lead-magnet"
+          id="ai-guide"
+          data-bgcolor="#6A00FF"
+          data-textcolor="#ffffff"
+        >
+          <div className="section-inner container">
+            <h2>Get the AI Time-Saver Guide</h2>
+            <p className="section-lead">
+              Download 5 ways AI can save your business time and uncover the tasks to automate first.
+            </p>
+            <form className="lead-form" onSubmit={handleLeadSubmit} noValidate>
+              <div className="lead-form__field">
+                <label htmlFor="lead-email">Email address</label>
+                <input
+                  id="lead-email"
+                  type="email"
+                  name="email"
+                  placeholder="you@business.co.za"
+                  required
+                  aria-describedby="lead-consent"
+                />
+              </div>
+              <button type="submit" className="btn btn-primary">
+                Download the AI Time-Saver Guide
+              </button>
+              <p id="lead-consent" className="lead-form__consent">
+                We respect your inbox. One useful email, zero spam. Opt out anytime.
+              </p>
+              <p className="lead-form__success" aria-live="polite">
+                {leadSubmitted ? 'Thanks! Your download link is on its way to your inbox.' : ''}
+              </p>
+            </form>
+          </div>
+        </section>
+
+        <section
+          className="scroll-section faq"
+          id="faq"
+          data-bgcolor="#0A174E"
+          data-textcolor="#ffffff"
+        >
+          <div className="section-inner container">
+            <h2>FAQ</h2>
+            <div className="faq-list">
+              {faqs.map((faqItem) => (
+                <details key={faqItem.question}>
+                  <summary>{faqItem.question}</summary>
+                  <p>{faqItem.answer}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section
+          className="scroll-section cta-band"
+          data-bgcolor="#00D4FF"
+          data-textcolor="#0A174E"
+        >
+          <div className="section-inner container">
+            <h2>Ready to launch a site that works as hard as you do?</h2>
+            <p>
+              Book a Free Strategy Call and get a clear roadmap, pricing, and timeline in your inbox within 48 hours.
+            </p>
+            <div className="cta-band__actions">
+              <Link to="/contact" className="btn btn-primary">
+                Book a Free Strategy Call
+              </Link>
+              <a href="#ai-guide" className="btn btn-ghost">
+                Download the AI Time-Saver Guide
+              </a>
+            </div>
+          </div>
+        </section>
+      </div>
     </div>
   );
 }
