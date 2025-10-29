@@ -4,6 +4,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Services from './pages/Services';
+import Pricing from './pages/Pricing';
 import Resources from './pages/Resources';
 import Gallery from './components/gallery/Gallery';
 import Contact from './pages/Contact';
