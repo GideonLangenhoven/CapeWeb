@@ -6,6 +6,15 @@
 /* Import Design System - Must be first */
 @import './styles/design-system.css';
 
+body {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
 /* Legacy app styles - keeping for backwards compatibility */
 .App {
   text-align: center;

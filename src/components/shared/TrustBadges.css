@@ -1,0 +1,130 @@
+/* Trust Section */
+.trust-section {
+  padding: var(--space-8) 0;
+  background-color: var(--color-gray-50);
+}
+
+.trust-badges {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-6);
+}
+
+.trust-badge {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  background-color: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  transition: all var(--transition-medium) var(--ease-smooth);
+}
+
+.trust-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
+}
+
+.trust-badge-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  background-color: rgba(0, 212, 255, 0.1);
+  color: var(--color-secondary);
+}
+
+.trust-badge-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.trust-badge-content {
+  flex: 1;
+}
+
+.trust-badge-label {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-900);
+  margin-bottom: var(--space-1);
+}
+
+.trust-badge-description {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-600);
+  margin: 0;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .trust-section {
+    padding: var(--space-6) 0;
+  }
+
+  .trust-badges {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .trust-badge {
+    padding: var(--space-3);
+  }
+
+  .trust-badge-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .trust-badge-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .trust-badge-label {
+    font-size: var(--font-size-base);
+  }
+
+  .trust-badge-description {
+    font-size: var(--font-size-xs);
+  }
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  .trust-section {
+    background-color: var(--color-gray-900);
+  }
+
+  .trust-badge {
+    background-color: var(--color-gray-800);
+    border: 1px solid var(--color-gray-700);
+  }
+
+  .trust-badge-icon {
+    background-color: rgba(0, 212, 255, 0.2);
+  }
+
+  .trust-badge-label {
+    color: var(--color-white);
+  }
+
+  .trust-badge-description {
+    color: var(--color-gray-300);
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .trust-badge {
+    transition: none;
+  }
+
+  .trust-badge:hover {
+    transform: none;
+  }
+}

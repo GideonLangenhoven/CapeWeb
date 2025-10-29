@@ -90,14 +90,16 @@ function Hero() {
 
         <div className="right-part">
           <div className="bg-line">
-            <img src="https://www.yudiz.com/codepen/photography-banner/wave.svg" alt="Line"/>
-            <img src="https://www.yudiz.com/codepen/photography-banner/wave.svg" alt="Line"/>
+            <img src="/assets/text-infinity.svg" alt="Infinity text"/>
+            <img src="/assets/text-infinity.svg" alt="Infinity text"/>
           </div>
 
-          <div className="main-grid d-flex">
+          <div className="main-grid">
+            <div className="d-flex">
               <div className="box">
+                <span>Photography</span>
                 <div className="bg-img">
-                  <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?w=400" alt="Web Design" />
+                  <img src="https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=400" alt="Photography" />
                 </div>
               </div>
 
@@ -110,14 +112,15 @@ function Hero() {
               </div>
 
               <div className="box">
+                <span></span>
                 <div className="bg-img">
-                  <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400" alt="AI" />
+                  <img src="https://images.unsplash.com/photo-1535016120720-40c646be5580?w=400" alt="" />
                 </div>
               </div>
 
               <div className="box">
                 <div className="bg-img">
-                  <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=400" alt="Design" />
+                  <img src="https://www.yudiz.com/codepen/photography-banner/VFX.png" alt=" graphic" />
                 </div>
               </div>
 
@@ -126,26 +129,27 @@ function Hero() {
               </div>
 
               <div className="box">
+                <span></span>
                 <div className="bg-img">
-                  <img src="https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=400" alt="Automation" />
+                  <img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=400" alt="Videography" />
                 </div>
               </div>
 
               <div className="box">
                 <div className="bg-img">
-                  <img src="https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=400" alt="Development" />
+                  <img src="https://www.yudiz.com/codepen/photography-banner/Videography.png" alt="Videography graphic" />
                 </div>
               </div>
-          </div>
+            </div>
 
-          <div className="bg-circle-h-line">
-            <img src="https://www.yudiz.com/codepen/photography-banner/circle-ring.svg" alt="Circle ring"/>
-            <img src="https://www.yudiz.com/codepen/photography-banner/circle-ring.svg" alt="Circle ring"/>
-            <img src="https://www.yudiz.com/codepen/photography-banner/circle-ring.svg" alt="Circle ring"/>
-          </div>
-
-          <div className="bg-dash-circle">
-            <img src="https://www.yudiz.com/codepen/photography-banner/dash-circle.svg" alt="Dashed circle"/>
+            <div className="bg-circle-h-line">
+              <img src="/assets/circle-ring.svg" alt="Accent ring"/>
+              <img src="/assets/circle-ring.svg" alt="Accent ring"/>
+              <img src="/assets/circle-ring.svg" alt="Accent ring"/>
+            </div>
+            <div className="bg-dash-circle">
+              <img src="/assets/dash-circle.svg" alt="Dashed rotating circle"/>
+            </div>
           </div>
         </div>
       </div>
