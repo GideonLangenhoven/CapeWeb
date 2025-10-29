@@ -411,7 +411,14 @@ function Home() {
           </div>
         </section>
 
-        <Footer />
+        <section
+          className="scroll-section footer-section"
+          data-bgcolor="#0A174E"
+          data-textcolor="#ffffff"
+          data-scroll-section
+        >
+          <Footer />
+        </section>
       </div>
     </div>
   );
