@@ -5,7 +5,6 @@ import '../styles/Footer.css';
 const navLinks = [
   { label: 'Services', to: '/services' },
   { label: 'Work', to: '/gallery' },
-  { label: 'Pricing', to: '/pricing' },
   { label: 'Resources', to: '/resources' },
   { label: 'Contact', to: '/contact' }
 ];
@@ -122,6 +121,7 @@ function Footer() {
             <span>Built with design, code, and AI in Cape Town · Operating globally.</span>
           </div>
           <div className="footer-social">
+            <Link to="/privacy">Privacy</Link>
             <a href="https://instagram.com/_rds_entertainment/" target="_blank" rel="noopener noreferrer">Instagram</a>
             <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</a>
             <a href="mailto:hello@capeweb.co.za">Email</a>

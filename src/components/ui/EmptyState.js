@@ -1,4 +1,9 @@
 import React from 'react';
+import {
+  MagnifyingGlassCircleIcon,
+  InboxIcon,
+  ExclamationTriangleIcon
+} from '@heroicons/react/24/outline';
 import Button from './Button';
 import './EmptyState.css';
 
@@ -69,35 +74,83 @@ export default function EmptyState({
  * Common Empty State Variants
  */
 
-export function NoResults({ searchTerm, onClear }) {
+export function NoResults({
+  searchTerm,
+  onClear,
+  actionHref = '/'
+}) {
+  const handleClear = () => {
+    if (onClear) {
+      onClear();
+      return;
+    }
+
+    if (typeof window !== 'undefined') {
+      window.location.href = actionHref;
+    }
+  };
+
   return (
     <EmptyState
+      icon={<MagnifyingGlassCircleIcon />}
       title="No results found"
       description={searchTerm ? `We couldn't find anything matching "${searchTerm}"` : 'Try adjusting your search or filters'}
-      actionLabel={searchTerm ? "Clear search" : undefined}
-      onAction={onClear}
+      actionLabel={searchTerm ? 'Clear search' : 'Browse all'}
+      onAction={handleClear}
     />
   );
 }
 
-export function NoData({ onAdd, addLabel = "Add item" }) {
+export function NoData({
+  onAdd,
+  addLabel = 'Add item',
+  actionHref = '/contact'
+}) {
+  const handleAdd = () => {
+    if (onAdd) {
+      onAdd();
+      return;
+    }
+
+    if (typeof window !== 'undefined') {
+      window.location.href = actionHref;
+    }
+  };
+
   return (
     <EmptyState
+      icon={<InboxIcon />}
       title="Nothing here yet"
       description="Get started by adding your first item"
       actionLabel={addLabel}
-      onAction={onAdd}
+      onAction={handleAdd}
     />
   );
 }
 
-export function ErrorState({ error, onRetry }) {
+export function ErrorState({
+  error,
+  onRetry,
+  actionHref = window.location.pathname
+}) {
+  const handleRetry = () => {
+    if (onRetry) {
+      onRetry();
+      return;
+    }
+
+    if (typeof window !== 'undefined') {
+      window.location.href = actionHref;
+    }
+  };
+
   return (
     <EmptyState
+      icon={<ExclamationTriangleIcon />}
       title="Something went wrong"
       description={error?.message || "We couldn't load this content. Please try again."}
       actionLabel="Try again"
-      onAction={onRetry}
+      onAction={handleRetry}
     />
   );
 }
