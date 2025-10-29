@@ -1,0 +1,143 @@
+/* Empty State */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-8) var(--space-4);
+}
+
+.empty-state-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: var(--space-4);
+  border-radius: var(--radius-full);
+  background-color: var(--color-gray-100);
+  color: var(--color-gray-500);
+}
+
+.empty-state-icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+.empty-state-title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-900);
+  margin-bottom: var(--space-2);
+}
+
+.empty-state-description {
+  font-size: var(--font-size-base);
+  color: var(--color-gray-600);
+  max-width: 480px;
+  margin-bottom: var(--space-6);
+  line-height: var(--line-height-relaxed);
+}
+
+.empty-state-content {
+  margin-bottom: var(--space-6);
+  max-width: 600px;
+}
+
+.empty-state-action {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Size Variants */
+.empty-state-sm {
+  padding: var(--space-6) var(--space-3);
+}
+
+.empty-state-sm .empty-state-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: var(--space-3);
+}
+
+.empty-state-sm .empty-state-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.empty-state-sm .empty-state-title {
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--space-1);
+}
+
+.empty-state-sm .empty-state-description {
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-4);
+}
+
+.empty-state-lg {
+  padding: var(--space-12) var(--space-6);
+}
+
+.empty-state-lg .empty-state-icon {
+  width: 96px;
+  height: 96px;
+  margin-bottom: var(--space-6);
+}
+
+.empty-state-lg .empty-state-icon svg {
+  width: 48px;
+  height: 48px;
+}
+
+.empty-state-lg .empty-state-title {
+  font-size: var(--font-size-3xl);
+  margin-bottom: var(--space-3);
+}
+
+.empty-state-lg .empty-state-description {
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--space-8);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .empty-state {
+    padding: var(--space-6) var(--space-3);
+  }
+
+  .empty-state-title {
+    font-size: var(--font-size-xl);
+  }
+
+  .empty-state-description {
+    font-size: var(--font-size-sm);
+  }
+
+  .empty-state-action {
+    width: 100%;
+  }
+
+  .empty-state-action .btn {
+    width: 100%;
+  }
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  .empty-state-icon {
+    background-color: var(--color-gray-800);
+    color: var(--color-gray-400);
+  }
+
+  .empty-state-title {
+    color: var(--color-white);
+  }
+
+  .empty-state-description {
+    color: var(--color-gray-300);
+  }
+}

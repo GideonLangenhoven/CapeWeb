@@ -1,0 +1,109 @@
+/* Contact Form */
+.contact-form {
+  max-width: 800px;
+  width: 100%;
+}
+
+.contact-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+/* Make phone and subject span full width on narrow grids */
+.contact-form-grid > :nth-child(3),
+.contact-form-grid > :nth-child(4) {
+  grid-column: 1 / -1;
+}
+
+.contact-form-footer {
+  margin-top: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.contact-form-success {
+  padding: var(--space-4);
+  background-color: rgba(0, 200, 81, 0.1);
+  border: 2px solid var(--color-success);
+  border-radius: var(--radius-lg);
+  color: var(--color-success);
+  font-weight: var(--font-weight-semibold);
+  text-align: center;
+  animation: slideIn 0.3s var(--ease-out);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.contact-form-note {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-600);
+  text-align: center;
+  margin: 0;
+}
+
+.contact-form-link {
+  color: var(--color-secondary);
+  text-decoration: underline;
+  transition: color var(--transition-base) var(--ease-in-out);
+}
+
+.contact-form-link:hover {
+  color: var(--color-secondary-light);
+}
+
+.contact-form-link:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .contact-form-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  .contact-form-grid > :nth-child(3),
+  .contact-form-grid > :nth-child(4) {
+    grid-column: 1;
+  }
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  .contact-form-success {
+    background-color: rgba(0, 200, 81, 0.15);
+  }
+
+  .contact-form-note {
+    color: var(--color-gray-300);
+  }
+
+  .contact-form-link {
+    color: var(--color-secondary);
+  }
+
+  .contact-form-link:hover {
+    color: var(--color-secondary-light);
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .contact-form-success {
+    animation: none;
+  }
+}

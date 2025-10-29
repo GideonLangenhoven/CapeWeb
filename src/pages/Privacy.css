@@ -1,0 +1,222 @@
+/* Privacy Policy Page */
+.privacy-page {
+  padding: var(--space-12) 0;
+  background-color: var(--color-white);
+  min-height: 100vh;
+}
+
+.privacy-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.privacy-header {
+  margin-bottom: var(--space-8);
+  padding-bottom: var(--space-6);
+  border-bottom: 2px solid var(--color-gray-200);
+}
+
+.privacy-header h1 {
+  font-size: var(--font-size-5xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  margin-bottom: var(--space-2);
+}
+
+.privacy-meta {
+  font-size: var(--font-size-base);
+  color: var(--color-gray-600);
+  margin: 0;
+}
+
+.privacy-section {
+  margin-bottom: var(--space-8);
+}
+
+.privacy-section h2 {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary);
+  margin-bottom: var(--space-4);
+  margin-top: 0;
+}
+
+.privacy-section h3 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-900);
+  margin-bottom: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.privacy-section p {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-gray-700);
+  margin-bottom: var(--space-3);
+}
+
+.privacy-section ul {
+  list-style: disc;
+  margin-left: var(--space-6);
+  margin-bottom: var(--space-3);
+}
+
+.privacy-section li {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-gray-700);
+  margin-bottom: var(--space-2);
+}
+
+.privacy-section li strong {
+  color: var(--color-gray-900);
+  font-weight: var(--font-weight-semibold);
+}
+
+.privacy-section a {
+  color: var(--color-secondary);
+  text-decoration: underline;
+  transition: color var(--transition-base) var(--ease-in-out);
+}
+
+.privacy-section a:hover {
+  color: var(--color-secondary-light);
+}
+
+.privacy-section a:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.privacy-contact {
+  padding: var(--space-4);
+  background-color: var(--color-gray-50);
+  border-left: 4px solid var(--color-secondary);
+  border-radius: var(--radius-base);
+  font-style: normal;
+  line-height: var(--line-height-relaxed);
+}
+
+.privacy-contact a {
+  color: var(--color-secondary);
+}
+
+.privacy-footer {
+  margin-top: var(--space-8);
+  padding-top: var(--space-6);
+  border-top: 2px solid var(--color-gray-200);
+}
+
+.privacy-footer p {
+  font-size: var(--font-size-base);
+  color: var(--color-gray-700);
+  padding: var(--space-4);
+  background-color: var(--color-gray-50);
+  border-radius: var(--radius-lg);
+  margin: 0;
+}
+
+.privacy-footer strong {
+  color: var(--color-primary);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .privacy-page {
+    padding: var(--space-8) 0;
+  }
+
+  .privacy-header h1 {
+    font-size: var(--font-size-3xl);
+  }
+
+  .privacy-section h2 {
+    font-size: var(--font-size-xl);
+  }
+
+  .privacy-section h3 {
+    font-size: var(--font-size-lg);
+  }
+
+  .privacy-section ul {
+    margin-left: var(--space-4);
+  }
+
+  .privacy-contact {
+    padding: var(--space-3);
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  .privacy-page {
+    background-color: var(--color-gray-900);
+  }
+
+  .privacy-header {
+    border-bottom-color: var(--color-gray-700);
+  }
+
+  .privacy-header h1 {
+    color: var(--color-secondary);
+  }
+
+  .privacy-meta {
+    color: var(--color-gray-400);
+  }
+
+  .privacy-section h2 {
+    color: var(--color-secondary);
+  }
+
+  .privacy-section h3 {
+    color: var(--color-white);
+  }
+
+  .privacy-section p,
+  .privacy-section li {
+    color: var(--color-gray-300);
+  }
+
+  .privacy-section li strong {
+    color: var(--color-white);
+  }
+
+  .privacy-contact {
+    background-color: var(--color-gray-800);
+    border-left-color: var(--color-secondary);
+  }
+
+  .privacy-footer {
+    border-top-color: var(--color-gray-700);
+  }
+
+  .privacy-footer p {
+    background-color: var(--color-gray-800);
+    color: var(--color-gray-300);
+  }
+
+  .privacy-footer strong {
+    color: var(--color-secondary);
+  }
+}
+
+/* Print Styles */
+@media print {
+  .privacy-page {
+    padding: 0;
+  }
+
+  .privacy-section a {
+    color: #000;
+    text-decoration: underline;
+  }
+
+  .privacy-section a[href]:after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+  }
+}
