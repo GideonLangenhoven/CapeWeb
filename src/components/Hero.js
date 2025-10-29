@@ -90,12 +90,11 @@ function Hero() {
 
         <div className="right-part">
           <div className="bg-line">
-            <img src="/assets/text-infinity.svg" alt="Infinity text"/>
-            <img src="/assets/text-infinity.svg" alt="Infinity text"/>
+            <img src="https://www.yudiz.com/codepen/photography-banner/wave.svg" alt="Line"/>
+            <img src="https://www.yudiz.com/codepen/photography-banner/wave.svg" alt="Line"/>
           </div>
 
-          <div className="main-grid">
-            <div className="d-flex">
+          <div className="main-grid d-flex">
               <div className="box">
                 <div className="bg-img">
                   <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?w=400" alt="Web Design" />
@@ -137,16 +136,16 @@ function Hero() {
                   <img src="https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=400" alt="Development" />
                 </div>
               </div>
-            </div>
+          </div>
 
-            <div className="bg-circle-h-line">
-              <img src="/assets/circle-ring.svg" alt="Accent ring"/>
-              <img src="/assets/circle-ring.svg" alt="Accent ring"/>
-              <img src="/assets/circle-ring.svg" alt="Accent ring"/>
-            </div>
-            <div className="bg-dash-circle">
-              <img src="/assets/dash-circle.svg" alt="Dashed rotating circle"/>
-            </div>
+          <div className="bg-circle-h-line">
+            <img src="https://www.yudiz.com/codepen/photography-banner/circle-ring.svg" alt="Circle ring"/>
+            <img src="https://www.yudiz.com/codepen/photography-banner/circle-ring.svg" alt="Circle ring"/>
+            <img src="https://www.yudiz.com/codepen/photography-banner/circle-ring.svg" alt="Circle ring"/>
+          </div>
+
+          <div className="bg-dash-circle">
+            <img src="https://www.yudiz.com/codepen/photography-banner/dash-circle.svg" alt="Dashed circle"/>
           </div>
         </div>
       </div>
