@@ -172,8 +172,8 @@ function Home() {
     };
 
     scrollColorElems.forEach((colorSection, i) => {
-      const prevBg = i === 0 ? '#ffffff' : scrollColorElems[i - 1].dataset.bgcolor;
-      const prevText = i === 0 ? '#0A174E' : scrollColorElems[i - 1].dataset.textcolor;
+      const prevBg = i === 0 ? '#000000' : scrollColorElems[i - 1].dataset.bgcolor;
+      const prevText = i === 0 ? '#ffffff' : scrollColorElems[i - 1].dataset.textcolor;
 
       triggers.push(
         ScrollTrigger.create({
@@ -206,9 +206,9 @@ function Home() {
         duration: 0.3,
         ease: 'power2.out',
         overwrite: 'auto',
-        '--home-bg-color': '#ffffff',
+        '--home-bg-color': '#000000',
         '--home-text-color': '#0A174E',
-        background: '#ffffff',
+        background: '#000000',
         color: '#0A174E'
       });
       cleanupTween.eventCallback('onComplete', () => {

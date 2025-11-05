@@ -38,6 +38,14 @@ const HeroCanvas = () => {
 
         appRef.current = app;
 
+        if (app && app.renderer && typeof app.renderer.setClearColor === 'function') {
+          app.renderer.setClearColor('#ffffff', 1);
+        }
+
+        if (app && app.renderer && app.renderer.domElement) {
+          app.renderer.domElement.style.backgroundColor = '#ffffff';
+        }
+
         // Add click handler to randomize colors
         const handleClick = () => {
           const colors = randomColors(3);
