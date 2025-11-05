@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import '../styles/Hero.css';
 import Typed from 'typed.js';
 import gsap from 'gsap';
+import HeroCanvas from './HeroCanvas';
 
 function Hero() {
   useEffect(() => {
@@ -66,6 +67,7 @@ function Hero() {
 
   return (
     <section className="hero-container" data-scroll-section>
+      <HeroCanvas />
       <div className="bg-decoration bg-decoration-1"></div>
       <div className="bg-decoration bg-decoration-2"></div>
 

@@ -16,6 +16,7 @@
     "react-router-dom": "^7.6.2",
     "react-scripts": "5.0.1",
     "swiper": "^11.2.8",
+    "threejs-components": "^0.0.23",
     "typed.js": "^2.1.0"
   },
   "scripts": {
