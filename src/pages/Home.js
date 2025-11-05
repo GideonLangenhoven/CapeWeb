@@ -149,6 +149,15 @@ function Home() {
 
     const scrollColorElems = scrollContainer.querySelectorAll('[data-bgcolor]');
     const triggers = [];
+
+    // Apply background colors to sections immediately
+    scrollColorElems.forEach((section) => {
+      const bgColor = section.dataset.bgcolor;
+      if (bgColor) {
+        section.style.backgroundColor = bgColor;
+      }
+    });
+
     const applyTheme = (bg, text) => {
       if (!bg || !text) return;
       gsap.to(document.body, {
@@ -206,6 +215,136 @@ function Home() {
         document.body.classList.remove('home-scroll-active');
       });
       document.documentElement.style.scrollBehavior = previousScrollBehavior;
+    };
+  }, []);
+
+  /* -----------------------------------------------------------
+     Interactive Reveal Effect for Guide Section
+  ----------------------------------------------------------- */
+  useEffect(() => {
+    const hiddenContent = document.querySelector('.guide .hidden-content');
+    const ctaLink = document.querySelector('.guide .cta-link');
+    const btnIcon = document.querySelector('.guide .btn-icon');
+    const guideSection = document.querySelector('.guide');
+
+    if (!hiddenContent || !ctaLink || !btnIcon || !guideSection) {
+      console.log('Guide elements not found:', { hiddenContent, ctaLink, btnIcon, guideSection });
+      return;
+    }
+
+    console.log('Interactive reveal initialized');
+
+    let isLinkHovered = false;
+    let currentX = window.innerWidth / 2;
+    let currentY = window.innerHeight / 3;
+    let targetX = currentX;
+    let targetY = currentY;
+    let currentSize = 0;
+    let targetSize = 0;
+    let animationFrameId;
+
+    // Convert rem to pixels
+    const remToPx = (rem) => {
+      return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
+    };
+
+    const proximityThreshold = remToPx(6); // 6rem in pixels for larger detection area
+
+    // Check if mouse is near any hoverable element
+    const isNearHoverableElement = (mouseX, mouseY) => {
+      const hoverElements = document.querySelectorAll('.guide .content h2, .guide .content .display-text, .guide .content .stakes-callout, .guide .content .section-lead');
+
+      for (let el of hoverElements) {
+        const rect = el.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+        // Calculate element bounds with proximity threshold
+        const elementTop = rect.top + scrollTop - proximityThreshold;
+        const elementBottom = rect.bottom + scrollTop + proximityThreshold;
+        const elementLeft = rect.left - proximityThreshold;
+        const elementRight = rect.right + proximityThreshold;
+
+        // Check if mouse is within the expanded bounds
+        if (mouseX >= elementLeft && mouseX <= elementRight &&
+            mouseY >= elementTop && mouseY <= elementBottom) {
+          return true;
+        }
+      }
+      return false;
+    };
+
+    // Smooth animation loop
+    const animate = () => {
+      // Smooth interpolation
+      currentX += (targetX - currentX) * 0.15;
+      currentY += (targetY - currentY) * 0.15;
+      currentSize += (targetSize - currentSize) * 0.15;
+
+      hiddenContent.style.setProperty('--x', currentX + 'px');
+      hiddenContent.style.setProperty('--y', currentY + 'px');
+      hiddenContent.style.setProperty('--size', currentSize + 'px');
+
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    // Start animation loop
+    animate();
+
+    // Track mouse movement and check proximity
+    const handleMouseMove = (e) => {
+      if (!isLinkHovered) {
+        targetX = e.pageX;
+        targetY = e.pageY;
+
+        // Check if near any hoverable element
+        if (isNearHoverableElement(e.pageX, e.pageY)) {
+          targetSize = 500; // Increased from 300 to 500 for more visibility
+        } else {
+          targetSize = 0;
+        }
+      }
+    };
+
+    // Button hovering - smaller focused reveal
+    const handleLinkEnter = () => {
+      isLinkHovered = true;
+      targetSize = 50; // Increased from 25 to 50
+    };
+
+    const handleLinkMove = (e) => {
+      if (isLinkHovered) {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const iconRect = btnIcon.getBoundingClientRect();
+        const centerX = iconRect.left + iconRect.width / 2;
+        const centerY = iconRect.top + iconRect.height / 2 + scrollTop;
+
+        targetX = centerX;
+        targetY = centerY;
+      }
+    };
+
+    const handleLinkLeave = () => {
+      isLinkHovered = false;
+      targetSize = 0;
+    };
+
+    // Add event listeners
+    window.addEventListener('mousemove', handleMouseMove);
+    ctaLink.addEventListener('mouseenter', handleLinkEnter);
+    ctaLink.addEventListener('mousemove', handleLinkMove);
+    ctaLink.addEventListener('mouseleave', handleLinkLeave);
+
+    // Cleanup
+    return () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (ctaLink) {
+        ctaLink.removeEventListener('mouseenter', handleLinkEnter);
+        ctaLink.removeEventListener('mousemove', handleLinkMove);
+        ctaLink.removeEventListener('mouseleave', handleLinkLeave);
+      }
     };
   }, []);
 
@@ -297,19 +436,64 @@ function Home() {
         <section
           className="scroll-section guide"
           id="about"
-          data-bgcolor="#1a1a1a"
-          data-textcolor="#00D4FF"
+          data-bgcolor="#3d4a6d"
+          data-textcolor="#ffffff"
           data-scroll-section
         >
-          <div className="section-inner container">
-            <h2>Meet your guide</h2>
-            <p className="section-lead">
-              We know how frustrating it is to feel invisible online. For years, Capeweb has helped Cape Town
-              businesses ship clean, fast sites with automation that frees up hours.
-            </p>
-            <div className="guide-highlight">
-              <p>Local expertise with global standards in web design, development, and AI-powered automation.</p>
-              <p>Certified StoryBrand and automation specialists ready to translate your vision into measurable growth.</p>
+          <div className="section-inner" style={{ position: 'relative', width: '100%' }}>
+            <div className="content">
+              <div className="container">
+                <div className="row justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
+                  <div className="col-12 col-md-10 col-lg-8">
+                    <h2 className="text-center problem-heading">Stop losing leads to a tired website</h2>
+                    <p className="section-lead text-center">
+                      An outdated, cluttered site costs you leads. Manual tasks steal your focus and slow growth.
+                    </p>
+                    <div className="stakes-callout">
+                      If you wait, you keep losing customers, keep wasting hours, and keep falling behind competitors who automate first.
+                    </div>
+                    <p className="reveal-hint text-center">Hover to reveal the solution...</p>
+                  </div>
+                </div>
+                <div className="row justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
+                  <div className="col-12 col-md-10 col-lg-8">
+                    <p className="display-text text-center hoverable">Your website should work as hard as you do</p>
+                  </div>
+                </div>
+                <div className="text-center pb-5">
+                  <a className="cta-link d-inline-flex justify-content-center align-items-center" href="#contact">
+                    <span>Transform your website now</span>
+                    <span className="btn-icon">→</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div className="hidden-content">
+              <div className="container">
+                <div className="row justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
+                  <div className="col-12 col-md-10 col-lg-8">
+                    <h2 className="text-center">Automate, convert, and scale with confidence</h2>
+                    <p className="section-lead text-center">
+                      Modern websites capture leads 24/7, automate follow-ups, and turn visitors into customers while you sleep.
+                    </p>
+                    <div className="stakes-callout">
+                      Smart automation means more leads, more time, and more revenue—without the manual grind.
+                    </div>
+                    <p className="reveal-hint text-center" style={{ opacity: 0 }}>Placeholder for spacing</p>
+                  </div>
+                </div>
+                <div className="row justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
+                  <div className="col-12 col-md-10 col-lg-8">
+                    <p className="display-text text-center">Turn your site into your best salesperson</p>
+                  </div>
+                </div>
+                <div className="text-center pb-5">
+                  <div className="cta-link d-inline-flex justify-content-center align-items-center">
+                    <span>Transform your website now</span>
+                    <span className="btn-icon">→</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>

@@ -34,7 +34,6 @@ body {
 
 .scroll-container {
   position: relative;
-  overflow: hidden;
 }
 
 .scroll-section {
@@ -67,6 +66,7 @@ body {
   line-height: 1.7;
   letter-spacing: -0.01em;
   overflow-x: hidden;
+  min-height: 100vh;
 }
 
 .home p,
@@ -300,8 +300,6 @@ h1, h2, h3, h4 {
   background: linear-gradient(135deg, var(--coral-primary) 0%, var(--coral-rose) 100%);
   color: white;
   box-shadow: 0 10px 30px rgba(229, 71, 66, 0.3);
-  position: relative;
-  z-index: 1;
 }
 
 .btn-primary:hover {
@@ -499,33 +497,86 @@ section h2 {
 
 .guide {
   background: transparent;
+  position: relative;
 }
 
-.guide-highlight {
-  background: color-mix(in srgb, currentColor 10%, transparent);
-  padding: clamp(2rem, 5vw, 3rem);
-  border-radius: 16px;
-  margin-top: 1rem;
-  border-left: 6px solid currentColor;
-  transition: transform 0.3s ease, border-left-width 0.3s ease, background 0.3s ease;
+.guide .section-inner {
+  position: relative;
 }
 
-.guide-highlight:hover {
-  transform: translateX(12px);
-  border-left-width: 10px;
-  background: color-mix(in srgb, currentColor 18%, transparent);
+.guide .stakes-callout {
+  background: rgba(255, 255, 255, 0.1);
+  border-left: 4px solid #ff6b6b;
+  padding: 1.5rem;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 500;
+  line-height: 1.6;
+  text-transform: none;
+  backdrop-filter: blur(10px);
+  border-radius: 4px;
 }
 
-.guide-highlight p {
+.guide .display-text {
+  background: -webkit-linear-gradient(45deg, #fa9b8b 0%, #f27481 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.guide .content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+.guide .hidden-content {
+  --x: 50%;
+  --y: 50%;
+  --size: 0px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(251, 156, 132, 1) 0%, rgba(240, 102, 128, 1) 50%, rgba(129, 36, 112, 1) 100%);
+  color: #2a3a5c;
+  -webkit-mask-image: radial-gradient(circle at var(--x) var(--y), black var(--size), transparent 0);
+  mask-image: radial-gradient(circle at var(--x) var(--y), black var(--size), transparent 0);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  pointer-events: none;
+  visibility: visible;
+  z-index: 2;
+  will-change: -webkit-mask-image, mask-image;
+}
+
+.guide .hidden-content h2,
+.guide .hidden-content .section-lead,
+.guide .hidden-content .stakes-callout,
+.guide .hidden-content .display-text {
+  color: #2a3a5c;
+}
+
+.guide .hidden-content .stakes-callout {
+  background: rgba(42, 58, 92, 0.2);
+  border-left-color: #2a3a5c;
+}
+
+.guide .cta-link {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 1.5rem;
   font-size: 1.1rem;
-  line-height: 1.8;
-  margin: 0;
-  color: currentColor;
-  opacity: 0.85;
-}
-
-.guide-highlight p + p {
-  margin-top: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: transform 0.3s ease;
+  color: inherit;
+  text-decoration: none;
 }
 
 /* ==========================================
