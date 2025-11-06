@@ -100,8 +100,7 @@ function Hero() {
             <span className="text"></span>
           </h1>
           <div className="cta-buttons">
-            <a href="#contact" className="btn btn-primary">Get a Free Site Audit</a>
-            <a href="#work" className="btn btn-secondary">See Our Work</a>
+            <a href="#contact" className="btn btn-primary">Book a Discovery Call</a>
           </div>
         </div>
       </div>
