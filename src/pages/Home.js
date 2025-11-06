@@ -83,6 +83,7 @@ const faqs = [
 function Home() {
   const [leadSubmitted, setLeadSubmitted] = useState(false);
   const scrollContainerRef = useRef(null);
+  const problemRef = useRef(null);
 
   useEffect(() => {
     if (!scrollContainerRef.current) return undefined;
@@ -215,6 +216,53 @@ function Home() {
         document.body.classList.remove('home-scroll-active');
       });
       document.documentElement.style.scrollBehavior = previousScrollBehavior;
+    };
+  }, []);
+
+  /* -----------------------------------------------------------
+     Gradient Wipe Effect for Problem Section
+  ----------------------------------------------------------- */
+  useEffect(() => {
+    const section = problemRef.current;
+    if (!section) return;
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+      gsap.set(section, { '--target': '0%' });
+      return;
+    }
+
+    section.style.zIndex = '10';
+    section.style.position = 'relative';
+    gsap.set(section, { '--target': '100%' });
+
+    const tween = gsap.to(section, {
+      '--target': '0%',
+      ease: 'none',
+      scrollTrigger: {
+        trigger: section,
+        start: 'top top',
+        end: '+=1500',
+        pin: true,
+        scrub: 1,
+        anticipatePin: 1,
+        invalidateOnRefresh: true
+      }
+    });
+
+    const onResize = () => {
+      ScrollTrigger.refresh();
+    };
+    window.addEventListener('resize', onResize);
+
+    return () => {
+      window.removeEventListener('resize', onResize);
+      if (tween?.scrollTrigger) {
+        tween.scrollTrigger.kill();
+      }
+      tween?.kill();
+      section.style.zIndex = '';
+      section.style.position = '';
     };
   }, []);
 
@@ -368,6 +416,7 @@ function Home() {
         <Hero />
 
         <section
+          ref={problemRef}
           className="scroll-section problem"
           id="problem"
           data-bgcolor="#0A174E"

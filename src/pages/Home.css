@@ -366,11 +366,48 @@ section h2 {
 }
 
 /* ==========================================
-   PROBLEM SECTION
+   PROBLEM SECTION - Gradient Wipe Effect
    ========================================== */
 
-.problem {
-  background: transparent;
+#problem {
+  --target: 100%;
+  --bg-dark: #2a3a5c;
+  --bg-light: #ffffff;
+
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  align-items: center;
+  padding: clamp(5rem, 18vh, 9rem) clamp(2.5rem, 10vw, 8rem);
+  will-change: transform;
+  background: var(--bg-dark);
+  color: var(--bg-light);
+}
+
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  #problem {
+    background: linear-gradient(
+      to right,
+      var(--bg-dark) var(--target),
+      var(--bg-light) var(--target)
+    );
+  }
+
+  #problem h2,
+  #problem .section-lead,
+  #problem .stakes-callout {
+    background: linear-gradient(
+      to right,
+      var(--bg-light) var(--target),
+      var(--bg-dark) var(--target)
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
 }
 
 .stakes-callout {
