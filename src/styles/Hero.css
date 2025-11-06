@@ -89,6 +89,12 @@ header { padding: 30px 0; position: relative; z-index: 100; }
   transform-origin: center;
   will-change: transform, opacity;
 }
+
+.left-part h1 .word {
+  display: inline-block;
+  transform-origin: center;
+  will-change: transform, opacity, scale;
+}
 .text {
   color: #E54742;
   -webkit-text-fill-color: #E54742;

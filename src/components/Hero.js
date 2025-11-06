@@ -47,11 +47,9 @@ function Hero() {
       }
     );
 
-    // Scroll-triggered animation for h1 - add spacing and zoom
+    // Scroll-triggered animation for h1 - add increasing letter spacing
     const scrollAnimation = gsap.to('.left-part h1', {
-      letterSpacing: '0.5em',
-      scale: 1.5,
-      opacity: 0.3,
+      letterSpacing: '0.8em',
       scrollTrigger: {
         trigger: '.hero-container',
         start: 'top top',
@@ -61,12 +59,12 @@ function Hero() {
       }
     });
 
-    // Scroll-triggered animation for individual h1 spans (words zoom incrementally)
-    const h1Spans = gsap.utils.toArray('.left-part h1 > span');
-    h1Spans.forEach((span, index) => {
+    // Scroll-triggered animation for individual word spans (words zoom incrementally)
+    const wordSpans = gsap.utils.toArray('.left-part h1 .word');
+    wordSpans.forEach((span, index) => {
       gsap.to(span, {
-        scale: 2 + (index * 0.5),
-        opacity: 0,
+        scale: 1.5 + (index * 0.3),
+        opacity: 0.2,
         scrollTrigger: {
           trigger: '.hero-container',
           start: 'top top',
@@ -95,7 +93,8 @@ function Hero() {
       <div className="hero-content">
         <div className="left-part">
           <h1>
-            <span>Websites that</span>
+            <span className="word">Websites</span>{' '}
+            <span className="word">that</span>
             <br />
             <span className="text"></span>
           </h1>
