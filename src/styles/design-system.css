@@ -422,15 +422,24 @@ p {
   pointer-events: none;
 }
 
-/* Primary Button - Accent Purple */
+/* Primary Button - Coral */
 .btn-primary {
-  background-color: var(--color-accent);
-  color: var(--color-white);
+  background-color: #E54742 !important;
+  color: #ffffff !important;
   box-shadow: var(--shadow-button-primary);
+  position: relative;
+  z-index: 1;
+}
+
+.btn-primary * {
+  color: #ffffff !important;
+  position: relative;
+  z-index: 2;
 }
 
 .btn-primary:hover {
-  background-color: var(--color-accent-dark);
+  background-color: #E54742 !important;
+  color: #ffffff !important;
   box-shadow: var(--shadow-button-hover);
   transform: translateY(-2px);
 }

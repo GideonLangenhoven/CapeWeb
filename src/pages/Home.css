@@ -297,14 +297,23 @@ h1, h2, h3, h4 {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--coral-primary) 0%, var(--coral-rose) 100%);
-  color: white;
+  background: #E54742 !important;
+  color: #ffffff !important;
   box-shadow: 0 10px 30px rgba(229, 71, 66, 0.3);
+  position: relative;
+  z-index: 1;
+}
+
+.btn-primary * {
+  color: #ffffff !important;
+  position: relative;
+  z-index: 2;
 }
 
 .btn-primary:hover {
   transform: translateY(-3px) scale(1.02);
   box-shadow: 0 15px 40px rgba(229, 71, 66, 0.4);
+  color: #ffffff !important;
 }
 
 .btn-primary:active {
