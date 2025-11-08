@@ -11,7 +11,7 @@ function Hero() {
   useEffect(() => {
     // Initialize Typed.js for the animated headline
     const typed = new Typed('.text', {
-      strings: ['sell 24/7.', 'book meetings.', 'qualify leads.', 'handle support.', 'sync to your CRM.'],
+      strings: ['sell 24/7.', 'book meetings.', 'qualify leads.', 'handle support', 'sync to CRMs'],
       typeSpeed: 100,
       backSpeed: 40,
       loop: true
@@ -46,6 +46,35 @@ function Hero() {
         clearProps: 'all'
       }
     );
+
+    // Get the scroll container for proper scroller reference
+    const scrollContainer = document.querySelector('[data-scroll-container]');
+
+    // Scroll-triggered animation for "Websites that" - increase size and letter spacing
+    const websitesThatSpan = document.querySelector('.left-part h1 > span:first-child');
+    if (websitesThatSpan && scrollContainer) {
+      const scrollAnimation = gsap.to(websitesThatSpan, {
+        scale: 1.1,  // 10% increase in size
+        letterSpacing: '0.25em',  // 25% increase in letter spacing
+        transformOrigin: 'left center',  // Scale from the left so all words move
+        scrollTrigger: {
+          trigger: '.hero-container',
+          scroller: scrollContainer,
+          start: 'top top',
+          end: 'bottom+=25% top',  // End 25% sooner
+          scrub: 1,
+          markers: false
+        }
+      });
+
+      return () => {
+        typed.destroy();
+        if (scrollAnimation.scrollTrigger) {
+          scrollAnimation.scrollTrigger.kill();
+        }
+        ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      };
+    }
 
     return () => {
       typed.destroy();
