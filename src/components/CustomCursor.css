@@ -27,6 +27,7 @@ html {
   margin-top: -0.5em;
   margin-left: -0.5em;
   opacity: 0.6;
+  transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
 .cursor-circle-1 {
@@ -42,6 +43,16 @@ html {
   animation: pulse 4s infinite;
   background: rgba(200, 0, 0, 0.8);
   transition: background-color 0.3s ease;
+}
+
+.custom-cursor.cursor-highlight .cursor-circle-1 {
+  transform: scale(1.4);
+  opacity: 0.9;
+}
+
+.custom-cursor.cursor-highlight .cursor-circle-2 {
+  transform: scale(1.8);
+  opacity: 0.85;
 }
 
 /* Pulse animation */

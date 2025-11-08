@@ -68,6 +68,30 @@ const CustomCursor = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const follower = followerRef.current;
+    if (!follower) return;
+
+    const highlightTargets = Array.from(document.querySelectorAll('h1 .hl, h2 .hl, h3 .hl'));
+    if (!highlightTargets.length) return undefined;
+
+    const handleEnter = () => follower.classList.add('cursor-highlight');
+    const handleLeave = () => follower.classList.remove('cursor-highlight');
+
+    highlightTargets.forEach((node) => {
+      node.addEventListener('mouseenter', handleEnter);
+      node.addEventListener('mouseleave', handleLeave);
+    });
+
+    return () => {
+      highlightTargets.forEach((node) => {
+        node.removeEventListener('mouseenter', handleEnter);
+        node.removeEventListener('mouseleave', handleLeave);
+      });
+      follower.classList.remove('cursor-highlight');
+    };
+  }, []);
+
   return (
     <div id="follower" ref={followerRef} className="custom-cursor">
       <div
