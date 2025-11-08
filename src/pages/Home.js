@@ -194,8 +194,9 @@ function Home() {
 
     // Delay refresh to allow Locomotive Scroll to fully initialize and prevent jumping
     setTimeout(() => {
+      locoScroll.update();
       ScrollTrigger.refresh();
-    }, 100);
+    }, 300);
 
     return () => {
       scrollContainer.removeEventListener('click', handleAnchorClick);
@@ -220,49 +221,80 @@ function Home() {
   }, []);
 
   /* -----------------------------------------------------------
-     Gradient Wipe Effect for Problem Section
+     Gradient Wipe Effect for Problem Section with Text Reveal
   ----------------------------------------------------------- */
   useEffect(() => {
     const section = problemRef.current;
-    if (!section) return;
+    const scrollContainer = scrollContainerRef.current;
+
+    if (!section || !scrollContainer) return;
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced) {
       gsap.set(section, { '--target': '0%' });
+      section.setAttribute('data-progress', 'complete');
       return;
     }
 
-    section.style.zIndex = '10';
-    section.style.position = 'relative';
-    gsap.set(section, { '--target': '100%' });
+    // Wait for Locomotive Scroll to initialize completely
+    const timer = setTimeout(() => {
+      section.style.zIndex = '10';
+      section.style.position = 'relative';
+      gsap.set(section, { '--target': '100%' });
 
-    const tween = gsap.to(section, {
-      '--target': '0%',
-      ease: 'none',
-      scrollTrigger: {
-        trigger: section,
-        start: 'top top',
-        end: '+=1500',
-        pin: true,
-        scrub: 1,
-        anticipatePin: 1,
-        invalidateOnRefresh: true
-      }
-    });
+      const tween = gsap.to(section, {
+        '--target': '0%',
+        ease: 'none',
+        scrollTrigger: {
+          trigger: section,
+          scroller: scrollContainer,
+          start: 'top top',
+          end: '+=2500',  // Longer duration for complete animation
+          pin: true,
+          scrub: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          pinSpacing: true,
+          markers: false,  // Set to true for debugging
+          onUpdate: (self) => {
+            // For browsers without clip-path support
+            if (self.progress > 0.95) {
+              section.setAttribute('data-progress', 'complete');
+            } else {
+              section.removeAttribute('data-progress');
+            }
+          },
+          onLeave: () => {
+            // Ensure animation is complete when leaving
+            gsap.set(section, { '--target': '0%' });
+            section.setAttribute('data-progress', 'complete');
+          },
+          onEnterBack: () => {
+            // Reset when scrolling back up
+            section.removeAttribute('data-progress');
+          }
+        }
+      });
 
-    const onResize = () => {
-      ScrollTrigger.refresh();
-    };
-    window.addEventListener('resize', onResize);
+      const onResize = () => {
+        ScrollTrigger.refresh();
+      };
+      window.addEventListener('resize', onResize);
+
+      return () => {
+        window.removeEventListener('resize', onResize);
+        if (tween?.scrollTrigger) {
+          tween.scrollTrigger.kill();
+        }
+        tween?.kill();
+        section.style.zIndex = '';
+        section.style.position = '';
+        section.removeAttribute('data-progress');
+      };
+    }, 350);
 
     return () => {
-      window.removeEventListener('resize', onResize);
-      if (tween?.scrollTrigger) {
-        tween.scrollTrigger.kill();
-      }
-      tween?.kill();
-      section.style.zIndex = '';
-      section.style.position = '';
+      clearTimeout(timer);
     };
   }, []);
 
@@ -423,15 +455,32 @@ function Home() {
           data-textcolor="#ffffff"
           data-scroll-section
         >
-          <div className="section-inner container">
-            <h2>Stop losing leads to a tired website</h2>
-            <p className="section-lead">
-              An outdated, cluttered site costs you leads. Manual tasks steal your focus and slow growth.
-            </p>
-            <div className="stakes-callout">
-              If you wait, you keep losing customers, keep wasting hours, and keep falling behind competitors
-              who automate first.
+          <div className="content-wrapper">
+
+            {/* PROBLEM CONTENT (clips away as wipe progresses) */}
+            <div className="problem-content">
+              <h2>Stop losing leads to a tired website</h2>
+              <p className="section-lead">
+                An outdated, cluttered site costs you leads. Manual tasks steal your focus and slow growth.
+              </p>
+              <div className="stakes-callout">
+                If you wait, you keep losing customers, keep wasting hours, and keep falling behind competitors who automate first.
+              </div>
             </div>
+
+            {/* SOLUTION CONTENT (revealed as wipe progresses) */}
+            <div className="solution-content">
+              <h2>Build a site that sells while you sleep</h2>
+              <p className="section-lead">
+                Imagine a website that converts 24/7 while smart automation handles the busywork. Grow faster with less effort.
+              </p>
+              <ul className="value-list">
+                <li>Responsive layouts that stay fast on every device</li>
+                <li>Automated follow-ups and bookings that free your team</li>
+                <li>Cape Town specialists who optimize after launch</li>
+              </ul>
+            </div>
+
           </div>
         </section>
 

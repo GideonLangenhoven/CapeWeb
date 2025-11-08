@@ -47,41 +47,8 @@ function Hero() {
       }
     );
 
-    // Scroll-triggered animation for h1 - add spacing and zoom
-    const scrollAnimation = gsap.to('.left-part h1', {
-      letterSpacing: '0.5em',
-      scale: 1.5,
-      opacity: 0.3,
-      scrollTrigger: {
-        trigger: '.hero-container',
-        start: 'top top',
-        end: 'bottom top',
-        scrub: 1,
-        markers: false
-      }
-    });
-
-    // Scroll-triggered animation for individual h1 spans (words zoom incrementally)
-    const h1Spans = gsap.utils.toArray('.left-part h1 > span');
-    h1Spans.forEach((span, index) => {
-      gsap.to(span, {
-        scale: 2 + (index * 0.5),
-        opacity: 0,
-        scrollTrigger: {
-          trigger: '.hero-container',
-          start: 'top top',
-          end: 'bottom top',
-          scrub: 1,
-          markers: false
-        }
-      });
-    });
-
     return () => {
       typed.destroy();
-      if (scrollAnimation.scrollTrigger) {
-        scrollAnimation.scrollTrigger.kill();
-      }
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
   }, []);
@@ -100,7 +67,7 @@ function Hero() {
             <span className="text"></span>
           </h1>
           <div className="cta-buttons">
-            <a href="#contact" className="btn btn-primary">Book a Discovery Call</a>
+            <a href="#ai-guide" className="btn btn-primary">Book a Discovery Call</a>
           </div>
         </div>
       </div>
