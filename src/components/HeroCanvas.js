@@ -18,6 +18,8 @@ const HeroCanvas = () => {
     };
 
     // Dynamically import the TubesCursor module
+    // Note: threejs-components uses WebGLRenderer internally for maximum browser compatibility
+    // This works on all modern browsers including Safari, iOS, and Android
     const loadTubesCursor = async () => {
       try {
         const TubesCursorModule = await import('threejs-components/build/cursors/tubes1.min.js');
@@ -67,6 +69,10 @@ const HeroCanvas = () => {
         };
       } catch (error) {
         console.error('Failed to load TubesCursor:', error);
+        // Fallback: Set a simple background color if WebGL fails
+        if (canvas) {
+          canvas.style.backgroundColor = '#ffffff';
+        }
       }
     };
 

@@ -143,14 +143,10 @@ a:hover {
 
 .scroll-arrow {
   position: absolute;
-  bottom: var(--space-6);
-  left: 50%;
-  transform: translateX(-50%);
-  opacity: 0;
-  animation: fadeIn 0.5s var(--ease-out) forwards 1.5s,
-             bounce 2s var(--ease-in-out) infinite;
-  cursor: pointer;
-  color: var(--color-secondary);
+  inset: auto 0 2rem 0;
+  display: grid;
+  place-content: center;
+  opacity: .8;
 }
 
 @keyframes bounce {

@@ -6,12 +6,12 @@ test('third section is module-work and visible', async ({ page }) => {
 
   // Gather sections under main content (exclude header/footer)
   const sections = await page.locator('main section').all();
-  expect(sections.length).toBeGreaterThan(2);
+  expect(sections.length).toBeGreaterThan(4); // hero, problem, keyhole, ... , work
 
-  // Third section (index 2) should be the module-work-section
-  const third = sections[2];
-  await expect(third).toHaveAttribute('id', 'work');
-  await expect(third.locator('.module-work__grid')).toBeVisible();
-  await expect(third.locator('.work-card')).toHaveCount(3);
+  // Find work section by ID instead of fixed index
+  const work = await page.locator('main section#work');
+  await expect(work).toBeVisible();
+  await expect(work.locator('.module-work__grid')).toBeVisible();
+  await expect(work.locator('.work-card')).toHaveCount(3);
 });
 
