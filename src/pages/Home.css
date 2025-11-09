@@ -71,7 +71,7 @@ img {
 }
 
 .section-inner {
-  width: min(1100px, 94vw);
+  width: min(1400px, 92vw);
   margin-inline: auto;
   display: grid;
   gap: clamp(1.25rem, 2vw, 1.75rem);
@@ -621,26 +621,21 @@ h3 {
 }
 
 #ai-guide {
-  padding-top: clamp(8rem, 20vh, 14rem);
+  padding-top: clamp(4rem, 10vh, 8rem);
 }
 
 #testimonials {
-  padding: 3rem 0;
+  padding: clamp(4rem, 8vh, 6rem) 0;
 }
 
 .t-wrap {
-  max-width: 2240px;
+  max-width: 1400px;
+  width: min(1400px, 92vw);
   margin: 0 auto;
   background: #fff;
   border-radius: 32px;
   box-shadow: 0 40px 110px rgba(15, 23, 42, .15);
   padding: 4.5rem;
-}
-
-@media (min-width: 1200px) {
-  .t-wrap {
-    width: min(1200px, 90vw);
-  }
 }
 
 .t-head {
@@ -834,13 +829,12 @@ h3 {
 
 #fluid-mask {
   min-height: auto;
-  padding: clamp(4rem, 10vh, 6rem) 0;
-  margin-bottom: clamp(4rem, 12vh, 8rem);
+  padding: clamp(4rem, 8vh, 6rem) 0;
 }
 
 .fluid-inner {
   position: relative;
-  width: min(1200px, 92vw);
+  width: min(1400px, 92vw);
   margin: 0 auto;
   aspect-ratio: 16 / 9;
   max-height: 72vh;
@@ -869,7 +863,7 @@ h3 {
 
 #yt-hero .header {
   position: relative;
-  width: min(1100px, 94vw);
+  width: min(1400px, 92vw);
   height: clamp(360px, 60vh, 800px);
   overflow: hidden;
   background: #000;
@@ -1103,7 +1097,7 @@ h3 {
 }
 
 #yt-hero {
-  margin-bottom: 20rem;
+  margin-bottom: clamp(4rem, 12vh, 8rem);
 }
 
 @media (min-width: 1024px) {
@@ -1114,13 +1108,13 @@ h3 {
 
   .section-inner {
     margin-left: auto;
-    margin-right: clamp(2.5rem, 8vw, 7rem);
-    text-align: right;
-    justify-items: end;
+    margin-right: auto;
+    text-align: center;
+    justify-items: center;
   }
 
   .section-inner > * {
-    justify-self: end;
+    justify-self: center;
   }
 
   #prod-slider {
@@ -1135,15 +1129,16 @@ h3 {
   #prod-slider .wrap,
   .logo-carousel .wrap {
     margin-left: auto;
-    margin-right: clamp(2.5rem, 8vw, 7rem);
+    margin-right: auto;
+    max-width: 1400px;
   }
 
   #prod-slider .head {
-    justify-content: flex-end;
+    justify-content: center;
   }
 
   #prod-slider .head h2 {
-    text-align: right;
+    text-align: center;
   }
 }
 
