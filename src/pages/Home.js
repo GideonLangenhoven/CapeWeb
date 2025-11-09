@@ -222,12 +222,12 @@ function Home() {
 
   /* -----------------------------------------------------------
      Gradient Wipe Effect for Problem Section with Text Reveal
+     NOTE: Problem section now uses native scroll (outside Locomotive Scroll)
   ----------------------------------------------------------- */
   useEffect(() => {
     const section = problemRef.current;
-    const scrollContainer = scrollContainerRef.current;
 
-    if (!section || !scrollContainer) return;
+    if (!section) return;
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced) {
@@ -236,7 +236,7 @@ function Home() {
       return;
     }
 
-    // Wait for Locomotive Scroll to initialize completely
+    // Use native scroll instead of Locomotive Scroll scroller
     const timer = setTimeout(() => {
       section.style.zIndex = '10';
       section.style.position = 'relative';
@@ -247,7 +247,7 @@ function Home() {
         ease: 'none',
         scrollTrigger: {
           trigger: section,
-          scroller: scrollContainer,
+          // No scroller property - uses window/native scroll
           start: 'top top',
           end: '+=2500',  // Longer duration for complete animation
           pin: true,
@@ -440,21 +440,16 @@ function Home() {
 
   return (
     <div className="home">
-      <div
-        className="scroll-container"
-        data-scroll-container
-        ref={scrollContainerRef}
-      >
-        <Hero />
+      {/* Native scroll sections - Hero and Problem */}
+      <Hero />
 
-        <section
-          ref={problemRef}
-          className="scroll-section problem"
-          id="problem"
-          data-bgcolor="#0A174E"
-          data-textcolor="#ffffff"
-          data-scroll-section
-        >
+      <section
+        ref={problemRef}
+        className="scroll-section problem"
+        id="problem"
+        data-bgcolor="#0A174E"
+        data-textcolor="#ffffff"
+      >
           <div className="content-wrapper">
 
             {/* PROBLEM CONTENT (clips away as wipe progresses) */}
@@ -484,6 +479,12 @@ function Home() {
           </div>
         </section>
 
+      {/* Locomotive Scroll starts here */}
+      <div
+        className="scroll-container"
+        data-scroll-container
+        ref={scrollContainerRef}
+      >
         <section
           className="scroll-section value"
           id="value"
