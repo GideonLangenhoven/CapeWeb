@@ -1,0 +1,74 @@
+:root{
+  --hl-pink:#E91E63; --hl-cyan:#0097A7; --hl-green:#2E7D32; --hl-yellow:#F57C00;
+  --text-dark:#1f2937;
+  --step-0:clamp(1rem,.82rem + .6vw,1.125rem);
+  --step-1:clamp(1.125rem,.9rem + 1.1vw,1.35rem);
+  --display-1:clamp(3.2rem,8.5vw + .4rem,6rem);
+  --display-2:clamp(2.6rem,6.2vw + .3rem,4.5rem);
+}
+
+/* Shared */
+.section-inner{width:min(1100px,94vw);margin-inline:auto;display:grid;gap:clamp(1.25rem,2vw,1.75rem)}
+h1,h2{font-weight:900;letter-spacing:-.02em;line-height:1.06}
+.display-hero{font-size:var(--display-1)}
+.subhead{font-size:var(--step-1);line-height:1.6;opacity:.85;max-width:72ch}
+.subhead.small{font-size:var(--step-0)}
+.bullets{list-style:none;display:grid;gap:.5rem;margin-top:.25rem}
+.hl{color:var(--hl-pink)} .hl-pink{color:var(--hl-pink)} .hl-cyan{color:var(--hl-cyan)} .hl-green{color:var(--hl-green)} .hl-yellow{color:var(--hl-yellow)}
+
+.section-top{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:.25rem}
+.kicker,.cta{
+  display:inline-flex;align-items:center;gap:.65rem;background:#111;color:#fff;border-radius:.6rem;
+  padding:.9rem 1.1rem;font:800 .82rem/1 Inter, system-ui;letter-spacing:.08em;text-transform:uppercase;
+  border:1px solid rgba(255,255,255,.08);box-shadow:0 8px 22px rgba(0,0,0,.25);
+  transition:transform .2s ease, background .2s ease
+}
+.kicker:hover,.cta:hover{transform:translateY(-1px);background:#181818}
+.kicker .dot{width:.5rem;height:.5rem;border-radius:50%;background:currentColor;opacity:.6}
+.arr{display:inline-block;transform:translateX(0);transition:transform .2s ease}
+.cta:hover .arr{transform:translateX(2px)}
+
+/* ===== Gradient Wipe (#problem) ===== */
+#problem{
+  --target:100%;
+  --bg-dark:#0b0f1a;
+  --bg-light:#ffffff;
+  position:relative;min-height:100svh;display:flex;align-items:center;isolation:isolate;
+  background:linear-gradient(to right,var(--bg-dark) var(--target),var(--bg-light) var(--target));
+  color:var(--bg-light);
+}
+#problem .section-inner{position:relative}
+.problem-content,.solution-content{display:grid;gap:1.1rem}
+.solution-content{position:absolute;inset:0;z-index:0;opacity:0}
+.problem-content{position:relative;z-index:1}
+@supports(clip-path:inset(0)){
+  .problem-content{clip-path:inset(0 calc(100% - var(--target)) 0 0)}
+  .solution-content{clip-path:inset(0 0 0 var(--target));opacity:1}
+}
+.problem-content :is(h1,.subhead), .problem-content .stakes{color:var(--bg-light)}
+.solution-content :is(h1,.subhead,ul){color:var(--text-dark)}
+.stakes{border-left:4px solid currentColor;padding:1rem 1rem 1rem 1.25rem;border-radius:12px;opacity:.95}
+
+/* ===== Keyhole ("digital dream team") with parallax ===== */
+.keyhole-section{position:relative;min-height:90vh;overflow:hidden;background:#F35588}
+.keyhole{position:absolute;inset:0;background:#F35588;clip-path:inset(49% 49% 49% 49% round 80px);z-index:2;pointer-events:none}
+.keyhole-section__figure img{width:100%;height:90vh;object-fit:cover}
+.keyhole-section__content{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:min(900px,90%);text-align:center;color:#fff;opacity:0;clip-path:inset(100% 0 0 0);z-index:3;
+  display:flex;flex-direction:column;gap:1rem;padding:2rem;
+}
+.keyhole-section__content h2{font-size:var(--display-2);text-shadow:0 2px 32px rgba(0,0,0,.45);margin-bottom:.5rem}
+.keyhole-section__content p{font-size:var(--step-1);text-shadow:0 1px 12px rgba(0,0,0,.55);line-height:1.6}
+.keyhole-section .hl{color:#F57C00}
+.arrow{position:absolute;top:46vh;left:50%;transform:translateX(-50%);animation:float 1s ease-in-out infinite alternate;z-index:3}
+.arrow svg{rotate:90deg;stroke:#1f2937;width:26px;height:26px}
+@keyframes float{from{transform:translate(-50%,-45%)} to{transform:translate(-50%,-35%)}}
+
+/* Responsive tweaks */
+@media (max-width:768px){
+  .display-hero{font-size:clamp(2.2rem,9vw,3.6rem)}
+  .section-top{flex-direction:column;align-items:stretch}
+  .kicker,.cta{justify-content:center}
+  .keyhole-section__content h2{font-size:clamp(2rem, 6.4vw, 3rem)}
+}
