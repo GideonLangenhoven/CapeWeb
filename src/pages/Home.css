@@ -389,15 +389,13 @@ section h2 {
   color: var(--bg-light);
 }
 
-/* Gradient background wipe */
-@supports ((-webkit-background-clip: text) or (background-clip: text)) {
-  #problem {
-    background: linear-gradient(
-      to right,
-      var(--bg-dark) var(--target),
-      var(--bg-light) var(--target)
-    );
-  }
+/* Gradient background wipe - apply unconditionally */
+#problem {
+  background: linear-gradient(
+    to right,
+    var(--bg-dark) var(--target),
+    var(--bg-light) var(--target)
+  );
 }
 
 /* Content containers - stacked on top of each other */
