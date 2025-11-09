@@ -16,9 +16,9 @@
   overflow: visible;
 }
 
-/* Canvas background styles */
+/* Canvas background styles - FIXED: changed from fixed to absolute to avoid blocking scroll */
 .hero-effect-canvas {
-  position: fixed;
+  position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
@@ -32,7 +32,7 @@
 .hero-effect-canvas canvas {
   width: 100%;
   height: 100%;
-  pointer-events: auto;
+  pointer-events: none; /* FIXED: changed from auto to none to allow scroll */
   background: #ffffff;
 }
 

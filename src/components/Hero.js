@@ -47,17 +47,19 @@ function Hero() {
       }
     );
 
+    // Get the scroll container for proper scroller reference
+    const scrollContainer = document.querySelector('[data-scroll-container]');
+
     // Scroll-triggered animation for "Websites that" - increase size and letter spacing
-    // NOTE: Hero is now outside Locomotive Scroll, using native scroll
     const websitesThatSpan = document.querySelector('.left-part h1 > span:first-child');
-    if (websitesThatSpan) {
+    if (websitesThatSpan && scrollContainer) {
       const scrollAnimation = gsap.to(websitesThatSpan, {
         scale: 1.1,  // 10% increase in size
         letterSpacing: '0.25em',  // 25% increase in letter spacing
         transformOrigin: 'left center',  // Scale from the left so all words move
         scrollTrigger: {
           trigger: '.hero-container',
-          // No scroller property - uses window/native scroll
+          scroller: scrollContainer,
           start: 'top top',
           end: 'bottom+=25% top',  // End 25% sooner
           scrub: 1,
@@ -81,7 +83,7 @@ function Hero() {
   }, []);
 
   return (
-    <section className="hero-container">
+    <section className="hero-container" data-scroll-section>
       <HeroCanvas />
       <div className="bg-decoration bg-decoration-1"></div>
       <div className="bg-decoration bg-decoration-2"></div>

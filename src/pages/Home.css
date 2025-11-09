@@ -30,10 +30,13 @@
 body {
   transition: background-color 0.3s ease-out, color 0.3s ease-out;
   overflow-x: hidden;
+  overflow-y: auto; /* Ensure vertical scrolling is allowed */
 }
 
 .scroll-container {
   position: relative;
+  width: 100%;
+  /* Locomotive Scroll will handle the scrolling for sections inside */
 }
 
 .scroll-section {
@@ -66,6 +69,7 @@ body {
   line-height: 1.7;
   letter-spacing: -0.01em;
   overflow-x: hidden;
+  overflow-y: visible; /* Allow scrolling through native and Locomotive sections */
   min-height: 100vh;
 }
 
