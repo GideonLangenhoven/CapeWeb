@@ -350,48 +350,80 @@ function Home() {
   }, []);
 
   useEffect(() => {
-    const section = problemRef.current;
-    const scrollContainer = scrollContainerRef.current;
-    if (!section || !scrollContainer) return undefined;
+    const leftSide = document.getElementById('left-side');
+    const navBar = document.querySelector('.NavBar');
 
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReduced) {
-      gsap.set(section, { '--target': '0%' });
-      section.setAttribute('data-progress', 'complete');
-      return undefined;
-    }
+    if (!leftSide) return undefined;
 
-    gsap.set(section, { '--target': '100%' });
+    // Mouse/Touch move handler for split screen effect
+    const handleMove = (clientX) => {
+      const percentage = (clientX / window.innerWidth) * 100;
+      leftSide.style.width = `${percentage}%`;
+    };
 
-    const tween = gsap.to(section, {
-      '--target': '0%',
-      ease: 'none',
-      scrollTrigger: {
-        trigger: section,
-        scroller: scrollContainer,
-        start: 'top top',
-        end: '+=1500',
-        pin: true,
-        scrub: 1,
-        anticipatePin: 1,
-        onUpdate: (self) => {
-          if (self.progress > 0.95) {
-            section.setAttribute('data-progress', 'complete');
-          } else {
-            section.removeAttribute('data-progress');
+    const handleMouseMove = (e) => handleMove(e.clientX);
+    const handleTouchMove = (e) => handleMove(e.touches[0].clientX);
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('touchmove', handleTouchMove);
+
+    // Change nav color based on mouse position
+    const handleNavColorChange = (e) => {
+      const x = e.clientX;
+      if (x <= 400) {
+        document.documentElement.style.setProperty('--nav-color-green', '#000');
+      } else {
+        document.documentElement.style.setProperty('--nav-color-green', '#a0e234');
+      }
+    };
+
+    document.addEventListener('mousemove', handleNavColorChange);
+
+    // Load SplitText plugin and animate
+    const initAnimations = async () => {
+      try {
+        // Load GSAP SplitText plugin
+        await loadExternalScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/SplitText.min.js');
+
+        if (window.SplitText) {
+          const fancyElements = document.querySelectorAll('.fancy');
+
+          fancyElements.forEach((fancy) => {
+            const split = new window.SplitText(fancy, {
+              type: 'chars',
+              charsClass: 'fancy-char'
+            });
+
+            gsap.from(split.chars, {
+              duration: 3,
+              y: 200,
+              stagger: 0.04,
+              ease: 'power4.out'
+            });
+          });
+
+          // Animate navbar
+          if (navBar) {
+            gsap.from(navBar, {
+              duration: 3,
+              opacity: 0,
+              y: 200,
+              delay: 0.6,
+              ease: 'power4.out'
+            });
           }
         }
+      } catch (error) {
+        console.warn('SplitText plugin could not be loaded:', error);
       }
-    });
+    };
 
-    const handleResize = () => ScrollTrigger.refresh();
-    window.addEventListener('resize', handleResize);
+    initAnimations();
 
     return () => {
-      window.removeEventListener('resize', handleResize);
-      tween.scrollTrigger?.kill();
-      tween.kill();
-      section.removeAttribute('data-progress');
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('mousemove', handleNavColorChange);
     };
   }, []);
 
@@ -749,44 +781,54 @@ function Home() {
 
         <section
           id="problem"
-          className="scroll-section"
+          className="split-screen-section"
           ref={problemRef}
-          data-bgcolor="#0b0f1a"
-          data-textcolor="#ffffff"
           data-scroll-section
         >
-          <div className="section-inner">
-            <div className="problem-content">
+          <div id="left-side" className="side">
+            <h2 className="title">
               <div className="section-top">
                 <a href="#problem" className="kicker"><span className="dot" aria-hidden="true" /> About</a>
                 <a href="#ai-guide" className="cta">Come play with us <span className="arr">→</span></a>
               </div>
-              <h1 className="display-hero">
-                Driving Brand <span className="hl hl-pink">Growth</span> Through Strategic
-                <span className="hl hl-cyan"> Engagement</span> and
-                <span className="hl hl-yellow"> Meaningful Connections</span>.
-              </h1>
-              <p className="subhead">We design, market, and automate experiences that turn attention into revenue.</p>
-              <div className="stakes subhead" style={{ fontSize: 'var(--step-0)' }}>
-                Slow sites and manual tasks cost customers. Let's fix both.
-              </div>
+              Driving Brand <span className="hl hl-pink">Growth</span> Through Strategic
+              <span className="hl hl-cyan"> Engagement</span> and
+              <span className="hl hl-yellow"> Meaningful Connections</span>
+              <span className="fancy">.</span>
+            </h2>
+            <p className="split-subhead">We design, market, and automate experiences that turn attention into revenue.</p>
+            <div className="split-stakes">
+              Slow sites and manual tasks cost customers. Let's fix both.
             </div>
-
-            <div className="solution-content" aria-hidden="true">
+          </div>
+          <div id="right-side" className="side">
+            <h2 className="title">
               <div className="section-top" style={{ visibility: 'hidden' }}>
                 <span />
                 <span />
               </div>
-              <h1 className="display-hero">Build a site that <span className="hl hl-green">sells</span> while you sleep.</h1>
-              <p className="subhead">Fast UX, clean code, smart automation—deployed together.</p>
-              <ul className="subhead" style={{ listStyle: 'none', display: 'grid', gap: '.5rem', marginTop: '.25rem' }}>
-                <li>Lightning-fast pages that convert</li>
-                <li>AI workflows for bookings & follow-ups</li>
-                <li>SEO that brings buyers, not just browsers</li>
-                <li>Continuous optimisation post-launch</li>
-              </ul>
+              Driving Brand <span className="hl hl-green">Growth</span> Through Strategic
+              <span className="hl hl-cyan"> Engagement</span> and
+              <span className="hl hl-yellow"> Meaningful Connections</span>
+              <span className="fancy">.</span>
+            </h2>
+            <p className="split-subhead">We design, market, and automate experiences that turn attention into revenue.</p>
+            <div className="split-stakes">
+              Slow sites and manual tasks cost customers. Let's fix both.
             </div>
           </div>
+          <nav className="NavBar">
+            <div className="NavBar-buttons">
+              <button className="NavBar-menu">Menu</button>
+              <button className="NavBar-close">Close</button>
+            </div>
+            <ul className="NavBar-items">
+              <li className="NavBar-item">Home</li>
+              <li className="NavBar-item">Search</li>
+              <li className="NavBar-item">Chat</li>
+              <li className="NavBar-item">Person</li>
+            </ul>
+          </nav>
         </section>
 
         <section

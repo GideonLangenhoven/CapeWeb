@@ -182,71 +182,228 @@ h3 {
   transform: translateX(2px);
 }
 
-#problem {
-  --target: 100%;
-  --bg-dark: #0b0f1a;
-  --bg-light: #ffffff;
+/* Split Screen Section Styles */
+:root {
+  --split-left-color: #030712;
+  --split-right-color: #A3F7BF;
+  --nav-color-green: #a0e234;
+}
+
+@font-face {
+  font-family: 'Uzi';
+  src: url('https://raw.githubusercontent.com/vickkie/uzitrake/main/fonts/Uzi-stylish.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'uzi-love';
+  font-style: normal;
+  font-weight: normal;
+  src: url('https://raw.githubusercontent.com/vickkie/uzitrake/main/fonts/uzi-love.woff') format('woff');
+}
+
+.split-screen-section {
+  position: relative;
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  isolation: isolate;
-  background: var(--bg-dark);
-  color: var(--bg-light);
+  overflow: hidden;
 }
 
-@supports((-webkit-background-clip:text) or (background-clip:text)) {
-  #problem {
-    background: linear-gradient(to right, var(--bg-dark) var(--target), var(--bg-light) var(--target));
-  }
-}
-
-#problem .section-inner {
-  position: relative;
-}
-
-.problem-content,
-.solution-content {
+.side {
   display: grid;
-  gap: 1.1rem;
-}
-
-.solution-content {
+  height: 100vh;
+  overflow: hidden;
+  place-items: center;
   position: absolute;
-  inset: 0;
-  z-index: 0;
-  opacity: 0;
+  width: 100%;
+  padding: clamp(2rem, 5vw, 4rem);
 }
 
-.problem-content {
-  position: relative;
-  z-index: 1;
+.side .title {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Inter, Arial, sans-serif;
+  font-size: clamp(2.2rem, 7vw, 5.5vw);
+  font-weight: 900;
+  margin: 0;
+  width: 80vw;
+  max-width: 1100px;
+  overflow: hidden;
+  letter-spacing: -.02em;
+  line-height: 1.1;
 }
 
-@supports(clip-path: inset(0)) {
-  .problem-content {
-    clip-path: inset(0 calc(100% - var(--target)) 0 0);
-  }
-
-  .solution-content {
-    clip-path: inset(0 0 0 var(--target));
-    opacity: 1;
-  }
+.side .fancy {
+  font-family: "uzi-love", cursive;
+  font-size: 1.8em;
+  line-height: 0.6em;
+  display: inline-block;
 }
 
-.problem-content :is(h1, .subhead),
-.problem-content .stakes {
-  color: var(--bg-light);
+.split-subhead {
+  font-size: var(--step-1);
+  line-height: 1.6;
+  max-width: 72ch;
+  margin-top: 1.5rem;
+  opacity: 0.85;
 }
 
-.solution-content :is(h1, .subhead, ul) {
-  color: var(--bg-dark);
-}
-
-.stakes {
+.split-stakes {
+  font-size: var(--step-0);
+  line-height: 1.6;
   border-left: 4px solid currentColor;
   padding: 1rem 1rem 1rem 1.25rem;
   border-radius: 12px;
-  opacity: .95;
+  opacity: 0.95;
+  margin-top: 1rem;
+  max-width: 60ch;
+}
+
+#left-side {
+  background-color: var(--split-left-color);
+  width: 60%;
+  z-index: 2;
+}
+
+#left-side .title {
+  color: white;
+}
+
+#left-side .fancy {
+  color: var(--split-right-color);
+}
+
+#left-side .split-subhead,
+#left-side .split-stakes {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+#right-side {
+  background-color: var(--split-right-color);
+}
+
+#right-side .title {
+  color: var(--ink);
+}
+
+#right-side .fancy {
+  color: white;
+}
+
+#right-side .split-subhead,
+#right-side .split-stakes {
+  color: var(--ink);
+}
+
+/* NavBar Styles */
+.NavBar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translatex(-50%);
+  width: min(100vw, 400px);
+  z-index: 10;
+}
+
+.NavBar::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border: 2px solid var(--nav-color-green);
+  width: 20%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+  border-radius: 50% 50% 0 0;
+  transition: 0.5s;
+}
+
+.NavBar:focus-within:not(:has(.NavBar-close:focus))::before {
+  width: 100%;
+  background: var(--nav-color-green);
+  border-radius: 0;
+}
+
+.NavBar:focus-within:not(:has(.NavBar-close:focus)) .NavBar-item {
+  transform: translatey(0);
+}
+
+.NavBar-buttons {
+  position: absolute;
+  z-index: 10;
+  top: 50%;
+  left: 50%;
+  background: rgba(0,0,0,0);
+  width: 20%;
+  aspect-ratio: 1/1;
+  border: none;
+  transform: translate(-50%, -50%);
+  color: #2efb55;
+  cursor: pointer;
+}
+
+.NavBar-buttons:hover {
+  text-shadow: 0 0 5px #2efb55;
+}
+
+.NavBar-menu,
+.NavBar-close {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: rgba(0,0,0,0);
+  border: none;
+  color: var(--nav-color-green);
+  cursor: pointer;
+  transform: translate(-50%, -50%) scale(1);
+  font-size: 1.2rem;
+  font-weight: 700;
+  transition: 0.5s;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.NavBar-buttons .NavBar-close {
+  transform: translate(-50%, -50%) scale(0);
+}
+
+.NavBar-buttons:has(.NavBar-menu:focus) .NavBar-close {
+  transform: translate(-50%, -50%) scale(1);
+  color: #111;
+}
+
+.NavBar-buttons:has(.NavBar-menu:focus) .NavBar-menu {
+  transform: translate(-50%, -50%) scale(0);
+}
+
+.NavBar-buttons:has(.NavBar-close:focus) .NavBar-menu {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.NavBar-items {
+  display: flex;
+  padding: 0;
+  margin: 0;
+  color: #111;
+  list-style: none;
+}
+
+.NavBar-item {
+  width: 20%;
+  text-align: center;
+  padding: 5%;
+  transform: translatey(100%);
+  cursor: pointer;
+  transition: 0.5s;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.NavBar-close:hover,
+.NavBar-item:hover {
+  text-shadow: 0 0 15px #111;
+}
+
+.NavBar-item:nth-child(2) {
+  margin-right: 20%;
 }
 
 .keyhole-section {
