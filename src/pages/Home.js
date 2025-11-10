@@ -350,80 +350,39 @@ function Home() {
   }, []);
 
   useEffect(() => {
-    const leftSide = document.getElementById('left-side');
-    const navBar = document.querySelector('.NavBar');
+    const section = problemRef.current;
+    const scrollContainer = scrollContainerRef.current;
+    if (!section || !scrollContainer) return undefined;
 
-    if (!leftSide) return undefined;
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) {
+      gsap.set(section, { '--target': '0%' });
+      return undefined;
+    }
 
-    // Mouse/Touch move handler for split screen effect
-    const handleMove = (clientX) => {
-      const percentage = (clientX / window.innerWidth) * 100;
-      leftSide.style.width = `${percentage}%`;
-    };
+    gsap.set(section, { '--target': '100%' });
 
-    const handleMouseMove = (e) => handleMove(e.clientX);
-    const handleTouchMove = (e) => handleMove(e.touches[0].clientX);
-
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('touchmove', handleTouchMove);
-
-    // Change nav color based on mouse position
-    const handleNavColorChange = (e) => {
-      const x = e.clientX;
-      if (x <= 400) {
-        document.documentElement.style.setProperty('--nav-color-green', '#000');
-      } else {
-        document.documentElement.style.setProperty('--nav-color-green', '#a0e234');
+    const tween = gsap.to(section, {
+      '--target': '0%',
+      ease: 'none',
+      scrollTrigger: {
+        trigger: section,
+        scroller: scrollContainer,
+        start: 'top top',
+        end: '+=1000',
+        pin: true,
+        scrub: 1,
+        anticipatePin: 1
       }
-    };
+    });
 
-    document.addEventListener('mousemove', handleNavColorChange);
-
-    // Load SplitText plugin and animate
-    const initAnimations = async () => {
-      try {
-        // Load GSAP SplitText plugin
-        await loadExternalScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/SplitText.min.js');
-
-        if (window.SplitText) {
-          const fancyElements = document.querySelectorAll('.fancy');
-
-          fancyElements.forEach((fancy) => {
-            const split = new window.SplitText(fancy, {
-              type: 'chars',
-              charsClass: 'fancy-char'
-            });
-
-            gsap.from(split.chars, {
-              duration: 3,
-              y: 200,
-              stagger: 0.04,
-              ease: 'power4.out'
-            });
-          });
-
-          // Animate navbar
-          if (navBar) {
-            gsap.from(navBar, {
-              duration: 3,
-              opacity: 0,
-              y: 200,
-              delay: 0.6,
-              ease: 'power4.out'
-            });
-          }
-        }
-      } catch (error) {
-        console.warn('SplitText plugin could not be loaded:', error);
-      }
-    };
-
-    initAnimations();
+    const handleResize = () => ScrollTrigger.refresh();
+    window.addEventListener('resize', handleResize);
 
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('touchmove', handleTouchMove);
-      document.removeEventListener('mousemove', handleNavColorChange);
+      window.removeEventListener('resize', handleResize);
+      tween.scrollTrigger?.kill();
+      tween.kill();
     };
   }, []);
 
@@ -781,54 +740,25 @@ function Home() {
 
         <section
           id="problem"
-          className="split-screen-section"
+          className="gradient-reveal-section"
           ref={problemRef}
           data-scroll-section
         >
-          <div id="left-side" className="side">
-            <h2 className="title">
-              <div className="section-top">
-                <a href="#problem" className="kicker"><span className="dot" aria-hidden="true" /> About</a>
-                <a href="#ai-guide" className="cta">Come play with us <span className="arr">→</span></a>
-              </div>
+          <div className="gradient-content">
+            <div className="section-top">
+              <a href="#problem" className="kicker"><span className="dot" aria-hidden="true" /> About</a>
+              <a href="#ai-guide" className="cta">Come play with us <span className="arr">→</span></a>
+            </div>
+            <h1 className="gradient-title">
               Driving Brand <span className="hl hl-pink">Growth</span> Through Strategic
               <span className="hl hl-cyan"> Engagement</span> and
-              <span className="hl hl-yellow"> Meaningful Connections</span>
-              <span className="fancy">.</span>
-            </h2>
-            <p className="split-subhead">We design, market, and automate experiences that turn attention into revenue.</p>
-            <div className="split-stakes">
+              <span className="hl hl-yellow"> Meaningful Connections</span>.
+              <span className="gradient-subtitle">We design, market, and automate experiences that turn attention into revenue.</span>
+            </h1>
+            <div className="gradient-stakes">
               Slow sites and manual tasks cost customers. Let's fix both.
             </div>
           </div>
-          <div id="right-side" className="side">
-            <h2 className="title">
-              <div className="section-top" style={{ visibility: 'hidden' }}>
-                <span />
-                <span />
-              </div>
-              Driving Brand <span className="hl hl-green">Growth</span> Through Strategic
-              <span className="hl hl-cyan"> Engagement</span> and
-              <span className="hl hl-yellow"> Meaningful Connections</span>
-              <span className="fancy">.</span>
-            </h2>
-            <p className="split-subhead">We design, market, and automate experiences that turn attention into revenue.</p>
-            <div className="split-stakes">
-              Slow sites and manual tasks cost customers. Let's fix both.
-            </div>
-          </div>
-          <nav className="NavBar">
-            <div className="NavBar-buttons">
-              <button className="NavBar-menu">Menu</button>
-              <button className="NavBar-close">Close</button>
-            </div>
-            <ul className="NavBar-items">
-              <li className="NavBar-item">Home</li>
-              <li className="NavBar-item">Search</li>
-              <li className="NavBar-item">Chat</li>
-              <li className="NavBar-item">Person</li>
-            </ul>
-          </nav>
         </section>
 
         <section
