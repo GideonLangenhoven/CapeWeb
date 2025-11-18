@@ -184,7 +184,8 @@ function Home() {
       lerp: 0.12,
       tablet: { smooth: true },
       smartphone: { smooth: false },
-      resetNativeScroll: true
+      resetNativeScroll: true,
+      reloadOnContextChange: true
     });
 
     const handleAnchorClick = (event) => {
@@ -323,10 +324,12 @@ function Home() {
     const refresh = () => loco.update();
     ScrollTrigger.addEventListener('refresh', refresh);
 
-    setTimeout(() => {
-      loco.update();
-      ScrollTrigger.refresh();
-    }, 300);
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        loco.update();
+        ScrollTrigger.refresh();
+      }, 500);
+    });
 
     return () => {
       scrollContainer.removeEventListener('click', handleAnchorClick);

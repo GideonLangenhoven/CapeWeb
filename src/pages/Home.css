@@ -141,12 +141,12 @@ h3 {
 .cta {
   display: inline-flex;
   align-items: center;
-  gap: .5rem;
-  padding: .9rem 1.1rem;
-  border-radius: .6rem;
+  gap: .55rem;
+  padding: 1rem 1.2rem;
+  border-radius: .66rem;
   background: #111;
   color: #fff;
-  font: 800 .82rem/1 Inter, system-ui;
+  font: 800 .9rem/1 Inter, system-ui;
   text-transform: uppercase;
   letter-spacing: .08em;
   border: 1px solid rgba(255, 255, 255, .08);
@@ -156,8 +156,8 @@ h3 {
 
 .kicker .dot,
 .cta .dot {
-  width: .5rem;
-  height: .5rem;
+  width: .55rem;
+  height: .55rem;
   border-radius: 50%;
   background: currentColor;
   opacity: .6;
