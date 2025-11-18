@@ -36,11 +36,16 @@
 }
 
 .navbar-mainbg {
-  background: #000000;
+  background: #9b59b6;
   padding: 0;
   box-shadow: 0 12px 36px var(--nav-shadow-strong);
   backdrop-filter: blur(12px);
-  transition: box-shadow 0.35s ease;
+  transition: background 0.35s ease, box-shadow 0.35s ease;
+}
+
+/* Black navbar when on hero section (not scrolled) */
+.site-header:not(.site-header--scrolled) .navbar-mainbg {
+  background: #000000;
 }
 
 .site-header--scrolled .navbar-mainbg {
@@ -203,6 +208,13 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
+  background: #9b59b6;
+  transition: background 0.35s ease;
+}
+
+/* Black selector background when on hero section */
+.site-header:not(.site-header--scrolled) .hori-selector .right:before,
+.site-header:not(.site-header--scrolled) .hori-selector .left:before {
   background: #000000;
 }
 

@@ -3,7 +3,6 @@ import '../styles/Hero.css';
 import Typed from 'typed.js';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import HeroCanvas from './HeroCanvas';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -47,13 +46,54 @@ function Hero() {
       }
     );
 
+    // Hover effect for shapes
+    const leftPart = document.querySelector('.left-part');
+    const heroContainer = document.querySelector('.hero-container');
+    let isHovering = false;
+
+    const handleMouseMove = (evt) => {
+      if (!isHovering) return;
+
+      const mouseX = evt.clientX;
+      const mouseY = evt.clientY;
+
+      gsap.set(".hero-cursor", {
+        x: mouseX,
+        y: mouseY
+      });
+
+      gsap.to(".hero-shape", {
+        x: mouseX,
+        y: mouseY,
+        stagger: -0.1
+      });
+    };
+
+    const handleMouseEnter = () => {
+      isHovering = true;
+      heroContainer.classList.add('shapes-active');
+    };
+
+    const handleMouseLeave = () => {
+      isHovering = false;
+      heroContainer.classList.remove('shapes-active');
+    };
+
+    if (leftPart) {
+      leftPart.addEventListener('mouseenter', handleMouseEnter);
+      leftPart.addEventListener('mouseleave', handleMouseLeave);
+    }
+
+    document.body.addEventListener("mousemove", handleMouseMove);
+
     // Get the scroll container for proper scroller reference
     const scrollContainer = document.querySelector('[data-scroll-container]');
 
     // Scroll-triggered animation for "Websites that" - increase size and letter spacing
+    let scrollAnimation = null;
     const websitesThatSpan = document.querySelector('.left-part h1 > span:first-child');
     if (websitesThatSpan && scrollContainer) {
-      const scrollAnimation = gsap.to(websitesThatSpan, {
+      scrollAnimation = gsap.to(websitesThatSpan, {
         scale: 1.1,  // 10% increase in size
         letterSpacing: '0.25em',  // 25% increase in letter spacing
         transformOrigin: 'left center',  // Scale from the left so all words move
@@ -66,25 +106,31 @@ function Hero() {
           markers: false
         }
       });
-
-      return () => {
-        typed.destroy();
-        if (scrollAnimation.scrollTrigger) {
-          scrollAnimation.scrollTrigger.kill();
-        }
-        ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-      };
     }
 
+    // Single cleanup function
     return () => {
       typed.destroy();
+      if (leftPart) {
+        leftPart.removeEventListener('mouseenter', handleMouseEnter);
+        leftPart.removeEventListener('mouseleave', handleMouseLeave);
+      }
+      document.body.removeEventListener("mousemove", handleMouseMove);
+      if (scrollAnimation?.scrollTrigger) {
+        scrollAnimation.scrollTrigger.kill();
+      }
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
   }, []);
 
   return (
     <section className="hero-container" data-scroll-section>
-      <HeroCanvas />
+      <div className="hero-cursor"></div>
+      <div className="hero-shapes">
+        <div className="hero-shape hero-shape-1"></div>
+        <div className="hero-shape hero-shape-2"></div>
+        <div className="hero-shape hero-shape-3"></div>
+      </div>
       <div className="bg-decoration bg-decoration-1"></div>
       <div className="bg-decoration bg-decoration-2"></div>
 

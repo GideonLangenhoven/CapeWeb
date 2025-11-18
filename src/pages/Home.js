@@ -97,7 +97,6 @@ const loadExternalScript = (src) => {
 
 function Home() {
   const scrollContainerRef = useRef(null);
-  const problemRef = useRef(null);
   const keyholeRef = useRef(null);
   const sliderTrackRef = useRef(null);
   const sliderViewportRef = useRef(null);
@@ -182,7 +181,7 @@ function Home() {
     const loco = new LocomotiveScroll({
       el: scrollContainer,
       smooth: true,
-      lerp: 0.09,
+      lerp: 0.12,
       tablet: { smooth: true },
       smartphone: { smooth: false },
       resetNativeScroll: true
@@ -249,8 +248,8 @@ function Home() {
         ScrollTrigger.create({
           trigger: section,
           scroller: scrollContainer,
-          start: 'top+=10rem top',
-          end: 'bottom top',
+          start: 'top 60%',
+          end: 'bottom 40%',
           onEnter: () => setTheme(section.dataset.bgcolor, section.dataset.textcolor),
           onEnterBack: () => setTheme(section.dataset.bgcolor, section.dataset.textcolor),
           onLeaveBack: () => setTheme(prevBg, prevFg)
@@ -346,43 +345,6 @@ function Home() {
         background: '#ffffff',
         color: '#1f2937'
       });
-    };
-  }, []);
-
-  useEffect(() => {
-    const section = problemRef.current;
-    const scrollContainer = scrollContainerRef.current;
-    if (!section || !scrollContainer) return undefined;
-
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReduced) {
-      gsap.set(section, { '--target': '0%' });
-      return undefined;
-    }
-
-    gsap.set(section, { '--target': '100%' });
-
-    const tween = gsap.to(section, {
-      '--target': '0%',
-      ease: 'none',
-      scrollTrigger: {
-        trigger: section,
-        scroller: scrollContainer,
-        start: 'top top',
-        end: '+=1000',
-        pin: true,
-        scrub: 1,
-        anticipatePin: 1
-      }
-    });
-
-    const handleResize = () => ScrollTrigger.refresh();
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      tween.scrollTrigger?.kill();
-      tween.kill();
     };
   }, []);
 
@@ -739,29 +701,6 @@ function Home() {
         <Hero />
 
         <section
-          id="problem"
-          className="gradient-reveal-section"
-          ref={problemRef}
-          data-scroll-section
-        >
-          <div className="gradient-content">
-            <div className="section-top">
-              <a href="#problem" className="kicker"><span className="dot" aria-hidden="true" /> About</a>
-              <a href="#ai-guide" className="cta">Come play with us <span className="arr">→</span></a>
-            </div>
-            <h1 className="gradient-title">
-              Driving Brand <span className="hl hl-pink">Growth</span> Through Strategic
-              <span className="hl hl-cyan"> Engagement</span> and
-              <span className="hl hl-yellow"> Meaningful Connections</span>.
-              <span className="gradient-subtitle">We design, market, and automate experiences that turn attention into revenue.</span>
-            </h1>
-            <div className="gradient-stakes">
-              Slow sites and manual tasks cost customers. Let's fix both.
-            </div>
-          </div>
-        </section>
-
-        <section
           id="keyhole"
           className="keyhole-section"
           ref={keyholeRef}
@@ -776,11 +715,10 @@ function Home() {
             </svg>
           </span>
           <figure className="keyhole-section__figure">
-            <img
-              src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&h=1600&fit=crop"
-              alt="Cape Town team collaboration"
-              width="1600"
-              height="1600"
+            <div
+              style={{ backgroundColor: '#000000' }}
+              role="img"
+              aria-label="Cape Town team collaboration"
             />
           </figure>
           <div className="keyhole-section__content">
@@ -917,8 +855,8 @@ function Home() {
         <section
           id="testimonials"
           className="scroll-section"
-          data-bgcolor="#F35588"
-          data-textcolor="#ffffff"
+          data-bgcolor="#FF8A5B"
+          data-textcolor="#1f2937"
           data-scroll-section
           aria-label="Customer testimonials"
         >
@@ -960,7 +898,7 @@ function Home() {
           </div>
         </section>
 
-        <section id="ai-guide" className="scroll-section" data-bgcolor="#05DFD7" data-textcolor="#1f2937" data-scroll-section>
+        <section id="ai-guide" className="scroll-section" data-bgcolor="#93C5FD" data-textcolor="#1f2937" data-scroll-section>
           <div className="section-inner" style={{ textAlign: 'center' }}>
             <div className="section-top" style={{ justifyContent: 'center' }}>
               <a href="#ai-guide" className="kicker"><span className="dot" /> Get the guide</a>
@@ -987,7 +925,7 @@ function Home() {
         <section
           id="fluid-mask"
           className="scroll-section"
-          data-bgcolor="#A3F7BF"
+          data-bgcolor="#DDD6FE"
           data-textcolor="#1f2937"
           data-scroll-section
           aria-label="SAVE TIME"
@@ -1022,7 +960,7 @@ function Home() {
                   ))}
                 </mask>
               </defs>
-              <rect x="0" y="0" width="1600" height="900" fill="#A3F7BF" mask="url(#cutout-mask)" />
+              <rect x="0" y="0" width="1600" height="900" fill="#A78BFA" mask="url(#cutout-mask)" />
             </svg>
           </div>
         </section>
@@ -1030,8 +968,8 @@ function Home() {
         <section
           id="yt-hero"
           className="scroll-section"
-          data-bgcolor="#FFF591"
-          data-textcolor="#1f2937"
+          data-bgcolor="#0b0f1a"
+          data-textcolor="#ffffff"
           data-scroll-section
           aria-label="Watch how we help you save time"
         >
