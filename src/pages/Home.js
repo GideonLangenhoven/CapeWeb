@@ -962,7 +962,7 @@ function Home() {
 
         <section id="ai-guide" className="scroll-section" data-bgcolor="#05DFD7" data-textcolor="#1f2937" data-scroll-section>
           <div className="section-inner" style={{ textAlign: 'center' }}>
-            <div className="section-top" style={{ justifyContent: 'center' }}>
+            <div className="section-top">
               <a href="#ai-guide" className="kicker"><span className="dot" /> Get the guide</a>
               <a href="#yt-hero" className="cta">Watch the demo <span className="arr">→</span></a>
             </div>
@@ -1036,7 +1036,7 @@ function Home() {
           aria-label="Watch how we help you save time"
         >
           <div className="section-inner" style={{ gap: '1rem', textAlign: 'center' }}>
-            <div className="section-top" style={{ justifyContent: 'center' }}>
+            <div className="section-top">
               <a href="#yt-hero" className="kicker"><span className="dot" /> Demo</a>
             </div>
             <h2 className="display-lg">
