@@ -143,7 +143,7 @@ function Home() {
 
   const toggleFullscreen = useCallback(() => {
     if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(() => {});
+      document.documentElement.requestFullscreen().catch(() => { });
     } else {
       document.exitFullscreen?.();
     }
@@ -476,7 +476,7 @@ function Home() {
     const canvas = fluidCanvasRef.current;
     const wrap = fluidWrapRef.current;
     if (!canvas || !wrap) return undefined;
-    let cleanup = () => {};
+    let cleanup = () => { };
     let isCancelled = false;
 
     const initFluid = () => {
@@ -635,7 +635,7 @@ function Home() {
     } else {
       loadExternalScript('https://unpkg.com/ogl@0.0.32/dist/ogl.min.js')
         .then(initFluid)
-        .catch(() => {});
+        .catch(() => { });
     }
 
     return () => {
@@ -719,7 +719,7 @@ function Home() {
           </span>
           <figure className="keyhole-section__figure">
             <div
-              style={{ backgroundColor: '#000000' }}
+              style={{ backgroundColor: '#ffffff' }}
               role="img"
               aria-label="Cape Town team collaboration"
             />

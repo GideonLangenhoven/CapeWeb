@@ -37,6 +37,18 @@ function Header() {
       const scrollPosition = window.scrollY + headerHeight;
 
       setIsScrolled(scrollPosition >= triggerOffset);
+
+      // Keyhole transparency logic (Homepage only)
+      const keyhole = document.getElementById('keyhole');
+      if (keyhole) {
+        const keyholeRect = keyhole.getBoundingClientRect();
+        // Check if keyhole is in view (or reached)
+        if (keyholeRect.top <= headerHeight && keyholeRect.bottom >= 0) {
+          document.querySelector('.site-header').classList.add('site-header--keyhole-active');
+        } else {
+          document.querySelector('.site-header').classList.remove('site-header--keyhole-active');
+        }
+      }
     };
 
     updateScrollState();
@@ -50,6 +62,9 @@ function Header() {
       clearTimeout(timer);
       window.removeEventListener('scroll', updateScrollState);
       window.removeEventListener('resize', updateScrollState);
+      // Cleanup class
+      const header = document.querySelector('.site-header');
+      if (header) header.classList.remove('site-header--keyhole-active');
     };
   }, [location.pathname]);
 
