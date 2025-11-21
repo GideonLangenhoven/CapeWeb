@@ -178,6 +178,14 @@ function Home() {
     const previousScrollBehavior = document.documentElement.style.scrollBehavior;
     document.documentElement.style.scrollBehavior = 'auto';
 
+    // Ensure each scroll section has a transform value to satisfy locomotive-scroll getTranslate
+    scrollContainer.querySelectorAll('[data-scroll-section]').forEach((section) => {
+      const transform = getComputedStyle(section).transform;
+      if (!transform || transform === 'none') {
+        section.style.transform = 'translate3d(0, 0, 0)';
+      }
+    });
+
     const loco = new LocomotiveScroll({
       el: scrollContainer,
       smooth: true,
