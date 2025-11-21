@@ -122,9 +122,9 @@ function Header() {
     <header className={`site-header ${isScrolled ? 'site-header--scrolled' : ''} ${isKeyholeActive ? 'site-header--keyhole-active' : ''}`}>
       <nav className="navbar navbar-expand-custom navbar-mainbg">
         <div className="container header-container">
-          <Link to="/" className="navbar-brand navbar-logo" aria-label="capeweb home">
+          <a href="/" className="navbar-brand navbar-logo" aria-label="capeweb home">
             <SplitRevealLogo />
-          </Link>
+          </a>
 
           <button
             className={`navbar-toggler ${isMenuOpen ? 'navbar-toggler--open' : ''}`}

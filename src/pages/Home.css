@@ -528,8 +528,7 @@ h3 {
 }
 
 #plan .section-inner {
-  width: fit-content;
-  /* Shrink to fit headline */
+  width: 100%;
   max-width: none;
   text-align: left;
   justify-items: start;
@@ -537,9 +536,18 @@ h3 {
   /* Match Keyhole padding */
   margin: 0;
   /* Override global section-inner margins */
+}
+
+#plan .plan-content {
+  width: fit-content;
+  /* Shrink to fit headline */
   display: flex;
-  /* Override grid */
   flex-direction: column;
+}
+
+#plan .cta-slide {
+  margin-right: 0;
+  /* Remove extra margin to align with section edge (padding handles it) */
 }
 
 #plan .section-inner>* {
@@ -657,7 +665,7 @@ h3 {
 
 #prod-slider .head h2 {
   font-size: var(--display-3);
-  text-align: center;
+  text-align: right;
   flex: 1;
 }
 
@@ -1081,13 +1089,21 @@ h3 {
 
 #yt-hero .header {
   position: relative;
-  width: min(1100px, 94vw);
-  height: clamp(360px, 60vh, 800px);
+  width: 100%;
+  /* Spans full width */
+  height: clamp(500px, 84vh, 1120px);
+  /* Increased by 40% */
   overflow: hidden;
   background: #000;
-  border-radius: 18px;
+  border-radius: 0;
+  /* Remove radius for full width */
   box-shadow: 0 30px 80px rgba(0, 0, 0, .45);
   margin: 0 auto;
+  margin-bottom: 0;
+}
+
+#yt-hero {
+  padding-bottom: 0;
 }
 
 .header__background {
@@ -1326,7 +1342,7 @@ h3 {
 }
 
 #yt-hero {
-  margin-bottom: 20rem;
+  margin-bottom: 0;
 }
 
 @media (min-width: 1024px) {
@@ -1355,10 +1371,14 @@ h3 {
     height: 41.6rem;
   }
 
-  #prod-slider .wrap,
   .logo-carousel .wrap {
     margin-left: auto;
     margin-right: clamp(2.5rem, 8vw, 7rem);
+  }
+
+  #prod-slider .wrap {
+    margin: 0 auto;
+    /* Ensure centered on large screens */
   }
 
   #prod-slider .head {
@@ -1367,6 +1387,25 @@ h3 {
 
   #prod-slider .head h2 {
     text-align: right;
+  }
+
+  #testimonials .section-inner,
+  #ai-guide .section-inner {
+    width: 100%;
+    max-width: none;
+    padding-inline: 2.2rem;
+    margin: 0 auto;
+    text-align: center;
+    justify-items: center;
+  }
+
+  #ai-guide .display-lg {
+    font-size: calc(var(--display-3) * 1.25);
+  }
+
+  #testimonials .cta-slide,
+  #ai-guide .cta-slide {
+    margin-right: 0;
   }
 }
 

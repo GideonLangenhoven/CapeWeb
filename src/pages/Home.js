@@ -770,17 +770,19 @@ function Home() {
             <div className="section-top">
               <a href="#ai-guide" className="cta-slide">See pricing & process</a>
             </div>
-            <h2 className="display-xl">
-              We are <span className="hl hl-cyan">web development</span> and <span className="hl hl-pink">digital marketing</span> experts.
-            </h2>
-            <p className="subhead">Focused sprints. Clear outcomes. Real growth.</p>
-            <div className="plan-textfx">
-              <div className="fx-wrap">
-                {PLAN_LINES.map((line) => (
-                  <div className="tfx-line" key={line.label}>
-                    {line.label} <span>{line.accent}</span>
-                  </div>
-                ))}
+            <div className="plan-content">
+              <h2 className="display-xl">
+                We are <span className="hl hl-cyan">web development</span> and <span className="hl hl-pink">digital marketing</span> experts.
+              </h2>
+              <p className="subhead">Focused sprints. Clear outcomes. Real growth.</p>
+              <div className="plan-textfx">
+                <div className="fx-wrap">
+                  {PLAN_LINES.map((line) => (
+                    <div className="tfx-line" key={line.label}>
+                      {line.label} <span>{line.accent}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -986,49 +988,49 @@ function Home() {
           data-scroll-section
           aria-label="Watch how we help you save time"
         >
-          <div className="section-inner" style={{ gap: '1rem', textAlign: 'center' }}>
+          <div className="section-inner" style={{ gap: '1rem', textAlign: 'center', marginBottom: '3rem' }}>
             <h2 className="display-lg">
               Watch how we <span className="hl hl-pink">automate the boring stuff</span>.
             </h2>
             <p className="subhead" style={{ margin: '0 auto', maxWidth: '860px' }}>
               A quick walkthrough showing SEO + social + AI working together.
             </p>
-            <div className="header" data-bg-video={BG_VIDEO_ID} data-fg-video={FG_VIDEO_ID}>
-              <div className="header__background">
-                <iframe
-                  id="bg-iframe"
-                  ref={bgIframeRef}
-                  title="Background video"
-                  src=""
-                  allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-                  loading="eager"
-                  referrerPolicy="origin"
-                />
-              </div>
-              <div
-                className="header__video-overlay js-video-overlay"
-                ref={videoOverlayRef}
-                style={{ backgroundImage: `url('https://img.youtube.com/vi/${BG_VIDEO_ID}/maxresdefault.jpg')` }}
+          </div>
+          <div className="header" data-bg-video={BG_VIDEO_ID} data-fg-video={FG_VIDEO_ID}>
+            <div className="header__background">
+              <iframe
+                id="bg-iframe"
+                ref={bgIframeRef}
+                title="Background video"
+                src=""
+                allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+                loading="eager"
+                referrerPolicy="origin"
               />
-              <div className="header__scrim" aria-hidden="true" />
-              <div className="play-cta">
-                <button className="play-cta__btn" id="openPlayer" type="button" aria-label="Play video" onClick={openVideoModal}>
-                  <span className="play-cta__ring" aria-hidden="true" />
-                  <span className="play-cta__icon" aria-hidden="true" />
-                </button>
-              </div>
             </div>
-            <div className={`video-modal ${isVideoOpen ? 'is-open' : ''}`.trim()} id="videoModal" aria-hidden={!isVideoOpen} aria-label="Video player dialog">
-              <div className="video-modal__backdrop" id="modalBackdrop" role="presentation" onClick={closeVideoModal} />
-              <div className="video-modal__stage" role="dialog" aria-modal="true">
-                <button className="video-modal__close" id="closePlayer" type="button" aria-label="Close video" onClick={closeVideoModal}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <line x1="18" y1="6" x2="6" y2="18" />
-                    <line x1="6" y1="6" x2="18" y2="18" />
-                  </svg>
-                </button>
-                <div id="yt-fg" />
-              </div>
+            <div
+              className="header__video-overlay js-video-overlay"
+              ref={videoOverlayRef}
+              style={{ backgroundImage: `url('https://img.youtube.com/vi/${BG_VIDEO_ID}/maxresdefault.jpg')` }}
+            />
+            <div className="header__scrim" aria-hidden="true" />
+            <div className="play-cta">
+              <button className="play-cta__btn" id="openPlayer" type="button" aria-label="Play video" onClick={openVideoModal}>
+                <span className="play-cta__ring" aria-hidden="true" />
+                <span className="play-cta__icon" aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+          <div className={`video-modal ${isVideoOpen ? 'is-open' : ''}`.trim()} id="videoModal" aria-hidden={!isVideoOpen} aria-label="Video player dialog">
+            <div className="video-modal__backdrop" id="modalBackdrop" role="presentation" onClick={closeVideoModal} />
+            <div className="video-modal__stage" role="dialog" aria-modal="true">
+              <button className="video-modal__close" id="closePlayer" type="button" aria-label="Close video" onClick={closeVideoModal}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+              <div id="yt-fg" />
             </div>
           </div>
         </section>
