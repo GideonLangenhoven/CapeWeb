@@ -64,7 +64,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 36px clamp(1rem, 4vw, 3rem);
+  padding: 41px clamp(1rem, 4vw, 3rem);
   min-height: 70px;
 }
 
@@ -591,6 +591,6 @@
 
 /* Keyhole section transparency */
 .site-header--keyhole-active .navbar-mainbg {
-  background: rgba(155, 89, 182, 0.6);
+  background: rgba(155, 89, 182, 0.5);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }

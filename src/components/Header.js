@@ -14,6 +14,7 @@ function Header() {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isKeyholeActive, setIsKeyholeActive] = useState(false);
   const selectorRef = useRef(null);
   const navRef = useRef(null);
 
@@ -22,6 +23,7 @@ function Header() {
       // Non-home pages should always have a filled navbar
       if (location.pathname !== '/') {
         setIsScrolled(true);
+        setIsKeyholeActive(false);
         return;
       }
 
@@ -44,9 +46,9 @@ function Header() {
         const keyholeRect = keyhole.getBoundingClientRect();
         // Check if keyhole is in view (or reached)
         if (keyholeRect.top <= headerHeight && keyholeRect.bottom >= 0) {
-          document.querySelector('.site-header').classList.add('site-header--keyhole-active');
+          setIsKeyholeActive(true);
         } else {
-          document.querySelector('.site-header').classList.remove('site-header--keyhole-active');
+          setIsKeyholeActive(false);
         }
       }
     };
@@ -62,9 +64,6 @@ function Header() {
       clearTimeout(timer);
       window.removeEventListener('scroll', updateScrollState);
       window.removeEventListener('resize', updateScrollState);
-      // Cleanup class
-      const header = document.querySelector('.site-header');
-      if (header) header.classList.remove('site-header--keyhole-active');
     };
   }, [location.pathname]);
 
@@ -120,7 +119,7 @@ function Header() {
 
 
   return (
-    <header className={`site-header ${isScrolled ? 'site-header--scrolled' : ''}`}>
+    <header className={`site-header ${isScrolled ? 'site-header--scrolled' : ''} ${isKeyholeActive ? 'site-header--keyhole-active' : ''}`}>
       <nav className="navbar navbar-expand-custom navbar-mainbg">
         <div className="container header-container">
           <Link to="/" className="navbar-brand navbar-logo" aria-label="capeweb home">

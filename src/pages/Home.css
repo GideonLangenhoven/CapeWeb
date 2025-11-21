@@ -443,6 +443,11 @@ h3 {
   /* Match Keyhole padding */
 }
 
+#plan .section-inner>* {
+  justify-self: start;
+  text-align: left;
+}
+
 #plan .section-top {
   width: 100%;
   justify-content: flex-start;
