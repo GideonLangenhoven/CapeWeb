@@ -1,0 +1,41 @@
+Style Guide 2.0
+================
+
+Palette
+- Core ink/text: #0b0f1a; Secondary text: #1f2937; Muted text: #4b5563
+- Brand brights: Coral primary #E54742; Coral salmon #ff8a5b; Coral rose #ea526f
+- Accent pool: Pink #F35588; Cyan #05DFD7; Green #A3F7BF; Yellow #FFF591
+- Highlights: HL pink #E91E63; HL cyan #0097A7; HL green #2E7D32; HL yellow #F57C00
+- CTA-slide accents (15% darker than section fills): Plan #8AD2A2; Testimonials #D8754D; AI Guide #7CA7D7
+- Surfaces: White #fff; Page background #ffffff; Dark footer/hero #0b0f1a
+
+Typography
+- Font stack: system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, sans-serif
+- Headings: Weight 900, letter-spacing -0.02em, line-height 1.06; sizes via display tokens (display-1/2/3 clamp up to ~6rem)
+- Body: Base clamp(1rem, .82rem + .6vw, 1.125rem); Subhead step-1 clamp with 1.6 line-height, max-width 72ch
+- Highlights: `.hl` color inherits via modifiers `.hl-pink/.hl-cyan/.hl-green/.hl-yellow`
+
+Buttons
+- Kicker/CTA (pills): Uppercase, 800 weight, ~0.9rem font; padding 1.1rem x 1.32rem; radius 0.726rem; background #111 with white text; subtle 1px border and 0 8px 22px shadow; hover lifts 1px
+- CTA-slide: Uppercase, 800 weight, 1.08rem font; padding 1.32rem x 1.584rem; 3px border/fill using section accent (see Palette, darkened 15%); left-to-right fill reveal on hover; black text pre/post hover; square corners; 1s transition
+- Nav dots: 12px round, inactive rgba(0,0,0,0.16), active uses coral primary
+
+Layout & Spacing
+- Sections: Padding clamp(3.85rem, 11vh, 6.6rem) baseline; min-height 100vh (desktop relaxes to auto with similar padding)
+- Containers: `.section-inner` width min(1100px, 94vw); grid layout with responsive gap; defaults to right alignment on wide screens; plan section overrides to full width, left alignment, 2.2rem side padding
+- Section-top: Flex row with space-between; CTA-slide aligned right with consistent margin
+
+Components & Motions
+- Text effects: `.tfx-line` large, bold clamp(2rem, 8.5vw, 6rem) with underline-on-hover and masked accent span reveal
+- Product slider: Closed cards width 5rem (9rem desktop), open card 30rem (58rem desktop), heights 22.9rem base / 41.6rem desktop; active card lifts and reflows content from vertical to horizontal
+- Testimonials: Card stack over dark speech bubble bar; circular avatars; prev/next round buttons with soft shadows
+- Hero video: Dark scrim over background iframe with circular play CTA (ring + icon)
+- Carousel logos: Horizontal marquee with gradient mask edges; brand names uppercase, spaced for legibility
+
+Forms
+- Inputs: Full-width, pill shape, soft border using mixed page color; focus uses current text color and slight lift
+- Submit: Pill button, black background, white text, 800 weight with uppercase letter-spacing
+
+General
+- Links inherit color and remove underline (except within `.plan-textfx` where underlines show)
+- Consistent use of clamp-based sizing for fluid responsiveness

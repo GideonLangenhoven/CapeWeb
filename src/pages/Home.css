@@ -459,32 +459,61 @@ h3 {
   font-size: clamp(1.4rem, 5.95vw, 4.2rem);
   /* Reduced by 30% */
   position: relative;
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* Left align */
+  justify-content: center;
   overflow: visible;
-  padding: .08em 0;
-  background: linear-gradient(currentColor, currentColor) left 100%/0% 1px no-repeat;
-  transition: background-size .5s ease;
+  padding: .2em 0;
+  /* Increased padding for touch target */
+
+  /* Text Fill Effect */
+  color: rgba(31, 41, 55, 0.2);
+  /* Faded dark grey */
+  background: linear-gradient(to right, #1f2937, #1f2937) no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  background-size: 0% 100%;
+  transition: background-size 0.5s cubic-bezier(.1, .5, .5, 1);
+
+  border-bottom: 1px solid rgba(31, 41, 55, 0.2);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .tfx-line:hover {
-  background-size: 100% 1px;
+  /* No default hover for background-size, handled by GSAP */
 }
 
 .tfx-line>span {
   position: absolute;
-  inset: -.15em -.2em;
-  display: grid;
-  place-items: center;
-  color: #0D0D0D;
-  background: #4246ce;
-  border-radius: .08em;
-  clip-path: inset(50% 0 50% 0);
-  transition: clip-path .45s cubic-bezier(.2, .7, .2, 1);
+  width: 100%;
+  height: 100%;
+  background-color: #351435;
+  /* Dark Purple */
+  color: aquamarine;
+  /* Aquamarine */
+
+  clip-path: polygon(0 50%, 100% 50%, 100% 50%, 0 50%);
+  transform-origin: center;
+  transition: all 0.4s cubic-bezier(.1, .5, .5, 1);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  /* Left align content */
+  padding-left: 0;
+  /* Align with main text */
+  inset: 0;
+  border-radius: 0;
   pointer-events: none;
+  z-index: 1;
 }
 
 .tfx-line:hover>span {
-  clip-path: inset(0 0 0 0);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
 }
 
 .plan-textfx a {
@@ -520,13 +549,13 @@ h3 {
 
 .cta-slide {
   text-decoration: none;
-  color: aquamarine;
+  color: #000;
   font-family: sans-serif;
-  font-size: 1.35rem;
-  /* Increased by 50% from 0.9rem */
-  border: 3px solid aquamarine;
-  padding: 1.65rem 1.98rem;
-  /* Increased by 50% from 1.1rem 1.32rem */
+  font-size: 1.08rem;
+  /* Reduced by 20% from 1.35rem */
+  border: 3px solid var(--cta-accent, currentColor);
+  padding: 1.32rem 1.584rem;
+  /* Reduced by 20% from 1.65rem 1.98rem */
   position: relative;
   transition: all 1s;
   overflow: hidden;
@@ -545,7 +574,7 @@ h3 {
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: aquamarine;
+  background-color: var(--cta-accent, currentColor);
   z-index: -1;
   transform: translateX(-100%);
   transition: all 1s;
@@ -556,7 +585,28 @@ h3 {
 }
 
 .cta-slide:hover {
-  color: #351435;
+  color: #000;
+}
+
+.section-top .cta-slide {
+  margin-left: auto;
+  margin-right: clamp(1.65rem, 6vw, 3rem);
+}
+
+#plan .cta-slide {
+  --cta-accent: #8AD2A2;
+}
+
+#testimonials .cta-slide {
+  --cta-accent: #D8754D;
+}
+
+#ai-guide .cta-slide {
+  --cta-accent: #7CA7D7;
+}
+
+#ai-guide .section-top {
+  justify-content: flex-end;
 }
 
 #plan .plan-textfx .fx-wrap {
@@ -566,8 +616,8 @@ h3 {
 }
 
 #plan .tfx-line {
-  width: fit-content;
-  /* Ensure underline is relative to text width */
+  width: 100%;
+  /* Ensure full width for reveal effect */
 }
 
 #prod-slider {
@@ -601,7 +651,8 @@ h3 {
 
 #prod-slider .head h2 {
   font-size: var(--display-3);
-  text-align: left;
+  text-align: center;
+  flex: 1;
 }
 
 #prod-slider .controls {
@@ -653,7 +704,7 @@ h3 {
 
 .project-card {
   flex: 0 0 var(--closed);
-  height: 28.6rem;
+  height: 22.9rem;
   border-radius: 1rem;
   overflow: hidden;
   cursor: pointer;
@@ -1255,6 +1306,10 @@ h3 {
   flex-wrap: wrap;
 }
 
+#testimonials .section-top {
+  justify-content: flex-end;
+}
+
 .lead-form {
   margin-left: auto;
   margin-right: auto;
@@ -1291,7 +1346,7 @@ h3 {
   }
 
   #prod-slider .project-card {
-    height: 52rem;
+    height: 41.6rem;
   }
 
   #prod-slider .wrap,

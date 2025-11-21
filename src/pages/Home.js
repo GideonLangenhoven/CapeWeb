@@ -306,9 +306,9 @@ function Home() {
       tweens.push(
         gsap.fromTo(
           line,
-          { backgroundSize: '0% 1px' },
+          { backgroundSize: '0% 100%' },
           {
-            backgroundSize: '100% 1px',
+            backgroundSize: '100% 100%',
             scrollTrigger: {
               trigger: line,
               scroller: scrollContainer,
@@ -875,8 +875,7 @@ function Home() {
         >
           <div className="section-inner">
             <div className="section-top">
-              <a href="#testimonials" className="kicker"><span className="dot" /> Results</a>
-              <a href="#ai-guide" className="cta">Book a call <span className="arr">→</span></a>
+              <a href="#ai-guide" className="cta-slide">Book a call</a>
             </div>
             <div className="t-wrap">
               <div className="t-head">
@@ -913,9 +912,8 @@ function Home() {
 
         <section id="ai-guide" className="scroll-section" data-bgcolor="#93C5FD" data-textcolor="#1f2937" data-scroll-section>
           <div className="section-inner" style={{ textAlign: 'center' }}>
-            <div className="section-top" style={{ justifyContent: 'center' }}>
-              <a href="#ai-guide" className="kicker"><span className="dot" /> Get the guide</a>
-              <a href="#yt-hero" className="cta">Watch the demo <span className="arr">→</span></a>
+            <div className="section-top" style={{ justifyContent: 'flex-end' }}>
+              <a href="#yt-hero" className="cta-slide">Watch the demo</a>
             </div>
             <h2 className="display-lg">
               Steal our <span className="hl hl-green">automation playbook</span>.
@@ -943,12 +941,6 @@ function Home() {
           data-scroll-section
           aria-label="SAVE TIME"
         >
-          <div className="section-inner container-tight" style={{ gap: '.5rem' }}>
-            <div className="section-top">
-              <a href="#fluid-mask" className="kicker"><span className="dot" /> Why it matters</a>
-              <a href="#ai-guide" className="cta">Start saving time <span className="arr">→</span></a>
-            </div>
-          </div>
           <div className="fluid-inner" ref={fluidWrapRef}>
             <canvas className="fluid-canvas" aria-hidden="true" ref={fluidCanvasRef} />
             <svg className="text-cut" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" role="img" aria-label="SAVE TIME AND MONEY">
@@ -987,9 +979,6 @@ function Home() {
           aria-label="Watch how we help you save time"
         >
           <div className="section-inner" style={{ gap: '1rem', textAlign: 'center' }}>
-            <div className="section-top" style={{ justifyContent: 'center' }}>
-              <a href="#yt-hero" className="kicker"><span className="dot" /> Demo</a>
-            </div>
             <h2 className="display-lg">
               Watch how we <span className="hl hl-pink">automate the boring stuff</span>.
             </h2>
