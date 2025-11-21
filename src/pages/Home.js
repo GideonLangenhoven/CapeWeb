@@ -760,8 +760,7 @@ function Home() {
         <section id="plan" className="scroll-section" data-bgcolor="#A3F7BF" data-textcolor="#1f2937" data-scroll-section>
           <div className="section-inner">
             <div className="section-top">
-              <a href="#plan" className="kicker"><span className="dot" /> Services</a>
-              <a href="#ai-guide" className="cta">See pricing &amp; process <span className="arr">→</span></a>
+              <a href="#ai-guide" className="cta-slide">See pricing & process</a>
             </div>
             <h2 className="display-xl">
               We are <span className="hl hl-cyan">web development</span> and <span className="hl hl-pink">digital marketing</span> experts.
