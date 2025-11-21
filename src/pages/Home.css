@@ -445,8 +445,8 @@ h3 {
 .plan-textfx .fx-wrap {
   display: flex;
   flex-direction: column;
-  gap: .42rem;
-  /* Increased by another 30% */
+  gap: .48rem;
+  /* Increased by 15% from .42rem */
   min-height: 60vh;
   justify-content: center;
   overflow: visible;
@@ -528,12 +528,18 @@ h3 {
 }
 
 #plan .section-inner {
-  width: 100%;
+  width: fit-content;
+  /* Shrink to fit headline */
   max-width: none;
   text-align: left;
   justify-items: start;
   padding-inline: 2.2rem;
   /* Match Keyhole padding */
+  margin: 0;
+  /* Override global section-inner margins */
+  display: flex;
+  /* Override grid */
+  flex-direction: column;
 }
 
 #plan .section-inner>* {
