@@ -281,8 +281,8 @@ function Home() {
           )
           .fromTo(
             content,
-            { opacity: 0, clipPath: 'inset(100% 0 0 0)' },
-            { opacity: 1, clipPath: 'inset(0 0 0 0)', ease: 'power2.out' },
+            { opacity: 1, clipPath: 'inset(49% 49% 49% 49% round 80px)' },
+            { opacity: 1, clipPath: 'inset(0% 0% 0% 0%)', ease: 'power2.out' },
             0
           )
       );
@@ -707,8 +707,8 @@ function Home() {
           id="keyhole"
           className="keyhole-section"
           ref={keyholeRef}
-          data-bgcolor="#F35588"
-          data-textcolor="#ffffff"
+          data-bgcolor="#ffffff"
+          data-textcolor="#1f2937"
           data-scroll-section
         >
           <span className="keyhole" aria-hidden="true" />
@@ -725,10 +725,21 @@ function Home() {
             />
           </figure>
           <div className="keyhole-section__content">
-            <h2>
-              Meet your <span className="hl hl-yellow">digital dream team</span>.
-            </h2>
-            <p>We turn "our site doesn't convert" into growth—design, dev, SEO and automation under one roof.</p>
+            <div className="keyhole-content-wrapper">
+              <div className="keyhole-label">ABOUT</div>
+              <h2 className="keyhole-headline">
+                Driving Brand Growth Through Strategic Engagement and <span className="hl hl-pink">Meaningful Connections.</span>
+              </h2>
+              <p className="keyhole-body">
+                We build websites that hustle harder than you do—using AI to schedule, follow up, and book appointments on autopilot. From high-converting Shopify stores to custom apps, we turn leads into loyalists. Throw in expert SEO, scroll-stopping graphic design, and ad campaigns on Google and Meta that actually work, and you’ve got a digital dream team ready to dominate.
+              </p>
+              <a href="/about" className="keyhole-cta">
+                GO DOWN THE RABBIT HOLE
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </a>
+            </div>
           </div>
         </section>
 
