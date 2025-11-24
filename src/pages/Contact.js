@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import useScrollReveal from '../hooks/useScrollReveal';
+import useLocomotiveScroll from '../hooks/useLocomotiveScroll';
 import '../styles/Contact.css';
 
 const initialState = {
@@ -14,7 +14,7 @@ const initialState = {
 const priorities = ['Launch', 'Scale', 'Compound'];
 
 function Contact() {
-  useScrollReveal();
+  const scrollRef = useLocomotiveScroll();
   const [formData, setFormData] = useState(initialState);
   const [submissionState, setSubmissionState] = useState('idle'); // idle | submitting | success | error
 
@@ -38,7 +38,7 @@ function Contact() {
   };
 
   return (
-    <div className="contact-page">
+    <div className="contact-page monochrome-page" ref={scrollRef} data-scroll-container>
       <section className="section contact-hero" data-cursor-section="contact">
         <div className="container contact-hero__container surface-panel" data-scroll-reveal>
           <div className="surface-panel__shine" />
@@ -131,8 +131,8 @@ function Contact() {
               {submissionState === 'success'
                 ? 'Thanks! We’ll respond within one business day with scheduling options.'
                 : submissionState === 'error'
-                ? 'Something went wrong. Please email hello@capeweb.co.za.'
-                : 'We keep everything confidential. NDA available on request.'}
+                  ? 'Something went wrong. Please email hello@capeweb.co.za.'
+                  : 'We keep everything confidential. NDA available on request.'}
             </p>
           </form>
           <aside className="contact-insights surface-panel" data-scroll-reveal>

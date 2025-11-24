@@ -12,6 +12,7 @@ import {
   Heart
 } from 'lucide-react';
 import '../styles/Footer2.css';
+import SplitRevealLogo from './SplitRevealLogo';
 
 const LATEST_NEWS = [
   {
@@ -108,12 +109,7 @@ export default function Footer() {
       <div className="footer2__inner">
         <div className="footer2__top">
           <div className="footer2__brand-block">
-            <h2 className="footer2__brand">
-              Brand<span className="footer2__brand-dot">.</span>
-            </h2>
-            <p className="footer2__lede">
-              Elevating digital experiences with bold aesthetics and seamless functionality.
-            </p>
+            <SplitRevealLogo />
           </div>
           <div className="footer2__socials">
             <SocialIcon Icon={Twitter} />
@@ -129,15 +125,15 @@ export default function Footer() {
             <ul className="footer2__list">
               <li className="footer2__list-item">
                 <MapPin size={20} />
-                <span>203 Fake St. Mountain View, San Francisco, California, USA</span>
+                <span>301 Long Street Cape Town</span>
               </li>
               <li className="footer2__list-item">
                 <Phone size={20} />
-                <span>+2 392 3929 210</span>
+                <span>0716145061</span>
               </li>
               <li className="footer2__list-item">
                 <Mail size={20} />
-                <span>info@yourdomain.com</span>
+                <span>info@capeweb.com</span>
               </li>
             </ul>
             <FooterInput />

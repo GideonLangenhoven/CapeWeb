@@ -60,14 +60,9 @@ function Hero() {
       if (heroRef.current) heroRef.current.classList.add('gradient-active');
     };
 
-    const handleMouseLeave = () => {
-      if (heroRef.current) heroRef.current.classList.remove('gradient-active');
-    };
-
     const leftPart = leftPartRef.current;
     if (leftPart) {
       leftPart.addEventListener('mouseenter', handleMouseEnter);
-      leftPart.addEventListener('mouseleave', handleMouseLeave);
     }
 
     // Scroll Animation
@@ -97,7 +92,6 @@ function Hero() {
       cancelAnimationFrame(animationFrameId);
       if (leftPart) {
         leftPart.removeEventListener('mouseenter', handleMouseEnter);
-        leftPart.removeEventListener('mouseleave', handleMouseLeave);
       }
       if (scrollAnimation?.scrollTrigger) {
         scrollAnimation.scrollTrigger.kill();

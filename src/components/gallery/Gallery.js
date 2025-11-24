@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { galleryData } from '../../data/galleryData';
-import useScrollReveal from '../../hooks/useScrollReveal';
+import useLocomotiveScroll from '../../hooks/useLocomotiveScroll';
 import './Gallery.css';
 
 const GalleryModal = ({ item, onClose, onNext, onPrev }) => {
@@ -44,7 +44,7 @@ const GalleryModal = ({ item, onClose, onNext, onPrev }) => {
 
 const Gallery = () => {
   const [activeIndex, setActiveIndex] = useState(null);
-  useScrollReveal();
+  const scrollRef = useLocomotiveScroll();
   const categories = useMemo(() => ['All', ...Array.from(new Set(galleryData.map((item) => item.category)))], []);
   const [activeCategory, setActiveCategory] = useState('All');
 
@@ -78,7 +78,7 @@ const Gallery = () => {
   }, [activeCategory]);
 
   return (
-    <div className="gallery-page">
+    <div className="gallery-page monochrome-page" ref={scrollRef} data-scroll-container>
       <section className="section gallery-hero">
         <div className="container gallery-hero__container">
           <div className="gallery-hero__copy" data-scroll-reveal>

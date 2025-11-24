@@ -11,6 +11,7 @@ import Contact from './pages/Contact';
 import Privacy from './pages/Privacy';
 import ComponentLibrary from './pages/ComponentLibrary';
 import './styles/main.css';
+import './styles/monochrome.css';
 import { ModalProvider } from './context/ModalContext';
 import Modal from './components/Modal'; // Import our new universal modal
 import useVoiceflowWidget from './hooks/useVoiceflowWidget'; // Import the Voiceflow widget hook

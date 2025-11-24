@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import useLocomotiveScroll from '../hooks/useLocomotiveScroll';
 import '../styles/StaticPage.css';
 
 const resources = [
@@ -24,8 +25,9 @@ const resources = [
 ];
 
 function Resources() {
+  const scrollRef = useLocomotiveScroll();
   return (
-    <div className="static-page">
+    <div className="static-page monochrome-page" ref={scrollRef} data-scroll-container>
       <header className="static-hero container">
         <p className="static-eyebrow">Resources</p>
         <h1>Tools to help you grow without the burnout</h1>

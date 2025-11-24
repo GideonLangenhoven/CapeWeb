@@ -751,19 +751,7 @@ function Home() {
           </div>
         </section>
 
-        <section className="logo-carousel" data-bgcolor="#05DFD7" data-textcolor="#1f2937" data-scroll-section aria-label="Trusted by brands">
-          <div className="wrap">
-            <div className="marquee">
-              <ul id="logoStrip" ref={logoStripRef}>
-                {LOGO_ITEMS.map((item) => (
-                  <li className="logo-item" key={item}>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </section>
+
 
         <section id="plan" className="scroll-section" data-bgcolor="#A3F7BF" data-textcolor="#1f2937" data-scroll-section>
           <div className="section-inner">
@@ -871,6 +859,20 @@ function Home() {
                   }}
                 />
               ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="logo-carousel" data-bgcolor="#05DFD7" data-textcolor="#1f2937" data-scroll-section aria-label="Trusted by brands">
+          <div className="wrap">
+            <div className="marquee">
+              <ul id="logoStrip" ref={logoStripRef}>
+                {LOGO_ITEMS.map((item) => (
+                  <li className="logo-item" key={item}>
+                    {item}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </section>

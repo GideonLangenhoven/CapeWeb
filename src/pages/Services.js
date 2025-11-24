@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { services } from '../data/servicesData';
-import useScrollReveal from '../hooks/useScrollReveal';
+import useLocomotiveScroll from '../hooks/useLocomotiveScroll';
 import '../styles/Services.css';
 
 const serviceDeepDive = {
@@ -53,9 +53,9 @@ const serviceDeepDive = {
 };
 
 function Services() {
-  useScrollReveal();
+  const scrollRef = useLocomotiveScroll();
   return (
-    <div className="services-page">
+    <div className="services-page monochrome-page" ref={scrollRef} data-scroll-container>
       <section className="section section-muted services-hero" data-cursor-section="services">
         <div className="container services-hero__container">
           <div className="services-hero__copy" data-scroll-reveal>
