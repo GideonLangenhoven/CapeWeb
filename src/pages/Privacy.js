@@ -1,4 +1,6 @@
 import React from 'react';
+import useLocomotiveScroll from '../hooks/useLocomotiveScroll';
+import Footer from '../components/Footer';
 import './Privacy.css';
 
 /**
@@ -8,11 +10,12 @@ import './Privacy.css';
  * Based on South African Protection of Personal Information Act (POPIA).
  */
 export default function Privacy() {
+  const scrollRef = useLocomotiveScroll();
   const lastUpdated = "January 2025";
 
   return (
-    <div className="privacy-page">
-      <div className="container">
+    <div className="privacy-page" ref={scrollRef} data-scroll-container>
+      <div className="container" data-scroll-section>
         <article className="privacy-content">
           <header className="privacy-header">
             <h1>Privacy Policy</h1>
@@ -178,6 +181,7 @@ export default function Privacy() {
           </footer>
         </article>
       </div>
+      <Footer />
     </div>
   );
 }

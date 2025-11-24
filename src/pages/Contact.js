@@ -1,158 +1,112 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import useLocomotiveScroll from '../hooks/useLocomotiveScroll';
-import '../styles/Contact.css';
+import Footer from '../components/Footer';
+import './Contact.css';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-const initialState = {
-  name: '',
-  email: '',
-  company: '',
-  website: '',
-  priority: '',
-  message: ''
-};
-
-const priorities = ['Launch', 'Scale', 'Compound'];
+gsap.registerPlugin(ScrollTrigger);
 
 function Contact() {
-  const scrollRef = useLocomotiveScroll();
-  const [formData, setFormData] = useState(initialState);
-  const [submissionState, setSubmissionState] = useState('idle'); // idle | submitting | success | error
+  const scrollRef = useLocomotiveScroll(true);
+  const containerRef = useRef(null);
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    if (submissionState !== 'idle') setSubmissionState('idle');
-  };
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const reveals = document.querySelectorAll('.reveal-text');
+      reveals.forEach((el) => {
+        gsap.fromTo(el,
+          { y: 50, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: el,
+              scroller: containerRef.current,
+              start: 'top 85%',
+            }
+          }
+        );
+      });
+    }, containerRef);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setSubmissionState('submitting');
-
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1200));
-      setFormData(initialState);
-      setSubmissionState('success');
-    } catch (error) {
-      setSubmissionState('error');
-    }
-  };
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <div className="contact-page monochrome-page" ref={scrollRef} data-scroll-container>
-      <section className="section contact-hero" data-cursor-section="contact">
-        <div className="container contact-hero__container surface-panel" data-scroll-reveal>
-          <div className="surface-panel__shine" />
-          <div className="contact-hero__copy">
-            <span className="eyebrow">Free Strategy Call</span>
-            <h1>Book a Free Strategy Call.</h1>
-            <p>45 minutes to map goals, bottlenecks, and the plan that pays off.</p>
-            <div className="contact-hero__meta">
-              <div>
-                <strong>What you get</strong>
-                <p>45-minute strategy session · bottleneck diagnosis · prioritised roadmap · next-step plan in 48 hours.</p>
-              </div>
-              <div>
-                <strong>Who joins</strong>
-                <p>Founder or lead + our pod lead. Bring your metrics, questions, and ambition. We’ll bring the plan.</p>
-              </div>
-            </div>
-          </div>
-          <div className="contact-hero__aside">
-            <div>
-              <span className="eyebrow">Direct line</span>
-              <p className="contact-line">hello@capeweb.co.za</p>
-              <p className="contact-line">+27 21 000 0000</p>
-            </div>
-            <div>
-              <span className="eyebrow">Office hours</span>
-              <p>Mon–Fri 09:00–18:00 SAST · Remote-first · Global delivery</p>
-            </div>
-            <div>
-              <span className="eyebrow">Newsletter</span>
-              <p>“Signal, not noise.” Monthly playbooks on design, AI, and growth.</p>
-            </div>
-          </div>
-        </div>
-      </section>
+    <div className="expand-page" data-scroll-container ref={scrollRef}>
+      <div ref={containerRef}>
 
-      <section className="section contact-form-section" data-cursor-section="contact">
-        <div className="container contact-form__wrapper">
-          <form className={`contact-form ${submissionState}`} onSubmit={handleSubmit} data-scroll-reveal>
-            <div className="form-grid">
-              <label>
-                Name
-                <input type="text" name="name" value={formData.name} onChange={handleChange} required placeholder="Your name" />
-              </label>
-              <label>
-                Email
-                <input type="email" name="email" value={formData.email} onChange={handleChange} required placeholder="you@company.com" />
-              </label>
+        {/* 1. HERO SECTION (WHITE) */}
+        <section className="section-white" data-scroll-section>
+          <div className="expand-label">Get In Touch</div>
+          <h1 className="expand-title-hero reveal-text">
+            LET'S START A<br />
+            CONVERSATION.
+          </h1>
+          <p className="expand-text-lg reveal-text" style={{ color: '#333', marginTop: '2rem' }}>
+            Whether you have a specific project in mind or just want to explore what's possible, we're here to listen.
+          </p>
+        </section>
+
+        {/* 2. FORM SECTION (BLACK) */}
+        <section className="section-black" data-scroll-section data-bgcolor="#0b0f1a" data-textcolor="#ffffff">
+          <div className="contact-grid">
+            <div className="reveal-text">
+              <h2 className="expand-title-section">Tell us about your project.</h2>
+              <p className="expand-text-lg" style={{ opacity: 0.8 }}>
+                Fill out the form and we'll get back to you within 24 hours.
+                We hate spam as much as you do, so your details are safe with us.
+              </p>
             </div>
-            <div className="form-grid">
-              <label>
-                Company
-                <input type="text" name="company" value={formData.company} onChange={handleChange} placeholder="Company or project" />
-              </label>
-              <label>
-                Website / URL
-                <input type="url" name="website" value={formData.website} onChange={handleChange} placeholder="https://" />
-              </label>
-            </div>
-            <label>
-              Which focus best matches your priority?
-              <div className="priority-group">
-                {priorities.map((option) => (
-                  <button
-                    key={option}
-                    type="button"
-                    className={`priority-pill ${formData.priority === option ? 'is-active' : ''}`}
-                    onClick={() => setFormData((prev) => ({ ...prev, priority: option }))}
-                  >
-                    {option}
-                  </button>
-                ))}
+
+            <form className="contact-form reveal-text">
+              <div className="form-group">
+                <label htmlFor="name">Name</label>
+                <input type="text" id="name" required placeholder="John Doe" />
               </div>
-            </label>
-            <label>
-              Tell us about your goals and bottlenecks
-              <textarea
-                name="message"
-                rows="6"
-                value={formData.message}
-                onChange={handleChange}
-                placeholder="Where are you headed? What’s holding you back? What have you tried?"
-                required
-              />
-            </label>
-            <button type="submit" className="btn btn-primary" disabled={submissionState === 'submitting'}>
-              {submissionState === 'submitting' ? 'Sending…' : 'Book a Free Strategy Call'}
-            </button>
-            <p className="form-note">
-              {submissionState === 'success'
-                ? 'Thanks! We’ll respond within one business day with scheduling options.'
-                : submissionState === 'error'
-                  ? 'Something went wrong. Please email hello@capeweb.co.za.'
-                  : 'We keep everything confidential. NDA available on request.'}
-            </p>
-          </form>
-          <aside className="contact-insights surface-panel" data-scroll-reveal>
-            <div className="surface-panel__shine" />
-            <span className="eyebrow">What to expect</span>
-            <ul>
-              <li>Pre-call prep: we review your current site, funnels, and automations.</li>
-              <li>Live strategy: collaborative session to map quick wins and big swings.</li>
-              <li>48-hour blueprint: priorities, timeline, and investment ready to action.</li>
-            </ul>
-            <div className="divider" />
-            <span className="eyebrow">Recent wins</span>
-            <ul>
-              <li>42% increase in speed + 3.1× organic leads for a SaaS brand in 60 days.</li>
-              <li>Automated lead routing that cut response times from 12 hours to 4 minutes.</li>
-              <li>Launch-to-scale commerce rollout generating 28% higher AOV.</li>
-            </ul>
-          </aside>
-        </div>
-      </section>
+              <div className="form-group">
+                <label htmlFor="email">Email</label>
+                <input type="email" id="email" required placeholder="john@company.com" />
+              </div>
+              <div className="form-group">
+                <label htmlFor="message">Message</label>
+                <textarea id="message" rows="4" required placeholder="Tell us about your goals..."></textarea>
+              </div>
+              <button type="submit" className="submit-btn">Send Message</button>
+            </form>
+          </div>
+        </section>
+
+        {/* 3. INFO SECTION (DEEP PURPLE) */}
+        <section className="section-purple" data-scroll-section data-bgcolor="#240b36" data-textcolor="#ffffff">
+          <div className="expand-label" style={{ backgroundColor: '#fff', color: '#000' }}>Contact Details</div>
+          <h2 className="expand-title-section reveal-text">Other ways to connect.</h2>
+
+          <ul className="contact-info-list">
+            <li className="contact-info-item reveal-text">
+              <span className="contact-info-label">Email</span>
+              <a href="mailto:hello@capeweb.co.za" className="contact-info-value">hello@capeweb.co.za</a>
+            </li>
+            <li className="contact-info-item reveal-text">
+              <span className="contact-info-label">Phone</span>
+              <a href="tel:+27211234567" className="contact-info-value">+27 (0) 21 123 4567</a>
+            </li>
+            <li className="contact-info-item reveal-text">
+              <span className="contact-info-label">Office</span>
+              <span className="contact-info-value">Cape Town, South Africa</span>
+            </li>
+          </ul>
+        </section>
+
+        {/* FOOTER */}
+        <section data-scroll-section>
+          <Footer />
+        </section>
+
+      </div>
     </div>
   );
 }

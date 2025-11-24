@@ -1,167 +1,140 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { services } from '../data/servicesData';
+import React, { useEffect, useRef } from 'react';
 import useLocomotiveScroll from '../hooks/useLocomotiveScroll';
-import '../styles/Services.css';
+import Footer from '../components/Footer';
+import './Services.css';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-const serviceDeepDive = {
-  'web-design': {
-    longForm: 'High‑performing sites that convert. Clear, fast, and simple to update.',
-    deliverables: [
-      'Conversion-first UX and copy.',
-      'Responsive design systems in Figma.',
-      'Performance-tuned builds with analytics.'
-    ],
-    metrics: ['Core Web Vitals', 'Conversion rate', 'Form / cart completion']
-  },
-  'seo-organic': {
-    longForm: 'Earn traffic, don’t rent it. Technical SEO + content that drives qualified demand.',
-    deliverables: [
-      'Technical SEO and schema.',
-      'Intent-led content strategy and briefs.',
-      'Dashboards that tie to revenue.'
-    ],
-    metrics: ['Organic qualified sessions', 'Share of voice', 'Content-assisted pipeline']
-  },
-  'ai-automation': {
-    longForm: 'Lead capture, follow‑up, and support on autopilot. Feels human, books meetings.',
-    deliverables: [
-      'Chatbots trained on your offers.',
-      'CRM, calendar, and helpdesk integrations.',
-      'Lead routing and follow-up workflows.'
-    ],
-    metrics: ['Lead-to-meeting rate', 'Response time', 'Pipeline influenced']
-  },
-  'brand-identity': {
-    longForm: 'A clear, consistent identity that makes your brand unmistakable.',
-    deliverables: [
-      'Brand strategy and messaging.',
-      'Logos, motion, and visual language.',
-      'Sales and social asset kits.'
-    ],
-    metrics: ['Brand recall', 'Creative velocity', 'Sales cycle compression']
-  },
-  'social-media': {
-    longForm: 'Content engines and paid frameworks that turn views into pipeline.',
-    deliverables: [
-      'Channel blueprints and tone.',
-      'Content sprints and UGC sourcing.',
-      'Paid testing and retargeting.'
-    ],
-    metrics: ['Cost per qualified lead', 'Content-to-demo rate', 'Share of conversation']
-  }
-};
+gsap.registerPlugin(ScrollTrigger);
 
 function Services() {
-  const scrollRef = useLocomotiveScroll();
+  // Initialize locomotive scroll with start=true
+  const scrollRef = useLocomotiveScroll(true);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Animate elements on scroll
+      const reveals = document.querySelectorAll('.reveal-text');
+      reveals.forEach((el) => {
+        gsap.fromTo(el,
+          { y: 50, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: el,
+              scroller: containerRef.current, // Important: use the container ref
+              start: 'top 85%',
+            }
+          }
+        );
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <div className="services-page monochrome-page" ref={scrollRef} data-scroll-container>
-      <section className="section section-muted services-hero" data-cursor-section="services">
-        <div className="container services-hero__container">
-          <div className="services-hero__copy" data-scroll-reveal>
-            <span className="eyebrow">Services</span>
-            <h1>Web + AI systems built to scale your next chapter.</h1>
-            <p>Pair conversion-first websites with intelligent automations so your team wins back time and keeps the pipeline full.</p>
-            <div className="btn-group">
-              <Link to="/contact" className="btn btn-primary">Book a Free Strategy Call</Link>
-              <Link to="/resources" className="btn btn-ghost">Download the AI Time-Saver Guide</Link>
-            </div>
-          </div>
-          <div className="services-hero__card surface-panel" data-scroll-reveal>
-            <div className="surface-panel__shine" />
-            <h3>How we partner</h3>
-            <ul>
-              <li>Embedded with your team or fully managed delivery.</li>
-              <li>Weekly standups, async reporting, and shared dashboards.</li>
-              <li>Transparent scope, clear KPIs, and momentum from week one.</li>
-            </ul>
-          </div>
-        </div>
-      </section>
+    <div className="expand-page" data-scroll-container ref={scrollRef}>
+      <div ref={containerRef}>
 
-      <section className="section services-offering" data-cursor-section="services">
-        <div className="container">
-          <div className="section-header" data-scroll-reveal>
-            <span className="eyebrow">What we do</span>
-            <h2>Each service is a growth stack. Combine them to build your operating system.</h2>
-          </div>
-          <div className="service-detail-grid">
-            {services.map((service) => {
-              const detail = serviceDeepDive[service.id];
-              return (
-                <article key={service.id} className="service-detail surface-panel" data-scroll-reveal>
-                  <div className="surface-panel__shine" />
-                  <header>
-                    <span className="service-detail__category">{service.category}</span>
-                    <h3>{service.title}</h3>
-                    <p className="service-detail__lead">{detail?.longForm ?? service.description}</p>
-                  </header>
-                  <div className="service-detail__body">
-                    <div>
-                      <h4>What we deliver</h4>
-                      <ul>
-                        {(detail?.deliverables ?? service.highlights).map((item) => (
-                          <li key={item}>{item}</li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div>
-                      <h4>Signals we track</h4>
-                      <ul>
-                        {(detail?.metrics ?? service.highlights).map((item) => (
-                          <li key={item}>{item}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                  <footer className="service-detail__footer">
-                    <Link to="/contact" className="btn btn-ghost">Book a Free Strategy Call</Link>
-                  </footer>
-                </article>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+        {/* 1. HERO SECTION (WHITE) */}
+        <section className="section-white" data-scroll-section>
+          <div className="expand-label">Our Expertise</div>
+          <h1 className="expand-title-hero reveal-text">
+            WE BUILD MEANINGFUL<br />
+            CUSTOMER EXPERIENCES.
+          </h1>
+          <p className="expand-text-lg reveal-text" style={{ color: '#333', marginTop: '2rem' }}>
+            We combine design, technology, and strategy to help ambitious brands grow faster.
+          </p>
+        </section>
 
-      <section className="section section-muted services-collaboration" data-cursor-section="services">
-        <div className="container collaboration-grid surface-panel" data-scroll-reveal>
-          <div className="surface-panel__shine" />
-          <div>
-            <span className="eyebrow">Collaboration model</span>
-            <h2>Pods built for clarity, speed, and iteration.</h2>
-            <p>We assemble a dedicated team around your objective. The pod plugs into your workflows, communicates in your tools, and ships progress every week.</p>
-          </div>
-          <div className="collaboration-points">
-            <div>
-              <strong>Weekly rhythm</strong>
-              <p>Monday strategy standups, mid-week async check-ins, and Friday demo drops keep everyone aligned.</p>
-            </div>
-            <div>
-              <strong>Tooling</strong>
-              <p>We run in Notion, Linear, Figma, and Looker. Prefer Airtable or ClickUp? We’ll meet you there.</p>
-            </div>
-            <div>
-              <strong>Transparency</strong>
-              <p>Shared dashboards, Loom breakdowns, and open calendars mean no surprises and faster decisions.</p>
-            </div>
-          </div>
-        </div>
-      </section>
+        {/* 2. PILLARS SECTION (BLACK) */}
+        <section className="section-black" data-scroll-section data-bgcolor="#0b0f1a" data-textcolor="#ffffff">
+          <div className="expand-label" style={{ backgroundColor: '#fff', color: '#000' }}>Core Services</div>
+          <h2 className="expand-title-section reveal-text">
+            Everything you need<br />
+            to scale online.
+          </h2>
 
-      <section className="section services-cta" data-cursor-section="contact">
-        <div className="container shimmer-border" data-scroll-reveal>
-          <div className="shimmer-inner services-cta__inner">
-            <span className="eyebrow">Next step</span>
-            <h2>Book a Free Strategy Call.</h2>
-            <p>We’ll map bottlenecks and send a no‑fluff plan within 48 hours.</p>
-            <div className="btn-group">
-              <Link to="/contact" className="btn btn-primary">Book a Free Strategy Call</Link>
-              <Link to="/resources" className="btn btn-ghost">Download the AI Time-Saver Guide</Link>
+          <div className="services-grid">
+            <div className="service-card reveal-text">
+              <span className="service-card__icon">⚡️</span>
+              <h3>Performance Dev</h3>
+              <p>Custom websites and web apps built for speed. No bloat, just code that converts.</p>
+              <ul>
+                <li>React / Next.js Development</li>
+                <li>Headless CMS (Sanity, Contentful)</li>
+                <li>Shopify Plus Customization</li>
+              </ul>
+            </div>
+
+            <div className="service-card reveal-text">
+              <span className="service-card__icon">🤖</span>
+              <h3>AI Automation</h3>
+              <p>Replace busy work with intelligent systems. We build bots that work 24/7.</p>
+              <ul>
+                <li>Customer Support AI Agents</li>
+                <li>Lead Qualification Chatbots</li>
+                <li>Workflow Automation (Zapier/Make)</li>
+              </ul>
+            </div>
+
+            <div className="service-card reveal-text">
+              <span className="service-card__icon">📈</span>
+              <h3>Growth & SEO</h3>
+              <p>Data-driven strategies to get you found and keep you top of mind.</p>
+              <ul>
+                <li>Technical SEO Audits</li>
+                <li>Conversion Rate Optimization</li>
+                <li>Analytics & Tracking Setup</li>
+              </ul>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+
+        {/* 3. PROCESS SECTION (DEEP PURPLE) */}
+        <section className="section-purple" data-scroll-section data-bgcolor="#240b36" data-textcolor="#ffffff">
+          <div className="expand-label" style={{ backgroundColor: '#fff', color: '#000' }}>The Process</div>
+          <h2 className="expand-title-section reveal-text">How we work.</h2>
+
+          <div className="process-list">
+            <div className="process-item reveal-text">
+              <div className="process-num">01</div>
+              <div className="process-content">
+                <h3>Discovery & Strategy</h3>
+                <p>We start by understanding your business goals, target audience, and current bottlenecks. We don't write a line of code until we have a solid plan.</p>
+              </div>
+            </div>
+
+            <div className="process-item reveal-text">
+              <div className="process-num">02</div>
+              <div className="process-content">
+                <h3>Design & Build</h3>
+                <p>We design high-fidelity prototypes for your approval, then build them using modern, scalable tech stacks. Regular updates keep you in the loop.</p>
+              </div>
+            </div>
+
+            <div className="process-item reveal-text">
+              <div className="process-num">03</div>
+              <div className="process-content">
+                <h3>Launch & Optimize</h3>
+                <p>We handle the deployment and ensure everything runs smoothly. Post-launch, we monitor performance and make data-backed improvements.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* FOOTER */}
+        <section data-scroll-section>
+          <Footer />
+        </section>
+
+      </div>
     </div>
   );
 }

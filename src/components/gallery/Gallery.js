@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { galleryData } from '../../data/galleryData';
 import useLocomotiveScroll from '../../hooks/useLocomotiveScroll';
+import Footer from '../Footer';
 import './Gallery.css';
 
 const GalleryModal = ({ item, onClose, onNext, onPrev }) => {
@@ -79,7 +80,7 @@ const Gallery = () => {
 
   return (
     <div className="gallery-page monochrome-page" ref={scrollRef} data-scroll-container>
-      <section className="section gallery-hero">
+      <section className="section gallery-hero" data-scroll-section>
         <div className="container gallery-hero__container">
           <div className="gallery-hero__copy" data-scroll-reveal>
             <span className="eyebrow">Work</span>
@@ -110,7 +111,7 @@ const Gallery = () => {
         </div>
       </section>
 
-      <section className="section gallery-grid-section">
+      <section className="section gallery-grid-section" data-scroll-section>
         <div className="container">
           <div className="gallery-grid">
             {filteredData.map((item, index) => (
@@ -135,7 +136,7 @@ const Gallery = () => {
         </div>
       </section>
 
-      <section className="section gallery-cta">
+      <section className="section gallery-cta" data-scroll-section>
         <div className="container shimmer-border" data-scroll-reveal>
           <div className="shimmer-inner gallery-cta__inner">
             <span className="eyebrow">Next step</span>
@@ -145,6 +146,8 @@ const Gallery = () => {
           </div>
         </div>
       </section>
+
+      <Footer />
 
       <GalleryModal
         item={activeIndex !== null ? filteredData[activeIndex] : null}

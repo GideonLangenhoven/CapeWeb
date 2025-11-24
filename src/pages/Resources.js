@@ -1,99 +1,118 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useRef } from 'react';
 import useLocomotiveScroll from '../hooks/useLocomotiveScroll';
-import '../styles/StaticPage.css';
+import Footer from '../components/Footer';
+import './Resources.css';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-const resources = [
+gsap.registerPlugin(ScrollTrigger);
+
+const ARTICLES = [
   {
-    title: 'AI Time-Saver Guide',
-    description: 'Identify five quick wins to automate across marketing, sales, and admin without new headcount.',
-    format: 'PDF · 12 pages',
-    link: '#ai-guide'
+    category: "Strategy",
+    title: "The 2025 E-commerce Playbook",
+    excerpt: "Why speed is the new currency and how to optimize your store for the next generation of shoppers.",
+    image: "https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+    href: "/resources/2025-ecommerce-playbook"
   },
   {
-    title: 'Website Clarity Checklist',
-    description: 'A 15-minute checklist to ensure your homepage tells the right story and drives action on mobile.',
-    format: 'Notion template',
-    link: '#'
+    category: "Automation",
+    title: "Stop Wasting Time on Email",
+    excerpt: "How to set up intelligent auto-responders that actually sound human and convert leads while you sleep.",
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+    href: "/resources/stop-wasting-time-email"
   },
   {
-    title: 'Automation Stack for SMEs',
-    description: 'See the exact tools we integrate for Cape Town clients to automate inbound leads and onboarding.',
-    format: 'Google Sheet',
-    link: '#'
+    category: "Design",
+    title: "Minimalism is Not Dead",
+    excerpt: "How to use negative space and bold typography to create a premium brand experience.",
+    image: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+    href: "/resources/minimalism-not-dead"
   }
 ];
 
 function Resources() {
-  const scrollRef = useLocomotiveScroll();
+  const scrollRef = useLocomotiveScroll(true);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const reveals = document.querySelectorAll('.reveal-text');
+      reveals.forEach((el) => {
+        gsap.fromTo(el,
+          { y: 50, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: el,
+              scroller: containerRef.current,
+              start: 'top 85%',
+            }
+          }
+        );
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <div className="static-page monochrome-page" ref={scrollRef} data-scroll-container>
-      <header className="static-hero container">
-        <p className="static-eyebrow">Resources</p>
-        <h1>Tools to help you grow without the burnout</h1>
-        <p className="static-lead">
-          Practical templates, guides, and automations designed for South African SMEs who want a smarter, faster
-          web presence.
-        </p>
-        <div className="static-actions">
-          <Link to="/contact" className="btn btn-primary">
-            Book a Free Strategy Call
-          </Link>
-          <a href="#downloads" className="btn btn-ghost">
-            Download the AI Time-Saver Guide
-          </a>
-        </div>
-      </header>
+    <div className="expand-page" data-scroll-container ref={scrollRef}>
+      <div ref={containerRef}>
 
-      <section className="static-section container" id="downloads">
-        <div className="static-section__header">
-          <h2>Download and put to work today</h2>
-        </div>
-        <div className="static-grid">
-          {resources.map((resource) => (
-            <article key={resource.title} className="static-card static-card--resource">
-              <header>
-                <p className="static-card__format">{resource.format}</p>
-                <h3>{resource.title}</h3>
-              </header>
-              <p className="static-card__description">{resource.description}</p>
-              <a href={resource.link} className="static-link">
-                Download resource
+        {/* 1. HERO SECTION (WHITE) */}
+        <section className="section-white" data-scroll-section>
+          <div className="expand-label">Knowledge Base</div>
+          <h1 className="expand-title-hero reveal-text">
+            INSIGHTS FOR<br />
+            GROWTH.
+          </h1>
+          <p className="expand-text-lg reveal-text" style={{ color: '#333', marginTop: '2rem' }}>
+            Strategies, tactics, and guides to help you scale your business in the digital age.
+          </p>
+        </section>
+
+        {/* 2. ARTICLES SECTION (BLACK) */}
+        <section className="section-black" data-scroll-section data-bgcolor="#0b0f1a" data-textcolor="#ffffff">
+          <div className="expand-label" style={{ backgroundColor: '#fff', color: '#000' }}>Latest Articles</div>
+
+          <div className="resources-grid">
+            {ARTICLES.map((article, index) => (
+              <a href={article.href} className="resource-card reveal-text" key={index}>
+                <div className="resource-card__image-wrap">
+                  <img src={article.image} alt={article.title} className="resource-card__image" />
+                </div>
+                <span className="resource-card__cat">{article.category}</span>
+                <h3 className="resource-card__title">{article.title}</h3>
+                <p className="resource-card__excerpt">{article.excerpt}</p>
               </a>
-            </article>
-          ))}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
 
-      <section className="static-section container">
-        <div className="static-section__header">
-          <h2>Want early access?</h2>
-          <p>Join our quarterly update to get new templates, workshop invites, and automation experiments first.</p>
-        </div>
-        <form className="static-form">
-          <div className="static-form__field">
-            <label htmlFor="resource-name">Name</label>
-            <input id="resource-name" name="name" type="text" autoComplete="name" placeholder="Your name" required />
+        {/* 3. NEWSLETTER SECTION (DEEP PURPLE) */}
+        <section className="section-purple" data-scroll-section data-bgcolor="#240b36" data-textcolor="#ffffff">
+          <div className="newsletter-box reveal-text">
+            <h2 className="expand-title-section">Stay ahead of the curve.</h2>
+            <p className="expand-text-lg">
+              Join 5,000+ founders receiving our weekly growth tactics. No fluff, just value.
+            </p>
+            <form className="newsletter-form">
+              <input type="email" placeholder="Enter your email" className="newsletter-input" required />
+              <button type="submit" className="newsletter-btn">Subscribe</button>
+            </form>
           </div>
-          <div className="static-form__field">
-            <label htmlFor="resource-email">Email</label>
-            <input
-              id="resource-email"
-              name="email"
-              type="email"
-              autoComplete="email"
-              placeholder="you@business.co.za"
-              required
-            />
-          </div>
-          <button type="submit" className="btn btn-primary">
-            Download the AI Time-Saver Guide
-          </button>
-        </form>
-        <p className="static-form__note">
-          We send one curated email at a time. Unsubscribe whenever you need to.
-        </p>
-      </section>
+        </section>
+
+        {/* FOOTER */}
+        <section data-scroll-section>
+          <Footer />
+        </section>
+
+      </div>
     </div>
   );
 }

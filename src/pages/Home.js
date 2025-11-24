@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { ArrowRight } from 'lucide-react';
 import Hero from '../components/Hero';
 import Footer from '../components/Footer';
 import gsap from 'gsap';
@@ -178,13 +179,17 @@ function Home() {
     const previousScrollBehavior = document.documentElement.style.scrollBehavior;
     document.documentElement.style.scrollBehavior = 'auto';
 
-    // Ensure each scroll section has a transform value to satisfy locomotive-scroll getTranslate
-    scrollContainer.querySelectorAll('[data-scroll-section]').forEach((section) => {
-      const transform = getComputedStyle(section).transform;
-      if (!transform || transform === 'none') {
-        section.style.transform = 'translate3d(0, 0, 0)';
-      }
-    });
+    // Helper to ensure sections have a transform
+    const fixScrollSections = () => {
+      scrollContainer.querySelectorAll('[data-scroll-section]').forEach((section) => {
+        const transform = getComputedStyle(section).transform;
+        if (!transform || transform === 'none') {
+          section.style.transform = 'translate3d(0, 0, 0)';
+        }
+      });
+    };
+
+    fixScrollSections();
 
     const loco = new LocomotiveScroll({
       el: scrollContainer,
@@ -195,6 +200,13 @@ function Home() {
       resetNativeScroll: true,
       reloadOnContextChange: true
     });
+
+    // Override update to always apply fix
+    const originalUpdate = loco.update.bind(loco);
+    loco.update = () => {
+      fixScrollSections();
+      originalUpdate();
+    };
 
     const handleAnchorClick = (event) => {
       const target = event.target.closest('a[href^="#"]');
@@ -332,14 +344,16 @@ function Home() {
     const refresh = () => loco.update();
     ScrollTrigger.addEventListener('refresh', refresh);
 
+    let timeoutId;
     requestAnimationFrame(() => {
-      setTimeout(() => {
+      timeoutId = setTimeout(() => {
         loco.update();
         ScrollTrigger.refresh();
       }, 500);
     });
 
     return () => {
+      clearTimeout(timeoutId);
       scrollContainer.removeEventListener('click', handleAnchorClick);
       ScrollTrigger.removeEventListener('refresh', refresh);
       triggers.forEach((trigger) => trigger.kill());
@@ -768,6 +782,7 @@ function Home() {
                   {PLAN_LINES.map((line) => (
                     <div className="tfx-line" key={line.label}>
                       {line.label} <span>{line.accent}</span>
+                      <ArrowRight className="tfx-arrow" size={32} />
                     </div>
                   ))}
                 </div>

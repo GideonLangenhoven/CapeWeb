@@ -16,13 +16,23 @@ export default function useLocomotiveScroll(start = true) {
         const scrollEl = scrollRef.current;
 
         // Fix for locomotive-scroll getTranslate error: ensure sections have a transform
-        const sections = scrollEl.querySelectorAll('[data-scroll-section]');
-        sections.forEach((section) => {
-            const transform = window.getComputedStyle(section).transform;
-            if (!transform || transform === 'none') {
-                section.style.transform = 'translate3d(0, 0, 0)';
-            }
-        });
+        const fixScrollSections = () => {
+            const ensureTransform = (el) => {
+                if (!el) return;
+                const transform = window.getComputedStyle(el).transform;
+                if (!transform || transform === 'none' || transform === 'unset') {
+                    el.style.transform = 'translate3d(0, 0, 0)';
+                }
+            };
+
+            ensureTransform(scrollEl);
+            const sections = scrollEl.querySelectorAll('[data-scroll-section]');
+            sections.forEach((section) => {
+                ensureTransform(section);
+            });
+        };
+
+        fixScrollSections();
 
         locomotiveScrollRef.current = new LocomotiveScroll({
             el: scrollEl,
@@ -39,6 +49,13 @@ export default function useLocomotiveScroll(start = true) {
                 smooth: true,
             },
         });
+
+        // Override update to always apply fix
+        const originalUpdate = locomotiveScrollRef.current.update.bind(locomotiveScrollRef.current);
+        locomotiveScrollRef.current.update = () => {
+            fixScrollSections();
+            originalUpdate();
+        };
 
         // Sync ScrollTrigger with Locomotive Scroll
         ScrollTrigger.scrollerProxy(scrollEl, {
@@ -60,21 +77,30 @@ export default function useLocomotiveScroll(start = true) {
 
         locomotiveScrollRef.current.on('scroll', ScrollTrigger.update);
 
-        ScrollTrigger.addEventListener('refresh', () => locomotiveScrollRef.current.update());
+        const refreshHandler = () => {
+            if (locomotiveScrollRef.current) {
+                locomotiveScrollRef.current.update();
+            }
+        };
+
+        ScrollTrigger.addEventListener('refresh', refreshHandler);
         ScrollTrigger.refresh();
 
         const resizeObserver = new ResizeObserver(() => {
-            locomotiveScrollRef.current?.update();
-            ScrollTrigger.refresh();
+            if (locomotiveScrollRef.current) {
+                locomotiveScrollRef.current.update();
+                ScrollTrigger.refresh();
+            }
         });
         resizeObserver.observe(scrollEl);
 
         return () => {
             if (locomotiveScrollRef.current) {
                 locomotiveScrollRef.current.destroy();
+                locomotiveScrollRef.current = null;
             }
             resizeObserver.disconnect();
-            ScrollTrigger.removeEventListener('refresh', () => locomotiveScrollRef.current?.update());
+            ScrollTrigger.removeEventListener('refresh', refreshHandler);
         };
     }, [start]);
 

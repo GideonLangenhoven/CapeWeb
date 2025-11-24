@@ -657,21 +657,32 @@ h3 {
   display: flex;
   width: 100%;
   max-width: 1200px;
-  justify-content: space-between;
-  align-items: flex-end;
+  justify-content: center;
+  /* Center content */
+  align-items: center;
+  /* Align items vertically */
   gap: 1.375rem;
   margin-bottom: .55rem;
+  position: relative;
+  /* For absolute positioning of controls */
 }
 
 #prod-slider .head h2 {
   font-size: var(--display-3);
-  text-align: right;
-  flex: 1;
+  text-align: center;
+  /* Center text */
+  flex: auto;
+  /* Allow it to take natural width */
 }
 
 #prod-slider .controls {
   display: flex;
   gap: .55rem;
+  position: absolute;
+  /* Position absolutely */
+  right: 0;
+  bottom: 0.5rem;
+  /* Adjust vertical alignment */
 }
 
 #prod-slider .nav-btn {
@@ -1485,4 +1496,32 @@ h3 {
     font-size: .825rem;
     padding: .825rem .99rem;
   }
+}
+
+/* Animated Arrow Styles */
+.tfx-arrow {
+  position: absolute;
+  right: 6rem;
+  /* Start 5rem to the left of the original 1rem */
+  opacity: 0;
+  transform: scaleX(2);
+  /* 200% bigger tail */
+  transform-origin: right center;
+  transition: all 0.4s cubic-bezier(0.1, 0.5, 0.5, 1);
+  z-index: 2;
+  color: aquamarine;
+  pointer-events: none;
+}
+
+.tfx-line:hover .tfx-arrow {
+  opacity: 1;
+  transform: scaleX(2) translateX(5rem);
+  /* Move 5rem to the right */
+}
+
+/* Keyhole Section Scroll Fix */
+.keyhole-section {
+  position: relative;
+  z-index: 2;
+  /* Ensure it sits above/blends with following sections */
 }
