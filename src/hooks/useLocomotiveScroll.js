@@ -6,6 +6,72 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Define a safe subclass to override the buggy method
+class SafeLocomotiveScroll extends LocomotiveScroll {
+    addSections() {
+        this.sections = {};
+
+        let sections = this.el?.querySelectorAll(`[data-${this.name}-section]`) || [];
+        if (sections.length === 0 && this.el) {
+            sections = [this.el];
+        }
+
+        // Helper to safely get translate values
+        const safeGetTranslate = (el) => {
+            if (!el) return { x: 0, y: 0 };
+            const style = window.getComputedStyle ? window.getComputedStyle(el) : null;
+            const transform = style?.transform || style?.webkitTransform || style?.mozTransform || 'matrix(1,0,0,1,0,0)';
+
+            const translate = { x: 0, y: 0 };
+            // Ensure transform is a string
+            const transformStr = String((!transform || transform === 'none') ? 'matrix(1,0,0,1,0,0)' : transform);
+
+            let mat = transformStr.match(/^matrix3d\((.+)\)$/);
+            if (mat) {
+                const parts = mat[1].split(', ');
+                translate.x = parseFloat(parts[12]) || 0;
+                translate.y = parseFloat(parts[13]) || 0;
+            } else {
+                mat = transformStr.match(/^matrix\((.+)\)$/);
+                const parts = mat ? mat[1].split(', ') : [];
+                translate.x = parseFloat(parts[4]) || 0;
+                translate.y = parseFloat(parts[5]) || 0;
+            }
+            return translate;
+        };
+
+        sections.forEach((section, index) => {
+            if (!section) return;
+            const dataset = section.dataset || {};
+            const id = typeof dataset[this.name + 'Id'] === 'string' ? dataset[this.name + 'Id'] : `section${index}`;
+            const sectionBCR = section.getBoundingClientRect();
+
+            // Use safe getter
+            const translate = safeGetTranslate(section);
+
+            const offset = {
+                x: sectionBCR.left - window.innerWidth * 1.5 - translate.x,
+                y: sectionBCR.top - window.innerHeight * 1.5 - translate.y
+            };
+            const limit = {
+                x: offset.x + sectionBCR.width + window.innerWidth * 2,
+                y: offset.y + sectionBCR.height + window.innerHeight * 2
+            };
+            const persistent = typeof dataset[this.name + 'Persistent'] === 'string';
+            section.setAttribute(`data-${this.name}-section-id`, id);
+
+            this.sections[id] = {
+                el: section,
+                offset,
+                limit,
+                inView: false,
+                persistent,
+                id
+            };
+        });
+    }
+}
+
 export default function useLocomotiveScroll(start = true) {
     const scrollRef = useRef(null);
     const locomotiveScrollRef = useRef(null);
@@ -15,26 +81,19 @@ export default function useLocomotiveScroll(start = true) {
 
         const scrollEl = scrollRef.current;
 
-        // Fix for locomotive-scroll getTranslate error: ensure sections have a transform
-        const fixScrollSections = () => {
-            const ensureTransform = (el) => {
-                if (!el) return;
-                const transform = window.getComputedStyle(el).transform;
-                if (!transform || transform === 'none' || transform === 'unset') {
-                    el.style.transform = 'translate3d(0, 0, 0)';
-                }
-            };
-
-            ensureTransform(scrollEl);
+        // Ensure elements have transforms before init (extra safety)
+        const ensureTransforms = () => {
             const sections = scrollEl.querySelectorAll('[data-scroll-section]');
-            sections.forEach((section) => {
-                ensureTransform(section);
+            sections.forEach(el => {
+                if (!el.style.transform) {
+                    el.style.transform = 'translate3d(0,0,0)';
+                }
             });
         };
+        ensureTransforms();
 
-        fixScrollSections();
-
-        locomotiveScrollRef.current = new LocomotiveScroll({
+        // Use the Safe subclass
+        const ls = new SafeLocomotiveScroll({
             el: scrollEl,
             smooth: true,
             multiplier: 1,
@@ -50,19 +109,24 @@ export default function useLocomotiveScroll(start = true) {
             },
         });
 
-        // Override update to always apply fix
-        const originalUpdate = locomotiveScrollRef.current.update.bind(locomotiveScrollRef.current);
-        locomotiveScrollRef.current.update = () => {
-            fixScrollSections();
-            originalUpdate();
-        };
+        locomotiveScrollRef.current = ls;
+
+        // Force an update to register sections using the patched method
+        ls.update();
 
         // Sync ScrollTrigger with Locomotive Scroll
         ScrollTrigger.scrollerProxy(scrollEl, {
             scrollTop(value) {
-                return arguments.length
-                    ? locomotiveScrollRef.current.scrollTo(value, 0, 0)
-                    : locomotiveScrollRef.current.scroll.instance.scroll.y;
+                if (ls && ls.scroll) {
+                    if (arguments.length) {
+                        return ls.scrollTo(value, 0, 0);
+                    }
+                    return ls.scroll.instance?.scroll?.y || 0;
+                }
+                if (arguments.length && scrollEl) {
+                    scrollEl.scrollTop = value;
+                }
+                return scrollEl ? scrollEl.scrollTop : 0;
             },
             getBoundingClientRect() {
                 return {
@@ -75,11 +139,11 @@ export default function useLocomotiveScroll(start = true) {
             pinType: scrollEl.style.transform ? 'transform' : 'fixed',
         });
 
-        locomotiveScrollRef.current.on('scroll', ScrollTrigger.update);
+        ls.on('scroll', ScrollTrigger.update);
 
         const refreshHandler = () => {
-            if (locomotiveScrollRef.current) {
-                locomotiveScrollRef.current.update();
+            if (ls) {
+                ls.update();
             }
         };
 
@@ -87,16 +151,22 @@ export default function useLocomotiveScroll(start = true) {
         ScrollTrigger.refresh();
 
         const resizeObserver = new ResizeObserver(() => {
-            if (locomotiveScrollRef.current) {
-                locomotiveScrollRef.current.update();
+            if (ls) {
+                ls.update();
                 ScrollTrigger.refresh();
             }
         });
         resizeObserver.observe(scrollEl);
 
         return () => {
-            if (locomotiveScrollRef.current) {
-                locomotiveScrollRef.current.destroy();
+            ScrollTrigger.getAll().forEach((trigger) => {
+                if (trigger.scroller === scrollEl) {
+                    trigger.kill();
+                }
+            });
+
+            if (ls) {
+                ls.destroy();
                 locomotiveScrollRef.current = null;
             }
             resizeObserver.disconnect();

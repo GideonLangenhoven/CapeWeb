@@ -7,7 +7,7 @@ import Work from './pages/Work';
 import Services from './pages/Services';
 import Pricing from './pages/Pricing';
 import Resources from './pages/Resources';
-import Gallery from './components/gallery/Gallery';
+import Gallery from './pages/Gallery';
 import Contact from './pages/Contact';
 import Privacy from './pages/Privacy';
 import ComponentLibrary from './pages/ComponentLibrary';

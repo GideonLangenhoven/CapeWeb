@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import useLocomotiveScroll from '../hooks/useLocomotiveScroll';
+import useColorChange from '../hooks/useColorChange';
 import Footer from '../components/Footer';
 import './Contact.css';
 import gsap from 'gsap';
@@ -10,6 +11,8 @@ gsap.registerPlugin(ScrollTrigger);
 function Contact() {
   const scrollRef = useLocomotiveScroll(true);
   const containerRef = useRef(null);
+
+  useColorChange(scrollRef);
 
   useEffect(() => {
     const ctx = gsap.context(() => {

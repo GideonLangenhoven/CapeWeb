@@ -6,6 +6,7 @@ import SplitRevealLogo from './SplitRevealLogo';
 const navItems = [
   { label: 'Services', to: '/services' },
   { label: 'Work', to: '/work' },
+  { label: 'Gallery', to: '/gallery' },
   { label: 'Resources', to: '/resources' },
   { label: 'Contact', to: '/contact' }
 ];
@@ -116,6 +117,7 @@ function Header() {
   }, [location.pathname]);
 
   const isActive = (path) => location.pathname === path;
+
 
 
   return (

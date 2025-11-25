@@ -5,6 +5,7 @@
   "dependencies": {
     "@fontsource-variable/montserrat": "^5.2.6",
     "@heroicons/react": "^2.2.0",
+    "@shopify/storefront-api-client": "^1.0.9",
     "framer-motion": "^12.18.1",
     "gsap": "^3.13.0",
     "locomotive-scroll": "^4.1.4",
@@ -16,6 +17,7 @@
     "react-intersection-observer": "^9.16.0",
     "react-router-dom": "^7.6.2",
     "react-scripts": "5.0.1",
+    "shopify-buy": "^3.0.7",
     "swiper": "^11.2.8",
     "threejs-components": "^0.0.23",
     "typed.js": "^2.1.0"
