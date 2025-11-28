@@ -136,10 +136,43 @@ function Home() {
     });
   }, []);
 
-  const handleLeadSubmit = useCallback((event) => {
+  const handleLeadSubmit = useCallback(async (event) => {
     event.preventDefault();
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const email = formData.get('email');
+    const name = formData.get('name');
+
+    if (!email || !name) return;
+
+    // 1. Trigger Download immediately (UX)
+    const link = document.createElement('a');
+    link.href = '/The-Automation-Playbook.pdf';
+    link.download = 'The-Automation-Playbook.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
     setLeadSubmitted(true);
-    event.currentTarget.reset();
+    form.reset();
+
+    // 2. Send to Google Sheets (Background)
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwLFgbHHM63wG-WrNwFrwzzLoj0kv6r7MD9RHPDFhTAVeS-8Y2UopbSVrzacie8GuZARg/exec';
+
+    try {
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: email,
+          name: name,
+          guideType: 'automation-playbook'
+        }),
+      });
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
   }, []);
 
   const toggleFullscreen = useCallback(() => {
@@ -949,6 +982,10 @@ function Home() {
               Five workflows that save 10+ hours a week. Free, no fluff.
             </p>
             <form className="lead-form" id="leadForm" onSubmit={handleLeadSubmit} noValidate>
+              <div className="lead-form__field">
+                <label htmlFor="lead-name">Name</label>
+                <input id="lead-name" type="text" name="name" placeholder="John Doe" required />
+              </div>
               <div className="lead-form__field">
                 <label htmlFor="lead-email">Email address</label>
                 <input id="lead-email" type="email" name="email" placeholder="you@business.co.za" required />

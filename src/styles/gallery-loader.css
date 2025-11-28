@@ -7,28 +7,30 @@
     width: 100%;
     height: 100%;
     background: #000;
-    z-index: 9999;
+    z-index: 10001;
+    /* Below Header (10002) but above content */
     transition: opacity 0.8s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .loading-text {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
     text-align: center;
     width: 100%;
     height: 100px;
     line-height: 100px;
+    position: relative;
+    z-index: 10002;
 }
 
 .loading-text span {
     display: inline-block;
     margin: 0 5px;
-    color: #fff;
+    color: #fff !important;
     font-family: 'Quattrocento Sans', sans-serif;
+    font-size: 24px;
+    /* Ensure visible size */
 }
 
 .loading-text span:nth-child(1) {

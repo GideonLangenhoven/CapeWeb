@@ -9,6 +9,7 @@ import Pricing from './pages/Pricing';
 import Resources from './pages/Resources';
 import Gallery from './pages/Gallery';
 import Contact from './pages/Contact';
+import Intake from './pages/Intake';
 import Privacy from './pages/Privacy';
 import ComponentLibrary from './pages/ComponentLibrary';
 import './styles/main.css';
@@ -41,6 +42,7 @@ function App() {
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/resources" element={<Resources />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/intake" element={<Intake />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/component-library" element={<ComponentLibrary />} />
           <Route path="*" element={<Home />} /> {/* Fallback route */}
