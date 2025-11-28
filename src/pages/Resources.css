@@ -97,3 +97,115 @@
 .newsletter-btn:hover {
     background: var(--expand-accent);
 }
+
+/* Lead Gen Section */
+.section-accent {
+    background-color: #A64B23;
+    /* Or your theme accent color */
+    color: #fff;
+    padding: 8rem 2rem;
+}
+
+.lead-gen-box {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .lead-gen-box {
+        grid-template-columns: 1fr;
+    }
+}
+
+.lead-gen-content .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+    display: block;
+    opacity: 0.8;
+}
+
+.lead-gen-features {
+    list-style: none;
+    padding: 0;
+    margin-top: 2rem;
+}
+
+.lead-gen-features li {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.lead-gen-form-wrapper {
+    background: #fff;
+    color: #000;
+    padding: 3rem;
+    border-radius: 8px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.lead-gen-form h3 {
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    background: #f9f9f9;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 1rem;
+    background: #000;
+    color: #fff;
+    border: none;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-top: 1rem;
+}
+
+.btn-submit:hover {
+    background: #333;
+}
+
+.btn-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.success-message {
+    color: green;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.error-message {
+    color: red;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    text-align: center;
+}

@@ -4,6 +4,7 @@ import { Draggable } from 'gsap/Draggable';
 import { Flip } from 'gsap/Flip';
 import { CustomEase } from 'gsap/CustomEase';
 import './Gallery.css';
+import '../styles/gallery-loader.css';
 
 gsap.registerPlugin(Draggable, Flip, CustomEase);
 
@@ -50,114 +51,8 @@ export default function Gallery() {
         document.body.classList.add('gallery-mode');
 
         // --- Preloader Logic ---
-        class PreloaderManager {
-            constructor() {
-                this.overlay = null;
-                this.canvas = null;
-                this.ctx = null;
-                this.animationId = null;
-                this.startTime = null;
-                this.duration = 2000;
-                this.createLoadingScreen();
-            }
-
-            createLoadingScreen() {
-                this.overlay = document.getElementById("preloader-overlay");
-                if (!this.overlay) return;
-
-                this.canvas = document.createElement("canvas");
-                this.canvas.width = 300;
-                this.canvas.height = 300;
-                this.ctx = this.canvas.getContext("2d");
-                this.overlay.appendChild(this.canvas);
-                this.startAnimation();
-            }
-
-            startAnimation() {
-                const centerX = this.canvas.width / 2;
-                const centerY = this.canvas.height / 2;
-                let time = 0;
-                let lastTime = 0;
-                const dotRings = [
-                    { radius: 20, count: 8 },
-                    { radius: 35, count: 12 },
-                    { radius: 50, count: 16 },
-                    { radius: 65, count: 20 },
-                    { radius: 80, count: 24 }
-                ];
-                const colors = { primary: "#2C1B14", accent: "#A64B23" };
-                const hexToRgb = (hex) => [parseInt(hex.slice(1, 3), 16), parseInt(hex.slice(3, 5), 16), parseInt(hex.slice(5, 7), 16)];
-
-                const animate = (timestamp) => {
-                    if (!this.startTime) this.startTime = timestamp;
-                    if (!lastTime) lastTime = timestamp;
-                    const deltaTime = timestamp - lastTime;
-                    lastTime = timestamp;
-                    time += deltaTime * 0.001;
-                    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-                    this.ctx.beginPath();
-                    this.ctx.arc(centerX, centerY, 3, 0, Math.PI * 2);
-                    const rgb = hexToRgb(colors.primary);
-                    this.ctx.fillStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.9)`;
-                    this.ctx.fill();
-
-                    dotRings.forEach((ring, ringIndex) => {
-                        for (let i = 0; i < ring.count; i++) {
-                            const angle = (i / ring.count) * Math.PI * 2;
-                            const radiusPulse = Math.sin(time * 2 - ringIndex * 0.4) * 3;
-                            const x = centerX + Math.cos(angle) * (ring.radius + radiusPulse);
-                            const y = centerY + Math.sin(angle) * (ring.radius + radiusPulse);
-                            const opacityWave = 0.4 + Math.sin(time * 2 - ringIndex * 0.4 + i * 0.2) * 0.6;
-                            const isActive = Math.sin(time * 2 - ringIndex * 0.4 + i * 0.2) > 0.6;
-
-                            this.ctx.beginPath();
-                            this.ctx.moveTo(centerX, centerY);
-                            this.ctx.lineTo(x, y);
-                            this.ctx.lineWidth = 0.8;
-                            if (isActive) {
-                                const accentRgb = hexToRgb(colors.accent);
-                                this.ctx.strokeStyle = `rgba(${accentRgb[0]}, ${accentRgb[1]}, ${accentRgb[2]}, ${opacityWave * 0.7})`;
-                            } else {
-                                const primaryRgb = hexToRgb(colors.primary);
-                                this.ctx.strokeStyle = `rgba(${primaryRgb[0]}, ${primaryRgb[1]}, ${primaryRgb[2]}, ${opacityWave * 0.5})`;
-                            }
-                            this.ctx.stroke();
-
-                            this.ctx.beginPath();
-                            this.ctx.arc(x, y, 2.5, 0, Math.PI * 2);
-                            if (isActive) {
-                                const accentRgb = hexToRgb(colors.accent);
-                                this.ctx.fillStyle = `rgba(${accentRgb[0]}, ${accentRgb[1]}, ${accentRgb[2]}, ${opacityWave})`;
-                            } else {
-                                const primaryRgb = hexToRgb(colors.primary);
-                                this.ctx.fillStyle = `rgba(${primaryRgb[0]}, ${primaryRgb[1]}, ${primaryRgb[2]}, ${opacityWave})`;
-                            }
-                            this.ctx.fill();
-                        }
-                    });
-
-                    if (timestamp - this.startTime >= this.duration) {
-                        this.complete();
-                        return;
-                    }
-                    this.animationId = requestAnimationFrame(animate);
-                };
-                this.animationId = requestAnimationFrame(animate);
-            }
-
-            complete(onComplete) {
-                if (this.animationId) cancelAnimationFrame(this.animationId);
-                if (this.overlay) {
-                    this.overlay.style.opacity = "0";
-                    this.overlay.style.transition = "opacity 0.8s ease";
-                    setTimeout(() => {
-                        this.overlay?.remove();
-                        if (onComplete) onComplete();
-                    }, 800);
-                }
-            }
-        }
+        // --- Preloader Logic ---
+        // Removed old PreloaderManager class
 
         // --- Gallery Logic ---
         class FashionGallery {
@@ -853,15 +748,21 @@ export default function Gallery() {
         }
 
         // Initialize
+        // Initialize
         let galleryInstance;
-        const preloader = new PreloaderManager();
+
+        // Simple timeout to simulate loading completion and fade out
         setTimeout(() => {
-            preloader.complete(() => {
-                galleryInstance = new FashionGallery();
-                galleryInstance.init();
-                // Expose to window for button clicks
-                window.gallery = galleryInstance;
-            });
+            const overlay = document.getElementById("preloader-overlay");
+            if (overlay) {
+                overlay.style.opacity = "0";
+                setTimeout(() => {
+                    overlay.remove();
+                    galleryInstance = new FashionGallery();
+                    galleryInstance.init();
+                    window.gallery = galleryInstance;
+                }, 800); // Wait for fade out transition
+            }
         }, 2000);
 
         return () => {
@@ -875,7 +776,17 @@ export default function Gallery() {
 
     return (
         <div className="gallery-page-wrapper">
-            <div id="preloader-overlay"></div>
+            <div className="loading" id="preloader-overlay">
+                <div className="loading-text">
+                    <span className="loading-text-words">L</span>
+                    <span className="loading-text-words">O</span>
+                    <span className="loading-text-words">A</span>
+                    <span className="loading-text-words">D</span>
+                    <span className="loading-text-words">I</span>
+                    <span className="loading-text-words">N</span>
+                    <span className="loading-text-words">G</span>
+                </div>
+            </div>
 
 
             <div className="viewport" id="viewport">
