@@ -5,7 +5,6 @@ import SplitRevealLogo from './SplitRevealLogo';
 
 const navItems = [
   { label: 'Services', to: '/services' },
-  { label: 'Work', to: '/work' },
   { label: 'Gallery', to: '/gallery' },
   { label: 'Resources', to: '/resources' },
   { label: 'Contact', to: '/contact' }
@@ -162,9 +161,9 @@ function Header() {
           </div>
 
           <div className="header-actions">
-            <Link to="/contact" className="btn btn-primary btn-nav" aria-label="Book a Free Strategy Call">
+            <a href="https://calendly.com/capeweb/discovery-call" className="btn btn-primary btn-nav" aria-label="Book a Free Strategy Call" target="_blank" rel="noopener noreferrer">
               Book a Free Strategy Call
-            </Link>
+            </a>
           </div>
         </div>
       </nav>
@@ -191,9 +190,9 @@ function Header() {
             </details>
           )}
           <div className="mobile-nav__cta">
-            <Link to="/contact" className="btn btn-primary">
+            <a href="https://calendly.com/capeweb/discovery-call" className="btn btn-primary" target="_blank" rel="noopener noreferrer">
               Book a Free Strategy Call
-            </Link>
+            </a>
             <Link to="/resources" className="btn btn-ghost">
               Download the AI Time-Saver Guide
             </Link>

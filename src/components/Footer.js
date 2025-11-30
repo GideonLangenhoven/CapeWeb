@@ -47,14 +47,51 @@ const SocialIcon = ({ Icon, href = '#' }) => (
   </a>
 );
 
-const FooterInput = () => (
-  <div className="footer2__input">
-    <input type="email" placeholder="Enter email address" />
-    <button type="button" aria-label="Subscribe">
-      <Send size={16} />
-    </button>
-  </div>
-);
+const FooterInput = () => {
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState('idle');
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    if (!email) return;
+    setStatus('submitting');
+
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwLFgbHHM63wG-WrNwFrwzzLoj0kv6r7MD9RHPDFhTAVeS-8Y2UopbSVrzacie8GuZARg/exec';
+
+    try {
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: email,
+          name: 'Subscriber',
+          guideType: 'footer-subscribe'
+        }),
+      });
+      setStatus('success');
+      setEmail('');
+    } catch (error) {
+      console.error('Error:', error);
+      setStatus('error');
+    }
+  };
+
+  return (
+    <div className="footer2__input">
+      <input
+        type="email"
+        placeholder={status === 'success' ? 'Subscribed!' : "Enter email address"}
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        disabled={status === 'success'}
+      />
+      <button type="button" aria-label="Subscribe" onClick={handleSubscribe} disabled={status === 'submitting' || status === 'success'}>
+        <Send size={16} />
+      </button>
+    </div>
+  );
+};
 
 const InstagramFeed = () => {
   const [posts, setPosts] = useState([]);
@@ -140,55 +177,53 @@ export default function Footer() {
           </div>
 
           <div className="footer2__col">
-            <SectionTitle>Latest News</SectionTitle>
+            <SectionTitle>Latest Resources</SectionTitle>
             <div className="footer2__news">
-              {LATEST_NEWS.map((news) => (
-                <div key={news.id} className="footer2__news-item">
-                  <div className="footer2__news-thumb">
-                    <img src={news.image} alt="News thumb" />
-                  </div>
-                  <div>
-                    <h4>{news.title}</h4>
-                    <div className="footer2__news-meta">
-                      <span>{news.date}</span>
-                      <span className="footer2__dot">•</span>
-                      <span>{news.author}</span>
-                    </div>
+              <a href="/resources" className="footer2__news-item" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <div className="footer2__news-thumb">
+                  <img src="https://images.unsplash.com/photo-1611746347311-585aad8486a6?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="WhatsApp Automation" />
+                </div>
+                <div>
+                  <h4>The WhatsApp Goldmine</h4>
+                  <div className="footer2__news-meta">
+                    <span>Automation</span>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="footer2__col">
-            <SectionTitle>Best Sellers</SectionTitle>
-            <div className="footer2__card">
-              <div className="footer2__card-media">
-                <img src={BEST_SELLER.image} alt={BEST_SELLER.title} />
-                <div className="footer2__card-badge">Top Rated</div>
-              </div>
-              <h4 className="footer2__card-title">{BEST_SELLER.title}</h4>
-              <div className="footer2__stars">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    size={14}
-                    fill={i < BEST_SELLER.rating ? 'currentColor' : 'none'}
-                    stroke="currentColor"
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="footer2__col">
-            <div className="footer2__insta-head">
-              <SectionTitle>Instagram</SectionTitle>
-              <a href="#" className="footer2__link">
-                Follow Us
+              </a>
+              <a href="/resources" className="footer2__news-item" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <div className="footer2__news-thumb">
+                  <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Time Trap" />
+                </div>
+                <div>
+                  <h4>The "Time-for-Money" Trap</h4>
+                  <div className="footer2__news-meta">
+                    <span>Strategy</span>
+                  </div>
+                </div>
+              </a>
+              <a href="/resources" className="footer2__news-item" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <div className="footer2__news-thumb">
+                  <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="2026 Extinction" />
+                </div>
+                <div>
+                  <h4>The 2026 Extinction Event</h4>
+                  <div className="footer2__news-meta">
+                    <span>Future Tech</span>
+                  </div>
+                </div>
               </a>
             </div>
-            <InstagramFeed />
+          </div>
+
+          <div className="footer2__col">
+            <SectionTitle>Quick Links</SectionTitle>
+            <ul className="footer2__list">
+              <li className="footer2__list-item"><a href="/" style={{ color: 'inherit', textDecoration: 'none' }}>Home</a></li>
+              <li className="footer2__list-item"><a href="/services" style={{ color: 'inherit', textDecoration: 'none' }}>Services</a></li>
+              <li className="footer2__list-item"><a href="/work" style={{ color: 'inherit', textDecoration: 'none' }}>Work</a></li>
+              <li className="footer2__list-item"><a href="/resources" style={{ color: 'inherit', textDecoration: 'none' }}>Resources</a></li>
+              <li className="footer2__list-item"><a href="/contact" style={{ color: 'inherit', textDecoration: 'none' }}>Contact</a></li>
+            </ul>
           </div>
         </div>
 

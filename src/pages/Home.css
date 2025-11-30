@@ -409,6 +409,7 @@ h3 {
   display: inline-flex;
   width: 100%;
   justify-content: center;
+  gap: 4.4rem;
   -webkit-mask-image: linear-gradient(to right, transparent, black 128px, black calc(100% - 128px), transparent);
   mask-image: linear-gradient(to right, transparent, black 128px, black calc(100% - 128px), transparent);
 }

@@ -11,6 +11,37 @@ gsap.registerPlugin(ScrollTrigger);
 function Contact() {
   const scrollRef = useLocomotiveScroll(true);
   const containerRef = useRef(null);
+  const [formData, setFormData] = React.useState({ name: '', email: '', message: '' });
+  const [status, setStatus] = React.useState('idle');
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus('submitting');
+
+    // REPLACE WITH YOUR ACTUAL DEPLOYED URL
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwLFgbHHM63wG-WrNwFrwzzLoj0kv6r7MD9RHPDFhTAVeS-8Y2UopbSVrzacie8GuZARg/exec';
+
+    try {
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          guideType: 'contact-form'
+        }),
+      });
+      setStatus('success');
+      setFormData({ name: '', email: '', message: '' });
+    } catch (error) {
+      console.error('Error:', error);
+      setStatus('error');
+    }
+  };
 
   useColorChange(scrollRef);
 
@@ -65,20 +96,47 @@ function Contact() {
               </p>
             </div>
 
-            <form className="contact-form reveal-text">
+            <form className="contact-form reveal-text" onSubmit={handleSubmit}>
               <div className="form-group">
                 <label htmlFor="name">Name</label>
-                <input type="text" id="name" required placeholder="John Doe" />
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  placeholder="John Doe"
+                />
               </div>
               <div className="form-group">
                 <label htmlFor="email">Email</label>
-                <input type="email" id="email" required placeholder="john@company.com" />
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  placeholder="john@company.com"
+                />
               </div>
               <div className="form-group">
                 <label htmlFor="message">Message</label>
-                <textarea id="message" rows="4" required placeholder="Tell us about your goals..."></textarea>
+                <textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  rows="4"
+                  required
+                  placeholder="Tell us about your goals..."
+                ></textarea>
               </div>
-              <button type="submit" className="submit-btn">Send Message</button>
+              <button type="submit" className="submit-btn" disabled={status === 'submitting'}>
+                {status === 'submitting' ? 'Sending...' : status === 'success' ? 'Message Sent!' : 'Send Message'}
+              </button>
+              {status === 'error' && <p style={{ color: 'red', marginTop: '10px' }}>Something went wrong. Please try again.</p>}
             </form>
           </div>
         </section>

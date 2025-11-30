@@ -86,7 +86,7 @@ export const homeData = {
     title: 'GALLERY OF SUCCESS',
     subtitle: 'Witness the power of unified teams and vibrant corporate cultures.',
     buttonText: 'VIEW EVENTS',
-    buttonLink: '/work',
+    buttonLink: '/gallery',
     image: 'https://static.wixstatic.com/media/ec833a_89de362236df4ba09105813098c48a66~mv2.jpg/v1/fill/w_2560,h_1058,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/ec833a_89de362236df4ba09105813098c48a66~mv2.jpg'
   }
 };

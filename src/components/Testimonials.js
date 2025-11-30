@@ -14,7 +14,7 @@ const Testimonials = () => {
         <div className="cta-section">
           <h2>Ready to grow?</h2>
           <p>Book a free strategy call and get a custom plan.</p>
-          <a href="/contact" className="cta-button">Book a Free Strategy Call</a>
+          <a href="https://calendly.com/capeweb/discovery-call" className="cta-button" target="_blank" rel="noopener noreferrer">Book a Free Strategy Call</a>
         </div>
       </div>
     </div>

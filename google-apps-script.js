@@ -64,16 +64,24 @@ function doPost(e) {
             var name = data.name || "Friend";
             var email = data.email;
             var guideType = data.guideType || "business-evolution";
+            var message = data.message || ""; // Capture message if present
 
             // Send Welcome Email
             var emailStatus = "Sent";
             try {
-                sendWelcomeEmail(name, email, guideType);
+                sendWelcomeEmail(name, email, guideType, message);
             } catch (error) {
                 emailStatus = "Error: " + error.toString();
             }
 
             // Append to the sheet
+            // If it's a contact form, we might want to store the message too.
+            // For simplicity, we'll append it to the "Guide Type" column or a new column if we wanted to be fancy,
+            // but let's stick to the existing structure and maybe append message to name or just log it.
+            // Actually, let's just append it as is. The sheet has fixed columns.
+            // We'll put the message in the "Guide Type" column for now if it's a contact form, or just keep it simple.
+            // Better approach: Just log it as "Contact Form" in guide type.
+
             sheet.appendRow([timestamp, name, email, emailStatus, guideType, "Pending"]);
 
             return ContentService.createTextOutput(JSON.stringify({ 'result': 'success', 'emailStatus': emailStatus }))
@@ -91,7 +99,7 @@ function doPost(e) {
 // -----------------------------------------------------------------------------
 // WELCOME EMAIL FUNCTION
 // -----------------------------------------------------------------------------
-function sendWelcomeEmail(name, email, guideType) {
+function sendWelcomeEmail(name, email, guideType, message) {
     var subject = "";
     var bodyContent = "";
 
@@ -113,6 +121,30 @@ function sendWelcomeEmail(name, email, guideType) {
               This guide covers the high-impact tasks you should automate immediately to start seeing these results.
             </p>
         `;
+    } else if (guideType === "contact-form") {
+        subject = "We received your message! 📬";
+        bodyContent = `
+            <p style="font-size: 16px; line-height: 1.6;">
+              Thanks for reaching out! We've received your message and our team is reviewing it.
+            </p>
+            <p style="font-size: 16px; line-height: 1.6;">
+              <strong>Your Message:</strong><br/>
+              <em>"${message}"</em>
+            </p>
+            <p style="font-size: 16px; line-height: 1.6;">
+              We typically reply within 24 hours. In the meantime, feel free to check out our <a href="https://capeweb.co.za/resources" style="color: #A64B23;">free resources</a>.
+            </p>
+        `;
+    } else if (guideType === "footer-subscribe") {
+        subject = "Welcome to the Cape Web Community! 🌟";
+        bodyContent = `
+            <p style="font-size: 16px; line-height: 1.6;">
+              Thanks for subscribing to our newsletter! You're now on the list to receive the latest insights on AI, automation, and web development.
+            </p>
+            <p style="font-size: 16px; line-height: 1.6;">
+              We promise to keep it valuable and spam-free.
+            </p>
+        `;
     } else {
         // Default: Business Evolution Guide
         subject = "Your Business Evolution Guide is Here! 🚀";
@@ -123,6 +155,42 @@ function sendWelcomeEmail(name, email, guideType) {
             <p style="font-size: 16px; line-height: 1.6;">
               Inside, you'll find actionable strategies to leverage AI and social media to scale your operations.
             </p>
+        `;
+    }
+
+    // List of all available resources
+    var resources = [
+        { id: "business-evolution", title: "Business Evolution Guide", url: "https://capeweb.co.za/business-evolution-guide.pdf" },
+        { id: "automation-playbook", title: "Automation Playbook", url: "https://capeweb.co.za/The-Automation-Playbook.pdf" },
+        { id: "time-money-trap", title: "Time-for-Money Trap", url: "https://capeweb.co.za/time-for-money-trap.pdf" },
+        { id: "2026-extinction", title: "2026 Extinction Event", url: "https://capeweb.co.za/2026-survival-guide.pdf" },
+        { id: "employee-never-sleeps", title: "The Employee Who Never Sleeps", url: "https://capeweb.co.za/ai-agent-guide.pdf" },
+        { id: "whatsapp-goldmine", title: "The WhatsApp Goldmine", url: "https://capeweb.co.za/whatsapp-automation.pdf" },
+        { id: "service-to-scale", title: "Service to Scale", url: "https://capeweb.co.za/service-to-scale.pdf" }
+    ];
+
+    // Generate HTML for other resources (excluding the current one)
+    var otherResourcesHtml = "";
+    var otherResources = resources.filter(function (r) { return r.id !== guideType; });
+
+    if (otherResources.length > 0 && guideType !== "contact-form" && guideType !== "footer-subscribe") {
+        otherResourcesHtml += `
+            <div style="margin-top: 40px; padding-top: 30px; border-top: 1px solid #eee;">
+                <h3 style="text-align: center; color: #333; margin-bottom: 20px;">Explore More Free Resources</h3>
+                <div style="text-align: center;">
+        `;
+
+        otherResources.forEach(function (r) {
+            otherResourcesHtml += `
+                <a href="${r.url}" style="display: inline-block; margin: 10px; padding: 10px 20px; background-color: #240b36; color: #ffffff; text-decoration: none; border-radius: 4px; font-size: 14px;">
+                    Download ${r.title}
+                </a>
+            `;
+        });
+
+        otherResourcesHtml += `
+                </div>
+            </div>
         `;
     }
 
@@ -142,10 +210,12 @@ function sendWelcomeEmail(name, email, guideType) {
         
         <!-- CTA Button -->
         <div style="text-align: center; margin: 40px 0;">
-          <a href="https://capeweb.co.za/contact" style="background-color: #A64B23; color: #ffffff; padding: 15px 30px; text-decoration: none; font-weight: bold; border-radius: 5px; display: inline-block;">
+          <a href="https://calendly.com/capeweb/discovery-call" style="background-color: #A64B23; color: #ffffff; padding: 15px 30px; text-decoration: none; font-weight: bold; border-radius: 5px; display: inline-block;">
             Book Your Free Discovery Call
           </a>
         </div>
+
+        ${otherResourcesHtml}
 
         <p style="font-size: 16px; line-height: 1.6;">
           If you're ready to implement these changes but don't know where to start, our team is here to help. Let's discuss your specific goals.

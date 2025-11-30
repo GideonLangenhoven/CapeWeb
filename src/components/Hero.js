@@ -131,7 +131,7 @@ function Hero() {
             <span className="text"></span>
           </h1>
           <div className="cta-buttons">
-            <a href="#ai-guide" className="btn btn-primary">Book a Discovery Call</a>
+            <a href="https://calendly.com/capeweb/discovery-call" className="btn btn-primary" target="_blank" rel="noopener noreferrer">Book a Discovery Call</a>
           </div>
         </div>
       </div>

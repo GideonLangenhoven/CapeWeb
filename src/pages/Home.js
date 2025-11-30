@@ -921,6 +921,13 @@ function Home() {
                   </li>
                 ))}
               </ul>
+              <ul aria-hidden="true">
+                {LOGO_ITEMS.map((item) => (
+                  <li className="logo-item" key={`${item}-clone`}>
+                    {item}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </section>

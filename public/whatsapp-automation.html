@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The WhatsApp Goldmine</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0b0f1a;
+            --bg-purple: #240b36;
+            --accent: #A64B23;
+            --text-light: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.8);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            width: 210mm;
+            /* A4 Width */
+            min-height: 297mm;
+            /* A4 Height */
+            margin: 0 auto;
+        }
+
+        .page {
+            position: relative;
+            width: 100%;
+            min-height: 297mm;
+            padding: 40px;
+            background: var(--bg-dark);
+            overflow: hidden;
+            page-break-after: always;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .brand {
+            font-size: 12px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            line-height: 1.1;
+            margin: 0 0 20px 0;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: var(--text-dim);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Section */
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .section-number {
+            background: var(--accent);
+            color: #fff;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border-radius: 50%;
+        }
+
+        .section-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            margin: 0;
+        }
+
+        .content-block {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .text-block p {
+            line-height: 1.6;
+            color: var(--text-dim);
+            margin-bottom: 20px;
+        }
+
+        .visual-block {
+            background: var(--bg-purple);
+            border-radius: 8px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .checklist li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .checklist li::before {
+            content: "✓";
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        blockquote {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-style: italic;
+            text-align: center;
+            margin: 60px 0;
+            color: var(--accent);
+            padding: 0 40px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: auto;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+
+        /* Print Specifics */
+        @media print {
+            body {
+                width: 210mm;
+                height: 297mm;
+            }
+
+            .page {
+                margin: 0;
+                border: initial;
+                border-radius: initial;
+                width: initial;
+                min-height: initial;
+                box-shadow: initial;
+                background: initial;
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page">
+        <header>
+            <img src="/assets/CapeWeblogo.png" alt="CapeWeb" style="height: 60px; margin-bottom: 20px;">
+            <h1>The WhatsApp Goldmine</h1>
+            <p class="subtitle">Automating Sales Conversations Where South Africa Lives.</p>
+        </header>
+
+        <div class="section-title">
+            <div class="section-number">01</div>
+            <h2 class="section-heading">Unlock the Direct Line</h2>
+        </div>
+
+        <div class="content-block">
+            <div class="text-block">
+                <p>96% of South Africans use WhatsApp. Is your business treating it like a chat app or a sales channel?
+                </p>
+                <p>Move beyond manual replies and unlock the power of automated conversational commerce. Meet your
+                    customers where they already are, instantly.</p>
+            </div>
+            <div class="visual-block">
+                <ul class="checklist">
+                    <li><strong>Automated Bookings:</strong> Schedule appointments and reminders without lifting a
+                        finger.</li>
+                    <li><strong>High Open Rates:</strong> Send personalized offers that get opened (98% vs email's 20%).
+                    </li>
+                    <li><strong>Instant FAQs:</strong> Answer common questions instantly, freeing staff for complex
+                        issues.</li>
+                    <li><strong>Lead Database:</strong> Build a list you own, independent of social media algorithms.
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        blockquote {
+        "Turn the nation's favorite app into your most powerful sales engine."
+        </blockquote>
+
+        <div class="footer">
+            <p>&copy; 2025 CapeWeb. All rights reserved. | capeweb.co.za</p>
+        </div>
+    </div>
+
+</body>
+
+</html>

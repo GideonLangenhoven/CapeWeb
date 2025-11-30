@@ -14,7 +14,7 @@ html {
   top: 50%;
   left: 50%;
   pointer-events: none;
-  z-index: 9999;
+  z-index: 20000;
   transform: translate(-50%, -50%);
 }
 
@@ -64,6 +64,7 @@ html {
     margin-top: -0.5em;
     margin-left: -0.5em;
   }
+
   50% {
     opacity: 0.9;
     height: 3em;
@@ -71,6 +72,7 @@ html {
     margin-top: -1.5em;
     margin-left: -1.5em;
   }
+
   100% {
     opacity: 0.2;
     height: 1em;
@@ -111,19 +113,19 @@ html {
 }
 
 /* Button hover effects */
-.btn:hover ~ #follower .cursor-circle-1,
-button:hover ~ #follower .cursor-circle-1 {
+.btn:hover~#follower .cursor-circle-1,
+button:hover~#follower .cursor-circle-1 {
   animation-duration: 0.5s;
   background: rgba(255, 255, 255, 0.9);
 }
 
-.btn:hover ~ #follower .cursor-circle-2,
-button:hover ~ #follower .cursor-circle-2 {
+.btn:hover~#follower .cursor-circle-2,
+button:hover~#follower .cursor-circle-2 {
   animation-duration: 1s;
 }
 
 /* Link hover effects */
-a:hover ~ #follower .cursor-circle-1 {
+a:hover~#follower .cursor-circle-1 {
   background: rgba(255, 255, 255, 1);
   animation-duration: 0.8s;
 }

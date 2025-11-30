@@ -79,7 +79,7 @@ function About() {
                         EXPAND transforms businesses by designing these exceptional experiences, driven by strong creativity
                         and backed by the technology, data, and strategic planning needed for operational success.
                     </p>
-                    <a href="/work" className="about-intro__cta reveal-text">
+                    <a href="/gallery" className="about-intro__cta reveal-text">
                         View Our Work
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <path d="M5 12h14M12 5l7 7-7 7" />

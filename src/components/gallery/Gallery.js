@@ -87,7 +87,7 @@ const Gallery = () => {
             <h1>Work that ships results.</h1>
             <p>Launches and automations that turn attention into revenue.</p>
             <div className="btn-group">
-              <Link to="/contact" className="btn btn-primary">Book a Free Strategy Call</Link>
+              <a href="https://calendly.com/capeweb/discovery-call" className="btn btn-primary" target="_blank" rel="noopener noreferrer">Book a Free Strategy Call</a>
               <Link to="/services" className="btn btn-ghost">View services</Link>
             </div>
           </div>
@@ -142,7 +142,7 @@ const Gallery = () => {
             <span className="eyebrow">Next step</span>
             <h2>Ready to see your plan?</h2>
             <p>We’ll translate your goal into a simple blueprint—wireframes, automation flow, and rollout plan.</p>
-            <Link to="/contact" className="btn btn-primary">Book a Free Strategy Call</Link>
+            <a href="https://calendly.com/capeweb/discovery-call" className="btn btn-primary" target="_blank" rel="noopener noreferrer">Book a Free Strategy Call</a>
           </div>
         </div>
       </section>
