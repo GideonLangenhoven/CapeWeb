@@ -32,6 +32,7 @@
     font-size: 2rem;
     font-weight: 700;
     margin-bottom: 1rem;
+    color: #ffffff;
 }
 
 .service-card p {
@@ -39,6 +40,7 @@
     line-height: 1.6;
     opacity: 0.8;
     margin-bottom: 2rem;
+    color: #e5e7eb;
 }
 
 .service-card ul {
@@ -52,6 +54,7 @@
     position: relative;
     font-size: 1rem;
     opacity: 0.9;
+    color: #d1d5db;
 }
 
 .service-card li::before {
@@ -100,7 +103,7 @@
     position: relative;
     height: 100vh;
     overflow: hidden;
-    background: #0b0f1a;
+    background: transparent;
     /* Match the previous section's background */
     display: flex;
     flex-direction: column;
@@ -192,4 +195,18 @@
     .v-loop-image img {
         height: 200px;
     }
+}
+
+/* White Section Overrides */
+.section-white .process-num {
+    color: rgba(0, 0, 0, 0.1);
+}
+
+.section-white .process-content h3 {
+    color: #000;
+    /* Or a dark accent like #240b36 */
+}
+
+.section-white .process-content p {
+    color: #333;
 }

@@ -74,7 +74,7 @@ function Contact() {
       <div ref={containerRef}>
 
         {/* 1. HERO SECTION (WHITE) */}
-        <section className="section-white" data-scroll-section>
+        <section className="section-white" data-scroll-section data-bgcolor="#ffffff" data-textcolor="#0b0f1a">
           <div className="expand-label">Get In Touch</div>
           <h1 className="expand-title-hero reveal-text">
             LET'S START A<br />
@@ -141,9 +141,9 @@ function Contact() {
           </div>
         </section>
 
-        {/* 3. INFO SECTION (DEEP PURPLE) */}
-        <section className="section-purple" data-scroll-section data-bgcolor="#240b36" data-textcolor="#ffffff">
-          <div className="expand-label" style={{ backgroundColor: '#fff', color: '#000' }}>Contact Details</div>
+        {/* 3. INFO SECTION (WHITE) */}
+        <section className="section-white" data-scroll-section data-bgcolor="#ffffff" data-textcolor="#0b0f1a">
+          <div className="expand-label" style={{ backgroundColor: '#000', color: '#fff' }}>Contact Details</div>
           <h2 className="expand-title-section reveal-text">Other ways to connect.</h2>
 
           <ul className="contact-info-list">
@@ -163,7 +163,7 @@ function Contact() {
         </section>
 
         {/* FOOTER */}
-        <section data-scroll-section>
+        <section data-scroll-section data-bgcolor="#0b0f1a" data-textcolor="#ffffff">
           <Footer />
         </section>
 

@@ -225,6 +225,16 @@ export default function Footer() {
               <li className="footer2__list-item"><a href="/contact" style={{ color: 'inherit', textDecoration: 'none' }}>Contact</a></li>
             </ul>
           </div>
+
+          <div className="footer2__col">
+            <div className="footer2__insta-head">
+              <SectionTitle>Instagram</SectionTitle>
+              <a href="#" className="footer2__link">
+                @capeweb
+              </a>
+            </div>
+            <InstagramFeed />
+          </div>
         </div>
 
         <div className="footer2__bottom">

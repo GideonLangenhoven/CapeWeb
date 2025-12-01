@@ -650,8 +650,36 @@
 }
 
 .error-message {
-    color: red;
-    margin-top: 1rem;
     font-size: 0.9rem;
     text-align: center;
+}
+
+/* White Section Overrides */
+.section-white .newsletter-box {
+    background: rgba(0, 0, 0, 0.05);
+    color: #000;
+}
+
+.section-white .expand-title-section,
+.section-white .expand-text-lg {
+    color: #000;
+}
+
+.section-white .newsletter-input {
+    border-color: rgba(0, 0, 0, 0.2);
+    color: #000;
+}
+
+.section-white .newsletter-input::placeholder {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.section-white .newsletter-btn {
+    background: #000;
+    color: #fff;
+}
+
+.section-white .newsletter-btn:hover {
+    background: var(--expand-accent);
+    color: #fff;
 }

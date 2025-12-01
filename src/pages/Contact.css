@@ -106,3 +106,20 @@
 .contact-info-value:hover {
     color: var(--expand-accent);
 }
+
+/* White Section Overrides */
+.section-white .expand-title-section {
+    color: #000;
+}
+
+.section-white .contact-info-label {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.section-white .contact-info-value {
+    color: #000;
+}
+
+.section-white .contact-info-value:hover {
+    color: var(--expand-accent);
+}

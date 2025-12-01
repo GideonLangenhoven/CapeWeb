@@ -220,9 +220,9 @@ function Services() {
           </div>
         </section>
 
-        {/* 3. PROCESS SECTION (DEEP PURPLE) */}
-        <section className="section-purple" data-scroll-section data-bgcolor="#240b36" data-textcolor="#ffffff">
-          <div className="expand-label" style={{ backgroundColor: '#fff', color: '#000' }}>The Process</div>
+        {/* 3. PROCESS SECTION (WHITE) */}
+        <section className="section-white" data-scroll-section data-bgcolor="#ffffff" data-textcolor="#0b0f1a">
+          <div className="expand-label" style={{ backgroundColor: '#000', color: '#fff' }}>The Process</div>
           <h2 className="expand-title-section reveal-text">How we work.</h2>
 
           <div className="process-list">
@@ -253,7 +253,7 @@ function Services() {
         </section>
 
         {/* FOOTER */}
-        <section data-scroll-section>
+        <section data-scroll-section data-bgcolor="#0b0f1a" data-textcolor="#ffffff">
           <Footer />
         </section>
 

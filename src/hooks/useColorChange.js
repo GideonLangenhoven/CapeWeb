@@ -11,10 +11,14 @@ gsap.registerPlugin(ScrollTrigger);
 export default function useColorChange(scrollRef) {
     useEffect(() => {
         const scrollContainer = scrollRef.current;
-        if (!scrollContainer) return;
+        if (!scrollContainer) {
+            console.warn('useColorChange: scrollContainer is null');
+            return;
+        }
 
         const triggers = [];
         const colorSections = scrollContainer.querySelectorAll('[data-bgcolor]');
+        console.log('useColorChange: Found sections:', colorSections.length);
 
         const setTheme = (bg, fg) => {
             gsap.to(document.body, {

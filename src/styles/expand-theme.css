@@ -8,7 +8,7 @@
 
 /* Page Container */
 .expand-page {
-    background-color: var(--expand-white);
+    background-color: transparent;
     min-height: 100vh;
     width: 100%;
 }
@@ -52,7 +52,7 @@
 
 /* Sections */
 .section-white {
-    background-color: var(--expand-white);
+    background-color: transparent;
     color: var(--expand-black);
     padding: 20vh max(5vw, 2rem) 10vh;
     min-height: 80vh;
@@ -64,7 +64,7 @@
 }
 
 .section-black {
-    background-color: var(--expand-black);
+    background-color: transparent;
     color: var(--expand-white);
     padding: 15vh max(5vw, 2rem);
     min-height: 100vh;
@@ -73,7 +73,7 @@
 }
 
 .section-purple {
-    background-color: var(--expand-purple);
+    background-color: transparent;
     color: var(--expand-white);
     padding: 15vh max(5vw, 2rem);
     min-height: 100vh;

@@ -428,7 +428,7 @@ function Resources() {
       <div ref={containerRef}>
 
         {/* 1. HERO SECTION (WHITE) */}
-        <section className="section-white" data-scroll-section style={{ position: 'relative', overflow: 'hidden' }}>
+        <section className="section-white" data-scroll-section style={{ position: 'relative', overflow: 'hidden', paddingBottom: 0 }} data-bgcolor="#ffffff" data-textcolor="#0b0f1a">
           <div className="expand-label">Knowledge Base</div>
           <div className="hero-content-wrapper" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
@@ -443,6 +443,11 @@ function Resources() {
             <div className="hero-canvas-container">
               <CanvasAnimation />
             </div>
+          </div>
+
+          <div className="hero-footer-text reveal-text" style={{ marginTop: 'auto', paddingTop: '4rem', paddingBottom: '10rem', textAlign: 'center' }}>
+            <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: '800', marginBottom: '1rem', lineHeight: '1.1' }}>Businesses and automation go hand in hand</h2>
+            <p className="expand-text-lg" style={{ opacity: 0.8 }}>Click below to find out more</p>
           </div>
         </section>
 
@@ -488,8 +493,8 @@ function Resources() {
           </div>
         </section>
 
-        {/* 4. NEWSLETTER SECTION (DEEP PURPLE) */}
-        <section className="section-purple" data-scroll-section data-bgcolor="#240b36" data-textcolor="#ffffff">
+        {/* 4. NEWSLETTER SECTION (WHITE) */}
+        <section className="section-white" data-scroll-section data-bgcolor="#ffffff" data-textcolor="#0b0f1a">
           <div className="newsletter-box reveal-text">
             <h2 className="expand-title-section">Stay ahead of the curve.</h2>
             <p className="expand-text-lg">
@@ -500,7 +505,7 @@ function Resources() {
         </section>
 
         {/* FOOTER */}
-        <section data-scroll-section>
+        <section data-scroll-section data-bgcolor="#0b0f1a" data-textcolor="#ffffff">
           <Footer />
         </section>
 

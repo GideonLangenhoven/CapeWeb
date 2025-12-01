@@ -36,7 +36,7 @@
 }
 
 .navbar-mainbg {
-  background: #9b59b6;
+  background: rgba(0, 0, 0, 0.5);
   padding: 0;
   box-shadow: 0 12px 36px var(--nav-shadow-strong);
   backdrop-filter: blur(12px);

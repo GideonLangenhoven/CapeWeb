@@ -20,12 +20,8 @@ function Header() {
 
   useEffect(() => {
     const updateScrollState = () => {
-      // Non-home pages should always have a filled navbar
-      if (location.pathname !== '/') {
-        setIsScrolled(true);
-        setIsKeyholeActive(false);
-        return;
-      }
+      // Scroll detection for all pages
+
 
       const trigger = document.querySelector('[data-nav-fill-trigger]');
       const headerHeight = navRef.current ? navRef.current.offsetHeight : 0;
