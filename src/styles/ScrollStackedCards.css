@@ -1,0 +1,63 @@
+/* Scroll Stacked Cards - sticky layering */
+
+.stacked-sections-container {
+  position: relative;
+  width: 100%;
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 0 1rem 10vh;
+}
+
+.stacked-section-card {
+  position: sticky;
+  height: 84vh;
+  margin: 0;
+  overflow: hidden;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  color: white;
+  border-radius: 18px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2);
+}
+
+.stacked-card-content {
+  padding: clamp(1.5rem, 4vw, 3rem);
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.stacked-card-content h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin: 0 0 1rem 0;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.stacked-card-content p {
+  font-size: clamp(1rem, 2.6vw, 1.2rem);
+  line-height: 1.6;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.stacked-stripes {
+  display: flex;
+  border-radius: 10px 10px 0 0;
+  overflow: hidden;
+  max-width: 64rem;
+  margin: 0 auto 1rem;
+  padding: 0 1rem;
+}
+
+.stacked-stripes > div {
+  flex: 1;
+  height: 12px;
+}
+
+.stacked-stripes .stripe-yellow { background-color: #fde047; }
+.stacked-stripes .stripe-cyan { background-color: #22d3ee; }
+.stacked-stripes .stripe-pink { background-color: #f472b6; }
+.stacked-stripes .stripe-orange { background-color: #fb923c; }
+.stacked-stripes .stripe-green { background-color: #4ade80; }

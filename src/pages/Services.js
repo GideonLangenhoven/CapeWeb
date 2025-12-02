@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import useLocomotiveScroll from '../hooks/useLocomotiveScroll';
 import useColorChange from '../hooks/useColorChange';
 import Footer from '../components/Footer';
+import ScrollStackedCards from '../components/ScrollStackedCards';
 import './Services.css';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -9,12 +10,14 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 function Services() {
-  // Initialize locomotive scroll with start=true
-  const scrollRef = useLocomotiveScroll(true);
+  // Initialize locomotive scroll with start=true, smooth=false (native scroll)
+  const { scrollRef, locomotiveScroll } = useLocomotiveScroll(true, false);
   const containerRef = useRef(null);
+  const heroRef = useRef(null);
 
   // Activate color transitions
   useColorChange(scrollRef);
+
 
   useEffect(() => {
     // Delay GSAP init to ensure Locomotive Scroll proxy is ready
@@ -33,7 +36,7 @@ function Services() {
               ease: 'power3.out',
               scrollTrigger: {
                 trigger: el,
-                scroller: ".expand-page", // Use class selector
+                // scroller: ".expand-page", // Removed for native scroll
                 start: 'top 85%',
               }
             }
@@ -87,7 +90,7 @@ function Services() {
         // Scroll Velocity Trigger
         ScrollTrigger.create({
           trigger: ".v-loop-section",
-          scroller: ".expand-page",
+          // scroller: ".expand-page", // Removed for native scroll
           start: "top bottom",
           end: "bottom top",
           onUpdate: function (self) {
@@ -111,11 +114,145 @@ function Services() {
       }, containerRef);
     }, 100);
 
+    // Hero Services Animation
+    const heroCtx = gsap.context(() => {
+      const colors = [
+        "#ffcc55",
+        "#f0b4fa",
+        "#0000fe",
+        "#385a1d",
+        "#e277af",
+        "#e4e4e4"
+      ];
+
+      const boxes = gsap.utils.toArray('.hero-services .box');
+      const tagline = document.querySelector('.hero-services .tagline');
+
+      if (tagline && boxes.length > 0) {
+        // Custom Split Text Logic
+        const text = tagline.innerText;
+        tagline.innerHTML = '';
+        const words = text.split(' ');
+
+        words.forEach((word, i) => {
+          const wordSpan = document.createElement('span');
+          wordSpan.style.display = 'inline-block';
+          wordSpan.innerText = word;
+          wordSpan.className = 'word';
+          tagline.appendChild(wordSpan);
+
+          // Add actual space character between words
+          if (i < words.length - 1) {
+            tagline.appendChild(document.createTextNode(' '));
+          }
+        });
+
+        const wordSpans = tagline.querySelectorAll('.word');
+
+        // Animation Setup
+        const masterTL = gsap.timeline({
+          delay: 0.2,
+          scrollTrigger: {
+            trigger: ".hero-services",
+            // scroller: ".expand-page", // Removed for native scroll
+            start: "top 80%",
+          }
+        });
+
+        // 1. Assign colors to boxes
+        gsap.set(boxes, {
+          backgroundColor: gsap.utils.wrap(colors)
+        });
+
+        // 2. Box Distribution
+        const boxDist = gsap.utils.distribute({
+          base: -200,
+          amount: 400,
+          ease: "none"
+        });
+
+        const boxY = gsap.utils.distribute({
+          base: gsap.utils.random(-100, -50),
+          amount: gsap.utils.random(200, 400),
+          ease: "none"
+        });
+
+        const boxScale = gsap.utils.distribute({
+          base: -2.5,
+          amount: 2.5,
+          ease: "power3.inOut"
+        });
+
+        // 3. Box Animation
+        const boxTL = gsap.timeline().from(boxes, {
+          x: boxDist,
+          y: boxY,
+          opacity: 0,
+          scale: boxScale,
+          stagger: {
+            each: 0.05,
+            from: "center"
+          },
+          duration: 2,
+          ease: "power2.inOut"
+        });
+
+        // 4. Text Reveal
+        const splitTL = gsap.timeline().from(wordSpans, {
+          y: 70,
+          opacity: 0,
+          stagger: 0.035,
+          ease: "power2.out"
+        });
+
+        masterTL.add(boxTL).add(splitTL, "-=1.15");
+
+        // 5. Ripple Hover Effects
+        boxes.forEach((box, i) => {
+          box.addEventListener('mouseenter', () => {
+            // Animate all boxes based on distance
+            boxes.forEach((b, j) => {
+              const distance = Math.abs(i - j);
+              const delay = distance * 0.05; // Ripple delay
+
+              // Decay effect: further boxes move less
+              const intensity = Math.max(0, 1 - distance * 0.2);
+
+              if (intensity > 0) {
+                gsap.to(b, {
+                  y: gsap.utils.random(-30, -10) * intensity,
+                  scale: 1 + (gsap.utils.random(0.05, 0.2) * intensity),
+                  duration: 0.4,
+                  delay: delay,
+                  ease: "power2.out",
+                  overwrite: "auto"
+                });
+              }
+            });
+          });
+
+          box.addEventListener('mouseleave', () => {
+            // Reset all boxes
+            gsap.to(boxes, {
+              y: 0,
+              scale: 1,
+              duration: 0.4,
+              ease: "power2.out",
+              overwrite: "auto"
+            });
+          });
+        });
+      }
+    }, containerRef); // Scope to container
+
+    // Force white background on mount to prevent black flash
+    document.body.style.backgroundColor = '#ffffff';
+    document.body.style.color = '#0b0f1a';
+
     return () => {
       clearTimeout(timer);
-      if (ctx) {
-        ctx.revert();
-      }
+      if (ctx) ctx.revert();
+      heroCtx.revert();
     };
   }, []);
 
@@ -137,46 +274,26 @@ function Services() {
 
         {/* 2. PILLARS SECTION (BLACK) */}
         <section className="section-black" data-scroll-section data-bgcolor="#0b0f1a" data-textcolor="#ffffff">
-          <div className="expand-label" style={{ backgroundColor: '#fff', color: '#000' }}>Core Services</div>
-          <h2 className="expand-title-section reveal-text">
-            Everything you need<br />
-            to scale online.
-          </h2>
-
-          <div className="services-grid">
-            <div className="service-card reveal-text">
-              <span className="service-card__icon">⚡️</span>
-              <h3>Performance Dev</h3>
-              <p>Custom websites and web apps built for speed. No bloat, just code that converts.</p>
-              <ul>
-                <li>React / Next.js Development</li>
-                <li>Headless CMS (Sanity, Contentful)</li>
-                <li>Shopify Plus Customization</li>
-              </ul>
+          <div className="hero-services" ref={heroRef}>
+            <div className="graphic">
+              <div className="box"></div>
+              <div className="box"></div>
+              <div className="box"></div>
+              <div className="box"></div>
+              <div className="box"></div>
+              <div className="box"></div>
             </div>
 
-            <div className="service-card reveal-text">
-              <span className="service-card__icon">🤖</span>
-              <h3>AI Automation</h3>
-              <p>Replace busy work with intelligent systems. We build bots that work 24/7.</p>
-              <ul>
-                <li>Customer Support AI Agents</li>
-                <li>Lead Qualification Chatbots</li>
-                <li>Workflow Automation (Zapier/Make)</li>
-              </ul>
-            </div>
-
-            <div className="service-card reveal-text">
-              <span className="service-card__icon">📈</span>
-              <h3>Growth & SEO</h3>
-              <p>Data-driven strategies to get you found and keep you top of mind.</p>
-              <ul>
-                <li>Technical SEO Audits</li>
-                <li>Conversion Rate Optimization</li>
-                <li>Analytics & Tracking Setup</li>
-              </ul>
-            </div>
+            <h1 className="tagline">
+              {/* We will populate this via JS or render it split here */}
+              Everything you need to scale online.
+            </h1>
           </div>
+        </section>
+
+        {/* New Scroll Stacked Cards Section - Isolated */}
+        <section className="section-black" data-scroll-section>
+          <ScrollStackedCards locomotiveScroll={locomotiveScroll} />
         </section>
 
         {/* 2.5 VERTICAL LOOP SECTION */}

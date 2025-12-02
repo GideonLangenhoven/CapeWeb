@@ -72,7 +72,7 @@ class SafeLocomotiveScroll extends LocomotiveScroll {
     }
 }
 
-export default function useLocomotiveScroll(start = true) {
+export default function useLocomotiveScroll(start, smooth = true) {
     const scrollRef = useRef(null);
     const locomotiveScrollRef = useRef(null);
 
@@ -95,17 +95,17 @@ export default function useLocomotiveScroll(start = true) {
         // Use the Safe subclass
         const ls = new SafeLocomotiveScroll({
             el: scrollEl,
-            smooth: true,
+            smooth: smooth,
             multiplier: 1,
             class: 'is-revealed',
             reloadOnContextChange: true,
             touchMultiplier: 2,
             smoothMobile: 0,
             smartphone: {
-                smooth: true,
+                smooth: smooth,
             },
             tablet: {
-                smooth: true,
+                smooth: smooth,
             },
         });
 
@@ -174,5 +174,5 @@ export default function useLocomotiveScroll(start = true) {
         };
     }, [start]);
 
-    return scrollRef;
+    return { scrollRef, locomotiveScroll: locomotiveScrollRef };
 }

@@ -7,7 +7,66 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 4rem;
-    margin-top: 6rem;
+    margin-top: 4rem;
+}
+
+/* Hero Services Styles */
+.hero-services {
+    position: relative;
+    min-height: 80vh;
+    /* Increased height for impact */
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    margin-bottom: 4rem;
+    width: 100%;
+}
+
+/* Background Animated Boxes */
+.hero-services .graphic {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: flex;
+    transform: translate(-50%, -50%);
+    opacity: 0.43;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.hero-services .graphic .box {
+    height: 400px;
+    width: 80px;
+    /* Background color will be set by GSAP */
+    background-color: #ffffff;
+    pointer-events: auto;
+    /* Enable hover interactions */
+    cursor: pointer;
+}
+
+.hero-services .graphic .box:not(:last-of-type) {
+    margin-right: 20px;
+}
+
+/* Main Text Styling */
+.hero-services .tagline {
+    position: relative;
+    z-index: 10;
+    max-width: 80%;
+    text-align: center;
+    font-size: clamp(3rem, 6vw, 6rem);
+    font-weight: 400;
+    user-select: none;
+    line-height: 1.2;
+    color: #ffffff;
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    /* Ensure font matches request */
+}
+
+/* Helper for split text */
+.hero-services .tagline span {
+    display: inline-block;
 }
 
 .service-card {
