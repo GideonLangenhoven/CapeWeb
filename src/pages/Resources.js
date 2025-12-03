@@ -393,37 +393,60 @@ const NewsletterForm = () => {
 };
 
 function Resources() {
-  const { scrollRef } = useLocomotiveScroll(true);
+  const { scrollRef, locomotiveScroll } = useLocomotiveScroll(true);
   const containerRef = useRef(null);
   const [selectedArticle, setSelectedArticle] = useState(null);
 
   useColorChange(scrollRef);
 
+  // Reset scroll position on mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    if (scrollRef?.current) {
+      scrollRef.current.scrollTop = 0;
+    }
+    // Wait for locomotive scroll to initialize then scroll to top
+    const timer = setTimeout(() => {
+      if (locomotiveScroll?.current) {
+        locomotiveScroll.current.scrollTo(0, { duration: 0, disableLerp: true });
+      }
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [scrollRef, locomotiveScroll]);
+
   useEffect(() => {
     const scrollerEl = scrollRef?.current;
     if (!scrollerEl) return undefined;
 
-    const ctx = gsap.context(() => {
-      const reveals = document.querySelectorAll('.reveal-text');
-      reveals.forEach((el) => {
-        gsap.fromTo(el,
-          { y: 50, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 1,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: el,
-              scroller: scrollerEl,
-              start: 'top 85%',
+    // Wait for DOM to be ready
+    const timer = setTimeout(() => {
+      const ctx = gsap.context(() => {
+        const reveals = document.querySelectorAll('.reveal-text');
+        reveals.forEach((el) => {
+          gsap.fromTo(el,
+            { y: 50, opacity: 0 },
+            {
+              y: 0,
+              opacity: 1,
+              duration: 1,
+              ease: 'power3.out',
+              scrollTrigger: {
+                trigger: el,
+                scroller: scrollerEl,
+                start: 'top 85%',
+              }
             }
-          }
-        );
-      });
-    }, containerRef);
+          );
+        });
 
-    return () => ctx.revert();
+        // Refresh ScrollTrigger after animations are set up
+        ScrollTrigger.refresh();
+      }, containerRef);
+
+      return () => ctx.revert();
+    }, 200);
+
+    return () => clearTimeout(timer);
   }, [scrollRef]);
 
   return (
