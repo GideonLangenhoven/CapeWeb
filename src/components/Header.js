@@ -25,9 +25,12 @@ function Header() {
 
       const trigger = document.querySelector('[data-nav-fill-trigger]');
       const headerHeight = navRef.current ? navRef.current.offsetHeight : 0;
+      const isHome = location.pathname === '/';
 
       if (!trigger) {
         setIsScrolled(window.scrollY > 40);
+        // If not on home, ensure keyhole state is off
+        if (!isHome) setIsKeyholeActive(false);
         return;
       }
 
@@ -37,15 +40,17 @@ function Header() {
       setIsScrolled(scrollPosition >= triggerOffset);
 
       // Keyhole transparency logic (Homepage only)
-      const keyhole = document.getElementById('keyhole');
-      if (keyhole) {
-        const keyholeRect = keyhole.getBoundingClientRect();
-        // Check if keyhole is in view (or reached)
-        if (keyholeRect.top <= headerHeight && keyholeRect.bottom >= 0) {
-          setIsKeyholeActive(true);
+      if (isHome) {
+        const keyhole = document.getElementById('keyhole');
+        if (keyhole) {
+          const keyholeRect = keyhole.getBoundingClientRect();
+          const active = keyholeRect.top <= headerHeight && keyholeRect.bottom >= 0;
+          setIsKeyholeActive(active);
         } else {
           setIsKeyholeActive(false);
         }
+      } else {
+        setIsKeyholeActive(false);
       }
     };
 

@@ -166,21 +166,21 @@ function Services() {
 
         // 2. Box Distribution
         const boxDist = gsap.utils.distribute({
-          base: -200,
-          amount: 400,
+          base: -260,
+          amount: 520,
           ease: "none"
         });
 
         const boxY = gsap.utils.distribute({
-          base: gsap.utils.random(-100, -50),
-          amount: gsap.utils.random(200, 400),
+          base: gsap.utils.random(-140, -80),
+          amount: gsap.utils.random(280, 520),
           ease: "none"
         });
 
-        const boxScale = gsap.utils.distribute({
-          base: -2.5,
-          amount: 2.5,
-          ease: "power3.inOut"
+        const boxScaleY = gsap.utils.distribute({
+          base: 0.85,
+          amount: 0.75,
+          ease: "expo.inOut"
         });
 
         // 3. Box Animation
@@ -188,26 +188,52 @@ function Services() {
           x: boxDist,
           y: boxY,
           opacity: 0,
-          scale: boxScale,
+          scaleY: boxScaleY,
+          scaleX: 1,
           stagger: {
             each: 0.05,
             from: "center"
           },
-          duration: 2,
-          ease: "power2.inOut"
+          duration: 2.4,
+          ease: "power3.out"
         });
 
         // 4. Text Reveal
         const splitTL = gsap.timeline().from(wordSpans, {
-          y: 70,
+          y: 40,
           opacity: 0,
-          stagger: 0.035,
+          duration: 0.5,
+          stagger: 0.02,
           ease: "power2.out"
         });
 
         masterTL.add(boxTL).add(splitTL, "-=1.15");
 
-        // 5. Ripple Hover Effects
+        // 5. Continuous bar pulse
+        const pulseTL = gsap.timeline({
+          repeat: -1,
+          yoyo: true,
+          defaults: { ease: "sine.inOut" }
+        });
+
+        pulseTL.to(boxes, {
+          duration: 1.6,
+          scaleY: () => gsap.utils.random(0.7, 1.7),
+          scaleX: 1,
+          y: () => gsap.utils.random(-30, 30),
+          stagger: { each: 0.12, from: "edges" }
+        }).to(boxes, {
+          duration: 1.2,
+          scaleY: () => gsap.utils.random(0.8, 1.6),
+          scaleX: 1,
+          y: () => gsap.utils.random(-40, 20),
+          stagger: { each: 0.12, from: "center" }
+        });
+
+        // De-sync the loop so bars move independently
+        pulseTL.progress(Math.random());
+
+        // 6. Ripple Hover Effects
         boxes.forEach((box, i) => {
           box.addEventListener('mouseenter', () => {
             // Animate all boxes based on distance
@@ -221,7 +247,8 @@ function Services() {
               if (intensity > 0) {
                 gsap.to(b, {
                   y: gsap.utils.random(-30, -10) * intensity,
-                  scale: 1 + (gsap.utils.random(0.05, 0.2) * intensity),
+                  scaleY: 1 + (gsap.utils.random(0.05, 0.2) * intensity),
+                  scaleX: 1,
                   duration: 0.4,
                   delay: delay,
                   ease: "power2.out",
@@ -235,7 +262,8 @@ function Services() {
             // Reset all boxes
             gsap.to(boxes, {
               y: 0,
-              scale: 1,
+              scaleY: 1,
+              scaleX: 1,
               duration: 0.4,
               ease: "power2.out",
               overwrite: "auto"
@@ -332,38 +360,6 @@ function Services() {
               </div>
               <div className="v-loop-image">
                 <img src="https://images.unsplash.com/photo-1605810230434-7631ac76ec81?q=80&w=2070&auto=format&fit=crop" alt="Data Visualization" />
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* 3. PROCESS SECTION (WHITE) */}
-        <section className="section-white" data-scroll-section data-bgcolor="#ffffff" data-textcolor="#0b0f1a">
-          <div className="expand-label" style={{ backgroundColor: '#000', color: '#fff' }}>The Process</div>
-          <h2 className="expand-title-section reveal-text">How we work.</h2>
-
-          <div className="process-list">
-            <div className="process-item reveal-text">
-              <div className="process-num">01</div>
-              <div className="process-content">
-                <h3>Discovery & Strategy</h3>
-                <p>We start by understanding your business goals, target audience, and current bottlenecks. We don't write a line of code until we have a solid plan.</p>
-              </div>
-            </div>
-
-            <div className="process-item reveal-text">
-              <div className="process-num">02</div>
-              <div className="process-content">
-                <h3>Design & Build</h3>
-                <p>We design high-fidelity prototypes for your approval, then build them using modern, scalable tech stacks. Regular updates keep you in the loop.</p>
-              </div>
-            </div>
-
-            <div className="process-item reveal-text">
-              <div className="process-num">03</div>
-              <div className="process-content">
-                <h3>Launch & Optimize</h3>
-                <p>We handle the deployment and ensure everything runs smoothly. Post-launch, we monitor performance and make data-backed improvements.</p>
               </div>
             </div>
           </div>

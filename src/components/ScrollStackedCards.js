@@ -45,9 +45,9 @@ export default function ScrollStackedCards() {
 
   // Calculate enough scrollable area so all sticky cards can stack without disappearing
   const containerMinHeight = useMemo(() => {
-    const cardHeight = 84; // vh
+    const cardHeight = 60; // vh - Reduced from 84vh
     const offsetStep = 5; // vh
-    const buffer = 40; // vh - keeps last card visible and provides scroll space
+    const buffer = 20; // vh
     return `calc(${cardHeight}vh + ${(servicesData.length - 1) * offsetStep}vh + ${buffer}vh)`;
   }, []);
 
@@ -84,8 +84,24 @@ export default function ScrollStackedCards() {
               }}
             >
               <div className="stacked-card-content">
-                <h2>{card.title}</h2>
-                <p>{card.description}</p>
+                <div className="card-header">
+                  <h2>{card.title}</h2>
+                  <a href="/work" className="card-cta">
+                    Our Work <span className="arrow">→</span>
+                  </a>
+                </div>
+
+                <div className="card-body">
+                  <div className="card-description">
+                    <p>{card.description}</p>
+                  </div>
+
+                  <div className="card-services-list">
+                    {card.services.map((service, i) => (
+                      <span key={i} className="service-item">{service}</span>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           );

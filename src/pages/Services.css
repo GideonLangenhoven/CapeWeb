@@ -13,12 +13,12 @@
 /* Hero Services Styles */
 .hero-services {
     position: relative;
-    min-height: 80vh;
-    /* Increased height for impact */
+    min-height: 64vh;
+    /* Slightly tighter height (20% reduction) to pull the next section closer */
     display: grid;
     place-items: center;
     overflow: hidden;
-    margin-bottom: 4rem;
+    margin: 15vh 0 4rem;
     width: 100%;
 }
 
@@ -35,13 +35,14 @@
 }
 
 .hero-services .graphic .box {
-    height: 400px;
-    width: 80px;
+    height: 520px;
+    width: 96px;
     /* Background color will be set by GSAP */
     background-color: #ffffff;
     pointer-events: auto;
     /* Enable hover interactions */
     cursor: pointer;
+    transform-origin: center bottom;
 }
 
 .hero-services .graphic .box:not(:last-of-type) {

@@ -393,13 +393,16 @@ const NewsletterForm = () => {
 };
 
 function Resources() {
-  const scrollRef = useLocomotiveScroll(true);
+  const { scrollRef } = useLocomotiveScroll(true);
   const containerRef = useRef(null);
   const [selectedArticle, setSelectedArticle] = useState(null);
 
   useColorChange(scrollRef);
 
   useEffect(() => {
+    const scrollerEl = scrollRef?.current;
+    if (!scrollerEl) return undefined;
+
     const ctx = gsap.context(() => {
       const reveals = document.querySelectorAll('.reveal-text');
       reveals.forEach((el) => {
@@ -412,7 +415,7 @@ function Resources() {
             ease: 'power3.out',
             scrollTrigger: {
               trigger: el,
-              scroller: containerRef.current,
+              scroller: scrollerEl,
               start: 'top 85%',
             }
           }
@@ -421,7 +424,7 @@ function Resources() {
     }, containerRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [scrollRef]);
 
   return (
     <div className="expand-page" data-scroll-container ref={scrollRef}>

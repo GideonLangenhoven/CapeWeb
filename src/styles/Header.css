@@ -126,6 +126,8 @@
   transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   position: relative;
   font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+  z-index: 10;
+  /* Ensure link is above selector */
 }
 
 .nav-item.is-active .nav-link {
@@ -593,4 +595,20 @@
 .site-header--keyhole-active .navbar-mainbg {
   background: rgba(155, 89, 182, 0.5);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Match selector bubbles to transparent navbar state */
+.site-header--keyhole-active .hori-selector {
+  background: rgba(155, 89, 182, 0.35);
+  box-shadow: 0 12px 28px rgba(155, 89, 182, 0.25);
+}
+
+.site-header--keyhole-active .hori-selector .right,
+.site-header--keyhole-active .hori-selector .left {
+  background: rgba(155, 89, 182, 0.35);
+}
+
+.site-header--keyhole-active .hori-selector .right:before,
+.site-header--keyhole-active .hori-selector .left:before {
+  background: rgba(155, 89, 182, 0.35);
 }
