@@ -1,26 +1,23 @@
-/* Scroll Stacked Cards - sticky layering */
+/* Stacked Sticky Cards Layout */
 
 .stacked-sections-container {
   position: relative;
-  width: 100%;
-  max-width: 1400px;
-  /* Wider container */
+  width: 90%;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 2rem 10vh;
+  padding: 0 0 10vh;
 }
 
 .stacked-section-card {
   position: sticky;
-  height: 60vh;
-  /* Shorter cards */
+  height: 84vh;
   margin: 0;
   overflow: hidden;
   width: 100%;
   display: flex;
   align-items: center;
   color: #111;
-  /* Dark text for better contrast on bright colors, matching reference */
-  border-radius: 24px;
+  border-radius: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
@@ -60,6 +57,7 @@
   letter-spacing: 0.05em;
   text-decoration: none;
   transition: transform 0.2s ease;
+  border-radius: 4px;
 }
 
 .card-cta:hover {
@@ -103,34 +101,14 @@
   display: flex;
   border-radius: 10px 10px 0 0;
   overflow: hidden;
-  max-width: 1400px;
+  width: 90%;
+  max-width: 1200px;
   margin: 0 auto 1rem;
-  padding: 0 2rem;
 }
 
-.stacked-stripes>div {
+.stacked-stripes > div {
   flex: 1;
   height: 12px;
-}
-
-.stacked-stripes .stripe-yellow {
-  background-color: #fde047;
-}
-
-.stacked-stripes .stripe-cyan {
-  background-color: #22d3ee;
-}
-
-.stacked-stripes .stripe-pink {
-  background-color: #f472b6;
-}
-
-.stacked-stripes .stripe-orange {
-  background-color: #fb923c;
-}
-
-.stacked-stripes .stripe-green {
-  background-color: #4ade80;
 }
 
 @media (max-width: 768px) {
@@ -149,5 +127,13 @@
     height: auto;
     min-height: 60vh;
     padding: 2rem 0;
+  }
+
+  .stacked-sections-container {
+    width: 95%;
+  }
+
+  .stacked-stripes {
+    width: 95%;
   }
 }
