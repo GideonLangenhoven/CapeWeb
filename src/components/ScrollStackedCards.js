@@ -44,7 +44,7 @@ export default function ScrollStackedCards() {
 
   // Calculate enough scrollable area so all sticky cards can stack without disappearing
   const containerMinHeight = useMemo(() => {
-    const cardHeight = 84; // vh
+    const cardHeight = 60; // vh
     const offsetStep = 5; // vh
     const buffer = 20; // vh
     return `calc(${cardHeight}vh + ${(servicesData.length - 1) * offsetStep}vh + ${buffer}vh)`;

@@ -10,7 +10,7 @@
 
 .stacked-section-card {
   position: sticky;
-  height: 84vh;
+  height: 60vh;
   margin: 0;
   overflow: hidden;
   width: 100%;
@@ -106,7 +106,7 @@
   margin: 0 auto 1rem;
 }
 
-.stacked-stripes > div {
+.stacked-stripes>div {
   flex: 1;
   height: 12px;
 }

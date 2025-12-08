@@ -10,54 +10,322 @@ gsap.registerPlugin(ScrollTrigger);
 
 const ARTICLES = [
   {
-    category: "AI Strategy",
-    title: "The AI Advantage: Why Speed Wins",
-    excerpt: "In the age of AI, being second is the same as being last. Learn why implementation speed matters more than perfection.",
-    image: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+    category: "Web Development",
+    title: "The ROI of Custom Web Development",
+    excerpt: "Templates are cheap, but they cost you in the long run. Discover why custom-built sites convert 3x better.",
+    date: "October 12, 2025",
+    readTime: "6 minute read",
+    theme: "purple",
+    pdfFileName: "roi-custom-web-dev.pdf",
+    guideType: "article-web-roi",
+    posterContent: (
+      <>
+        <div className="poster-icon top-right">🚀</div>
+        <h3 className="poster-text">
+          STOP USING<br />
+          <span className="poster-highlight">TEMPLATES</span><br />
+          FOR YOUR BRAND
+        </h3>
+        <div className="poster-pill bottom-center">CUSTOM = CONVERSION</div>
+        <div className="poster-line bottom-left"></div>
+      </>
+    ),
     content: `
-      <h2>The Speed of AI Adoption</h2>
-      <p>The business landscape is shifting faster than ever before. Traditional 5-year plans are obsolete. In the age of AI, the companies that win are the ones that can iterate, adapt, and deploy new technologies at lightning speed.</p>
-      <h3>Perfection is the Enemy</h3>
-      <p>Many businesses wait for the "perfect" AI strategy. But AI evolves weekly. By the time you perfect your plan, the technology has changed. The winning strategy is "deploy and refine".</p>
-      <h3>The First-Mover Advantage</h3>
-      <p>Those who integrate AI agents and automation now are building a data moat that competitors cannot cross. They are learning what works while others are still holding meetings about it.</p>
+      <h2>Why Templates Are Killing Your Conversion Rate</h2>
+      <p>In the early days of a business, a $50 template seems like a smart financial decision. It gets you online fast and looks "good enough." But as you scale, that template becomes a straitjacket.</p>
+      <p>Custom web development isn't just about vanity; it's about performance. A custom site is built around your specific content and conversion goals, not the other way around.</p>
+      
+      <h3>The Speed Factor</h3>
+      <p>Templates are bloated with code to support every possible feature a user <em>might</em> want. This slows down your site significantly. Custom sites only load what they need.</p>
+      <ul>
+        <li><strong>Faster Load Times:</strong> Google ranks fast sites higher.</li>
+        <li><strong>Better UX:</strong> Users bounce if a site takes more than 3 seconds to load.</li>
+        <li><strong>Higher Conversions:</strong> A 1-second delay can cost you 7% in sales.</li>
+      </ul>
+
+      <h3>Brand Differentiation</h3>
+      <p>If you use a popular template, you look like thousands of other businesses. Custom design allows you to express your unique brand identity without compromise.</p>
+      <p>Investing in custom development is investing in a digital asset that will serve your business for years, not just a temporary placeholder.</p>
     `
   },
   {
     category: "Automation",
-    title: "The End of the 9-to-5",
-    excerpt: "How automated workflows are decoupling time from value creation, and what this means for the future of work.",
-    image: "https://images.unsplash.com/photo-1488229297570-58520851e868?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+    title: "AI Agents: The 24/7 Sales Team",
+    excerpt: "Imagine a sales rep that never sleeps, never takes a break, and knows your product perfectly. Meet your AI Agent.",
+    date: "November 5, 2025",
+    readTime: "5 minute read",
+    theme: "green",
+    pdfFileName: "ai-agents-sales-team.pdf",
+    guideType: "article-ai-agents",
+    posterContent: (
+      <>
+        <div className="poster-tag top-center">ALWAYS ONLINE</div>
+        <h3 className="poster-text outline-text">
+          THE SALES REP<br />THAT NEVER
+        </h3>
+        <h3 className="poster-text">
+          SLEEPS
+        </h3>
+        <div className="poster-icon right-center">🤖</div>
+        <div className="poster-icon left-center">💤</div>
+      </>
+    ),
     content: `
-      <h2>Decoupling Time from Value</h2>
-      <p>For centuries, we've equated work with hours. You get paid for the time you sit at a desk. Automation breaks this link.</p>
-      <h3>The 24/7 Workforce</h3>
-      <p>With AI agents handling customer support, lead qualification, and data entry, your business effectively runs 24/7. Your value creation is no longer limited by your need to sleep.</p>
-      <h3>Focus on High-Leverage Work</h3>
-      <p>This doesn't mean humans are obsolete. It means humans are freed to focus on strategy, creativity, and relationship building—the things AI cannot do (yet).</p>
+      <h2>The End of "Office Hours"</h2>
+      <p>The modern consumer expects instant gratification. If they have a question at 11 PM and you don't answer until 9 AM the next day, you've lost the sale. This is where AI Agents come in.</p>
+      
+      <h3>What is an AI Agent?</h3>
+      <p>Unlike a basic chatbot that follows a rigid script, an AI Agent understands context, sentiment, and nuance. It can answer complex questions, recommend products, and even close sales.</p>
+      
+      <h3>Key Benefits</h3>
+      <ul>
+        <li><strong>Zero Wait Times:</strong> Customers get answers instantly.</li>
+        <li><strong>Consistent Service:</strong> The AI never has a bad day or gets tired.</li>
+        <li><strong>Data Collection:</strong> Every interaction is analyzed to improve your sales process.</li>
+      </ul>
+      
+      <p>Implementing an AI Agent isn't about replacing humans; it's about freeing them up to handle high-value relationships while the AI handles the volume.</p>
     `
   },
   {
-    category: "Business Growth",
-    title: "Scaling Without Headcount",
-    excerpt: "The new unicorn companies will have fewer than 10 employees. Here is how to build a lean, high-revenue operation.",
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+    category: "Marketing",
+    title: "SEO in 2025: Beyond Keywords",
+    excerpt: "Search is changing. With AI overviews and voice search, traditional keyword stuffing is dead. Here is what works now.",
+    date: "September 28, 2025",
+    readTime: "8 minute read",
+    theme: "orange",
+    pdfFileName: "seo-2025-beyond-keywords.pdf",
+    guideType: "article-seo-2025",
+    posterContent: (
+      <>
+        <div className="poster-icon top-left">🔍</div>
+        <h3 className="poster-text">
+          SEO IS<br />
+          <span className="text-white text-shadow">DEAD?</span><br />
+          (NO, IT JUST EVOLVED)
+        </h3>
+        <div className="poster-pill bottom-center">ADAPT OR DISAPPEAR</div>
+        <div className="poster-scribble right-center">〰️</div>
+      </>
+    ),
     content: `
-      <h2>The One-Person Unicorn</h2>
-      <p>Sam Altman predicted that we will soon see the first one-person billion-dollar company. This is only possible through extreme leverage.</p>
-      <h3>The Tech Stack as a Team</h3>
-      <p>Instead of hiring a marketing department, you hire an AI marketing stack. Instead of a support team, you deploy an AI agent. The modern org chart is a mix of humans and silicon.</p>
-      <h3>Profitability over Revenue</h3>
-      <p>By keeping headcount low and revenue high, you maximize profitability and agility. You can pivot instantly without the inertia of a large workforce.</p>
+      <h2>The Shift to Semantic Search</h2>
+      <p>Gone are the days when you could rank by stuffing "best plumber Cape Town" into your footer 50 times. Search engines today use AI to understand <em>intent</em>, not just match strings of text.</p>
+      
+      <h3>AI Overviews (SGE)</h3>
+      <p>With Google's Search Generative Experience, the user often gets their answer without ever clicking a link. To survive, you need to be the <em>source</em> of that answer.</p>
+      
+      <h3>What Works Now?</h3>
+      <ul>
+        <li><strong>Topic Authority:</strong> deeply covering a subject rather than skimming the surface.</li>
+        <li><strong>Experience (E-E-A-T):</strong> Demonstrating real-world expertise and authorship.</li>
+        <li><strong>User Signals:</strong> If users dwell on your page, you rank higher. If they bounce, you drop.</li>
+      </ul>
+      
+      <p>SEO in 2025 is less about "tricking" the algorithm and more about providing the absolute best answer on the internet.</p>
+    `
+  },
+  {
+    category: "E-commerce",
+    title: "Why Your Shopify Store Needs a Speed Audit",
+    excerpt: "A 1-second delay in load time can cost you 7% in conversions. Is your store leaking money? Let's find out.",
+    date: "August 15, 2025",
+    readTime: "4 minute read",
+    theme: "yellow",
+    pdfFileName: "shopify-speed-audit.pdf",
+    guideType: "article-shopify-speed",
+    posterContent: (
+      <>
+        <div className="poster-icon top-right">⚡</div>
+        <h3 className="poster-text">
+          IS YOUR STORE<br />
+          <span className="text-outline">LEAKING</span><br />
+          MONEY?
+        </h3>
+        <div className="poster-tag bottom-left">SPEED KILLS (THE COMPETITION)</div>
+      </>
+    ),
+    content: `
+      <h2>Speed is the Currency of E-commerce</h2>
+      <p>Amazon found that every 100ms of latency cost them 1% in sales. For a smaller store, the impact is even more dramatic. Mobile users, in particular, have zero patience for slow loading screens.</p>
+      
+      <h3>Common Speed Killers</h3>
+      <ul>
+        <li><strong>Unoptimized Images:</strong> Uploading 5MB PNGs instead of compressed WebP files.</li>
+        <li><strong>Too Many Apps:</strong> Every Shopify app adds JavaScript to your site.</li>
+        <li><strong>Bad Themes:</strong> Bloated code that loads unnecessary assets.</li>
+      </ul>
+      
+      <h3>The Audit Process</h3>
+      <p>We start by analyzing your Core Web Vitals. These are the metrics Google uses to measure user experience. Fixing your LCP (Largest Contentful Paint) and CLS (Cumulative Layout Shift) can often double your conversion rate overnight.</p>
+      <p>Don't let a slow site be the reason you lose a customer who was ready to buy.</p>
+    `
+  },
+  {
+    category: "Design",
+    title: "The Future of Digital Branding",
+    excerpt: "Static logos are out. Dynamic, interactive brand identities are in. Learn how to future-proof your visual language.",
+    date: "July 22, 2025",
+    readTime: "6 minute read",
+    theme: "pink",
+    pdfFileName: "future-digital-branding.pdf",
+    guideType: "article-branding-future",
+    posterContent: (
+      <>
+        <div className="poster-scribble top-center">★</div>
+        <h3 className="poster-text">
+          MAKE IT<br />
+          <span className="poster-highlight white">POP</span><br />
+          NOT JUST PRETTY
+        </h3>
+        <div className="poster-icon bottom-right">🎨</div>
+      </>
+    ),
+    content: `
+      <h2>Beyond the Static Logo</h2>
+      <p>For decades, branding meant a logo, a font, and a color palette. In the digital age, branding is how your company <em>moves</em> and <em>interacts</em>.</p>
+      
+      <h3>Dynamic Identity Systems</h3>
+      <p>Modern brands are living systems. Your logo might animate on load, your colors might shift based on the time of day, and your typography might react to the user's cursor.</p>
+      
+      <h3>Why It Matters</h3>
+      <p>We live in an attention economy. A static image is easy to scroll past. Movement catches the eye. Interactivity holds attention.</p>
+      <ul>
+        <li><strong>Motion Design:</strong> Micro-animations that guide the user.</li>
+        <li><strong>Generative Art:</strong> Visuals that are unique to every user interaction.</li>
+        <li><strong>Sonic Branding:</strong> How your brand sounds in an app or video.</li>
+      </ul>
+      
+      <p>Future-proofing your brand means designing for screens first, not print.</p>
+    `
+  },
+  {
+    category: "Strategy",
+    title: "Local SEO: Dominating the Cape Town Market",
+    excerpt: "Global reach is great, but local dominance is profitable. How to own your backyard in the digital space.",
+    date: "June 10, 2025",
+    readTime: "5 minute read",
+    theme: "lightblue",
+    pdfFileName: "local-seo-cape-town.pdf",
+    guideType: "article-local-seo",
+    posterContent: (
+      <>
+        <div className="poster-tag top-left yellow">CAPE TOWN BUSINESS</div>
+        <h3 className="poster-text">
+          OWN YOUR<br />
+          BACKYARD
+        </h3>
+        <div className="poster-pill bottom-right">LOCAL SEO MASTERY</div>
+        <div className="poster-icon bottom-left">📍</div>
+      </>
+    ),
+    content: `
+      <h2>The "Near Me" Revolution</h2>
+      <p>Searches for "services near me" have exploded in the last 5 years. If you're a Cape Town business, your most valuable customer is the one searching for you right now, within 5km of your office.</p>
+      
+      <h3>Google Business Profile</h3>
+      <p>Your GMB listing is often more important than your homepage. It's the first thing people see on Maps. Optimizing this with photos, reviews, and updates is critical.</p>
+      
+      <h3>Local Content Strategy</h3>
+      <p>Don't just write about "Web Design." Write about "Web Design for Cape Town Wineries" or "E-commerce for SA Retailers."</p>
+      <ul>
+        <li><strong>Local Keywords:</strong> Target suburbs and specific areas.</li>
+        <li><strong>Local Backlinks:</strong> Get featured in local news and directories.</li>
+        <li><strong>Reviews:</strong> A steady stream of 5-star reviews is the strongest ranking signal.</li>
+      </ul>
+      
+      <p>Dominate your local market first. It's the foundation for global growth.</p>
     `
   }
 ];
 
+const DownloadForm = ({ article }) => {
+  const [formData, setFormData] = useState({ name: '', email: '' });
+  const [status, setStatus] = useState('idle');
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus('submitting');
+
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwLFgbHHM63wG-WrNwFrwzzLoj0kv6r7MD9RHPDFhTAVeS-8Y2UopbSVrzacie8GuZARg/exec';
+
+    try {
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          guideType: article.guideType
+        }),
+      });
+
+      setStatus('success');
+
+      // Trigger Download
+      const link = document.createElement('a');
+      link.href = `/${article.pdfFileName}`;
+      link.download = article.pdfFileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      setFormData({ name: '', email: '' });
+      setTimeout(() => setStatus('idle'), 5000);
+
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setStatus('error');
+    }
+  };
+
+  return (
+    <div className="article-download-section">
+      <div className="download-cta">
+        <h3>Download Full Article</h3>
+        <p>Get the complete PDF version of this article sent to your inbox.</p>
+      </div>
+
+      {status === 'success' ? (
+        <div className="download-success">
+          <p>Thanks! Your download should start automatically.</p>
+        </div>
+      ) : (
+        <form className="article-download-form" onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="name"
+            placeholder="Your Name"
+            value={formData.name}
+            onChange={handleInputChange}
+            required
+            className="download-input"
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Your Email"
+            value={formData.email}
+            onChange={handleInputChange}
+            required
+            className="download-input"
+          />
+          <button type="submit" className="download-btn" disabled={status === 'submitting'}>
+            {status === 'submitting' ? 'Processing...' : 'Download PDF'}
+          </button>
+        </form>
+      )}
+    </div>
+  );
+};
+
 const FullScreenModal = ({ article, onClose }) => {
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = 'unset'; };
-  }, []);
+
 
   if (!article) return null;
 
@@ -65,13 +333,13 @@ const FullScreenModal = ({ article, onClose }) => {
     <div className="article-modal-overlay" onClick={onClose}>
       <div className="article-modal-content" onClick={e => e.stopPropagation()}>
         <button className="article-modal-close" onClick={onClose}>×</button>
-        <div className="article-modal-header" style={{ backgroundImage: `url(${article.image})` }}>
-          <div className="article-modal-header-content">
-            <span className="article-category">{article.category}</span>
-            <h1>{article.title}</h1>
+        <div className={`article-modal-header theme-${article.theme}`}>
+          <div className="article-poster modal-poster">
+            {article.posterContent}
           </div>
         </div>
         <div className="article-modal-body" dangerouslySetInnerHTML={{ __html: article.content }} />
+        <DownloadForm article={article} />
       </div>
     </div>
   );
@@ -94,7 +362,19 @@ const RESOURCES_DATA = [
     fileName: "whatsapp-automation.pdf",
     image: "https://images.unsplash.com/photo-1611746347311-585aad8486a6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
     category: "Automation",
-    readTime: "8 min read"
+    readTime: "8 min read",
+    theme: "green",
+    posterContent: (
+      <>
+        <div className="poster-icon top-left">💬</div>
+        <h3 className="poster-text">
+          TURN<br />
+          CHATS INTO<br />
+          <span className="text-white text-shadow">CASH</span>
+        </h3>
+        <div className="poster-tag bottom-right">WHATSAPP AUTOMATION</div>
+      </>
+    )
   },
   {
     title: "The \"Time-for-Money\" Trap",
@@ -112,7 +392,19 @@ const RESOURCES_DATA = [
     fileName: "time-for-money-trap.pdf",
     image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
     category: "Strategy",
-    readTime: "10 min read"
+    readTime: "10 min read",
+    theme: "orange",
+    posterContent: (
+      <>
+        <div className="poster-icon top-right">⏳</div>
+        <h3 className="poster-text">
+          STOP<br />
+          TRADING<br />
+          <span className="poster-highlight">TIME</span>
+        </h3>
+        <div className="poster-pill bottom-left">ESCAPE THE TRAP</div>
+      </>
+    )
   },
   {
     title: "The 2026 Extinction Event",
@@ -130,7 +422,19 @@ const RESOURCES_DATA = [
     fileName: "2026-survival-guide.pdf",
     image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
     category: "Future Tech",
-    readTime: "15 min read"
+    readTime: "15 min read",
+    theme: "purple",
+    posterContent: (
+      <>
+        <div className="poster-scribble top-left">⚡</div>
+        <h3 className="poster-text">
+          ADAPT<br />
+          <span className="text-outline">OR</span><br />
+          DIE
+        </h3>
+        <div className="poster-icon bottom-right">💀</div>
+      </>
+    )
   },
   {
     title: "The Employee Who Never Sleeps",
@@ -148,7 +452,18 @@ const RESOURCES_DATA = [
     fileName: "ai-agent-guide.pdf",
     image: "https://images.unsplash.com/photo-1531746790731-6c087fecd65a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
     category: "AI Agents",
-    readTime: "12 min read"
+    readTime: "12 min read",
+    theme: "blue",
+    posterContent: (
+      <>
+        <div className="poster-icon top-center">🌙</div>
+        <h3 className="poster-text">
+          24/7<br />
+          <span className="text-white text-shadow">SUPPORT</span>
+        </h3>
+        <div className="poster-tag bottom-center">NEVER SLEEPS</div>
+      </>
+    )
   },
   {
     title: "Service to Scale",
@@ -166,7 +481,18 @@ const RESOURCES_DATA = [
     fileName: "service-to-scale.pdf",
     image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
     category: "Growth",
-    readTime: "20 min read"
+    readTime: "20 min read",
+    theme: "pink",
+    posterContent: (
+      <>
+        <div className="poster-icon top-right">🚀</div>
+        <h3 className="poster-text">
+          SCALE<br />
+          <span className="poster-highlight white">INFINITELY</span>
+        </h3>
+        <div className="poster-pill bottom-left">PRODUCTIZE YOUR SERVICE</div>
+      </>
+    )
   }
 ];
 
@@ -224,26 +550,20 @@ const ResourceCard3D = ({ resource }) => {
       <div className={`resource-3d-card ${isFlipped ? 'flipped' : ''}`}>
 
         {/* FRONT */}
-        <div className="card-front">
-          <div className="card-image-wrapper">
-            <span className="card-category-badge">{resource.category}</span>
-            <img src={resource.image} alt={resource.title} className="card-image" />
-            <div className="card-overlay"></div>
+        <div className={`card-front article-card theme-${resource.theme}`} onClick={() => setIsFlipped(true)} style={{ cursor: 'pointer' }}>
+          <div className="article-poster">
+            {resource.posterContent}
           </div>
-          <div className="card-stats-container">
-            <h3 className="card-title">{resource.title}</h3>
-            <span className="card-subtitle">{resource.subtitle}</span>
-
-            <div className="card-meta-row">
-              <span className="meta-item">⏱ {resource.readTime}</span>
-              <span className="meta-item">📄 PDF Guide</span>
+          <div className="article-category-bar">
+            {resource.category}
+          </div>
+          <div className="article-content">
+            <h3>{resource.title}</h3>
+            <p>{resource.subtitle}</p>
+            <div className="article-meta">
+              <span>{resource.readTime}</span>
+              <span>📄 PDF Guide</span>
             </div>
-
-            <p className="card-front-quote">{resource.quote}</p>
-
-            <button className="view-details-btn" onClick={() => setIsFlipped(true)}>
-              View Details
-            </button>
           </div>
         </div>
 
@@ -414,6 +734,21 @@ function Resources() {
     return () => clearTimeout(timer);
   }, [scrollRef, locomotiveScroll]);
 
+  // Handle scroll locking when modal is open
+  useEffect(() => {
+    if (selectedArticle) {
+      if (locomotiveScroll?.current) {
+        locomotiveScroll.current.stop();
+      }
+      document.body.style.overflow = 'hidden';
+    } else {
+      if (locomotiveScroll?.current) {
+        locomotiveScroll.current.start();
+      }
+      document.body.style.overflow = '';
+    }
+  }, [selectedArticle, locomotiveScroll]);
+
   useEffect(() => {
     const scrollerEl = scrollRef?.current;
     if (!scrollerEl) return undefined;
@@ -471,30 +806,35 @@ function Resources() {
             </div>
           </div>
 
-          <div className="hero-footer-text reveal-text" style={{ marginTop: 'auto', paddingTop: '4rem', paddingBottom: '10rem', textAlign: 'center' }}>
-            <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: '800', marginBottom: '1rem', lineHeight: '1.1' }}>Businesses and automation go hand in hand</h2>
-            <p className="expand-text-lg" style={{ opacity: 0.8 }}>Click below to find out more</p>
-          </div>
+
         </section>
 
         {/* 2. ARTICLES SECTION (BLACK) */}
-        <section className="section-black" data-scroll-section data-bgcolor="#0b0f1a" data-textcolor="#ffffff">
-          <div className="expand-label" style={{ backgroundColor: '#fff', color: '#000' }}>Latest Articles</div>
+        <section className="section-black" data-scroll-section data-bgcolor="#0b0f1a" data-textcolor="#ffffff" style={{ marginTop: '-20vh', position: 'relative', zIndex: 2 }}>
+          <div className="expand-label article-grid__label">Latest Articles</div>
 
-          <div className="resources-grid">
+          <div className="article-grid">
             {ARTICLES.map((article, index) => (
               <div
-                className="resource-card reveal-text"
+                className={`article-card theme-${article.theme} reveal-text`}
                 key={index}
                 onClick={() => setSelectedArticle(article)}
                 style={{ cursor: 'pointer' }}
               >
-                <div className="resource-card__image-wrap">
-                  <img src={article.image} alt={article.title} className="resource-card__image" />
+                <div className="article-poster">
+                  {article.posterContent}
                 </div>
-                <span className="resource-card__cat">{article.category}</span>
-                <h3 className="resource-card__title">{article.title}</h3>
-                <p className="resource-card__excerpt">{article.excerpt}</p>
+                <div className="article-category-bar">
+                  {article.category}
+                </div>
+                <div className="article-content">
+                  <h3>{article.title}</h3>
+                  <p>{article.excerpt}</p>
+                  <div className="article-meta">
+                    <span>{article.date}</span>
+                    <span>{article.readTime}</span>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -535,8 +875,8 @@ function Resources() {
           <Footer />
         </section>
 
-      </div>
-    </div>
+      </div >
+    </div >
   );
 }
 
