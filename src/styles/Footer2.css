@@ -427,3 +427,31 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* =========================================
+   MOBILE OPTIMIZATION (max-width: 768px)
+   ========================================= */
+@media (max-width: 768px) {
+  .footer2__inner {
+    gap: 2.5rem;
+  }
+
+  .footer2__grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .footer2__brand {
+    font-size: 2rem;
+  }
+
+  .footer2__lede {
+    font-size: 0.95rem;
+  }
+
+  .footer2__bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}

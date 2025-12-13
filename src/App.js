@@ -16,6 +16,7 @@ import './styles/monochrome.css';
 import { ModalProvider } from './context/ModalContext';
 import Modal from './components/Modal'; // Import our new universal modal
 import useVoiceflowWidget from './hooks/useVoiceflowWidget'; // Import the Voiceflow widget hook
+import ScrollToTop from './components/ScrollToTop'; // Import ScrollToTop
 import ScrollToTopButton from './components/ScrollToTopButton'; // Import ScrollToTopButton
 import CustomCursor from './components/CustomCursor'; // Import custom cursor
 import { ErrorBoundary, CookieConsent } from './components/shared';
@@ -29,6 +30,7 @@ function App() {
   }, []);
   return (
     <div className="app-shell">
+      <ScrollToTop />
       <CustomCursor />
       <Header />
       <main className="app-main">

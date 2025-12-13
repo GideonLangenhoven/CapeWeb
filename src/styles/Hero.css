@@ -347,3 +347,36 @@ p.hero-description {
 .btn-secondary:hover {
   background: rgba(102, 126, 234, 0.2);
 }
+
+/* =========================================
+   MOBILE OPTIMIZATION (max-width: 768px)
+   ========================================= */
+@media (max-width: 768px) {
+  .hero-container {
+    padding: 60px 20px;
+    align-items: flex-start;
+    padding-top: 120px;
+  }
+
+  .left-part h1 {
+    font-size: clamp(3rem, 12vw, 4.5rem);
+    margin-top: 0;
+    margin-bottom: 20px;
+  }
+
+  .subtitle,
+  .hero-description {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

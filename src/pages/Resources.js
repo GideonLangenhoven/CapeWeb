@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useLayoutEffect } from 'react';
 import useLocomotiveScroll from '../hooks/useLocomotiveScroll';
 import useColorChange from '../hooks/useColorChange';
 import Footer from '../components/Footer';
@@ -626,11 +626,19 @@ const CanvasAnimation = () => {
     canvas.width = 512;
     canvas.height = 512;
 
+    // Pre-calculate gradients to avoid creating them every frame
+    const gradients = [];
+    for (let y = 0; y < canvas.height; y += 30) {
+      const grad = ctx.createLinearGradient(0, y + 50, 0, y - 70);
+      grad.addColorStop(0, "gray");
+      grad.addColorStop(1, "white");
+      gradients.push({ y, grad });
+    }
+
     const update = () => {
-      for (let y = 0; y < canvas.height; y += 30) {
-        const grad = ctx.createLinearGradient(0, y + 50, 0, y - 70);
-        grad.addColorStop(0, "gray");
-        grad.addColorStop(1, "white");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      gradients.forEach(({ y, grad }) => {
         ctx.fillStyle = grad;
         ctx.beginPath();
         for (let x = 0; x <= canvas.width; x += 16) {
@@ -645,7 +653,8 @@ const CanvasAnimation = () => {
         ctx.lineTo(canvas.width + 100, y + 60);
         ctx.lineTo(-100, y + 60);
         ctx.fill();
-      }
+      });
+
       animationFrameId = requestAnimationFrame(update);
     };
 
@@ -720,18 +729,16 @@ function Resources() {
   useColorChange(scrollRef);
 
   // Reset scroll position on mount
-  useEffect(() => {
+  // Reset scroll position on mount
+  useLayoutEffect(() => {
     window.scrollTo(0, 0);
     if (scrollRef?.current) {
       scrollRef.current.scrollTop = 0;
     }
-    // Wait for locomotive scroll to initialize then scroll to top
-    const timer = setTimeout(() => {
-      if (locomotiveScroll?.current) {
-        locomotiveScroll.current.scrollTo(0, { duration: 0, disableLerp: true });
-      }
-    }, 100);
-    return () => clearTimeout(timer);
+    // Immediate reset for locomotive scroll
+    if (locomotiveScroll?.current) {
+      locomotiveScroll.current.scrollTo(0, { duration: 0, disableLerp: true });
+    }
   }, [scrollRef, locomotiveScroll]);
 
   // Handle scroll locking when modal is open
