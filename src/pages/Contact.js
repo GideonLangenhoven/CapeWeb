@@ -1,16 +1,9 @@
-import React, { useEffect, useRef } from 'react';
-import useLocomotiveScroll from '../hooks/useLocomotiveScroll';
-import useColorChange from '../hooks/useColorChange';
+import React from 'react';
 import Footer from '../components/Footer';
+import LightBulb from '../components/LightBulb';
 import './Contact.css';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
 
 function Contact() {
-  const scrollRef = useLocomotiveScroll(true);
-  const containerRef = useRef(null);
   const [formData, setFormData] = React.useState({ name: '', email: '', message: '' });
   const [status, setStatus] = React.useState('idle');
 
@@ -43,54 +36,34 @@ function Contact() {
     }
   };
 
-  useColorChange(scrollRef);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      const reveals = document.querySelectorAll('.reveal-text');
-      reveals.forEach((el) => {
-        gsap.fromTo(el,
-          { y: 50, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 1,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: el,
-              scroller: containerRef.current,
-              start: 'top 85%',
-            }
-          }
-        );
-      });
-    }, containerRef);
-
-    return () => ctx.revert();
+  // Static page; only LightBulb handles theme changes
+  React.useLayoutEffect(() => {
+    window.scrollTo(0, 0);
   }, []);
 
   return (
-    <div className="expand-page" data-scroll-container ref={scrollRef}>
-      <div ref={containerRef}>
+    <div className="expand-page contact-page">
+      <div>
 
-        {/* 1. HERO SECTION (WHITE) */}
-        <section className="section-white" data-scroll-section data-bgcolor="#ffffff" data-textcolor="#0b0f1a">
+        {/* 1. HERO SECTION (WHITE aka Lightbulb Theme) */}
+        <section className="section-white" data-scroll-section style={{ position: 'relative', backgroundColor: 'var(--lb-bg)', color: 'var(--lb-text)', transition: 'all 0.3s' }}>
+          <LightBulb />
           <div className="expand-label">Get In Touch</div>
-          <h1 className="expand-title-hero reveal-text">
+          <h1 className="expand-title-hero reveal-text" style={{ color: 'var(--lb-text)', transition: 'color 0.3s' }}>
             LET'S START A<br />
             CONVERSATION.
           </h1>
-          <p className="expand-text-lg reveal-text" style={{ color: '#333', marginTop: '2rem' }}>
+          <p className="expand-text-lg reveal-text" style={{ color: 'var(--lb-text)', marginTop: '2rem', transition: 'color 0.3s' }}>
             Whether you have a specific project in mind or just want to explore what's possible, we're here to listen.
           </p>
         </section>
 
-        {/* 2. FORM SECTION (BLACK) */}
-        <section className="section-black" data-scroll-section data-bgcolor="#0b0f1a" data-textcolor="#ffffff">
+        {/* 2. FORM SECTION (BLACK aka Lightbulb Theme) */}
+        <section className="section-black" data-scroll-section style={{ backgroundColor: 'var(--lb-bg)', color: 'var(--lb-text)', transition: 'all 0.3s' }}>
           <div className="contact-grid">
             <div className="reveal-text">
-              <h2 className="expand-title-section">Tell us about your project.</h2>
-              <p className="expand-text-lg" style={{ opacity: 0.8 }}>
+              <h2 className="expand-title-section" style={{ color: 'var(--lb-text)' }}>Tell us about your project.</h2>
+              <p className="expand-text-lg" style={{ color: 'var(--lb-text)', opacity: 0.9, transition: 'color 0.3s' }}>
                 Fill out the form and we'll get back to you within 24 hours.
                 We hate spam as much as you do, so your details are safe with us.
               </p>
@@ -98,7 +71,7 @@ function Contact() {
 
             <form className="contact-form reveal-text" onSubmit={handleSubmit}>
               <div className="form-group">
-                <label htmlFor="name">Name</label>
+                <label htmlFor="name" style={{ color: 'var(--lb-text)' }}>Name</label>
                 <input
                   type="text"
                   id="name"
@@ -107,10 +80,11 @@ function Contact() {
                   onChange={handleChange}
                   required
                   placeholder="John Doe"
+                  style={{ color: 'var(--page-fg)', borderColor: 'var(--lb-text)' }}
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="email">Email</label>
+                <label htmlFor="email" style={{ color: 'var(--lb-text)' }}>Email</label>
                 <input
                   type="email"
                   id="email"
@@ -119,10 +93,11 @@ function Contact() {
                   onChange={handleChange}
                   required
                   placeholder="john@company.com"
+                  style={{ color: 'var(--page-fg)', borderColor: 'var(--lb-text)' }}
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="message">Message</label>
+                <label htmlFor="message" style={{ color: 'var(--lb-text)' }}>Message</label>
                 <textarea
                   id="message"
                   name="message"
@@ -131,6 +106,7 @@ function Contact() {
                   rows="4"
                   required
                   placeholder="Tell us about your goals..."
+                  style={{ color: 'var(--page-fg)', borderColor: 'var(--lb-text)' }}
                 ></textarea>
               </div>
               <button type="submit" className="submit-btn" disabled={status === 'submitting'}>
@@ -141,29 +117,29 @@ function Contact() {
           </div>
         </section>
 
-        {/* 3. INFO SECTION (WHITE) */}
-        <section className="section-white" data-scroll-section data-bgcolor="#ffffff" data-textcolor="#0b0f1a">
-          <div className="expand-label" style={{ backgroundColor: '#000', color: '#fff' }}>Contact Details</div>
-          <h2 className="expand-title-section reveal-text">Other ways to connect.</h2>
+        {/* 3. INFO SECTION (WHITE aka Lightbulb Theme) */}
+        <section className="section-white" data-scroll-section style={{ backgroundColor: 'var(--lb-bg)', color: 'var(--lb-text)', transition: 'all 0.3s' }}>
+          <div className="expand-label" style={{ backgroundColor: 'var(--lb-text)', color: 'var(--lb-bg)' }}>Contact Details</div>
+          <h2 className="expand-title-section reveal-text" style={{ color: 'var(--lb-text)' }}>Other ways to connect.</h2>
 
-          <ul className="contact-info-list">
+          <ul className="contact-info-list" style={{ color: 'var(--lb-text)' }}>
             <li className="contact-info-item reveal-text">
               <span className="contact-info-label">Email</span>
-              <a href="mailto:hello@capeweb.co.za" className="contact-info-value">hello@capeweb.co.za</a>
+              <a href="mailto:hello@capeweb.co.za" className="contact-info-value" style={{ color: 'var(--lb-text)' }}>hello@capeweb.co.za</a>
             </li>
             <li className="contact-info-item reveal-text">
               <span className="contact-info-label">Phone</span>
-              <a href="tel:+27211234567" className="contact-info-value">+27 (0) 21 123 4567</a>
+              <a href="tel:+27211234567" className="contact-info-value" style={{ color: 'var(--lb-text)' }}>+27 (0) 21 123 4567</a>
             </li>
             <li className="contact-info-item reveal-text">
               <span className="contact-info-label">Office</span>
-              <span className="contact-info-value">Cape Town, South Africa</span>
+              <span className="contact-info-value" style={{ color: 'var(--lb-text)' }}>Cape Town, South Africa</span>
             </li>
           </ul>
         </section>
 
         {/* FOOTER */}
-        <section data-scroll-section data-bgcolor="#0b0f1a" data-textcolor="#ffffff">
+        <section className="footer-section" data-scroll-section data-bgcolor="#0b0f1a" data-textcolor="#ffffff">
           <Footer />
         </section>
 

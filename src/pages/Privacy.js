@@ -10,7 +10,7 @@ import './Privacy.css';
  * Based on South African Protection of Personal Information Act (POPIA).
  */
 export default function Privacy() {
-  const scrollRef = useLocomotiveScroll();
+  const { scrollRef } = useLocomotiveScroll();
   const lastUpdated = "January 2025";
 
   return (

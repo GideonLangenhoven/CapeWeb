@@ -20,50 +20,19 @@ function Header() {
 
   useEffect(() => {
     const updateScrollState = () => {
-      // Scroll detection for all pages
-
-
-      const trigger = document.querySelector('[data-nav-fill-trigger]');
-      const headerHeight = navRef.current ? navRef.current.offsetHeight : 0;
-      const isHome = location.pathname === '/';
-
-      if (!trigger) {
-        setIsScrolled(window.scrollY > 40);
-        // If not on home, ensure keyhole state is off
-        if (!isHome) setIsKeyholeActive(false);
-        return;
-      }
-
-      const triggerOffset = trigger.getBoundingClientRect().top + window.scrollY;
-      const scrollPosition = window.scrollY + headerHeight;
-
-      setIsScrolled(scrollPosition >= triggerOffset);
-
-      // Keyhole transparency logic (Homepage only)
-      if (isHome) {
-        const keyhole = document.getElementById('keyhole');
-        if (keyhole) {
-          const keyholeRect = keyhole.getBoundingClientRect();
-          const active = keyholeRect.top <= headerHeight && keyholeRect.bottom >= 0;
-          setIsKeyholeActive(active);
-        } else {
-          setIsKeyholeActive(false);
-        }
-      } else {
-        setIsKeyholeActive(false);
-      }
+      // Scroll detection disabled to keep header consistent (Solid Black)
+      // setIsScrolled(false);
+      // setIsKeyholeActive(false);
     };
 
     updateScrollState();
     // Delay a second measurement to ensure DOM layout is ready
     const timer = setTimeout(updateScrollState, 50);
 
-    window.addEventListener('scroll', updateScrollState, { passive: true });
     window.addEventListener('resize', updateScrollState);
 
     return () => {
       clearTimeout(timer);
-      window.removeEventListener('scroll', updateScrollState);
       window.removeEventListener('resize', updateScrollState);
     };
   }, [location.pathname]);

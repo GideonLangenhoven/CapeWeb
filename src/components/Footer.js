@@ -181,7 +181,7 @@ export default function Footer() {
             <div className="footer2__news">
               <a href="/resources" className="footer2__news-item" style={{ textDecoration: 'none', color: 'inherit' }}>
                 <div className="footer2__news-thumb">
-                  <img src="https://images.unsplash.com/photo-1611746347311-585aad8486a6?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="WhatsApp Automation" />
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp Automation" />
                 </div>
                 <div>
                   <h4>The WhatsApp Goldmine</h4>
@@ -243,8 +243,8 @@ export default function Footer() {
             <span>This template is made with</span>
             <Heart size={14} className="footer2__heart" />
             <span>by</span>
-            <a href="#" className="footer2__link footer2__link--inline">
-              YourBrand
+            <a href="/" className="footer2__link footer2__link--inline">
+              CAPE WEB
             </a>
           </div>
         </div>

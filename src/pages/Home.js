@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import Hero from '../components/Hero';
 import Footer from '../components/Footer';
 import gsap from 'gsap';
@@ -54,11 +54,11 @@ const REVIEWS = [
 ];
 
 const PLAN_LINES = [
-  { label: 'Performance First', accent: '98+ Lighthouse' },
-  { label: 'SEO that Sticks', accent: 'Structured & Fast' },
-  { label: 'Automation Built-In', accent: 'Bookings & Follow-ups' },
-  { label: 'Content that Converts', accent: 'StoryBrand Ready' },
-  { label: 'Care Plans that Care', accent: 'Ship • Learn • Improve' }
+  { label: 'Performance First', accent: '98+ Lighthouse', service: 'shopify-speed-audit' },
+  { label: 'SEO that Sticks', accent: 'Structured & Fast', service: 'seo-2025-beyond-keywords' },
+  { label: 'Automation Built-In', accent: 'Bookings & Follow-ups', service: 'ai-agents-sales-team' },
+  { label: 'Content that Converts', accent: 'StoryBrand Ready', service: 'future-digital-branding' },
+  { label: 'Care Plans that Care', accent: 'Ship • Learn • Improve', service: 'roi-custom-web-dev' }
 ];
 
 const BG_VIDEO_ID = '69yA-F7yOiQ';
@@ -128,6 +128,11 @@ function Home() {
     restartTestimonialTimer();
     return () => clearInterval(testimonialTimerRef.current);
   }, [restartTestimonialTimer]);
+
+  // Reset scroll on mount
+  React.useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const goToCard = useCallback((index) => {
     setActiveCard((prev) => {
@@ -813,10 +818,13 @@ function Home() {
               <div className="plan-textfx">
                 <div className="fx-wrap">
                   {PLAN_LINES.map((line) => (
-                    <div className="tfx-line" key={line.label}>
+                    <Link
+                      to={`/services?service=${line.service}`}
+                      className="tfx-line"
+                      key={line.label}
+                    >
                       {line.label} <span>{line.accent}</span>
-                      <ArrowRight className="tfx-arrow" size={32} />
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </div>

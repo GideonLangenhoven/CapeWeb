@@ -481,10 +481,18 @@ h3 {
   border-bottom: 1px solid rgba(31, 41, 55, 0.2);
   width: 100%;
   box-sizing: border-box;
-}
+  text-decoration: none;
+  cursor: pointer;
 
-.tfx-line:hover {
-  /* No default hover for background-size, handled by GSAP */
+  /* Force text fill effect for Link */
+  color: rgba(31, 41, 55, 0.2) !important;
+  background: linear-gradient(to right, #1f2937, #1f2937) no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  background-size: 0% 100%;
+  text-decoration: none;
+  border-bottom: none;
+  position: relative;
 }
 
 .tfx-line>span {
@@ -519,7 +527,7 @@ h3 {
 
 .plan-textfx a {
   color: inherit;
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 /* Plan Section Overrides */
@@ -541,7 +549,6 @@ h3 {
 
 #plan .plan-content {
   width: fit-content;
-  /* Shrink to fit headline */
   display: flex;
   flex-direction: column;
 }
@@ -1306,6 +1313,7 @@ h3 {
 
 .footer-section {
   padding-bottom: 0;
+  min-height: auto !important;
 }
 
 #testimonials .section-inner,

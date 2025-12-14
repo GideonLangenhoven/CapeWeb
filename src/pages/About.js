@@ -8,17 +8,20 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 function About() {
-    const scrollRef = useLocomotiveScroll(true);
+    const { scrollRef } = useLocomotiveScroll(true);
     const containerRef = useRef(null);
 
     useEffect(() => {
+        const scroller = scrollRef.current;
+        if (!scroller) return;
+
         const ctx = gsap.context(() => {
             // Parallax effect for mountain line
             gsap.to('.about-hero__mountain', {
                 y: 100,
                 scrollTrigger: {
                     trigger: '.about-hero',
-                    scroller: containerRef.current,
+                    scroller,
                     start: 'top top',
                     end: 'bottom top',
                     scrub: true
@@ -36,7 +39,7 @@ function About() {
                         duration: 1,
                         scrollTrigger: {
                             trigger: section,
-                            scroller: containerRef.current,
+                            scroller,
                             start: 'top 80%',
                         }
                     }
@@ -46,7 +49,7 @@ function About() {
         }, containerRef);
 
         return () => ctx.revert();
-    }, []);
+    }, [scrollRef]);
 
     return (
         <div className="about-page" data-scroll-container ref={scrollRef}>

@@ -30,12 +30,15 @@ const PROJECTS = [
 ];
 
 function Work() {
-    const scrollRef = useLocomotiveScroll(true);
+    const { scrollRef } = useLocomotiveScroll(true);
     const containerRef = useRef(null);
 
     useColorChange(scrollRef);
 
     useEffect(() => {
+        const scroller = scrollRef.current || window;
+        if (!scroller) return;
+
         const ctx = gsap.context(() => {
             // Parallax for images
             const images = document.querySelectorAll('.project-card__image');
@@ -45,7 +48,7 @@ function Work() {
                     ease: 'none',
                     scrollTrigger: {
                         trigger: img.parentElement,
-                        scroller: containerRef.current,
+                        scroller,
                         start: 'top bottom',
                         end: 'bottom top',
                         scrub: true
@@ -65,7 +68,7 @@ function Work() {
                         ease: 'power3.out',
                         scrollTrigger: {
                             trigger: el,
-                            scroller: containerRef.current,
+                            scroller,
                             start: 'top 85%',
                         }
                     }
@@ -74,7 +77,7 @@ function Work() {
         }, containerRef);
 
         return () => ctx.revert();
-    }, []);
+    }, [scrollRef]);
 
     return (
         <div className="expand-page" data-scroll-container ref={scrollRef}>

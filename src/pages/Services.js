@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import useLocomotiveScroll from '../hooks/useLocomotiveScroll';
 import useColorChange from '../hooks/useColorChange';
 import Footer from '../components/Footer';
@@ -11,13 +12,43 @@ gsap.registerPlugin(ScrollTrigger);
 
 function Services() {
   // Initialize locomotive scroll with start=true, smooth=false (native scroll)
+  // We keep smooth=false because ScrollStackedCards relies on position: sticky
   const { scrollRef, locomotiveScroll } = useLocomotiveScroll(true, false);
   const containerRef = useRef(null);
   const heroRef = useRef(null);
+  const [searchParams] = useSearchParams();
+  const selectedService = searchParams.get('service');
 
-  // Activate color transitions
-  useColorChange(scrollRef);
+  // Activate color transitions with native mode
+  useColorChange(scrollRef, true);
 
+  // Reset scroll on mount
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    // START: Fix for 'not always allowing scroll'
+    // Ensure the document allows scrolling since we are in native mode (smooth=false)
+    const unlockScroll = () => {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+      document.body.style.overflowX = 'hidden'; // Keep X hidden
+    };
+    unlockScroll();
+
+    // Force a refresh after a delay to handle image loading or layout shifts
+    const timer = setTimeout(() => {
+      unlockScroll();
+      ScrollTrigger.refresh();
+      if (locomotiveScroll.current) {
+        locomotiveScroll.current.update();
+      }
+    }, 1000);
+
+    return () => clearTimeout(timer);
+    // END: Fix for 'not always allowing scroll'
+  }, [locomotiveScroll]);
 
   useEffect(() => {
     // Delay GSAP init to ensure Locomotive Scroll proxy is ready
@@ -150,12 +181,13 @@ function Services() {
         const wordSpans = tagline.querySelectorAll('.word');
 
         // Animation Setup
+        // Animation Setup
         const masterTL = gsap.timeline({
-          delay: 0.2,
+          delay: 0,
           scrollTrigger: {
             trigger: ".hero-services",
             // scroller: ".expand-page", // Removed for native scroll
-            start: "top 80%",
+            start: "top 90%", // Start earlier when entering viewport
           }
         });
 
@@ -194,20 +226,21 @@ function Services() {
             each: 0.05,
             from: "center"
           },
-          duration: 2.4,
+          duration: 1.8, // Faster, snappier
           ease: "power3.out"
         });
 
         // 4. Text Reveal
         const splitTL = gsap.timeline().from(wordSpans, {
-          y: 40,
+          y: 50,
           opacity: 0,
-          duration: 0.5,
-          stagger: 0.02,
-          ease: "power2.out"
+          duration: 1.0, // Slower fade per word
+          stagger: 0.1,  // More noticeable ripple between words
+          ease: "power3.out" // Smooth, classic ease (removed bounce for elegance)
         });
 
-        masterTL.add(boxTL).add(splitTL, "-=1.15");
+        // Start text 0.6s after boxes start (gives time for boxes to establish)
+        masterTL.add(boxTL).add(splitTL, 0.6);
 
         // 5. Continuous bar pulse
         const pulseTL = gsap.timeline({
@@ -284,6 +317,27 @@ function Services() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!selectedService) return;
+    const target = document.getElementById(`service-${selectedService}`);
+    if (!target) return;
+
+    const scrollToCard = () => {
+      if (locomotiveScroll.current) {
+        locomotiveScroll.current.scrollTo(target, {
+          offset: -60,
+          duration: 800,
+          easing: [0.25, 0.0, 0.35, 1.0]
+        });
+      } else {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    };
+
+    const timer = setTimeout(scrollToCard, 200);
+    return () => clearTimeout(timer);
+  }, [selectedService, locomotiveScroll]);
+
   return (
     <div className="expand-page" data-scroll-container ref={scrollRef}>
       <div ref={containerRef}>
@@ -321,7 +375,7 @@ function Services() {
 
         {/* New Scroll Stacked Cards Section - Isolated */}
         <section className="section-black" data-scroll-section>
-          <ScrollStackedCards locomotiveScroll={locomotiveScroll} />
+          <ScrollStackedCards locomotiveScroll={locomotiveScroll} selectedService={selectedService} />
         </section>
 
         {/* 2.5 VERTICAL LOOP SECTION */}
@@ -366,7 +420,7 @@ function Services() {
         </section>
 
         {/* FOOTER */}
-        <section data-scroll-section data-bgcolor="#0b0f1a" data-textcolor="#ffffff">
+        <section className="footer-section" data-scroll-section data-bgcolor="#0b0f1a" data-textcolor="#ffffff">
           <Footer />
         </section>
 

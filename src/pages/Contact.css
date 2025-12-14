@@ -123,3 +123,9 @@
 .section-white .contact-info-value:hover {
     color: var(--expand-accent);
 }
+
+/* Contact page runs static (no scroll reveals), ensure content is visible */
+.contact-page .reveal-text {
+    opacity: 1;
+    transform: none;
+}

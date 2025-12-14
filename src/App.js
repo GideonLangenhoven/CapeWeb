@@ -7,6 +7,7 @@ import Services from './pages/Services';
 import Pricing from './pages/Pricing';
 import Resources from './pages/Resources';
 import Gallery from './pages/Gallery';
+import Work from './pages/Work';
 import Contact from './pages/Contact';
 import Intake from './pages/Intake';
 import Privacy from './pages/Privacy';
@@ -39,6 +40,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
           <Route path="/gallery" element={<Gallery />} />
+          <Route path="/work" element={<Work />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/resources" element={<Resources />} />
           <Route path="/contact" element={<Contact />} />

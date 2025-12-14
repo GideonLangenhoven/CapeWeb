@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, useLayoutEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import useLocomotiveScroll from '../hooks/useLocomotiveScroll';
 import useColorChange from '../hooks/useColorChange';
 import Footer from '../components/Footer';
@@ -360,7 +361,7 @@ const RESOURCES_DATA = [
     buttonText: "Download Playbook",
     guideType: "whatsapp-goldmine",
     fileName: "whatsapp-automation.pdf",
-    image: "https://images.unsplash.com/photo-1611746347311-585aad8486a6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+    image: "https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg",
     category: "Automation",
     readTime: "8 min read",
     theme: "green",
@@ -725,6 +726,18 @@ function Resources() {
   const { scrollRef, locomotiveScroll } = useLocomotiveScroll(true);
   const containerRef = useRef(null);
   const [selectedArticle, setSelectedArticle] = useState(null);
+  const [searchParams] = useSearchParams();
+
+  // Check for article query param on mount
+  useEffect(() => {
+    const articleSlug = searchParams.get('article');
+    if (articleSlug) {
+      const foundArticle = ARTICLES.find(a => a.pdfFileName.includes(articleSlug));
+      if (foundArticle) {
+        setSelectedArticle(foundArticle);
+      }
+    }
+  }, [searchParams]);
 
   useColorChange(scrollRef);
 
@@ -878,7 +891,7 @@ function Resources() {
         </section>
 
         {/* FOOTER */}
-        <section data-scroll-section data-bgcolor="#0b0f1a" data-textcolor="#ffffff">
+        <section className="footer-section" data-scroll-section data-bgcolor="#0b0f1a" data-textcolor="#ffffff">
           <Footer />
         </section>
 

@@ -27,7 +27,7 @@ html {
   margin-top: -0.5em;
   margin-left: -0.5em;
   opacity: 0.6;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  transition: transform 0.2s ease, opacity 0.2s ease, width 0.2s ease, height 0.2s ease, margin 0.2s ease;
 }
 
 .cursor-circle-1 {
@@ -128,4 +128,39 @@ button:hover~#follower .cursor-circle-2 {
 a:hover~#follower .cursor-circle-1 {
   background: rgba(255, 255, 255, 1);
   animation-duration: 0.8s;
+}
+
+/* Click Me State (tfx-line) */
+.custom-cursor.cursor-click-me .cursor-circle-1 {
+  /* Hide the small white dot so the text is clear */
+  opacity: 0;
+}
+
+.custom-cursor.cursor-click-me .cursor-circle-2 {
+  opacity: 1 !important;
+  animation: none !important;
+  /* Stop pulse */
+  width: 4em;
+  /* Static size ~30% larger than max pulse (3em) */
+  height: 4em;
+  margin-top: -2em;
+  margin-left: -2em;
+  transform: scale(1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20002;
+  background: #FFD700 !important;
+  /* Yellow */
+}
+
+.custom-cursor.cursor-click-me .cursor-circle-2::after {
+  content: 'click me';
+  color: #000;
+  /* Black text for contrast on yellow */
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  white-space: nowrap;
+  letter-spacing: 0.5px;
 }
