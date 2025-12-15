@@ -6,6 +6,7 @@ import SplitRevealLogo from './SplitRevealLogo';
 const navItems = [
   { label: 'Services', to: '/services' },
   { label: 'Gallery', to: '/gallery' },
+  { label: 'Learn', to: '/learn' },
   { label: 'Resources', to: '/resources' },
   { label: 'Contact', to: '/contact' }
 ];

@@ -12,6 +12,7 @@ import Contact from './pages/Contact';
 import Intake from './pages/Intake';
 import Privacy from './pages/Privacy';
 import ComponentLibrary from './pages/ComponentLibrary';
+import Learn from './pages/Learn';
 import './styles/main.css';
 import './styles/monochrome.css';
 import { ModalProvider } from './context/ModalContext';
@@ -42,6 +43,7 @@ function App() {
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/work" element={<Work />} />
           <Route path="/pricing" element={<Pricing />} />
+          <Route path="/learn" element={<Learn />} />
           <Route path="/resources" element={<Resources />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/intake" element={<Intake />} />
