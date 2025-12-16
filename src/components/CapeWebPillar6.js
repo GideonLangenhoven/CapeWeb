@@ -1,5 +1,68 @@
 import React, { useState, useEffect, useRef } from 'react';
 
+const getPillar6Playbook = (context = {}) => {
+  const sector = (context.sector || '').toLowerCase();
+  const geography = context.geography || 'South Africa';
+  const language = context.language || 'English';
+
+  if (sector.includes('township')) {
+    return {
+      summary: `Lead with WhatsApp Commerce, Facebook Marketplace, and community radio for ${geography}. Use isiXhosa/isiZulu voice notes for trust.`,
+      primaryAction: 'whatsapp',
+      homePlatform: 'facebook',
+      distPlatform: 'tiktok',
+      quickIdeas: [
+        'Daily WhatsApp Status with offer + CTA',
+        'Facebook Marketplace listings showing delivery radius',
+        'TikTok/Reels behind-the-scenes of prep/delivery',
+      ],
+      languageTip: `Record scripts in ${language} + vernacular for voice notes and captions.`,
+    };
+  }
+
+  if (/technology|saas|software/.test(sector)) {
+    return {
+      summary: 'Anchor marketing around LinkedIn + email nurture, share proof-of-value clips, and run webinars for high-consideration buyers.',
+      primaryAction: 'call',
+      homePlatform: 'linkedin',
+      distPlatform: 'youtube',
+      quickIdeas: ['Weekly LinkedIn carousel with data', '30-minute demo webinars', 'Short product tips on YouTube Shorts'],
+      languageTip: `Keep scripts concise and metric-heavy for ${language}-speaking execs.`,
+    };
+  }
+
+  if (/tourism|travel|hospitality/.test(sector)) {
+    return {
+      summary: `Show experiences visually: Instagram/TikTok for discovery, distribute via travel Facebook groups + WhatsApp communities in ${geography}.`,
+      primaryAction: 'checkout',
+      homePlatform: 'instagram',
+      distPlatform: 'facebook',
+      quickIdeas: ['Reels showing itineraries', 'Stories with polls ("Which weekend?")', 'Facebook group posts with seasonal promos'],
+      languageTip: 'Use bilingual captions (English + top tourist language).',
+    };
+  }
+
+  if (/ngo|npo/.test(sector)) {
+    return {
+      summary: 'Tell impact stories, highlight beneficiaries, and nurture donors via WhatsApp + email while recruiting volunteers on Instagram/LinkedIn.',
+      primaryAction: 'dm',
+      homePlatform: 'instagram',
+      distPlatform: 'linkedin',
+      quickIdeas: ['Volunteer spotlight posts', 'Impact carousels with donate CTA', 'LinkedIn monthly impact digest'],
+      languageTip: 'Alternate between community languages and English for accessibility.',
+    };
+  }
+
+  return {
+    summary: `Pick one "home" platform for deep content and one "distribution" channel to amplify across ${geography}.`,
+    primaryAction: 'checkout',
+    homePlatform: 'instagram',
+    distPlatform: 'facebook',
+    quickIdeas: [],
+    languageTip: '',
+  };
+};
+
 // Quiz questions for Pillar 6
 export const pillar6QuizQuestions = [
   {
@@ -188,6 +251,7 @@ export default function CapeWebPillar6() {
 
 // Content component
 export function Pillar6Content({
+  personalizationContext = {},
   primaryAction,
   setPrimaryAction,
   homePlatform,
@@ -213,6 +277,9 @@ export function Pillar6Content({
   currentIdea,
   setCurrentIdea,
 }) {
+  const playbook = getPillar6Playbook(personalizationContext);
+  const personaLabel = personalizationContext?.sector || 'Business';
+
   const postIdeas = [
     "Hook: \"Most people waste money on [thing]. Here's the simple fix.\" → 3 tips → CTA",
     "Proof post: show a result (before/after) and explain what changed",
@@ -309,6 +376,10 @@ export function Pillar6Content({
   const actionPlan = getActionPlan();
   const platformPlan = getPlatformPlan();
   const scripts = getScripts();
+  const formatLabel = (value) => (value ? value.charAt(0).toUpperCase() + value.slice(1) : '');
+  const recommendedCtaLabel = formatLabel(playbook.primaryAction);
+  const recommendedHome = formatLabel(playbook.homePlatform);
+  const recommendedDist = formatLabel(playbook.distPlatform);
 
   return (
     <>
@@ -320,6 +391,21 @@ export function Pillar6Content({
           They buy after they understand you and trust you.
           CapeWeb builds a simple loop that turns posts into sales conversations.
         </p>
+        {playbook.summary ? (
+          <div className="context-banner">
+            <strong>{personaLabel} playbook:</strong> {playbook.summary}
+          </div>
+        ) : null}
+        {playbook.quickIdeas?.length ? (
+          <div className="context-tip">
+            <strong>Quick wins:</strong>
+            <ul style={{ margin: '.35rem 0 0 1.1rem' }}>
+              {playbook.quickIdeas.map((idea) => (
+                <li key={idea}>{idea}</li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
 
         <figure style={{ margin: '1.25rem 0', padding: '1rem', border: '1px solid #e9ecef', borderRadius: '10px', background: '#fff' }}>
           <AttentionToSaleLoopDiagram />
@@ -350,6 +436,11 @@ export function Pillar6Content({
               {' '}Book a call
             </label>
           </div>
+          {recommendedCtaLabel ? (
+            <div className="context-tip">
+              CapeWeb suggests leading with <strong>{recommendedCtaLabel}</strong> as your main CTA for {personaLabel.toLowerCase()} audiences. Lock it in, then add secondary options later.
+            </div>
+          ) : null}
 
           <div style={{ marginTop: '1rem', background: '#fff', border: '1px solid #e9ecef', borderRadius: '10px', padding: '1rem' }}>
             {actionPlan ? (
@@ -449,6 +540,11 @@ export function Pillar6Content({
               </div>
             </div>
           </div>
+          {(recommendedHome || recommendedDist) ? (
+            <div className="context-tip">
+              CapeWeb suggests <strong>{recommendedHome || 'Instagram'}</strong> as your home base and <strong>{recommendedDist || 'Facebook'}</strong> for distribution for this profile.
+            </div>
+          ) : null}
 
           <div style={{ marginTop: '1rem', background: '#fff', border: '1px solid #e9ecef', borderRadius: '10px', padding: '1rem' }}>
             {platformPlan ? (
@@ -680,6 +776,7 @@ export function Pillar6Content({
           Most sales are won in the follow-up.
           CapeWeb keeps the script simple, kind, and clear — because the customer wants confidence.
         </p>
+        {playbook.languageTip ? <div className="context-tip">{playbook.languageTip}</div> : null}
 
         <div className="workbook-section" style={{ backgroundColor: '#f8f9fa', border: '1px solid #e9ecef', padding: '1.5rem', borderRadius: '10px', margin: '1.5rem 0' }}>
           <h4>💬 Script Builder (copy/paste messages)</h4>

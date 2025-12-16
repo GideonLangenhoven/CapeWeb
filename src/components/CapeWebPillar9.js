@@ -1,4 +1,51 @@
-import React from 'react';
+import React, { useState } from 'react';
+
+const getPillar9Plan = (context = {}) => {
+  const sector = (context.sector || '').toLowerCase();
+  const geography = context.geography || 'South Africa';
+  if (sector.includes('township')) {
+    return {
+      summary: `Track every cash + mobile money sale, prep lay-by/stokvel records, and aim for sefa/NYDA readiness in ${geography}.`,
+      quickWins: ['Use Google Sheet ledger (date, customer, amount)', 'Capture lay-by agreements + balances', 'Download sefa checklist now and start filling docs.'],
+      programs: [
+        { name: 'sefa Working Capital', link: 'https://www.sefa.org.za/', description: 'Purchase order funding, bridging finance.' },
+        { name: 'NYDA Grant Programme', link: 'https://www.nyda.gov.za/Products-Services/NYDA-Grant-Programme.html', description: 'Youth-owned micro-grants (R1k–R200k).' },
+        { name: 'SmartXchange Township', link: 'https://www.smartxchange.co.za/', description: 'Digital/township SME support.' },
+      ],
+    };
+  }
+  if (/manufactur|export|agri/.test(sector)) {
+    return {
+      summary: 'Build costing calculators, landed cost estimates, and maintain IFRS-lite records for IDC/NEF funding.',
+      quickWins: ['Price calculator (materials + labour + overhead + margin).', 'Track Forex exposure for imports/exports.', 'Assemble compliance pack (CIPC, SARS, B-BBEE).'],
+      programs: [
+        { name: 'IDC Funding', link: 'https://www.idc.co.za/', description: 'Industrial finance for scaling manufacturers.' },
+        { name: 'NEF Funding', link: 'https://www.nefcorp.co.za/', description: 'Black industrialist equity + loans.' },
+        { name: 'DTIC Sector Incentives', link: 'https://www.thedtic.gov.za/financial-and-non-financial-support/incentives/', description: 'Sector-specific grants and tax allowances.' },
+      ],
+    };
+  }
+  if (/technology|saas|software/.test(sector)) {
+    return {
+      summary: 'Keep clean MRR tracking, deferred revenue schedules, and investor-ready dashboards; explore TIA or VC funds.',
+      quickWins: ['Record ARR/MRR + churn monthly.', 'Automate invoicing + payouts (Paystack/Ozow).', 'Build simple runway calculator.'],
+      programs: [
+        { name: 'TIA Seed Fund', link: 'https://www.tia.org.za/funding-solutions/', description: 'Innovation grants for tech products.' },
+        { name: 'SAVCA Member Funds', link: 'https://savca.co.za/', description: 'List of SA VC/PE investors.' },
+        { name: 'AfricArena', link: 'https://www.africarena.com/', description: 'Pitch platform for African tech startups.' },
+      ],
+    };
+  }
+  return {
+    summary: `Make a simple ledger, reconcile weekly, and build a funding-ready document pack for ${geography}.`,
+    quickWins: ['Log every sale same day.', 'Set pricing calculator with fees + VAT.', 'Prepare policies (refund, delivery, privacy).'],
+    programs: [
+      { name: 'SEDA', link: 'https://www.seda.org.za/', description: 'Non-financial support + incubation.' },
+      { name: 'sefa / DSBD portal', link: 'https://sefa.finfind.co.za/', description: 'Loan/grant matching for SMEs.' },
+      { name: 'Local Municipality LED Unit', link: 'https://www.gov.za/about-government/government-system/local-government', description: 'Permits, incentives, LED programmes.' },
+    ],
+  };
+};
 
 export const pillar9QuizQuestions = [
   {
@@ -53,9 +100,35 @@ export const pillar9QuizQuestions = [
   },
 ];
 
-export function Pillar9Content() {
+export function Pillar9Content({ personalizationContext = {} }) {
+  const personaPlan = getPillar9Plan(personalizationContext);
+  const personaLabel = personalizationContext?.sector || 'Business';
   return (
     <>
+      <div className="mastery-section" data-topic="funding readiness calculator grant sefa nyda idc">
+        <h3>0) Funding readiness snapshot</h3>
+        <p>
+          Keep your money system honest. If you can prove every rand, CapeWeb can help you access grants, loans, and market access faster.
+        </p>
+        {personaPlan.summary ? (
+          <div className="context-banner">
+            <strong>{personaLabel} focus:</strong> {personaPlan.summary}
+          </div>
+        ) : null}
+        {personaPlan.quickWins?.length ? (
+          <div className="context-tip">
+            <strong>Quick wins:</strong>
+            <ul style={{ margin: '.35rem 0 0 1.1rem' }}>
+              {personaPlan.quickWins.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+        <FundingReadinessCalculator />
+        <FundingProgramsList programs={personaPlan.programs} />
+      </div>
+
       {/* SECTION 1 */}
       <div className="mastery-section" data-topic="profit cash revenue costs money truth financial systems">
         <h3>1) The Money Truth: Profit is not cash</h3>
@@ -127,6 +200,76 @@ export function Pillar9Content() {
 
       <Pillar9RemainingContent />
     </>
+  );
+}
+
+function FundingReadinessCalculator() {
+  const [monthlyRevenue, setMonthlyRevenue] = useState('');
+  const [monthlyExpenses, setMonthlyExpenses] = useState('');
+  const [cashBuffer, setCashBuffer] = useState('');
+  const [documentsReady, setDocumentsReady] = useState(false);
+
+  const revenue = parseFloat(monthlyRevenue) || 0;
+  const expenses = parseFloat(monthlyExpenses) || 0;
+  const buffer = parseFloat(cashBuffer) || 0;
+  const profit = revenue - expenses;
+  const profitStatus = profit > 0 ? '✅ Positive cashflow' : '⚠️ Tight cashflow — trim expenses or raise prices.';
+  const bufferStatus = buffer >= 1 ? '✅ At least 1 month cash buffer' : '⚠️ Build a 1-month buffer before applying.';
+  const docStatus = documentsReady ? '✅ Compliance pack ready (CIPC, SARS, bank statements)' : '⚠️ Create a funding folder (CIPC, SARS, bank statements, ID, proof of address).';
+  const readinessScore = (profit > 0 ? 1 : 0) + (buffer >= 1 ? 1 : 0) + (documentsReady ? 1 : 0);
+  const readinessMessages = [
+    'Not ready. Stabilise cash + paperwork before funding.',
+    'Mixed readiness. Fix weak areas in the checklist.',
+    'Almost there. Finalise documents and scenarios.',
+    'Ready! Start submitting to sefa/IDC/VC partners.',
+  ];
+  const readinessLabel = readinessMessages[readinessScore] || readinessMessages[0];
+
+  return (
+    <div className="workbook-section" style={{ background: '#f8f9fa', border: '1px solid #e9ecef', padding: '1.5rem', borderRadius: '10px', marginTop: '1rem' }}>
+      <h4>📊 Funding readiness calculator</h4>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))', gap: '1rem', marginTop: '.75rem' }}>
+        <label>
+          <span style={{ fontWeight: 700 }}>Average monthly revenue (R)</span>
+          <input type="number" value={monthlyRevenue} onChange={(e) => setMonthlyRevenue(e.target.value)} placeholder="e.g., 25 000" style={{ width: '100%', padding: '.6rem', border: '1px solid #ced4da', borderRadius: '6px', marginTop: '.4rem' }} />
+        </label>
+        <label>
+          <span style={{ fontWeight: 700 }}>Average monthly expenses (R)</span>
+          <input type="number" value={monthlyExpenses} onChange={(e) => setMonthlyExpenses(e.target.value)} placeholder="e.g., 18 000" style={{ width: '100%', padding: '.6rem', border: '1px solid #ced4da', borderRadius: '6px', marginTop: '.4rem' }} />
+        </label>
+        <label>
+          <span style={{ fontWeight: 700 }}>Cash buffer (months)</span>
+          <input type="number" value={cashBuffer} onChange={(e) => setCashBuffer(e.target.value)} placeholder="e.g., 1.5" style={{ width: '100%', padding: '.6rem', border: '1px solid #ced4da', borderRadius: '6px', marginTop: '.4rem' }} />
+        </label>
+        <label style={{ display: 'flex', alignItems: 'center', gap: '.5rem' }}>
+          <input type="checkbox" checked={documentsReady} onChange={(e) => setDocumentsReady(e.target.checked)} />
+          Funding documents ready (CIPC, SARS, statements, policies)
+        </label>
+      </div>
+      <div style={{ marginTop: '1rem', background: '#fff', border: '1px solid #e9ecef', borderRadius: '10px', padding: '1rem' }}>
+        <p style={{ margin: 0 }}>{profitStatus}</p>
+        <p style={{ margin: '.4rem 0 0' }}>{bufferStatus}</p>
+        <p style={{ margin: '.4rem 0 0' }}>{docStatus}</p>
+        <p style={{ margin: '.6rem 0 0', fontWeight: 700 }}>Readiness: {readinessLabel}</p>
+      </div>
+    </div>
+  );
+}
+
+function FundingProgramsList({ programs = [] }) {
+  if (!programs.length) return null;
+  return (
+    <div style={{ marginTop: '1rem' }}>
+      <h4>🎯 Funding programmes to explore</h4>
+      <ul style={{ margin: '.5rem 0 0 1.25rem' }}>
+        {programs.map((program) => (
+          <li key={program.name}>
+            <strong>{program.name}</strong> — {program.description}{' '}
+            <a href={program.link} target="_blank" rel="noopener noreferrer">Open</a>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 

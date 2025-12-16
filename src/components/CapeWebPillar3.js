@@ -326,7 +326,14 @@ export default function CapeWebPillar3() {
   );
 }
 
-export function Pillar3Content({ buildMode, setBuildMode, getBuildModePlan }) {
+export function Pillar3Content({ buildMode, setBuildMode, getBuildModePlan, onTrackChange }) {
+  const handleModeChange = (value) => {
+    setBuildMode(value);
+    if (typeof onTrackChange === 'function') {
+      onTrackChange(value);
+    }
+  };
+
   return (
     <>
       <div className="article-eyebrow">Pillar 3 · Web Development &amp; Architecture</div>
@@ -362,17 +369,17 @@ export function Pillar3Content({ buildMode, setBuildMode, getBuildModePlan }) {
 
           <div className="quiz-options">
             <label className="radio-item">
-              <input data-progress="true" type="radio" name="p3_build_mode" value="r0" checked={buildMode === 'r0'} onChange={(e) => setBuildMode(e.target.value)} />
+              <input data-progress="true" type="radio" name="p3_build_mode" value="r0" checked={buildMode === 'r0'} onChange={(e) => handleModeChange(e.target.value)} />
               <strong>R0 Mode:</strong> simple landing page + WhatsApp + payment link
             </label>
             <br />
             <label className="radio-item">
-              <input data-progress="true" type="radio" name="p3_build_mode" value="starter" checked={buildMode === 'starter'} onChange={(e) => setBuildMode(e.target.value)} />
+              <input data-progress="true" type="radio" name="p3_build_mode" value="starter" checked={buildMode === 'starter'} onChange={(e) => handleModeChange(e.target.value)} />
               <strong>Starter Mode:</strong> low-cost website build (clean + fast) with basic automation
             </label>
             <br />
             <label className="radio-item">
-              <input data-progress="true" type="radio" name="p3_build_mode" value="shopify" checked={buildMode === 'shopify'} onChange={(e) => setBuildMode(e.target.value)} />
+              <input data-progress="true" type="radio" name="p3_build_mode" value="shopify" checked={buildMode === 'shopify'} onChange={(e) => handleModeChange(e.target.value)} />
               <strong>Shopify Mode:</strong> ecommerce-ready system (when products become your main thing)
             </label>
           </div>

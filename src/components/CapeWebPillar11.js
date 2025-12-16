@@ -1,4 +1,164 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
+const getPillar11SupportPlan = (context = {}) => {
+  const sector = (context.sector || '').toLowerCase();
+  const geography = context.geography || 'South Africa';
+  const language = context.language || 'English';
+
+  if (sector.includes('township') || sector.includes('retail') || sector.includes('commerce') || sector.includes('shop')) {
+    return {
+      summary: `Most customers will DM or voice-call you. Keep WhatsApp as Support HQ and log proof-of-delivery photos so CPA + municipal inspectors can see your process in ${geography}.`,
+      primaryChannel: 'whatsapp',
+      primaryChannelLabel: 'WhatsApp Business + voice notes',
+      backupChannel: 'phone',
+      backupChannelLabel: 'Phone call / hotline',
+      serviceStandards: {
+        firstResponse: '10 minutes during trading hours',
+        resolution: 'Same day for delivery / refund issues',
+        tone: 'Warm, bilingual, proof-driven',
+      },
+      scriptPrompts: [
+        `Deepseek, rewrite my delivery delay template in ${language} referencing CPA Section 56 rights.`,
+        'Deepseek, craft a WhatsApp refund checklist that lists proof-of-payment, photo evidence, and POPIA consent.',
+      ],
+      compliance: 'Consumer Protection Act + POPIA require complaint logs, proof-of-purchase, and consent before broadcasting specials. City permits often ask for this register.',
+      rituals: [
+        { title: 'Daily WhatsApp sweep', description: 'Clear DMs at opening and close; send voice notes for complex cases.' },
+        { title: 'Mid-week FAQ update', description: 'Refresh price lists, delivery timelines, and stock photos.' },
+        { title: 'Friday loyalty broadcast', description: 'Send restock offers + request reviews via WhatsApp Catalog.' },
+      ],
+      retentionIdea: 'Offer a “delayed order” voucher and log redemptions in Google Sheets to prove recovery quality.',
+    };
+  }
+
+  if (sector.includes('health') || sector.includes('clinic')) {
+    return {
+      summary: `Clinics and health services must triage calmly, protect patient info, and log incidents for HPCSA and the Information Regulator.`,
+      primaryChannel: 'phone',
+      primaryChannelLabel: 'Nurse line / switchboard',
+      backupChannel: 'whatsapp',
+      backupChannelLabel: 'WhatsApp (with POPIA consent)',
+      serviceStandards: {
+        firstResponse: 'Under 5 minutes for emergencies',
+        resolution: '24 hours for claims / clinical questions',
+        tone: 'Clinical, reassuring, policy-guided',
+      },
+      scriptPrompts: [
+        `Deepseek, translate our triage + informed consent script into ${language}, referencing HPCSA wording.`,
+        'Deepseek, outline breach notification steps for DOH + Information Regulator if a patient file is exposed.',
+      ],
+      compliance: 'HPCSA, DOH, and POPIA expect consent logs, incident registers, and documented escalation paths. Keep hard copies + digital backups for audits.',
+      rituals: [
+        { title: 'Morning triage huddle', description: 'Review unresolved cases and assign clinician owners.' },
+        { title: 'POPIA log check', description: 'Record authorisations + incidents daily for InfoReg readiness.' },
+        { title: 'Weekly follow-up sample', description: 'Call/SMS 5 patients to capture satisfaction + address escalations.' },
+      ],
+      retentionIdea: 'Send 24-hour follow-ups with medication reminders + HPCSA practice number to reinforce trust.',
+    };
+  }
+
+  if (sector.includes('agri') || sector.includes('logistics')) {
+    return {
+      summary: `Agri/logistics teams juggle depot calls, truck updates, and export paperwork. Keep one radio/WhatsApp command channel plus an email log for buyers.`,
+      primaryChannel: 'whatsapp',
+      primaryChannelLabel: 'WhatsApp dispatch group',
+      backupChannel: 'email',
+      backupChannelLabel: 'Email (buyers + municipal inspectors)',
+      serviceStandards: {
+        firstResponse: '15 minutes for load / delivery queries',
+        resolution: 'Within 1 business day for claims / paperwork',
+        tone: 'Direct, timestamped, evidence-first',
+      },
+      scriptPrompts: [
+        'Deepseek, craft a WhatsApp script for cold-chain alerts referencing DALRRD and PPECB requirements.',
+        `Deepseek, create an email template for late delivery apologies in ${geography}, citing NRCS / transport permits.`,
+      ],
+      compliance: 'DALRRD, PPECB, and municipal permits require load numbers, cold-chain logs, and complaint registers. Keep them synced to your CX hub.',
+      rituals: [
+        { title: 'Morning load confirmation', description: 'Share truck ID, permit number, and ETA with buyers.' },
+        { title: 'Incident escalation table', description: 'Record delays, temperature breaches, and who was notified.' },
+        { title: 'Weekly buyer check-in', description: 'Summarise deliveries + highlight upcoming risks.' },
+      ],
+      retentionIdea: 'Send weekly WhatsApp digests with proof-of-delivery photos + SARS-ready POD numbers.',
+    };
+  }
+
+  if (sector.includes('ngo') || sector.includes('non-profit') || sector.includes('social')) {
+    return {
+      summary: `Social enterprises serve beneficiaries + donors simultaneously. One WhatsApp hotline plus a donor email desk keeps everyone informed without extra logins.`,
+      primaryChannel: 'whatsapp',
+      primaryChannelLabel: 'WhatsApp hotline (beneficiaries)',
+      backupChannel: 'email',
+      backupChannelLabel: 'Email (donor desk)',
+      serviceStandards: {
+        firstResponse: 'Within 30 minutes during programme hours',
+        resolution: '48 hours for donor or beneficiary escalations',
+        tone: 'Trauma-informed, clear next steps',
+      },
+      scriptPrompts: [
+        `Deepseek, draft a beneficiary update script in ${language} that includes safeguarding commitments.`,
+        'Deepseek, prepare a donor impact update template referencing DSBD / NPO Act reporting metrics.',
+      ],
+      compliance: 'NPO Act + POPIA require safeguarding logs, consent forms, and incident reporting pathways (DSD, SAPS where applicable).',
+      rituals: [
+        { title: 'Beneficiary check-in block', description: 'Voice notes or calls twice a week to capture feedback.' },
+        { title: 'Donor inbox power hour', description: 'Every Thursday, clear pledges and send receipts.' },
+        { title: 'Safeguarding log review', description: 'Update incident tracker + escalate to governance team.' },
+      ],
+      retentionIdea: 'Share monthly WhatsApp voice notes (bilingual) thanking donors + sharing outcomes.',
+    };
+  }
+
+  if (sector.includes('technology') || sector.includes('saas') || sector.includes('software')) {
+    return {
+      summary: `Keep a structured helpdesk (email/chat) and a WhatsApp escalation lane for enterprise clients. Document incidents for POPIA/PAIA and keep uptime comms ready.`,
+      primaryChannel: 'email',
+      primaryChannelLabel: 'Helpdesk (Help Scout / Zendesk)',
+      backupChannel: 'whatsapp',
+      backupChannelLabel: 'WhatsApp / Slack escalation',
+      serviceStandards: {
+        firstResponse: 'Under 30 minutes during business hours',
+        resolution: 'Within 1 business day for Sev-2, 4 hours for Sev-1',
+        tone: 'Guide energy + technical clarity',
+      },
+      scriptPrompts: [
+        'Deepseek, write a “feature outage” status email that cites PAIA/POPIA obligations and next steps.',
+        `Deepseek, create a multilingual onboarding script for ${language} support agents covering tone + escalation.`,
+      ],
+      compliance: 'POPIA + PAIA require documenting deletion requests, incident comms, and access logs. Keep checklists per release.',
+      rituals: [
+        { title: 'Daily stand-up with CX + engineering', description: 'Share blockers + customer pain before 09:30.' },
+        { title: 'Weekly churn review', description: 'Map support tickets to retention risks and plan fixes.' },
+        { title: 'Monthly PAIA/POPIA audit', description: 'Check requests, data deletion, and incident timelines.' },
+      ],
+      retentionIdea: 'Send a Monday “Success Pack”: feature tips, uptime summary, and CTA for office hours.',
+    };
+  }
+
+  return {
+    summary: `Default service businesses still need one Support HQ, a backup channel, and a CPA/POPIA-ready complaint log. Focus on rapid replies and WhatsApp-ready templates.`,
+    primaryChannel: 'email',
+    primaryChannelLabel: 'Shared inbox (Gmail/Help Scout)',
+    backupChannel: 'whatsapp',
+    backupChannelLabel: 'WhatsApp (consent-based)',
+    serviceStandards: {
+      firstResponse: 'Within 1 business hour',
+      resolution: '24–48 hours',
+      tone: 'Calm, helpful, next-step oriented',
+    },
+    scriptPrompts: [
+      `Deepseek, write a bilingual (${language}/English) apology + recovery script for missed appointments.`,
+      'Deepseek, outline a WhatsApp-ready returns policy referencing the Consumer Protection Act.',
+    ],
+    compliance: 'Log complaints, refunds, and consents so you can prove CPA/POPIA compliance in any province.',
+    rituals: [
+      { title: 'Morning inbox triage', description: 'Clear support queue before starting delivery work.' },
+      { title: 'Weekly FAQ sync', description: 'Update top questions + publish the answers in your knowledge base.' },
+      { title: 'Monthly review drive', description: 'Send review requests + compile testimonials for social proof.' },
+    ],
+    retentionIdea: 'Every resolved ticket becomes a chance to upsell, invite to a WhatsApp broadcast, or capture a review.',
+  };
+};
 
 export const pillar11QuizQuestions = [
   {
@@ -53,8 +213,15 @@ export const pillar11QuizQuestions = [
   },
 ];
 
-export function Pillar11Content() {
-  const [supportHQ, setSupportHQ] = useState('whatsapp');
+export function Pillar11Content({ personalizationContext = {} }) {
+  const personaPlan = getPillar11SupportPlan(personalizationContext);
+  const personaLabel = personalizationContext?.sector || 'business';
+  const geographyLabel = personalizationContext?.geography || 'South Africa';
+  const needsMultilingual = personalizationContext?.language && personalizationContext.language !== 'English';
+  const scriptPrompts = personaPlan.scriptPrompts || [];
+  const supportRituals = personaPlan.rituals || [];
+
+  const [supportHQ, setSupportHQ] = useState(personaPlan.primaryChannel || 'whatsapp');
   const [hours, setHours] = useState('');
   const [frt, setFrt] = useState('');
   const [promise, setPromise] = useState('');
@@ -70,6 +237,12 @@ export function Pillar11Content() {
   const [faqQuestions, setFaqQuestions] = useState('');
   const [faqAnswer, setFaqAnswer] = useState('');
   const [faqMessage, setFaqMessage] = useState('');
+
+  useEffect(() => {
+    if (personaPlan.primaryChannel) {
+      setSupportHQ(personaPlan.primaryChannel);
+    }
+  }, [personaPlan.primaryChannel]);
 
   const generatePromise = () => {
     const h = hours || 'Mon–Fri 9:00–17:00';
@@ -155,6 +328,143 @@ export function Pillar11Content() {
 
   return (
     <>
+      <div
+        className="persona-context-card"
+        style={{
+          background: '#04172a',
+          color: '#fff',
+          borderRadius: '14px',
+          padding: '1.5rem',
+          border: '1px solid rgba(255,255,255,.12)',
+          marginBottom: '1.5rem',
+        }}
+      >
+        <p className="panel-eyebrow" style={{ color: 'rgba(255,255,255,.72)', marginBottom: '.4rem' }}>
+          Context-aware CX focus
+        </p>
+        <h3 style={{ margin: 0 }}>Support blueprint for {personaLabel || 'your business'}</h3>
+        <p style={{ marginTop: '.5rem', color: 'rgba(255,255,255,.82)' }}>{personaPlan.summary}</p>
+        <div
+          style={{
+            marginTop: '1rem',
+            background: 'rgba(255,255,255,.08)',
+            borderRadius: '12px',
+            padding: '1rem',
+            border: '1px solid rgba(255,255,255,.12)',
+          }}
+        >
+          <strong>Channels</strong>
+          <p style={{ marginTop: '.35rem', color: 'rgba(255,255,255,.85)' }}>
+            Primary: <strong>{personaPlan.primaryChannelLabel}</strong> • Backup: <strong>{personaPlan.backupChannelLabel}</strong>
+          </p>
+          <p style={{ marginBottom: 0, color: 'rgba(255,255,255,.7)' }}>Province / municipality focus: {geographyLabel}</p>
+        </div>
+        <div style={{ marginTop: '1rem' }}>
+          <strong>Service standards</strong>
+          <ul style={{ margin: '.5rem 0 0 1.25rem', color: 'rgba(255,255,255,.9)' }}>
+            <li>First response: {personaPlan.serviceStandards.firstResponse}</li>
+            <li>Resolution target: {personaPlan.serviceStandards.resolution}</li>
+            <li>Tone: {personaPlan.serviceStandards.tone}</li>
+          </ul>
+        </div>
+        <div
+          style={{
+            marginTop: '1rem',
+            background: '#ffe8cc',
+            color: '#7c4700',
+            borderRadius: '12px',
+            padding: '1rem',
+            border: '1px solid #ffd8a8',
+          }}
+        >
+          <strong>Compliance reminder:</strong> {personaPlan.compliance}
+        </div>
+        {needsMultilingual && (
+          <div
+            style={{
+              marginTop: '1rem',
+              borderRadius: '12px',
+              padding: '1rem',
+              background: 'rgba(79,70,229,.15)',
+              border: '1px solid rgba(79,70,229,.3)',
+            }}
+          >
+            <strong>Language signal:</strong> Translate templates into English + {personalizationContext.language} so township/rural teams can copy/paste without errors.
+          </div>
+        )}
+        {scriptPrompts.length ? (
+          <div
+            style={{
+              marginTop: '1rem',
+              background: 'rgba(255,255,255,.08)',
+              borderRadius: '12px',
+              padding: '1rem',
+              border: '1px dashed rgba(255,255,255,.4)',
+            }}
+          >
+            <strong>Deepseek helper prompts</strong>
+            <ul style={{ margin: '.5rem 0 0 1.25rem', color: 'rgba(255,255,255,.86)' }}>
+              {scriptPrompts.map((prompt) => (
+                <li key={prompt}>{prompt}</li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+      </div>
+
+      <div className="workbook-section" style={{ background: '#fff', border: '1px solid #e9ecef', borderRadius: '12px', padding: '1.25rem', marginBottom: '1.5rem' }}>
+        <h4>🕒 Support ritual playbooks</h4>
+        <p>Instead of logging dates, use these ritual cards as study notes. Each one explains what to do, which regulation it satisfies, and the tools to use.</p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))', gap: '1rem', marginTop: '.75rem' }}>
+          {supportRituals.map((ritual) => (
+            <div key={ritual.title} style={{ border: '1px solid #dee2e6', borderRadius: '10px', padding: '.9rem', background: '#f8f9fa' }}>
+              <div style={{ fontWeight: 700 }}>{ritual.title}</div>
+              <p style={{ marginTop: '.35rem', color: '#495057', fontSize: '.9rem' }}>{ritual.description}</p>
+              <ul style={{ margin: '.5rem 0 0 1.25rem', color: '#6c757d' }}>
+                <li>Primary channel: {personaPlan.primaryChannelLabel}</li>
+                <li>Backup: {personaPlan.backupChannelLabel}</li>
+                <li>Compliance ref: {personaPlan.compliance}</li>
+              </ul>
+            </div>
+          ))}
+        </div>
+        <div style={{ marginTop: '1rem', padding: '1rem', borderRadius: '10px', background: '#e7f1ff', border: '1px solid #cfe2ff' }}>
+          <strong>Retention idea:</strong> {personaPlan.retentionIdea}
+        </div>
+        <details style={{ marginTop: '.75rem' }}>
+          <summary style={{ fontWeight: 700, color: '#0b7285' }}>Need another prompt?</summary>
+          <p style={{ marginTop: '.35rem', color: '#495057' }}>
+            Prompt example: “Deepseek, adapt Pillar 11 for a {personaLabel} in {geographyLabel}. I need bilingual scripts, CPA/POPIA compliance steps, and WhatsApp-ready SOPs.”
+          </p>
+        </details>
+      </div>
+
+      <div className="workbook-section" style={{ background: '#f8f9fa', border: '1px solid #dee2e6', borderRadius: '12px', padding: '1.25rem', marginBottom: '1.5rem' }}>
+        <h4>📜 South African CX compliance map</h4>
+        <p>Bookmark these official resources so you never guess what to send regulators or customers.</p>
+        <ul style={{ margin: '.75rem 0 0 1.25rem', color: '#495057' }}>
+          <li>
+            <strong>Consumer Protection Act (NCC):</strong> register complaints, download Section 56 refund rules. <a href="https://www.thencc.gov.za/" target="_blank" rel="noopener noreferrer">National Consumer Commission</a>.
+          </li>
+          <li>
+            <strong>National Consumer Tribunal:</strong> needed for credit/telco disputes. <a href="https://www.thenct.org.za/" target="_blank" rel="noopener noreferrer">NCT case files</a>.
+          </li>
+          <li>
+            <strong>B-BBEE Commission:</strong> use their template for customer-facing affidavits (esp. supplier development). <a href="https://www.bbbeecommission.co.za/" target="_blank" rel="noopener noreferrer">Download resources</a>.
+          </li>
+          <li>
+            <strong>HPCSA / DOH / NRCS:</strong> health + regulated services need sector-specific complaint forms. <a href="https://www.hpcsa.co.za/" target="_blank" rel="noopener noreferrer">HPCSA complaints</a>,{' '}
+            <a href="https://www.nrcs.org.za/" target="_blank" rel="noopener noreferrer">NRCS product safety</a>.
+          </li>
+          <li>
+            <strong>DSBD / SEDA service standards:</strong> align your helpdesk SLA wording to theirs when applying for supplier development support. <a href="https://www.dsbd.gov.za/" target="_blank" rel="noopener noreferrer">DSBD portal</a>.
+          </li>
+        </ul>
+        <p style={{ marginTop: '.75rem', color: '#495057' }}>
+          Keep a “CX evidence pack” (PDF folder) with: customer journey map, support promise, CPA-compliant refund script, proof of reply times, and B-BBEE affidavit—this is what municipal procurement officers or funders will ask for.
+        </p>
+      </div>
+
       <div className="mastery-section">
         <h3>1) Customer Experience (CX) is what people feel after dealing with you</h3>
         <p>
@@ -257,7 +567,7 @@ export function Pillar11Content() {
             <label style={{ background: '#fff', border: '1px solid #DEE2E6', borderRadius: '10px', padding: '1rem', display: 'block' }}>
               <input type="radio" name="p11-hq" value="whatsapp" checked={supportHQ === 'whatsapp'} onChange={(e) => setSupportHQ(e.target.value)} />
               <div style={{ fontWeight: 900, marginTop: '.35rem' }}>WhatsApp Business</div>
-              <div style={{ color: '#6c757d', fontSize: '.92rem', marginTop: '.25rem' }}>Fast for Cape Town customers</div>
+              <div style={{ color: '#6c757d', fontSize: '.92rem', marginTop: '.25rem' }}>Fast for customers in {geographyLabel}</div>
             </label>
 
             <label style={{ background: '#fff', border: '1px solid #DEE2E6', borderRadius: '10px', padding: '1rem', display: 'block' }}>
@@ -342,7 +652,13 @@ export function Pillar11Content() {
 
             <div style={{ background: '#fff', border: '1px solid #DEE2E6', borderRadius: '10px', padding: '1rem', gridColumn: 'span 2' }}>
               <div style={{ fontWeight: 900 }}>Template 5: Review request (after success)</div>
-              <textarea rows="4" value={template5} onChange={(e) => setTemplate5(e.target.value)} style={{ width: '100%', marginTop: '.5rem', padding: '.65rem', border: '1px solid #CED4DA', borderRadius: '10px' }} placeholder="Example: Thanks again! If you loved the result, would you mind leaving a quick review? It helps a small Cape Town business grow. Here's the link: [review link]." />
+              <textarea
+                rows="4"
+                value={template5}
+                onChange={(e) => setTemplate5(e.target.value)}
+                style={{ width: '100%', marginTop: '.5rem', padding: '.65rem', border: '1px solid #CED4DA', borderRadius: '10px' }}
+                placeholder={`Example: Thanks again! If you loved the result, would you mind leaving a quick review? It helps a ${geographyLabel} business grow. Here's the link: [review link].`}
+              />
             </div>
           </div>
 
@@ -377,7 +693,7 @@ export function Pillar11Content() {
                 value={faqQuestions}
                 onChange={(e) => setFaqQuestions(e.target.value)}
                 style={{ width: '100%', marginTop: '.5rem', padding: '.65rem', border: '1px solid #CED4DA', borderRadius: '10px' }}
-                placeholder={`1) How long does delivery take?\n2) What areas do you deliver to in Cape Town?\n3) How do I book the service?\n4) What if I chose the wrong option?\n5) What payment methods do you accept?\n...`}
+                placeholder={`1) How long does delivery take?\n2) What areas do you deliver to in ${geographyLabel}?\n3) How do I book the service?\n4) What if I chose the wrong option?\n5) What payment methods do you accept?\n...`}
               />
             </div>
 
@@ -391,7 +707,13 @@ export function Pillar11Content() {
               </ul>
 
               <div style={{ marginTop: '1rem', fontWeight: 900 }}>One sample answer</div>
-              <textarea rows="6" value={faqAnswer} onChange={(e) => setFaqAnswer(e.target.value)} style={{ width: '100%', marginTop: '.5rem', padding: '.65rem', border: '1px solid #CED4DA', borderRadius: '10px' }} placeholder="Example: Delivery in Cape Town is usually 1–2 business days after payment. If you need it urgently, message us on WhatsApp and we'll confirm the soonest time." />
+              <textarea
+                rows="6"
+                value={faqAnswer}
+                onChange={(e) => setFaqAnswer(e.target.value)}
+                style={{ width: '100%', marginTop: '.5rem', padding: '.65rem', border: '1px solid #CED4DA', borderRadius: '10px' }}
+                placeholder={`Example: Delivery in ${geographyLabel} is usually 1–2 business days after payment. If you need it urgently, message us on WhatsApp and we'll confirm the soonest time.`}
+              />
             </div>
           </div>
 

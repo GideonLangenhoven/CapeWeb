@@ -64,6 +64,38 @@ export const pillar5QuizQuestions = [
   },
 ];
 
+const getPillar5PersonaPlan = (context = {}) => {
+  const sector = (context.sector || '').toLowerCase();
+  const geography = context.geography || 'South Africa';
+  const language = context.language || 'English';
+  if (sector.includes('township')) {
+    return {
+      summary: `Prioritise vernacular SEO + WhatsApp conversions for ${geography}. Translate top pages into isiXhosa/isiZulu and own your Google Business Profile.`,
+      quickWins: [
+        'Publish isiXhosa/isiZulu FAQs with WhatsApp CTA.',
+        'Post weekly on Google Business Profile (specials, testimonials).',
+        'List delivery/pickup info (PUDO/PAXI) on every page.',
+      ],
+    };
+  }
+  if (/tourism|travel|hospitality/.test(sector)) {
+    return {
+      summary: `Focus on multi-language landing pages (EN/${language}), schema for tours, and seasonal Google Trends for ${geography}.`,
+      quickWins: ['Add hreflang tags + translated CTAs.', 'Publish itineraries with review snippets.', 'Capture multilingual testimonials + embed them.'],
+    };
+  }
+  if (/technology|saas|software/.test(sector)) {
+    return {
+      summary: 'Invest in product-led SEO: pillar pages, feature comparisons, and local case studies before attempting global keywords.',
+      quickWins: ['Ship 1 pillar + 3 supporting articles.', 'Create comparison pages vs incumbents.', 'Add proof blocks with metrics + CTA on each page.'],
+    };
+  }
+  return {
+    summary: `Anchor SEO to intent-rich keywords for ${geography} and turn every visit into trust using social proof + policies.`,
+    quickWins: [],
+  };
+};
+
 export default function CapeWebPillar5() {
   const [searchTerm, setSearchTerm] = useState('');
   const [quizResponses, setQuizResponses] = useState({});
@@ -295,7 +327,10 @@ export default function CapeWebPillar5() {
   );
 }
 
-export function Pillar5Content({ snippetTitle, setSnippetTitle, snippetDesc, setSnippetDesc }) {
+export function Pillar5Content({ personalizationContext = {}, snippetTitle, setSnippetTitle, snippetDesc, setSnippetDesc }) {
+  const personaPlan = getPillar5PersonaPlan(personalizationContext);
+  const personaLabel = personalizationContext?.sector || 'Business';
+
   return (
     <>
       <div className="article-eyebrow">Pillar 5 · Search Engine Optimization</div>
@@ -307,6 +342,22 @@ export function Pillar5Content({ snippetTitle, setSnippetTitle, snippetDesc, set
         how to publish content that ranks, and how to measure what leads to sales.
         You'll finish with a practical <strong>SEO Passport</strong> and a "first 100 sales" SEO plan.
       </p>
+
+      {personaPlan.summary ? (
+        <div className="context-banner">
+          <strong>{personaLabel} focus:</strong> {personaPlan.summary}
+        </div>
+      ) : null}
+      {personaPlan.quickWins?.length ? (
+        <div className="context-tip">
+          <strong>Quick wins:</strong>
+          <ul style={{ margin: '.4rem 0 0 1.25rem' }}>
+            {personaPlan.quickWins.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
 
       <div className="article-divider"></div>
 

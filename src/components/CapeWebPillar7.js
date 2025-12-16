@@ -1,4 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+const getPillar7Playbook = (context = {}) => {
+  const sector = (context.sector || '').toLowerCase();
+  const geography = context.geography || 'South Africa';
+  if (sector.includes('township') || sector.includes('retail')) {
+    return {
+      summary: `Start with WhatsApp + Google Forms → Sheet → manual follow-up. Automate proof of payment + booking reminders for ${geography}.`,
+      recommendedStack: 'r0',
+      quickWins: [
+        'Add Google Form + Sheet for every WhatsApp enquiry.',
+        'Automate “thanks + next step” with WhatsApp quick replies.',
+        'Use a weekly “leads to follow-up” reminder via Google Calendar.',
+      ],
+    };
+  }
+  if (/services|agency|consult/.test(sector)) {
+    return {
+      summary: 'Move into a CRM stack fast: pipelines, templated follow-ups, and calendar automation to cut no-shows.',
+      recommendedStack: 'crm',
+      quickWins: [
+        'Create pipeline stages (New, Qualified, Proposal, Won/Lost).',
+        'Automate booking confirmations + reminders.',
+        'Use task reminders to chase proposals every 48h.',
+      ],
+    };
+  }
+  if (/technology|saas/.test(sector)) {
+    return {
+      summary: 'Layer automation early: lead scoring, webhook-driven follow-ups, and AI assistants for support.',
+      recommendedStack: 'automation',
+      quickWins: [
+        'Connect product signups → CRM via Zapier/Make.',
+        'Trigger onboarding emails/SMS/WhatsApp automatically.',
+        'Build Deepseek prompts for support triage.',
+      ],
+    };
+  }
+  return {
+    summary: 'Pick the simplest stack that removes manual follow-ups. Track every lead in one place and automate reminders.',
+    recommendedStack: 'r0',
+    quickWins: [],
+  };
+};
 
 // Quiz questions for Pillar 7
 export const pillar7QuizQuestions = [
@@ -41,6 +84,7 @@ export default function CapeWebPillar7() {
 
 // Content component
 export function Pillar7Content({
+  personalizationContext = {},
   stack,
   setStack,
   bizName,
@@ -65,6 +109,14 @@ export function Pillar7Content({
   const [quiz1Score, setQuiz1Score] = useState(null);
   const [quiz1Q1, setQuiz1Q1] = useState('');
   const [quiz1Q2, setQuiz1Q2] = useState('');
+  const playbook = getPillar7Playbook(personalizationContext);
+  const personaLabel = personalizationContext?.sector || 'Business';
+
+  useEffect(() => {
+    if (!stack && playbook.recommendedStack) {
+      setStack(playbook.recommendedStack);
+    }
+  }, [stack, setStack, playbook.recommendedStack]);
 
   const getStackOutput = () => {
     const common = (
@@ -127,7 +179,8 @@ export function Pillar7Content({
       ),
     };
 
-    return blocks[stack] || blocks.r0;
+    const currentStack = stack || playbook.recommendedStack || 'r0';
+    return blocks[currentStack] || blocks.r0;
   };
 
   const generatePlaybook = () => {
@@ -322,6 +375,11 @@ export function Pillar7Content({
           You don't start with fancy tools. You start with a simple spine, then you add muscle.
           CapeWeb uses the same logic for client builds: <strong>simple → stable → scalable</strong>.
         </p>
+        {playbook.summary ? (
+          <div className="context-banner">
+            <strong>{personaLabel} focus:</strong> {playbook.summary}
+          </div>
+        ) : null}
 
         <div className="workbook-section" style={{ background: '#F8F9FA', border: '1px solid #E9ECEF', padding: '1.5rem', borderRadius: '10px' }}>
           <h4>🧰 Activity 2: Pick Your Stack (and get a setup checklist)</h4>
@@ -346,6 +404,11 @@ export function Pillar7Content({
               <div style={{ color: '#6c757d', fontSize: '.92rem', marginTop: '.25rem' }}>Zapier / Make / n8n for workflows</div>
             </label>
           </div>
+          {playbook.recommendedStack ? (
+            <div className="context-tip">
+              CapeWeb suggests starting with <strong>{playbook.recommendedStack.toUpperCase()}</strong> for {personaLabel.toLowerCase()} teams. You can upgrade once leads pile up.
+            </div>
+          ) : null}
 
           <div style={{ marginTop: '1rem', background: '#fff', border: '1px dashed #ADB5BD', borderRadius: '10px', padding: '1rem' }}>
             {getStackOutput()}

@@ -54,6 +54,39 @@ export const pillar4QuizQuestions = [
   },
 ];
 
+const getPillar4PersonaInsights = (context = {}) => {
+  const sector = (context.sector || '').toLowerCase();
+  const geography = context.geography || 'South Africa';
+  const regulation = (context.regulationFocus || '').toLowerCase();
+  const insights = [];
+
+  if (sector.includes('health') || regulation.includes('health')) {
+    insights.push('Health apps must document POPIA/HPCSA consent, encryption, and offline fallback before launch.');
+  }
+  if (sector.includes('field') || sector.includes('maintenance') || sector.includes('logistics')) {
+    insights.push('Field/service teams in ' + geography + ' value offline-first flows, job card uploads, and WhatsApp notifications.');
+  }
+  if (sector.includes('ngo') || sector.includes('education')) {
+    insights.push('NGO/community apps often succeed with lightweight PWAs first — prove adoption before custom builds.');
+  }
+  if (!insights.length) {
+    insights.push('Prototype quickly, get real user proof, and only then invest in the heavier build.');
+  }
+  return insights;
+};
+
+const getPillar4StackRecommendation = (context = {}) => {
+  const sector = (context.sector || '').toLowerCase();
+  const regulation = (context.regulationFocus || '').toLowerCase();
+  if (sector.includes('technology') || sector.includes('commerce') || sector.includes('manufactur')) {
+    return 'Flutter';
+  }
+  if (sector.includes('health') || regulation.includes('health') || regulation.includes('financial')) {
+    return 'Native (once MVP proves the need)';
+  }
+  return 'Expo / React Native';
+};
+
 export default function CapeWebPillar4() {
   const [searchTerm, setSearchTerm] = useState('');
   const [quizResponses, setQuizResponses] = useState({});
@@ -278,7 +311,19 @@ export default function CapeWebPillar4() {
   );
 }
 
-export function Pillar4Content({ needAppChoice, setNeedAppChoice, stackChoice, setStackChoice, selectedFeatures, setSelectedFeatures }) {
+export function Pillar4Content({
+  personalizationContext = {},
+  needAppChoice,
+  setNeedAppChoice,
+  stackChoice,
+  setStackChoice,
+  selectedFeatures,
+  setSelectedFeatures,
+}) {
+  const personaInsights = getPillar4PersonaInsights(personalizationContext);
+  const recommendedStack = getPillar4StackRecommendation(personalizationContext);
+  const personaLabel = personalizationContext?.sector || 'Founder';
+
   const handleFeatureToggle = (value) => {
     setSelectedFeatures((prev) =>
       prev.includes(value) ? prev.filter((f) => f !== value) : [...prev, value]
@@ -409,6 +454,16 @@ export function Pillar4Content({ needAppChoice, setNeedAppChoice, stackChoice, s
         <strong> (6)</strong> prep store assets + compliance,
         and <strong> (7)</strong> submit like a pro.
       </p>
+      {personaInsights?.length ? (
+        <div className="context-banner">
+          <strong>{personaLabel} note:</strong>
+          <ul style={{ margin: '.5rem 0 0 1.25rem' }}>
+            {personaInsights.map((insight) => (
+              <li key={insight}>{insight}</li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
 
       <div className="article-divider"></div>
 
@@ -592,6 +647,9 @@ export function Pillar4Content({ needAppChoice, setNeedAppChoice, stackChoice, s
               <input data-progress="true" type="radio" name="p4_stack" value="native" checked={stackChoice === 'native'} onChange={(e) => setStackChoice(e.target.value)} />
               Native (Android + iOS separate) — only if you must
             </label>
+          </div>
+          <div className="context-tip">
+            CapeWeb suggests starting with <strong>{recommendedStack}</strong> for {personaLabel.toLowerCase()} teams. You can switch later once the MVP earns adoption.
           </div>
 
           <div style={{ marginTop: '1rem', background: '#fff', border: '1px solid #e9ecef', borderRadius: '10px', padding: '1rem' }}>
