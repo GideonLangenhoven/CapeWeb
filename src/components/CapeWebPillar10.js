@@ -1,4 +1,98 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
+const getPillar10PersonaPlan = (context = {}) => {
+  const sector = (context.sector || '').toLowerCase();
+  const geography = context.geography || 'South Africa';
+  const stage = context.revenueStage || 'this stage';
+
+  if (sector.includes('township') || sector.includes('retail') || sector.includes('commerce') || sector.includes('shop') || sector.includes('manufacturing')) {
+    return {
+      summary: `Blend WhatsApp orders, till data, and courier payouts to see if promotions in ${geography} convert. Protect cash flow at ${stage} by watching basket size + stock-outs.`,
+      northStar: 'Paid orders per trading week',
+      kpis: [
+        { label: 'DM / WhatsApp leads → paid orders', description: 'Confirms if every promotion converts to till slips or EFTs.' },
+        { label: 'Average basket (R)', description: 'Revenue ÷ orders so you spot margin erosion early.' },
+        { label: 'Stock-out days on hero SKUs', description: 'Track how often you run out; informs SEFA/SEDA working-capital cases.' },
+      ],
+      tools: ['GA4 + Looker Studio (campaign tagging)', 'Meta Commerce Manager insights', 'Yoco/TallOrder/Kazang exports', 'Google Sheets / Zoho Books ledger for SARS'],
+      compliance: `Keep SARS VAT201-ready exports + POPIA consent logs if you remarket via WhatsApp in ${geography}.`,
+      sprintIdea: 'Run a weekly “in-stock” broadcast and compare WhatsApp-to-order conversion vs. walk-ins.',
+    };
+  }
+
+  if (sector.includes('health') || sector.includes('clinic')) {
+    return {
+      summary: `Track patient flow, consent, and breach logs. HPCSA + POPIA expect auditable data; analytics should measure bookings, attendance, and incident response.`,
+      northStar: 'Patients attended per week',
+      kpis: [
+        { label: 'Bookings → attended', description: 'No-show % determines staffing + consumables ordering.' },
+        { label: 'Average turnaround time', description: 'From booking to results / discharge; ties into patient experience targets.' },
+        { label: 'POPIA / clinical incident log entries', description: 'Keep breach + complaint stats ready for DOH or HPCSA reviews.' },
+      ],
+      tools: ['Medprax / Healthbridge dashboards', 'Google Looker Studio + DHIS exports', 'SharePoint/Notion POPIA incident log', 'WhatsApp template reminder tracker'],
+      compliance: 'Register Information Officers with the Information Regulator, keep HPCSA consent forms on file, and document breach notifications.',
+      sprintIdea: 'Automate isiZulu/isiXhosa WhatsApp reminders with POPIA-compliant opt-ins to cut no-shows.',
+    };
+  }
+
+  if (sector.includes('agri') || sector.includes('agriculture') || sector.includes('farming')) {
+    return {
+      summary: `Agriculture + agro-processing teams must connect yield data, logistics, and export docs. Analytics needs to prove traceability for DALRRD/PPECB and funders.`,
+      northStar: 'Tonnes / contracts fulfilled',
+      kpis: [
+        { label: 'Yield vs. forecast', description: 'Shows whether you can meet purchase orders or need bridging finance.' },
+        { label: 'Cold-chain / delivery on-time %', description: 'Protects supermarket + export relationships in ${geography}.' },
+        { label: 'Working capital days', description: 'Cash conversion cycle for Land Bank / SEFA applications.' },
+      ],
+      tools: ['FarmTrace / NDVI snapshots (if available)', 'Google Sheets + DALRRD compliance register', 'Ozow/Paystack payout exports', 'Simple logistics tracker (Kodiak, Trello, Airtable)'],
+      compliance: 'PPECB + DALRRD require traceability logs, pesticide records, and temperature registers—keep them in your analytics pack.',
+      sprintIdea: 'Attach delivery temperature logs + permit numbers to each KPI review so funders trust your controls.',
+    };
+  }
+
+  if (sector.includes('ngo') || sector.includes('non-profit') || sector.includes('social')) {
+    return {
+      summary: `Social enterprises report to DSD, donors, and sometimes the National Lotteries Commission. Track beneficiaries reached, cost per outcome, and donor pipeline health.`,
+      northStar: 'Beneficiaries served / month',
+      kpis: [
+        { label: 'Donor lead → pledge → cash received', description: 'Ensures campaigns convert before spending on programmes.' },
+        { label: 'Beneficiary outcomes delivered', description: 'Pairs with DSBD / NPO Act reporting requirements.' },
+        { label: 'Admin cost % vs. programme spend', description: 'Keep donors confident you meet governance ratios.' },
+      ],
+      tools: ['Google Sheets / Airtable impact register', 'Payfast / GivenGain exports', 'Looker Studio donor dashboards', 'M&E form library (KoboToolbox, CommCare)'],
+      compliance: 'NPO Act + POPIA require beneficiary consent tracking; keep signed forms + anonymised reports when sharing success stories.',
+      sprintIdea: 'Publish a monthly M&E PDF (English + local language) using these KPIs for funders and board members.',
+    };
+  }
+
+  if (sector.includes('technology') || sector.includes('saas') || sector.includes('software')) {
+    return {
+      summary: `SaaS and productized service teams should connect sign-ups, activation, retention, and ARPU. Tie this to POPIA + PCI obligations when storing payment data.`,
+      northStar: 'Monthly recurring revenue',
+      kpis: [
+        { label: 'Activation rate (sign-up → aha action)', description: 'Ensures onboarding flows convert across ${geography}.' },
+        { label: 'Gross churn %', description: 'Tracks downgrades/cancellations to feed CX and product work.' },
+        { label: 'Lead-to-demo conversion', description: 'Keeps sales focus on qualified prospects only.' },
+      ],
+      tools: ['Plausible/GA4 events', 'Stripe/Paystack metrics', 'Notion or Coda KPI hub', 'Intercom/Zendesk tagging'],
+      compliance: 'Map data flows for POPIA and PAIA manuals; log processor agreements for any offshore analytics tools.',
+      sprintIdea: 'Ship a 30/60/90 experiment backlog: activation email tests, onboarding video, and churn interviews.',
+    };
+  }
+
+  return {
+    summary: `Blend marketing, sales, and delivery data so each improvement sprint fixes the biggest leak. Keep SARS-ready revenue records and POPIA-friendly lead logs.`,
+    northStar: 'Qualified leads per week',
+    kpis: [
+      { label: 'Leads → booked calls', description: 'Shows if messaging + offers land with your segment.' },
+      { label: 'Booked → paid', description: 'Tracks proposal/checkout close rate and highlights follow-up gaps.' },
+      { label: 'Fulfilment satisfaction score', description: 'Simple 1–5 rating creates a CX metric tied to revenue.' },
+    ],
+    tools: ['GA4 or Fathom', 'Google Sheets / Airtable CRM', 'Pipedrive/HubSpot starter dashboards', 'WhatsApp broadcast stats'],
+    compliance: `Document where leads live, capture consent, and sync invoices to SARS (especially if you register for VAT in ${geography}).`,
+    sprintIdea: 'Add a weekly “growth stand-up”: review these KPIs, pick one bottleneck, and plan one fix.',
+  };
+};
 
 export const pillar10QuizQuestions = [
   {
@@ -53,8 +147,13 @@ export const pillar10QuizQuestions = [
   },
 ];
 
-export function Pillar10Content() {
-  const [northStar, setNorthStar] = useState('orders');
+export function Pillar10Content({ personalizationContext = {} }) {
+  const personaPlan = getPillar10PersonaPlan(personalizationContext);
+  const personaLabel = personalizationContext?.sector || 'business';
+  const geographyLabel = personalizationContext?.geography || 'South Africa';
+  const needsMultilingual = personalizationContext?.language && personalizationContext.language !== 'English';
+
+  const [northStar, setNorthStar] = useState(personaPlan.northStar || 'orders');
   const [sessions, setSessions] = useState('');
   const [views, setViews] = useState('');
   const [checkouts, setCheckouts] = useState('');
@@ -79,6 +178,13 @@ export function Pillar10Content() {
   const [eventOutput, setEventOutput] = useState('');
 
   const [testChoice, setTestChoice] = useState('headline');
+
+  useEffect(() => {
+    if (personaPlan.northStar) {
+      setNorthStar(personaPlan.northStar);
+    }
+  }, [personaPlan.northStar]);
+
 
   const calculateDashboard = () => {
     const sess = parseFloat(sessions) || 0;
@@ -274,6 +380,176 @@ export function Pillar10Content() {
 
   return (
     <>
+      <div
+        className="persona-context-card"
+        style={{
+          background: '#031633',
+          color: '#fff',
+          borderRadius: '14px',
+          padding: '1.5rem',
+          border: '1px solid rgba(255,255,255,.18)',
+          marginBottom: '1.5rem',
+        }}
+      >
+        <p className="panel-eyebrow" style={{ color: 'rgba(255,255,255,.72)', marginBottom: '.4rem' }}>
+          Context-aware analytics focus
+        </p>
+        <h3 style={{ margin: 0 }}>Measurement plan for {personaLabel || 'your business'}</h3>
+        <p style={{ marginTop: '.5rem', color: 'rgba(255,255,255,.82)' }}>
+          Geography: <strong>{geographyLabel}</strong>. North Star suggestion: <strong>{personaPlan.northStar}</strong>. {personaPlan.summary}
+        </p>
+        <div
+          style={{
+            marginTop: '1rem',
+            background: 'rgba(255,255,255,.08)',
+            borderRadius: '12px',
+            padding: '1rem',
+            border: '1px solid rgba(255,255,255,.12)',
+          }}
+        >
+          <strong>KPIs Deepseek is prioritising</strong>
+          <ul style={{ margin: '.75rem 0 0 1.25rem', color: 'rgba(255,255,255,.9)' }}>
+            {personaPlan.kpis.map((kpi) => (
+              <li key={kpi.label}>
+                <strong>{kpi.label}:</strong> {kpi.description}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div style={{ marginTop: '1rem' }}>
+          <strong>Suggested tools:</strong>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.5rem', marginTop: '.5rem' }}>
+            {personaPlan.tools.map((tool) => (
+              <span key={tool} style={{ background: 'rgba(255,255,255,.16)', borderRadius: '999px', padding: '.25rem .75rem', fontSize: '.9rem' }}>
+                {tool}
+              </span>
+            ))}
+          </div>
+        </div>
+        <div
+          style={{
+            marginTop: '1rem',
+            background: '#ffe8cc',
+            color: '#7c4700',
+            borderRadius: '12px',
+            padding: '1rem',
+            border: '1px solid #ffd8a8',
+          }}
+        >
+          <strong>Compliance reminder:</strong> {personaPlan.compliance}
+        </div>
+        {needsMultilingual && (
+          <div
+            style={{
+              marginTop: '1rem',
+              borderRadius: '12px',
+              padding: '1rem',
+              background: 'rgba(79,70,229,.15)',
+              border: '1px solid rgba(79,70,229,.3)',
+            }}
+          >
+            <strong>Language note:</strong> Label dashboard tiles in English + {personalizationContext.language} so frontline staff can run the scorecard.
+          </div>
+        )}
+      </div>
+
+      <div className="workbook-section" style={{ background: '#fff', border: '1px solid #e9ecef', borderRadius: '12px', padding: '1.25rem', marginBottom: '1.5rem' }}>
+        <h4>📊 KPI briefings for {personaLabel}</h4>
+        <p>Use this table as your analyst’s cheat sheet. Each KPI lists what to watch, which SA system provides the data, and the immediate business action.</p>
+        <div className="comparison-table-wrapper">
+          <table className="capeweb-table">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Why it matters</th>
+                <th>Where to pull it</th>
+                <th>Next decision</th>
+              </tr>
+            </thead>
+            <tbody>
+              {personaPlan.kpis.map((kpi) => (
+                <tr key={kpi.label}>
+                  <td>{kpi.label}</td>
+                  <td>{kpi.description}</td>
+                  <td>
+                    <ul style={{ margin: 0, paddingLeft: '1.1rem' }}>
+                      <li>Analytics stack (GA4/Plausible)</li>
+                      <li>Finance stack (Yoco/Paystack exports)</li>
+                      <li>CRM or order sheet</li>
+                    </ul>
+                  </td>
+                  <td>
+                    <strong>Ask:</strong> “What’s blocking this metric?” → design one test or sprint (landing page, offer, pricing, delivery) before moving on.
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div style={{ marginTop: '1rem', padding: '1rem', borderRadius: '10px', background: '#e7f1ff', border: '1px solid #cfe2ff' }}>
+          <strong>30/60/90 sprint idea:</strong> {personaPlan.sprintIdea}
+        </div>
+        <details style={{ marginTop: '.75rem' }}>
+          <summary style={{ fontWeight: 700, color: '#0b7285' }}>Need a Deepseek boost?</summary>
+          <p style={{ marginTop: '.35rem', color: '#495057' }}>
+            Prompt example: “Deepseek, rebuild Pillar 10 for a {personaLabel} in {geographyLabel}. I need KPI definitions, free South African tools, and SARS-compliant exports.”
+          </p>
+        </details>
+      </div>
+
+      <div className="workbook-section" style={{ background: '#f8f9fa', border: '1px solid #dee2e6', borderRadius: '12px', padding: '1.25rem', marginBottom: '1.5rem' }}>
+        <h4>🗂️ Official registrations + datasets</h4>
+        <p>Link your analytics practice to South Africa’s statutory systems so you can defend numbers during audits, grant applications, or tenders.</p>
+        <ul style={{ margin: '.75rem 0 0 1.25rem', color: '#495057' }}>
+          <li>
+            <strong>SARS eFiling:</strong> activate VAT/PAYE dashboards and reconcile revenue vs. submitted returns. <a href="https://www.sarsefiling.co.za/" target="_blank" rel="noopener noreferrer">Register / log in</a>.
+          </li>
+          <li>
+            <strong>Stats SA + Data.gov.za:</strong> benchmark township vs. metro demand, unemployment, and spend per district to justify your forecasts. <a href="https://www.statssa.gov.za/" target="_blank" rel="noopener noreferrer">Stats SA portal</a>.
+          </li>
+          <li>
+            <strong>BizPortal / CIPC:</strong> download registration certificates and B-BBEE affidavits to pair with your KPI reports when applying for funding. <a href="https://bizportal.gov.za/" target="_blank" rel="noopener noreferrer">BizPortal</a>.
+          </li>
+          <li>
+            <strong>SEDA / SEFA dashboards:</strong> most programmes ask for 12 months of revenue + pipeline metrics; prepare exports ahead of time. <a href="https://www.seda.org.za/" target="_blank" rel="noopener noreferrer">SEDA branches</a>.
+          </li>
+        </ul>
+        <p style={{ marginTop: '.75rem', color: '#495057' }}>
+          CapeWeb tip: keep a “Data Room” folder (Drive/SharePoint) with your KPI snapshots, SARS proofs, bank statements, and grant templates labelled per month.
+        </p>
+      </div>
+
+      <div className="workbook-section" style={{ background: '#fff', border: '1px solid #e9ecef', borderRadius: '12px', padding: '1.25rem', marginBottom: '1.5rem' }}>
+        <h4>🧭 Scenario playbooks</h4>
+        <p>This pillar changes drastically by business type. Use the track that matches your profile.</p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: '1rem', marginTop: '.75rem' }}>
+          <div style={{ border: '1px solid #dee2e6', borderRadius: '12px', padding: '1rem' }}>
+            <strong>Township retail / commerce</strong>
+            <ul style={{ margin: '.6rem 0 0 1.25rem' }}>
+              <li>Track WhatsApp leads → paid orders → cash vs. card splits.</li>
+              <li>Capture courier proofs (PUDO/PAXI) and reconcile with payouts.</li>
+              <li>Export stokvel/lay-by ledgers monthly for SEFA working-capital cases.</li>
+            </ul>
+          </div>
+          <div style={{ border: '1px solid #dee2e6', borderRadius: '12px', padding: '1rem', background: '#f8f9fa' }}>
+            <strong>Service / SaaS</strong>
+            <ul style={{ margin: '.6rem 0 0 1.25rem' }}>
+              <li>Instrument activation (signup → aha), retention, churn.</li>
+              <li>Tag every lead source (Meta, LinkedIn, referrals) using UTMs.</li>
+              <li>Log POPIA consents for every automation or WhatsApp drip.</li>
+            </ul>
+          </div>
+          <div style={{ border: '1px solid #dee2e6', borderRadius: '12px', padding: '1rem' }}>
+            <strong>Health / regulated services</strong>
+            <ul style={{ margin: '.6rem 0 0 1.25rem' }}>
+              <li>Measure bookings vs. attended vs. clinical incidents.</li>
+              <li>Store breach logs + HPCSA references next to analytics notes.</li>
+              <li>Use DHIS / DOH templates for reporting patient volumes.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
       <div className="mastery-section">
         <h3>1) The problem: "I'm busy" is not the same as "I'm growing"</h3>
         <p>

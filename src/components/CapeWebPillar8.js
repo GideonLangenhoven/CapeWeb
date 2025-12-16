@@ -1,5 +1,52 @@
 import React from 'react';
 
+const getPillar8Playbook = (context = {}) => {
+  const sector = (context.sector || '').toLowerCase();
+  const regulation = (context.regulationFocus || '').toLowerCase();
+  if (sector.includes('health') || regulation.includes('health')) {
+    return {
+      summary: 'Protect patient data (POPIA/HPCSA), encrypt backups, and prepare breach notifications.',
+      quickWins: ['Register Information Officer on InfoReg portal', 'Enable MFA on records/email, store consent logs', 'Draft breach notification template + incident contacts.'],
+    };
+  }
+  if (/(commerce|retail|ecommerce|pay)/.test(sector)) {
+    return {
+      summary: 'Lock down payment portals, marketplace logins, and proof-of-payment workflows; reduce fraud chargebacks.',
+      quickWins: ['Enable MFA on payment gateways + courier dashboards', 'Never accept screenshots as payment proof—verify in dashboard', 'Weekly backup of orders + payment exports.'],
+    };
+  }
+  if (/(fintech|saas|technology)/.test(sector)) {
+    return {
+      summary: 'Adopt zero-trust basics: password managers, SSO, and logging for cloud infrastructure.',
+      quickWins: ['Centralise secrets (1Password/Bitwarden)', 'Enable SSO/MFA across GitHub, hosting, analytics', 'Set up incident log + on-call contacts.'],
+    };
+  }
+  return {
+    summary: 'List what attackers can hit (email, domains, payments), enable MFA, keep backups, and write a response plan.',
+    quickWins: ['Inventory accounts + hardware', 'Turn on MFA everywhere this week', 'Document a simple incident response checklist.'],
+  };
+};
+
+const getPillar8ComplianceNote = (context = {}) => {
+  const location = context.geography || 'your municipality';
+  const sector = (context.sector || '').toLowerCase();
+  const regulation = (context.regulationFocus || '').toLowerCase();
+
+  if (sector.includes('health') || regulation.includes('health')) {
+    return 'Health data falls under POPIA + HPCSA ethical rules. Keep consent logs, encrypt patient files, and draft breach notices using the Information Regulator templates.';
+  }
+  if (sector.includes('food') || regulation.includes('food') || sector.includes('agri') || sector.includes('agriculture')) {
+    return 'Food + agri operators must align with DALRRD / Department of Health hygiene codes. Store supplier audits, cold-chain logs, and recall scripts in your backup plan.';
+  }
+  if (sector.includes('ngo')) {
+    return 'Registered NPOs must protect donor and beneficiary data under POPIA and the NPO Act. Restrict access to beneficiary lists and record approvals before syncing with cloud CRMs.';
+  }
+  if (sector.includes('technology') || sector.includes('saas') || regulation.includes('data')) {
+    return 'SaaS/tech firms should treat CapeWeb Pillar 8 as a POPIA-readiness sprint: appoint an Information Officer, log processor agreements, and keep audit trails for release rollbacks.';
+  }
+  return `Anchor your POPIA readiness to the Information Regulator of South Africa. Appoint/record your Information Officer and keep breach notification templates for ${location}.`;
+};
+
 export const pillar8QuizQuestions = [
   {
     question: 'The "master key" account that attackers use to reset everything is usually:',
@@ -63,9 +110,122 @@ export const pillar8QuizQuestions = [
   },
 ];
 
-export function Pillar8Content() {
+export function Pillar8Content({ personalizationContext = {} }) {
+  const playbook = getPillar8Playbook(personalizationContext);
+  const personaLabel = personalizationContext?.sector || 'Business';
+  const geographyLabel = personalizationContext?.geography || 'South Africa';
+  const regulationLabel = personalizationContext?.regulationFocus || 'general compliance';
+  const stageLabel = personalizationContext?.revenueStage || 'current stage';
+  const needsMultilingual = personalizationContext?.language && personalizationContext.language !== 'English';
+  const complianceNote = getPillar8ComplianceNote(personalizationContext);
   return (
     <>
+      <div
+        className="persona-context-card"
+        style={{
+          background: '#0d1726',
+          color: '#fff',
+          borderRadius: '14px',
+          padding: '1.5rem',
+          border: '1px solid rgba(255,255,255,.12)',
+          marginBottom: '1.5rem',
+        }}
+      >
+        <p className="panel-eyebrow" style={{ color: 'rgba(255,255,255,.72)', marginBottom: '.35rem' }}>
+          Context-aware security focus
+        </p>
+        <h3 style={{ margin: 0 }}>Security posture plan for {personaLabel || 'your business'}</h3>
+        <p style={{ marginTop: '.5rem', color: 'rgba(255,255,255,.82)' }}>
+          Sector focus: <strong>{personaLabel}</strong> · Geography: <strong>{geographyLabel}</strong> · Regulation priority:{' '}
+          <strong>{regulationLabel}</strong>. Deepseek prioritised Cybersecurity Pillar tasks based on your {stageLabel} profile.
+        </p>
+        <p style={{ marginTop: '.75rem', color: 'rgba(255,255,255,.82)' }}>{playbook.summary}</p>
+        <div
+          style={{
+            marginTop: '1rem',
+            background: 'rgba(255,255,255,.08)',
+            borderRadius: '12px',
+            padding: '1rem',
+            border: '1px solid rgba(255,255,255,.12)',
+          }}
+        >
+          <strong>Quick wins this week</strong>
+          <ul style={{ margin: '.75rem 0 0 1.25rem', color: 'rgba(255,255,255,.9)' }}>
+            {playbook.quickWins.map((win) => (
+              <li key={win}>{win}</li>
+            ))}
+          </ul>
+        </div>
+        <div
+          style={{
+            marginTop: '1rem',
+            background: '#ffe8cc',
+            color: '#7c4700',
+            borderRadius: '12px',
+            padding: '1rem',
+            border: '1px solid #ffd8a8',
+          }}
+        >
+          <strong>Compliance signal:</strong> {complianceNote}
+        </div>
+        {needsMultilingual && (
+          <div
+            style={{
+              marginTop: '1rem',
+              borderRadius: '12px',
+              padding: '1rem',
+              background: 'rgba(79,70,229,.15)',
+              border: '1px solid rgba(79,70,229,.3)',
+            }}
+          >
+            <strong>Multilingual reminder:</strong> prepare WhatsApp/email incident templates in English + {personalizationContext.language}. CapeWeb recommends labelling both versions in the Security Shield checklist.
+          </div>
+        )}
+      </div>
+
+      <div className="workbook-section" style={{ background: '#fff', border: '1px solid #e9ecef', borderRadius: '12px', padding: '1.25rem', marginBottom: '1.5rem' }}>
+        <h4>📚 Security action library</h4>
+        <p>Work through these government-aligned steps. Each item links to the South African regulator or support body responsible for that safeguard.</p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: '1rem', marginTop: '.75rem' }}>
+          <div style={{ border: '1px solid #dee2e6', borderRadius: '12px', padding: '1rem', background: '#f8f9fa' }}>
+            <strong>Register an Information Officer</strong>
+            <p style={{ marginTop: '.4rem', color: '#495057' }}>
+              Every company needs an Information Officer per POPIA. File the appointment with the Information Regulator and keep the acknowledgement saved.
+            </p>
+            <a href="https://www.justice.gov.za/inforeg/docs/InfoRegSA-IO-registration.pdf" target="_blank" rel="noopener noreferrer">
+              Download the registration form
+            </a>
+          </div>
+          <div style={{ border: '1px solid #dee2e6', borderRadius: '12px', padding: '1rem', background: '#fff' }}>
+            <strong>Connect with CSIRT / SAPS</strong>
+            <p style={{ marginTop: '.4rem', color: '#495057' }}>
+              Bookmark the national Cybersecurity Hub + SAPS Commercial Crimes Unit. When an attack lands, you must report within 24 hours.
+            </p>
+            <ul style={{ margin: '.5rem 0 0 1.25rem' }}>
+              <li><a href="https://www.cybersecurityhub.gov.za/" target="_blank" rel="noopener noreferrer">South African Cybersecurity Hub</a></li>
+              <li><a href="https://www.saps.gov.za/resource_centre/publications/commercial_crime.php" target="_blank" rel="noopener noreferrer">SAPS Commercial Crime Units</a></li>
+            </ul>
+          </div>
+          <div style={{ border: '1px solid #dee2e6', borderRadius: '12px', padding: '1rem', background: '#f8f9fa' }}>
+            <strong>Bank + payment escalations</strong>
+            <p style={{ marginTop: '.4rem', color: '#495057' }}>
+              Fraud on Yoco/Paystack/Ozow must be escalated to the gateway immediately. Keep their abuse desk contacts on your incident checklist.
+            </p>
+            <ul style={{ margin: '.5rem 0 0 1.25rem' }}>
+              <li><a href="https://www.yoco.com/za/blog/yoco-fraud-protection/" target="_blank" rel="noopener noreferrer">Yoco Fraud Protection Desk</a></li>
+              <li><a href="https://support.paystack.com/hc/en-us/articles/360009881940-Contact-Paystack-support" target="_blank" rel="noopener noreferrer">Paystack Support</a></li>
+            </ul>
+          </div>
+        </div>
+        <details style={{ marginTop: '1rem' }}>
+          <summary style={{ fontWeight: 700, color: '#0b7285' }}>Incident notification path</summary>
+          <p style={{ marginTop: '.5rem', color: '#495057' }}>
+            1) Contain + reset passwords. 2) Log evidence. 3) Report to SAPS (case number). 4) Notify the Information Regulator via{' '}
+            <a href="mailto:POPIACompliance@inforegulator.org.za">POPIACompliance@inforegulator.org.za</a>. 5) Inform affected customers in plain language (WhatsApp/email).
+          </p>
+        </details>
+      </div>
+
       {/* SECTION 1 */}
       <div className="mastery-section" data-topic="cybersecurity basics risk management attack surface accounts devices website payments">
         <h3>1) The real problem: your business has an "attack surface"</h3>
