@@ -1,0 +1,209 @@
+/* About Page Styles */
+.about-page {
+    background-color: var(--white);
+    min-height: 100vh;
+}
+
+/* Hero Section (White) */
+.about-hero {
+    background-color: #ffffff;
+    color: #000000;
+    padding: 15vh 0 10vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+}
+
+.about-hero__mountain {
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 2rem;
+}
+
+.about-hero__mountain path {
+    stroke: #000;
+    stroke-width: 1.5;
+    fill: none;
+}
+
+.about-hero__label {
+    background-color: #000;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    align-self: flex-start;
+    margin-left: max(5vw, 2rem);
+}
+
+.about-hero__title {
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 900;
+    line-height: 1.1;
+    text-align: left;
+    width: 100%;
+    padding: 0 max(5vw, 2rem);
+    max-width: 1400px;
+}
+
+.about-hero__subtitle {
+    font-size: 1.25rem;
+    margin-top: 2rem;
+    text-align: left;
+    width: 100%;
+    padding: 0 max(5vw, 2rem);
+    max-width: 1400px;
+    color: #333;
+}
+
+/* Intro Section (Black) */
+.about-intro {
+    background-color: #0b0f1a;
+    color: #ffffff;
+    padding: 15vh max(5vw, 2rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.about-intro__label {
+    background-color: #fff;
+    color: #000;
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+    width: fit-content;
+}
+
+.about-intro__headline {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 3rem;
+    max-width: 1200px;
+}
+
+.about-intro__text {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    max-width: 800px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.about-intro__cta {
+    margin-top: 3rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    color: #fff;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: gap 0.3s ease;
+}
+
+.about-intro__cta:hover {
+    gap: 1.5rem;
+}
+
+/* Founders Section (Image) */
+.about-founders {
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+.about-founders__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%);
+}
+
+.about-founders__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    padding: 0 max(5vw, 2rem);
+}
+
+.about-founders__title {
+    font-size: clamp(4rem, 15vw, 12rem);
+    font-weight: 900;
+    color: #fff;
+    line-height: 0.9;
+    text-transform: uppercase;
+}
+
+/* Values Section (Deep Purple) */
+.about-values {
+    background-color: #240b36;
+    /* Deep Purple */
+    color: #ffffff;
+    padding: 15vh max(5vw, 2rem);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.about-values__label {
+    background-color: #fff;
+    color: #000;
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 4rem;
+    width: fit-content;
+}
+
+.about-values__headline {
+    font-size: clamp(3rem, 7vw, 6rem);
+    font-weight: 900;
+    margin-bottom: 2rem;
+}
+
+.about-values__desc {
+    font-size: 1.5rem;
+    max-width: 800px;
+    margin-bottom: 6rem;
+    opacity: 0.9;
+}
+
+.about-values__word {
+    font-size: clamp(4rem, 12vw, 10rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    color: transparent;
+    -webkit-text-stroke: 2px rgba(255, 255, 255, 0.5);
+    transition: all 0.4s ease;
+    cursor: default;
+    display: block;
+    line-height: 1;
+}
+
+.about-values__word:hover {
+    color: #E3FDF5;
+    /* Cyan tint */
+    -webkit-text-stroke: 2px #E3FDF5;
+    transform: translateX(20px);
+}
+
+.about-values__detail {
+    margin-top: 2rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #E3FDF5;
+}

@@ -1,158 +1,149 @@
-import React, { useState } from 'react';
-import useScrollReveal from '../hooks/useScrollReveal';
-import '../styles/Contact.css';
-
-const initialState = {
-  name: '',
-  email: '',
-  company: '',
-  website: '',
-  priority: '',
-  message: ''
-};
-
-const priorities = ['Launch', 'Scale', 'Compound'];
+import React from 'react';
+import Footer from '../components/Footer';
+import LightBulb from '../components/LightBulb';
+import './Contact.css';
 
 function Contact() {
-  useScrollReveal();
-  const [formData, setFormData] = useState(initialState);
-  const [submissionState, setSubmissionState] = useState('idle'); // idle | submitting | success | error
+  const [formData, setFormData] = React.useState({ name: '', email: '', message: '' });
+  const [status, setStatus] = React.useState('idle');
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    if (submissionState !== 'idle') setSubmissionState('idle');
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setSubmissionState('submitting');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus('submitting');
+
+    // REPLACE WITH YOUR ACTUAL DEPLOYED URL
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwLFgbHHM63wG-WrNwFrwzzLoj0kv6r7MD9RHPDFhTAVeS-8Y2UopbSVrzacie8GuZARg/exec';
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1200));
-      setFormData(initialState);
-      setSubmissionState('success');
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          guideType: 'contact-form'
+        }),
+      });
+      setStatus('success');
+      setFormData({ name: '', email: '', message: '' });
     } catch (error) {
-      setSubmissionState('error');
+      console.error('Error:', error);
+      setStatus('error');
     }
   };
 
-  return (
-    <div className="contact-page">
-      <section className="section contact-hero" data-cursor-section="contact">
-        <div className="container contact-hero__container surface-panel" data-scroll-reveal>
-          <div className="surface-panel__shine" />
-          <div className="contact-hero__copy">
-            <span className="eyebrow">Free Strategy Call</span>
-            <h1>Book a Free Strategy Call.</h1>
-            <p>45 minutes to map goals, bottlenecks, and the plan that pays off.</p>
-            <div className="contact-hero__meta">
-              <div>
-                <strong>What you get</strong>
-                <p>45-minute strategy session · bottleneck diagnosis · prioritised roadmap · next-step plan in 48 hours.</p>
-              </div>
-              <div>
-                <strong>Who joins</strong>
-                <p>Founder or lead + our pod lead. Bring your metrics, questions, and ambition. We’ll bring the plan.</p>
-              </div>
-            </div>
-          </div>
-          <div className="contact-hero__aside">
-            <div>
-              <span className="eyebrow">Direct line</span>
-              <p className="contact-line">hello@capeweb.co.za</p>
-              <p className="contact-line">+27 21 000 0000</p>
-            </div>
-            <div>
-              <span className="eyebrow">Office hours</span>
-              <p>Mon–Fri 09:00–18:00 SAST · Remote-first · Global delivery</p>
-            </div>
-            <div>
-              <span className="eyebrow">Newsletter</span>
-              <p>“Signal, not noise.” Monthly playbooks on design, AI, and growth.</p>
-            </div>
-          </div>
-        </div>
-      </section>
+  // Static page; only LightBulb handles theme changes
+  React.useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
-      <section className="section contact-form-section" data-cursor-section="contact">
-        <div className="container contact-form__wrapper">
-          <form className={`contact-form ${submissionState}`} onSubmit={handleSubmit} data-scroll-reveal>
-            <div className="form-grid">
-              <label>
-                Name
-                <input type="text" name="name" value={formData.name} onChange={handleChange} required placeholder="Your name" />
-              </label>
-              <label>
-                Email
-                <input type="email" name="email" value={formData.email} onChange={handleChange} required placeholder="you@company.com" />
-              </label>
+  return (
+    <div className="expand-page contact-page">
+      <div>
+
+        {/* 1. HERO SECTION (WHITE aka Lightbulb Theme) */}
+        <section className="section-white" data-scroll-section style={{ position: 'relative', backgroundColor: 'var(--lb-bg)', color: 'var(--lb-text)', transition: 'all 0.3s' }}>
+          <LightBulb />
+          <div className="expand-label">Get In Touch</div>
+          <h1 className="expand-title-hero reveal-text" style={{ color: 'var(--lb-text)', transition: 'color 0.3s' }}>
+            LET'S START A<br />
+            CONVERSATION.
+          </h1>
+          <p className="expand-text-lg reveal-text" style={{ color: 'var(--lb-text)', marginTop: '2rem', transition: 'color 0.3s' }}>
+            Whether you have a specific project in mind or just want to explore what's possible, we're here to listen.
+          </p>
+        </section>
+
+        {/* 2. FORM SECTION (BLACK aka Lightbulb Theme) */}
+        <section className="section-black" data-scroll-section style={{ backgroundColor: 'var(--lb-bg)', color: 'var(--lb-text)', transition: 'all 0.3s' }}>
+          <div className="contact-grid">
+            <div className="reveal-text">
+              <h2 className="expand-title-section" style={{ color: 'var(--lb-text)' }}>Tell us about your project.</h2>
+              <p className="expand-text-lg" style={{ color: 'var(--lb-text)', opacity: 0.9, transition: 'color 0.3s' }}>
+                Fill out the form and we'll get back to you within 24 hours.
+                We hate spam as much as you do, so your details are safe with us.
+              </p>
             </div>
-            <div className="form-grid">
-              <label>
-                Company
-                <input type="text" name="company" value={formData.company} onChange={handleChange} placeholder="Company or project" />
-              </label>
-              <label>
-                Website / URL
-                <input type="url" name="website" value={formData.website} onChange={handleChange} placeholder="https://" />
-              </label>
-            </div>
-            <label>
-              Which focus best matches your priority?
-              <div className="priority-group">
-                {priorities.map((option) => (
-                  <button
-                    key={option}
-                    type="button"
-                    className={`priority-pill ${formData.priority === option ? 'is-active' : ''}`}
-                    onClick={() => setFormData((prev) => ({ ...prev, priority: option }))}
-                  >
-                    {option}
-                  </button>
-                ))}
+
+            <form className="contact-form reveal-text" onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label htmlFor="name" style={{ color: 'var(--lb-text)' }}>Name</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  placeholder="John Doe"
+                  style={{ color: 'var(--page-fg)', borderColor: 'var(--lb-text)' }}
+                />
               </div>
-            </label>
-            <label>
-              Tell us about your goals and bottlenecks
-              <textarea
-                name="message"
-                rows="6"
-                value={formData.message}
-                onChange={handleChange}
-                placeholder="Where are you headed? What’s holding you back? What have you tried?"
-                required
-              />
-            </label>
-            <button type="submit" className="btn btn-primary" disabled={submissionState === 'submitting'}>
-              {submissionState === 'submitting' ? 'Sending…' : 'Book a Free Strategy Call'}
-            </button>
-            <p className="form-note">
-              {submissionState === 'success'
-                ? 'Thanks! We’ll respond within one business day with scheduling options.'
-                : submissionState === 'error'
-                ? 'Something went wrong. Please email hello@capeweb.co.za.'
-                : 'We keep everything confidential. NDA available on request.'}
-            </p>
-          </form>
-          <aside className="contact-insights surface-panel" data-scroll-reveal>
-            <div className="surface-panel__shine" />
-            <span className="eyebrow">What to expect</span>
-            <ul>
-              <li>Pre-call prep: we review your current site, funnels, and automations.</li>
-              <li>Live strategy: collaborative session to map quick wins and big swings.</li>
-              <li>48-hour blueprint: priorities, timeline, and investment ready to action.</li>
-            </ul>
-            <div className="divider" />
-            <span className="eyebrow">Recent wins</span>
-            <ul>
-              <li>42% increase in speed + 3.1× organic leads for a SaaS brand in 60 days.</li>
-              <li>Automated lead routing that cut response times from 12 hours to 4 minutes.</li>
-              <li>Launch-to-scale commerce rollout generating 28% higher AOV.</li>
-            </ul>
-          </aside>
-        </div>
-      </section>
+              <div className="form-group">
+                <label htmlFor="email" style={{ color: 'var(--lb-text)' }}>Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  placeholder="john@company.com"
+                  style={{ color: 'var(--page-fg)', borderColor: 'var(--lb-text)' }}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="message" style={{ color: 'var(--lb-text)' }}>Message</label>
+                <textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  rows="4"
+                  required
+                  placeholder="Tell us about your goals..."
+                  style={{ color: 'var(--page-fg)', borderColor: 'var(--lb-text)' }}
+                ></textarea>
+              </div>
+              <button type="submit" className="submit-btn" disabled={status === 'submitting'}>
+                {status === 'submitting' ? 'Sending...' : status === 'success' ? 'Message Sent!' : 'Send Message'}
+              </button>
+              {status === 'error' && <p style={{ color: 'red', marginTop: '10px' }}>Something went wrong. Please try again.</p>}
+            </form>
+          </div>
+        </section>
+
+        {/* 3. INFO SECTION (WHITE aka Lightbulb Theme) */}
+        <section className="section-white" data-scroll-section style={{ backgroundColor: 'var(--lb-bg)', color: 'var(--lb-text)', transition: 'all 0.3s' }}>
+          <div className="expand-label" style={{ backgroundColor: 'var(--lb-text)', color: 'var(--lb-bg)' }}>Contact Details</div>
+          <h2 className="expand-title-section reveal-text" style={{ color: 'var(--lb-text)' }}>Other ways to connect.</h2>
+
+          <ul className="contact-info-list" style={{ color: 'var(--lb-text)' }}>
+            <li className="contact-info-item reveal-text">
+              <span className="contact-info-label">Email</span>
+              <a href="mailto:hello@capeweb.co.za" className="contact-info-value" style={{ color: 'var(--lb-text)' }}>hello@capeweb.co.za</a>
+            </li>
+            <li className="contact-info-item reveal-text">
+              <span className="contact-info-label">Phone</span>
+              <a href="tel:+27211234567" className="contact-info-value" style={{ color: 'var(--lb-text)' }}>+27 (0) 21 123 4567</a>
+            </li>
+            <li className="contact-info-item reveal-text">
+              <span className="contact-info-label">Office</span>
+              <span className="contact-info-value" style={{ color: 'var(--lb-text)' }}>Cape Town, South Africa</span>
+            </li>
+          </ul>
+        </section>
+
+        {/* FOOTER */}
+        <section className="footer-section" data-scroll-section data-bgcolor="#0b0f1a" data-textcolor="#ffffff">
+          <Footer />
+        </section>
+
+      </div>
     </div>
   );
 }

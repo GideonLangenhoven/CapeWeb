@@ -1,15 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import '../styles/Hero.css';
 import Typed from 'typed.js';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import HeroCanvas from './HeroCanvas';
 
 gsap.registerPlugin(ScrollTrigger);
 
 function Hero() {
+  const heroRef = useRef(null);
+  const leftPartRef = useRef(null);
+
   useEffect(() => {
-    // Initialize Typed.js for the animated headline
+    // Initialize Typed.js
     const typed = new Typed('.text', {
       strings: ['sell 24/7.', 'book meetings.', 'qualify leads.', 'handle support', 'sync to CRMs'],
       typeSpeed: 100,
@@ -17,86 +19,119 @@ function Hero() {
       loop: true
     });
 
-    // GSAP animations for hero elements with explicit end states
+    // GSAP animations for hero elements
     gsap.fromTo('.left-part h1',
-      {
-        y: 50,
-        opacity: 0
-      },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 1,
-        ease: 'power3.out',
-        clearProps: 'all'
-      }
+      { y: 50, opacity: 0 },
+      { y: 0, opacity: 1, duration: 1, ease: 'power3.out', clearProps: 'all' }
     );
 
     gsap.fromTo('.cta-buttons',
-      {
-        y: 30,
-        opacity: 0
-      },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 1,
-        delay: 0.6,
-        ease: 'power3.out',
-        clearProps: 'all'
-      }
+      { y: 30, opacity: 0 },
+      { y: 0, opacity: 1, duration: 1, delay: 0.6, ease: 'power3.out', clearProps: 'all' }
     );
 
-    // Get the scroll container for proper scroller reference
-    const scrollContainer = document.querySelector('[data-scroll-container]');
+    // Interactive Bubble Logic
+    const interBubble = document.querySelector('.interactive');
+    let curX = 0;
+    let curY = 0;
+    let tgX = 0;
+    let tgY = 0;
+    let animationFrameId;
 
-    // Scroll-triggered animation for "Websites that" - increase size and letter spacing
+    function move() {
+      curX += (tgX - curX) / 20;
+      curY += (tgY - curY) / 20;
+      if (interBubble) {
+        interBubble.style.transform = `translate(${Math.round(curX)}px, ${Math.round(curY)}px)`;
+      }
+      animationFrameId = requestAnimationFrame(move);
+    }
+
+    const handleMouseMove = (event) => {
+      tgX = event.clientX;
+      tgY = event.clientY;
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    move();
+
+    // Hover Logic
+    const handleMouseEnter = () => {
+      if (heroRef.current) heroRef.current.classList.add('gradient-active');
+    };
+
+    const leftPart = leftPartRef.current;
+    if (leftPart) {
+      leftPart.addEventListener('mouseenter', handleMouseEnter);
+    }
+
+    // Scroll Animation
+    const scrollContainer = document.querySelector('[data-scroll-container]');
+    let scrollAnimation = null;
     const websitesThatSpan = document.querySelector('.left-part h1 > span:first-child');
+
     if (websitesThatSpan && scrollContainer) {
-      const scrollAnimation = gsap.to(websitesThatSpan, {
-        scale: 1.1,  // 10% increase in size
-        letterSpacing: '0.25em',  // 25% increase in letter spacing
-        transformOrigin: 'left center',  // Scale from the left so all words move
+      scrollAnimation = gsap.to(websitesThatSpan, {
+        scale: 1.1,
+        letterSpacing: '0.25em',
+        transformOrigin: 'left center',
         scrollTrigger: {
           trigger: '.hero-container',
           scroller: scrollContainer,
           start: 'top top',
-          end: 'bottom+=25% top',  // End 25% sooner
+          end: 'bottom+=25% top',
           scrub: 1,
           markers: false
         }
       });
-
-      return () => {
-        typed.destroy();
-        if (scrollAnimation.scrollTrigger) {
-          scrollAnimation.scrollTrigger.kill();
-        }
-        ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-      };
     }
 
     return () => {
       typed.destroy();
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      window.removeEventListener('mousemove', handleMouseMove);
+      cancelAnimationFrame(animationFrameId);
+      if (leftPart) {
+        leftPart.removeEventListener('mouseenter', handleMouseEnter);
+      }
+      if (scrollAnimation?.scrollTrigger) {
+        scrollAnimation.scrollTrigger.kill();
+      }
+      // Only kill triggers created in this component, not global ones
+      // ScrollTrigger.getAll().forEach(trigger => trigger.kill()); 
     };
   }, []);
 
   return (
-    <section className="hero-container" data-scroll-section>
-      <HeroCanvas />
-      <div className="bg-decoration bg-decoration-1"></div>
-      <div className="bg-decoration bg-decoration-2"></div>
+    <section className="hero-container" data-scroll-section ref={heroRef}>
+      <div className="gradient-bg">
+        <svg xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="goo">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+              <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8" result="goo" />
+              <feBlend in="SourceGraphic" in2="goo" />
+            </filter>
+          </defs>
+        </svg>
+        <div className="gradients-container">
+          <div className="g1"></div>
+          <div className="g2"></div>
+          <div className="g3"></div>
+          <div className="g4"></div>
+          <div className="g5"></div>
+          <div className="interactive"></div>
+        </div>
+      </div>
 
       <div className="hero-content">
-        <div className="left-part">
+        <div className="left-part" ref={leftPartRef}>
           <h1>
             <span>Websites that</span>
             <br />
             <span className="text"></span>
           </h1>
           <div className="cta-buttons">
-            <a href="#ai-guide" className="btn btn-primary">Book a Discovery Call</a>
+            <a href="https://calendly.com/capeweb/discovery-call" className="btn btn-primary" target="_blank" rel="noopener noreferrer">Book a Discovery Call</a>
           </div>
         </div>
       </div>

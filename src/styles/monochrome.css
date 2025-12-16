@@ -1,0 +1,208 @@
+/* ==========================================
+   MONOCHROME STYLE GUIDE (Style Guide 2.1)
+   Scopes all monochrome overrides to .monochrome-page
+   ========================================== */
+
+.monochrome-page {
+    /* ===== COLOR SYSTEM OVERRIDES ===== */
+    --color-primary: #0b0f1a;
+    --color-primary-light: #1f2937;
+    --color-primary-dark: #000000;
+
+    --color-secondary: #4b5563;
+    --color-secondary-light: #6b7280;
+    --color-secondary-dark: #374151;
+    --color-secondary-glow: rgba(0, 0, 0, 0.1);
+
+    --color-accent: #1f2937;
+    --color-accent-light: #374151;
+    --color-accent-dark: #111827;
+    --color-accent-glow: rgba(0, 0, 0, 0.1);
+
+    /* Neutral Colors */
+    --color-gray-50: #f9fafb;
+    --color-gray-100: #f3f4f6;
+    --color-gray-200: #e5e7eb;
+    --color-gray-300: #d1d5db;
+    --color-gray-400: #9ca3af;
+    --color-gray-500: #6b7280;
+    --color-gray-600: #4b5563;
+    --color-gray-700: #374151;
+    --color-gray-800: #1f2937;
+    --color-gray-900: #111827;
+
+    /* Semantic Colors - Desaturated/Darkened */
+    --color-info: #4b5563;
+    --color-info-light: #6b7280;
+    --color-info-dark: #374151;
+
+    /* Gradients - Monochrome */
+    --gradient-hero: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+    --gradient-accent: linear-gradient(90deg, #1f2937 0%, #0b0f1a 100%);
+    --gradient-subtle: linear-gradient(180deg, #f9fafb 0%, #f3f4f6 100%);
+    --gradient-overlay: linear-gradient(180deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.65) 100%);
+
+    /* Shadows - Softer, Ambient */
+    --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-medium: 0 12px 40px rgba(0, 0, 0, 0.12);
+    --shadow-pronounced: 0 18px 55px rgba(0, 0, 0, 0.18);
+    --shadow-accent-glow: none;
+    --shadow-secondary-glow: none;
+    --shadow-button-primary: 0 4px 14px rgba(0, 0, 0, 0.15);
+    --shadow-button-hover: 0 6px 20px rgba(0, 0, 0, 0.25);
+
+    /* Backgrounds */
+    background-color: #ffffff;
+    color: #0b0f1a;
+}
+
+/* Dark Mode Support for Monochrome Pages */
+@media (prefers-color-scheme: dark) {
+    .monochrome-page {
+        --color-primary: #ffffff;
+        --color-primary-light: #f3f4f6;
+        --color-primary-dark: #e5e7eb;
+
+        --color-secondary: #9ca3af;
+        --color-secondary-light: #d1d5db;
+        --color-secondary-dark: #6b7280;
+
+        background-color: #0f172a;
+        /* Dark canvas */
+        color: #f9fafb;
+    }
+}
+
+/* ===== COMPONENT OVERRIDES ===== */
+
+/* Buttons */
+.monochrome-page .btn-primary {
+    background-color: #0b0f1a !important;
+    color: #ffffff !important;
+    border: 1px solid transparent;
+    box-shadow: var(--shadow-button-primary);
+}
+
+.monochrome-page .btn-primary:hover {
+    background-color: #1f2937 !important;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-button-hover);
+}
+
+.monochrome-page .btn-ghost {
+    color: #0b0f1a;
+    border: 1.5px solid rgba(0, 0, 0, 0.14);
+    background: transparent;
+}
+
+.monochrome-page .btn-ghost:hover {
+    background-color: #0b0f1a;
+    color: #ffffff;
+    border-color: #0b0f1a;
+}
+
+/* Cards */
+.monochrome-page .card,
+.monochrome-page .surface-panel,
+.monochrome-page .service-detail,
+.monochrome-page .gallery-card,
+.monochrome-page .static-card {
+    background-color: #f5f5f5;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-soft);
+    border-radius: 16px;
+}
+
+.monochrome-page .card:hover,
+.monochrome-page .surface-panel:hover,
+.monochrome-page .service-detail:hover,
+.monochrome-page .gallery-card:hover,
+.monochrome-page .static-card:hover {
+    background-color: #ffffff;
+    border-color: rgba(0, 0, 0, 0.12);
+    box-shadow: var(--shadow-medium);
+    transform: translateY(-3px);
+}
+
+/* Typography */
+.monochrome-page h1,
+.monochrome-page h2,
+.monochrome-page h3,
+.monochrome-page h4,
+.monochrome-page h5,
+.monochrome-page h6 {
+    color: #0b0f1a;
+    letter-spacing: -0.02em;
+}
+
+.monochrome-page p {
+    color: #4b5563;
+}
+
+.monochrome-page .eyebrow,
+.monochrome-page .static-eyebrow {
+    color: #0b0f1a;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.85rem;
+}
+
+/* Forms */
+.monochrome-page .form-input,
+.monochrome-page .form-textarea,
+.monochrome-page input,
+.monochrome-page textarea {
+    background-color: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 999px;
+    /* Pill inputs */
+    color: #0b0f1a;
+}
+
+.monochrome-page textarea {
+    border-radius: 16px;
+    /* Rounded rect for textareas */
+}
+
+.monochrome-page .form-input:focus,
+.monochrome-page .form-textarea:focus,
+.monochrome-page input:focus,
+.monochrome-page textarea:focus {
+    border-color: #0b0f1a;
+    box-shadow: 0 0 0 2px rgba(11, 15, 26, 0.1);
+    outline: none;
+}
+
+/* Imagery - Grayscale by default */
+.monochrome-page img {
+    filter: grayscale(100%);
+    transition: filter 0.4s ease, transform 0.4s ease;
+}
+
+.monochrome-page .gallery-card:hover img,
+.monochrome-page article:hover img {
+    filter: grayscale(0%);
+    transform: scale(1.04);
+}
+
+/* Section Backgrounds */
+.monochrome-page .section-muted {
+    background-color: #f7f7f7;
+}
+
+/* Specific Component Tweaks */
+.monochrome-page .gallery-filter {
+    color: #6b7280;
+    border: 1px solid transparent;
+}
+
+.monochrome-page .gallery-filter.is-active {
+    color: #0b0f1a;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.05);
+}
+
+.monochrome-page .gallery-filter:hover {
+    color: #0b0f1a;
+}

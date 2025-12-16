@@ -30,6 +30,14 @@ const CustomCursor = () => {
       const element = document.elementFromPoint(event.clientX, event.clientY);
       if (!element) return;
 
+      // Check for click-me targets (tfx-line)
+      const isClickMe = element.closest('.tfx-line');
+      if (isClickMe) {
+        followerRef.current.classList.add('cursor-click-me');
+      } else {
+        followerRef.current.classList.remove('cursor-click-me');
+      }
+
       const section = element.closest('section') || element.closest('[data-cursor-section]');
       if (section) {
         const sectionId = section.id || section.getAttribute('data-cursor-section');

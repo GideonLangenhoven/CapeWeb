@@ -31,16 +31,21 @@
 .site-header {
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 10002;
   transition: all 0.3s ease;
 }
 
 .navbar-mainbg {
-  background: #000000;
+  background: rgba(0, 0, 0, 0.5);
   padding: 0;
   box-shadow: 0 12px 36px var(--nav-shadow-strong);
   backdrop-filter: blur(12px);
-  transition: box-shadow 0.35s ease;
+  transition: background 0.35s ease, box-shadow 0.35s ease;
+}
+
+/* Black navbar when on hero section (not scrolled) */
+.site-header:not(.site-header--scrolled) .navbar-mainbg {
+  background: #000000;
 }
 
 .site-header--scrolled .navbar-mainbg {
@@ -59,7 +64,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 clamp(1rem, 4vw, 3rem);
+  padding: 41px clamp(1rem, 4vw, 3rem);
   min-height: 70px;
 }
 
@@ -90,7 +95,7 @@
   flex: 1;
   display: flex;
   justify-content: flex-end;
-  margin: 0 3rem 0 2rem;
+  margin: 0 1rem 0 1rem;
 }
 
 .navbar-nav {
@@ -117,10 +122,12 @@
   align-items: center;
   gap: 0.5rem;
   height: 100%;
-  padding: 20px 25px;
+  padding: 20px 15px;
   transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   position: relative;
   font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+  z-index: 10;
+  /* Ensure link is above selector */
 }
 
 .nav-item.is-active .nav-link {
@@ -203,6 +210,13 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
+  background: #9b59b6;
+  transition: background 0.35s ease;
+}
+
+/* Black selector background when on hero section */
+.site-header:not(.site-header--scrolled) .hori-selector .right:before,
+.site-header:not(.site-header--scrolled) .hori-selector .left:before {
   background: #000000;
 }
 
@@ -575,4 +589,26 @@
   .header-container {
     padding: 0 1rem;
   }
+}
+
+/* Keyhole section transparency */
+.site-header--keyhole-active .navbar-mainbg {
+  background: rgba(155, 89, 182, 0.5);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Match selector bubbles to transparent navbar state */
+.site-header--keyhole-active .hori-selector {
+  background: rgba(155, 89, 182, 0.35);
+  box-shadow: 0 12px 28px rgba(155, 89, 182, 0.25);
+}
+
+.site-header--keyhole-active .hori-selector .right,
+.site-header--keyhole-active .hori-selector .left {
+  background: rgba(155, 89, 182, 0.35);
+}
+
+.site-header--keyhole-active .hori-selector .right:before,
+.site-header--keyhole-active .hori-selector .left:before {
+  background: rgba(155, 89, 182, 0.35);
 }

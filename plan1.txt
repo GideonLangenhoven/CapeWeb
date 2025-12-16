@@ -1,0 +1,74 @@
+# Website Content & Structure Plan
+Based on the high-energy, automation-focused "CapeWeb" Home page.
+
+## 1. Core Brand Theme
+**"Websites that Hustle Harder."**
+- **Visuals**: Dark mode accents, vibrant highlights (Pink, Cyan, Green, Yellow), fluid animations (Locomotive Scroll, GSAP), premium typography.
+- **Tone**: Confident, direct, results-oriented. Focus on "Automation," "Speed," and "Revenue," not just "Design."
+
+## 2. Proposed Site Structure
+
+### A. New Pages (Recommended)
+1.  **About Us (`/about`)**
+    *   *Why*: The Home page "Keyhole" section teases this, but a dedicated page builds trust.
+    *   *Content*:
+        *   **The Philosophy**: "We don't just build pretty sites; we build revenue engines."
+        *   **The Team**: Show the humans behind the automation.
+        *   **The Stack**: Highlight the tech (React, GSAP, AI tools) as a competitive advantage.
+    *   *Design*: Kinetic typography, team photos with hover effects (glitch or color shift).
+
+2.  **Case Studies / Work (`/work` or enhance `/gallery`)**
+    *   *Why*: "Real results from real clients" needs proof.
+    *   *Content*:
+        *   **Deep Dives**: 3-4 detailed case studies.
+        *   **Metrics**: "3x Leads," "90% less admin time" (tie back to Home page testimonials).
+        *   **Before/After**: Visual sliders.
+    *   *Design*: Large imagery, sticky scrolling descriptions.
+
+### B. Existing Page Refinements
+
+3.  **Services (`/services`)**
+    *   *Current State*: Exists in routes.
+    *   *Refinement*: Structure around the 5 pillars from Home:
+        1.  **Performance Web Dev**: "98+ Lighthouse scores."
+        2.  **SEO & Content**: "Rank locally, dominate globally."
+        3.  **AI Automation**: "Booking bots, CRM syncs, auto-replies."
+        4.  **Digital Marketing**: "Ads that convert."
+        5.  **Care Plans**: "Ship • Learn • Improve."
+    *   *Design*: Bento-grid layout or horizontal scroll for each pillar.
+
+4.  **Pricing (`/pricing`)**
+    *   *Current State*: Exists in routes.
+    *   *Refinement*:
+        *   **"Sprint" Packages**: Fixed-price, fixed-scope builds (e.g., "The Launchpad," "The Growth Engine").
+        *   **Care Plans**: Monthly retainers for SEO + Automation.
+        *   **ROI Calculator**: Interactive element showing potential time/money saved with automation.
+    *   *Design*: Comparison tables with "Recommended" cards that pop out on hover.
+
+5.  **Resources / Playbook (`/resources`)**
+    *   *Current State*: Exists in routes.
+    *   *Refinement*:
+        *   **The Playbook**: The "5 workflows that save 10+ hours" lead magnet from Home.
+        *   **Blog**: Articles on "AI for Business," "SEO in 2025."
+    *   *Design*: Magazine style, filterable by topic (Automation, SEO, Dev).
+
+6.  **Contact (`/contact`)**
+    *   *Current State*: Exists in routes.
+    *   *Refinement*:
+        *   **Primary CTA**: "Book a Discovery Call" (Calendar embed).
+        *   **Secondary**: Simple form for quick inquiries.
+        *   **FAQ**: Address common objections right before the form.
+    *   *Design*: Split screen: Contact form on one side, "Why work with us" bullet points on the other.
+
+## 3. Technical & Design Requirements
+-   **Navigation**: Ensure the "Animated Navbar" (Aurora Theme) is consistent across all pages.
+-   **Scroll**: Implement `useLocomotiveScroll` hook on ALL pages for consistent smooth scrolling.
+-   **Transitions**: Page transition animations (e.g., curtain wipe or fade) to maintain the "premium app" feel.
+-   **Footer**: Consistent footer with the "Steal our playbook" CTA on pages where it fits.
+
+## 4. Implementation Priority
+1.  **Services**: Critical for explaining *what* you actually do beyond the hype.
+2.  **Contact**: The conversion point.
+3.  **About**: Trust builder.
+4.  **Work/Gallery**: Proof of competence.
+5.  **Pricing**: Qualification filter.

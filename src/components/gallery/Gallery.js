@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { galleryData } from '../../data/galleryData';
-import useScrollReveal from '../../hooks/useScrollReveal';
+import useLocomotiveScroll from '../../hooks/useLocomotiveScroll';
+import Footer from '../Footer';
 import './Gallery.css';
 
 const GalleryModal = ({ item, onClose, onNext, onPrev }) => {
@@ -44,7 +45,7 @@ const GalleryModal = ({ item, onClose, onNext, onPrev }) => {
 
 const Gallery = () => {
   const [activeIndex, setActiveIndex] = useState(null);
-  useScrollReveal();
+  const scrollRef = useLocomotiveScroll();
   const categories = useMemo(() => ['All', ...Array.from(new Set(galleryData.map((item) => item.category)))], []);
   const [activeCategory, setActiveCategory] = useState('All');
 
@@ -78,15 +79,15 @@ const Gallery = () => {
   }, [activeCategory]);
 
   return (
-    <div className="gallery-page">
-      <section className="section gallery-hero">
+    <div className="gallery-page monochrome-page" ref={scrollRef} data-scroll-container>
+      <section className="section gallery-hero" data-scroll-section>
         <div className="container gallery-hero__container">
           <div className="gallery-hero__copy" data-scroll-reveal>
             <span className="eyebrow">Work</span>
             <h1>Work that ships results.</h1>
             <p>Launches and automations that turn attention into revenue.</p>
             <div className="btn-group">
-              <Link to="/contact" className="btn btn-primary">Book a Free Strategy Call</Link>
+              <a href="https://calendly.com/capeweb/discovery-call" className="btn btn-primary" target="_blank" rel="noopener noreferrer">Book a Free Strategy Call</a>
               <Link to="/services" className="btn btn-ghost">View services</Link>
             </div>
           </div>
@@ -110,7 +111,7 @@ const Gallery = () => {
         </div>
       </section>
 
-      <section className="section gallery-grid-section">
+      <section className="section gallery-grid-section" data-scroll-section>
         <div className="container">
           <div className="gallery-grid">
             {filteredData.map((item, index) => (
@@ -135,16 +136,18 @@ const Gallery = () => {
         </div>
       </section>
 
-      <section className="section gallery-cta">
+      <section className="section gallery-cta" data-scroll-section>
         <div className="container shimmer-border" data-scroll-reveal>
           <div className="shimmer-inner gallery-cta__inner">
             <span className="eyebrow">Next step</span>
             <h2>Ready to see your plan?</h2>
             <p>We’ll translate your goal into a simple blueprint—wireframes, automation flow, and rollout plan.</p>
-            <Link to="/contact" className="btn btn-primary">Book a Free Strategy Call</Link>
+            <a href="https://calendly.com/capeweb/discovery-call" className="btn btn-primary" target="_blank" rel="noopener noreferrer">Book a Free Strategy Call</a>
           </div>
         </div>
       </section>
+
+      <Footer />
 
       <GalleryModal
         item={activeIndex !== null ? filteredData[activeIndex] : null}

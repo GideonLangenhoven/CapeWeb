@@ -1,0 +1,66 @@
+Style Guide 2.1 – Monochrome Flow (Extending Page One)
+======================================================
+
+Intent
+- Extend the homepage look to all pages using a monochrome palette (black/white/gray) while preserving the bold, fluid interaction style and Locomotive Scroll feel.
+- Keep typography, spacing, and motion consistent with the first page; swap page-level accents to nuanced grayscale.
+
+Palette (monochrome only)
+- Primary text (ink): #0b0f1a
+- Secondary text: #1f2937
+- Muted text: #4b5563
+- Borders/hairlines: rgba(0,0,0,0.08–0.12)
+- Surfaces: White #ffffff; Light gray cards: #f5f5f5; Dark canvas (rare sections): #0f172a
+- Overlays/scrims: rgba(0,0,0,0.45) on media; Glass for hover layers: rgba(0,0,0,0.08)
+- Shadows: Soft ambient 0 18px 55px rgba(0,0,0,0.18); light cards 0 12px 40px rgba(0,0,0,0.12)
+
+Typography
+- Stack: system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, sans-serif
+- Headings: Weight 900, letter-spacing -0.02em, line-height 1.06; sizes via existing display tokens (display-1/2/3 clamps)
+- Body: Base clamp(1rem, .82rem + .6vw, 1.125rem); subhead line-height 1.6; max widths 68–72ch
+- Highlights: Use weight/size/underline emphasis only (no color highlights in monochrome)
+
+Layout & Grid
+- Sections: Maintain clamp padding `clamp(3.85rem, 11vh, 6.6rem)`; alternate light (#fff) and very light gray (#f7f7f7) backgrounds for depth.
+- Containers: `.section-inner` width min(1100px, 94vw); grid with responsive gap; align right on wide screens unless overridden (plan-style sections stay left).
+- Cards: Rounded 16–20px; light surface (#f5f5f5) with border rgba(0,0,0,0.06–0.1); hover lift +3–4px and slight shadow deepen.
+
+Buttons
+- Primary pill: Background #0b0f1a; text white; border transparent; hover to slightly lighter #1f2937 and lift 1px.
+- Ghost/outline: Border 1.5px rgba(0,0,0,0.14); text #0b0f1a; hover fill #0b0f1a with white text.
+- CTA-slide variant (monochrome): Border/fill #0b0f1a; text white; left-to-right fill reveal retained; corners square or 8px; 1s transition.
+- Nav dots: 12px; inactive rgba(0,0,0,0.12); active #0b0f1a.
+
+Imagery
+- Use high-contrast black-and-white photography or desaturated hero/video thumbnails. Apply soft vignette or scrim for legibility.
+- For galleries/sliders, add grayscale filter on inactive items; remove filter on hover/active to pop.
+- Background flourishes: replace color blobs with subtle gray gradients or noise textures; keep motion gentle.
+
+Motion & Locomotive Scroll
+- Keep Locomotive Scroll smooth scrolling across all pages (ensure each `data-scroll-section` has `transform: translate3d(0,0,0)` to avoid runtime errors).
+- Entrance: fade/slide-up 20px with 0.35–0.5s duration for cards/text on reveal; stagger children by 80–120ms.
+- Hover micro-interactions: underline grows, image zoom 1.04–1.06x, shadow deepen, dots fill.
+- Avoid excessive parallax; limit to subtle 5–8% translate on hero media.
+
+Components
+- Hero: Dark or light variant; headline big and bold; CTA pair (primary pill + ghost). Optional autoplay background video with dark scrim. Add grayscale hero image if no video.
+- Plan/Text effect: Keep `.tfx-line` underline reveal; switch accent block to semi-transparent black (#111) with white text.
+- Product/Work slider: Closed width 5rem (9rem desktop), open 30rem (58rem desktop); heights 22.9rem base / 41.6rem desktop; inactive cards grayscale; active card full contrast.
+- Testimonials: Dark speech bar on light background; avatars grayscale ring; controls (prev/next) dark pills.
+- Resources/Blog list: Cards 3-up or 2-up with image top (grayscale), date/meta in uppercase microcopy, title bold.
+- Forms: Pill inputs on light background; border rgba(0,0,0,0.12); focus outline #0b0f1a; submit dark pill.
+- Footer: Light mode per latest update—white background, dark text, subtle glows in low-opacity grayscale if needed (or remove glows).
+
+Accessibility
+- Maintain 4.5:1 contrast; ensure hover states also meet contrast.
+- Focus rings: 2px #0b0f1a (or dashed for dark sections: 2px white with 2px offset outline).
+
+Assets & Effects Checklist
+- Apply `filter: grayscale(100%)` to decorative images by default; remove on hover/active where emphasis is desired.
+- Use `mix-blend-mode: multiply` sparingly on light textures; avoid muddy text.
+- Keep spine/underline animations consistent with homepage (linear gradient underline growth).
+
+Implementation Notes
+- Reuse existing spacing and typography tokens—only swap accent colors to monochrome values.
+- For new sections, wrap in `scroll-section` + `data-scroll-section` and set transforms to keep Locomotive Scroll stable.
+- Prefer CSS clamp() for responsive sizing; reuse `.section-inner` grid patterns to preserve flow from page one.
