@@ -1,1027 +1,1400 @@
-import React, { useRef, useState, useEffect } from 'react';
-import '../styles/CapeWebBlueprint.css';
+import React, { useState, useEffect, useRef } from 'react';
+import * as confettiModule from 'canvas-confetti';
+import { gsap } from 'gsap';
+import { InteractiveLayout, QuizLayout } from './CapeWebLayouts';
+import { CWButton, CWHeading, CWCard, CWInput, CWBadge, CWAlert, BookInsight } from './CapeWebUI';
 
+// ==========================================
+// PILLAR 5 QUIZ DATA
+// ==========================================
 export const pillar5QuizQuestions = [
   {
-    question: 'SEO is mainly about:',
-    options: ['Tricks and hacks', 'Helping search engines and humans find the best answer', 'Only backlinks'],
+    question: 'According to "The Long Tail", which keyword strategy is easier for new businesses?',
+    options: ['Head Terms (e.g. "Shoes")', 'Long Tail Keywords (e.g. "Red Velcro Hiking Shoes Size 10")', 'No keywords'],
     correctIndex: 1,
   },
   {
-    question: 'The correct order is:',
-    options: ['Discover → Crawl → Index → Rank → Click', 'Rank → Crawl → Index → Discover', 'Click → Discover → Forget'],
-    correctIndex: 0,
-  },
-  {
-    question: 'Search intent means:',
-    options: ['What the searcher is really trying to do', 'How long the keyword is', 'The logo on your site'],
-    correctIndex: 0,
-  },
-  {
-    question: 'A pricing query like "price" usually needs:',
-    options: ['A services/pricing page with clarity', 'A random blog post', 'A hidden page'],
-    correctIndex: 0,
-  },
-  {
-    question: 'Search Console helps because:',
-    options: ['It sells your products automatically', 'It shows indexing + queries + performance', 'It designs your logo'],
+    question: 'What does the acronym E-E-A-T stand for in Google\'s Quality Guidelines?',
+    options: ['Eat Everything All Time', 'Experience, Expertise, Authoritativeness, Trustworthiness', 'Energy, Effort, Action, Time'],
     correctIndex: 1,
   },
   {
-    question: 'On-page SEO includes:',
-    options: ['Title, headings, content structure, internal links', 'Traffic fines', 'VAT registration'],
-    correctIndex: 0,
-  },
-  {
-    question: 'A topic cluster is:',
-    options: ['One main page + supporting pages linked together', '50 random posts', 'Only social media posts'],
-    correctIndex: 0,
-  },
-  {
-    question: 'Local SEO is powered mainly by:',
-    options: ['Google Business Profile + reviews + consistency', 'Buying random backlinks', 'A bigger logo'],
-    correctIndex: 0,
-  },
-  {
-    question: 'A sitemap helps with:',
-    options: ['Making photos larger', 'Discovery of important pages', 'Writing content automatically'],
+    question: 'In "They Ask You Answer", what is the strategy recommended?',
+    options: ['Ignore customer questions', 'Answer the difficult questions (like Price and Problems) publicly', 'Only write sales copy'],
     correctIndex: 1,
   },
   {
-    question: 'Buying "1,000 backlinks" is usually:',
-    options: ['A safe strategy', 'Risky and often harmful', 'Required for SEO'],
+    question: 'What is the "Skyscraper Technique"?',
+    options: ['Building a tall office', 'Finding high-ranking content and creating a version that is 10x better', 'Buying ads'],
     correctIndex: 1,
   },
   {
-    question: 'CTR is:',
-    options: ['Clicks divided by impressions', 'A tax form', 'A payment gateway'],
+    question: 'Core Web Vitals measure:',
+    options: ['How much money you make', 'User Experience metrics like Loading (LCP), Interactivity (INP), and Stability (CLS)', 'The number of keywords'],
+    correctIndex: 1,
+  },
+  {
+    question: 'What is "Keyword Cannibalization"?',
+    options: ['When two of your own pages compete for the same keyword, hurting both', 'When keywords eat each other', 'Using too many keywords'],
     correctIndex: 0,
   },
   {
-    question: 'The real goal of SEO is:',
-    options: ['Ranking only', 'More conversions (leads/sales) from search', 'More plugins'],
+    question: 'Why is "Faceted Navigation" dangerous for E-commerce SEO?',
+    options: ['It makes the menu ugly', 'It can generate millions of thin/duplicate pages (Index Bloat)', 'Google loves it'],
+    correctIndex: 1,
+  },
+  {
+    question: 'What is a "Canonical Tag"?',
+    options: ['A religious text', 'A tag that tells Google "This is the master version of this page"', 'A price tag'],
+    correctIndex: 1,
+  },
+  {
+    question: 'For Local SEO, what is NAP Consistency?',
+    options: ['Sleeping at work', 'Name, Address, Phone number must be identical across the web (Google, Facebook, YellowPages)', 'No Ads Please'],
+    correctIndex: 1,
+  },
+  {
+    question: 'What is "Schema Markup"?',
+    options: ['A design scheme', 'Code that explains your content to Google (e.g. "This is a Recipe")', 'A database'],
     correctIndex: 1,
   },
 ];
 
-export default function CapeWebPillar5() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [quizResponses, setQuizResponses] = useState({});
-  const [scoreMessage, setScoreMessage] = useState('Not checked yet.');
-  const [progress, setProgress] = useState({ done: 0, total: 0, pct: 0 });
-  const [snippetTitle, setSnippetTitle] = useState('');
-  const [snippetDesc, setSnippetDesc] = useState('');
-  const articleRef = useRef(null);
-  const navRef = useRef(null);
+// ==========================================
+// SHARED UTILS (MiniQuiz)
+// ==========================================
+function MiniQuiz({ questions, title = "Knowledge Check", onNext }) {
+  const [currentQ, setCurrentQ] = useState(0);
+  const [selected, setSelected] = useState(null);
+  const [score, setScore] = useState(0);
+  const [completed, setCompleted] = useState(false);
+  const [celebrating, setCelebrating] = useState(false);
+  const counterRef = useRef(null);
 
-  const handleQuizResponse = (questionIndex, optionIndex) => {
-    setQuizResponses((prev) => ({ ...prev, [questionIndex]: optionIndex }));
+  const question = questions[currentQ];
+  const isLast = currentQ === questions.length - 1;
+
+  const playSuccessSound = () => {
+    try {
+      const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3');
+      audio.volume = 0.5;
+      audio.play().catch(e => console.log('Audio error', e));
+    } catch (e) { }
   };
 
-  const handleScore = () => {
-    const correct = pillar5QuizQuestions.reduce((sum, question, index) => {
-      return sum + (quizResponses[index] === question.correctIndex ? 1 : 0);
-    }, 0);
-    const message =
-      correct >= 9
-        ? `✅ Pass! You scored ${correct}/12. You're ready for Pillar 6.`
-        : `❌ ${correct}/12. Revisit the sections you missed and try again.`;
-    setScoreMessage(message);
+  const handleSelect = (index) => setSelected(index);
+
+  const handleNext = () => {
+    const isCorrect = selected === question.correctIndex;
+    const newScore = isCorrect ? score + 1 : score;
+    setScore(newScore);
+
+    if (isLast) {
+      setCompleted(true);
+      const percentage = Math.round((newScore / questions.length) * 100);
+      if (percentage >= 70) {
+        setCelebrating(true);
+        playSuccessSound();
+      }
+    } else {
+      setCurrentQ(currentQ + 1);
+      setSelected(null);
+    }
   };
 
-  const updateProgress = () => {
-    const items = document.querySelectorAll('[data-scroll-section-id="pillar5"] input[data-progress="true"]');
-    const total = items.length;
-    let done = 0;
-    items.forEach((el) => {
-      if ((el.type === 'checkbox' || el.type === 'radio') && el.checked) done += 1;
-    });
-    const pct = total ? Math.round((done / total) * 100) : 0;
-    setProgress({ done, total, pct });
+  const handleRestart = () => {
+    setCurrentQ(0);
+    setSelected(null);
+    setScore(0);
+    setCompleted(false);
+    setCelebrating(false);
   };
 
   useEffect(() => {
-    updateProgress();
-    const handleChange = (e) => {
-      if (e.target?.matches('input[data-progress="true"]')) {
-        updateProgress();
-      }
-    };
-    document.addEventListener('change', handleChange);
-    return () => document.removeEventListener('change', handleChange);
-  }, []);
+    if (celebrating && counterRef.current) {
+      const percentage = Math.round((score / questions.length) * 100);
+      const tl = gsap.timeline();
+      counterRef.current.classList.remove('celebrate');
+      tl.set(counterRef.current, { opacity: 1 })
+        .fromTo(counterRef.current,
+          { innerText: 0, "--font-variation-weight": 300, scale: 0.8 },
+          {
+            innerText: percentage, duration: 3, snap: { innerText: 1 }, ease: "linear",
+            onUpdate: function () { const val = Math.ceil(this.targets()[0].innerText); counterRef.current.innerHTML = val + "%"; },
+            onComplete: () => {
+              counterRef.current.classList.add('celebrate');
+              const colors = ['#fbda61', '#ff5acd'];
+              const runConfetti = confettiModule.default || confettiModule;
+              if (typeof runConfetti === 'function') {
+                runConfetti({ particleCount: 150, spread: 100, origin: { y: 0.8 }, colors: colors, disableForReducedMotion: true });
+              }
+              setTimeout(() => setCelebrating(false), 3000);
+            }
+          }
+        )
+        .to(counterRef.current, { scale: 1, "--font-variation-weight": 600, duration: 1.2, ease: "elastic.out(1, 0.2)" });
+      return () => { if (counterRef.current) counterRef.current.classList.remove('celebrate'); };
+    }
+  }, [celebrating, score, questions.length]);
 
-  // Scroll isolation for article pane
-  useEffect(() => {
-    const el = articleRef.current;
-    if (!el) return undefined;
+  if (celebrating) {
+    return (
+      <div style={{ marginTop: '3rem', padding: '3rem 2rem', borderRadius: '32px', background: 'rgba(255, 255, 255, 0.95)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255, 255, 255, 0.6)', boxShadow: '0 20px 50px -10px rgba(31, 38, 135, 0.15)', position: 'relative', overflow: 'hidden', minHeight: '400px', display: 'grid', placeItems: 'center', fontFamily: '"Roboto Flex", sans-serif' }}>
+        <div style={{ textAlign: 'center', width: '100%' }}><h1 ref={counterRef} className="counter">0%</h1></div>
+      </div>
+    );
+  }
 
-    const handleWheel = (event) => {
-      const { scrollTop, scrollHeight, clientHeight } = el;
-      const isScrollingDown = event.deltaY > 0;
-      const isScrollingUp = event.deltaY < 0;
-      const isAtTop = scrollTop === 0;
-      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
-
-      if ((isScrollingDown && !isAtBottom) || (isScrollingUp && !isAtTop)) {
-        event.stopPropagation();
-      }
-    };
-
-    const handleMouseEnter = () => {
-      document.body.style.overflow = 'hidden';
-    };
-
-    const handleMouseLeave = () => {
-      document.body.style.overflow = '';
-    };
-
-    el.addEventListener('wheel', handleWheel, { passive: true });
-    el.addEventListener('mouseenter', handleMouseEnter);
-    el.addEventListener('mouseleave', handleMouseLeave);
-
-    return () => {
-      el.removeEventListener('wheel', handleWheel);
-      el.removeEventListener('mouseenter', handleMouseEnter);
-      el.removeEventListener('mouseleave', handleMouseLeave);
-      document.body.style.overflow = '';
-    };
-  }, []);
-
-  // Scroll isolation for navigation pane
-  useEffect(() => {
-    const el = navRef.current;
-    if (!el) return undefined;
-
-    const handleWheel = (event) => {
-      const { scrollTop, scrollHeight, clientHeight } = el;
-      const isScrollingDown = event.deltaY > 0;
-      const isScrollingUp = event.deltaY < 0;
-      const isAtTop = scrollTop === 0;
-      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
-
-      if ((isScrollingDown && !isAtBottom) || (isScrollingUp && !isAtTop)) {
-        event.stopPropagation();
-      }
-    };
-
-    const handleMouseEnter = () => {
-      document.body.style.overflow = 'hidden';
-    };
-
-    const handleMouseLeave = () => {
-      document.body.style.overflow = '';
-    };
-
-    el.addEventListener('wheel', handleWheel, { passive: true });
-    el.addEventListener('mouseenter', handleMouseEnter);
-    el.addEventListener('mouseleave', handleMouseLeave);
-
-    return () => {
-      el.removeEventListener('wheel', handleWheel);
-      el.removeEventListener('mouseenter', handleMouseEnter);
-      el.removeEventListener('mouseleave', handleMouseLeave);
-      document.body.style.overflow = '';
-    };
-  }, []);
-
-  return (
-    <div data-scroll-section-id="pillar5">
-      <div className="blueprint-heading reveal-text">
-        <div className="expand-label">CapeWeb University</div>
-        <h2 className="expand-title-section" style={{ marginBottom: '1rem' }}>
-          Pillar 5: Search Engine Optimization — own organic demand across South Africa.
-        </h2>
-        <p className="expand-text-lg" style={{ maxWidth: '920px' }}>
-          SEO is how your business gets customers from Google without paying for every click.
-          CapeWeb's approach is <strong>"SEO that sticks"</strong>: technical foundations + fast pages + content systems — so your traffic compounds.
-          This pillar is beginner-friendly, practical, and built for getting to your <strong>first 100 sales</strong> while laying long-term growth foundations.
-        </p>
-
-        <div style={{ marginTop: '1rem', padding: '1rem', border: '1px solid #e9ecef', borderRadius: '10px', background: '#f8f9fa', maxWidth: '980px' }}>
-          <strong>What CapeWeb does differently (why you'll win):</strong>
-          <ul style={{ margin: '.75rem 0 0 1.25rem' }}>
-            <li><strong>Structured &amp; Fast:</strong> clean site structure, Core Web Vitals thinking, fewer "SEO plugins", more real performance.</li>
-            <li><strong>Technical SEO &amp; schema:</strong> indexability, sitemaps, canonical tags, structured data (when it matters).</li>
-            <li><strong>Content briefs &amp; outlines:</strong> you won't stare at a blank page — you'll follow a system.</li>
-            <li><strong>Internal linking &amp; sitemaps:</strong> content that supports each other, not random blog posts.</li>
-            <li><strong>Local &amp; international SEO:</strong> Cape Town visibility first, then scale.</li>
-          </ul>
-          <div style={{ marginTop: '.85rem' }}>
-            <a
-              href="/contact"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ display: 'inline-block', padding: '.65rem 1rem', borderRadius: '8px', background: '#0b0f1a', color: '#fff', textDecoration: 'none', fontWeight: 900 }}
-            >
-              Talk to CapeWeb about an SEO Foundations Pack →
-            </a>
-          </div>
+  if (completed) {
+    const percentage = Math.round((score / questions.length) * 100);
+    const passed = percentage >= 70;
+    return (
+      <div style={{ marginTop: '3rem', padding: '2rem', textAlign: 'center', borderRadius: '24px', background: passed ? 'rgba(209, 250, 229, 0.8)' : 'rgba(254, 226, 226, 0.8)', backdropFilter: 'blur(20px)', border: passed ? '3px solid rgba(16, 185, 129, 0.3)' : '3px solid rgba(239, 68, 68, 0.3)', boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)' }}>
+        <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>{passed ? '🎉' : '📚'}</div>
+        <h3 style={{ fontSize: '2rem', color: passed ? '#065F46' : '#991B1B', marginBottom: '1rem' }}>{passed ? 'Great Job!' : 'Keep Learning!'}</h3>
+        <p style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.5rem', color: '#1F2937' }}>You scored {score} out of {questions.length} ({percentage}%)</p>
+        <p style={{ color: '#4B5563', marginBottom: '2rem', fontSize: '1.1rem' }}>{passed ? 'You are ready for the next module.' : 'Review the content and try again.'}</p>
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1.5rem', flexWrap: 'wrap' }}>
+          <CWButton onClick={handleRestart} variant={passed ? "secondary" : "primary"} style={{ opacity: passed ? 0.9 : 1 }}>{passed ? '↺ Retake Quiz' : '↺ Try Again'}</CWButton>
+          {passed && onNext && <CWButton onClick={onNext} variant="primary">Next Module →</CWButton>}
         </div>
       </div>
+    );
+  }
 
-      <div className="learn-capeweb-layout">
-        <div className="learn-capeweb-toc-wrapper">
-          <aside className="learn-capeweb-toc">
-            <section className="learn-capeweb-controls">
-              <div className="search-bar-wrapper">
-                <input
-                  id="capeweb-search-p5"
-                  type="text"
-                  placeholder="🔍 Search CapeWeb topics..."
-                  className="learn-capeweb-search"
-                  aria-label="Search CapeWeb blueprint content"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-              <p className="search-hint">Browse by pillar or type what you want to learn.</p>
-
-              <div style={{ marginTop: '.75rem', padding: '.75rem', border: '1px solid #e9ecef', borderRadius: '10px', background: '#fff' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '.75rem' }}>
-                  <strong>SEO Passport</strong>
-                  <span style={{ fontSize: '.9rem', color: '#6c757d' }}>
-                    {progress.pct}% complete
-                  </span>
-                </div>
-                <div style={{ marginTop: '.5rem', height: '10px', background: '#e9ecef', borderRadius: '999px', overflow: 'hidden' }}>
-                  <div style={{ height: '10px', width: `${progress.pct}%`, background: '#0b0f1a' }}></div>
-                </div>
-                <p style={{ margin: '.5rem 0 0', fontSize: '.9rem', color: '#6c757d' }}>
-                  Tick checkboxes + activities to track mastery.
-                </p>
-              </div>
-
-              <div style={{ marginTop: '.75rem', padding: '.75rem', border: '1px solid #e9ecef', borderRadius: '10px', background: '#fff' }}>
-                <strong>Quick links (open in new tab)</strong>
-                <ul style={{ margin: '.6rem 0 0 1.25rem' }}>
-                  <li><a href="https://developers.google.com/search/docs/fundamentals/seo-starter-guide" target="_blank" rel="noopener noreferrer">Google SEO Starter Guide</a></li>
-                  <li><a href="https://search.google.com/search-console/about" target="_blank" rel="noopener noreferrer">Google Search Console</a></li>
-                  <li><a href="https://pagespeed.web.dev/" target="_blank" rel="noopener noreferrer">PageSpeed Insights</a></li>
-                  <li><a href="https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data" target="_blank" rel="noopener noreferrer">Structured data intro</a></li>
-                  <li><a href="https://www.google.com/business/" target="_blank" rel="noopener noreferrer">Google Business Profile (Local)</a></li>
-                </ul>
-              </div>
-            </section>
-
-            <nav className="learn-capeweb-nav" aria-label="CapeWeb Blueprint Navigation" ref={navRef}>
-              <div className="pillar-modules">
-                <button type="button" className="pillar-module is-active" aria-current="true">
-                  <div className="module-pill">Pillar 5</div>
-                  <div>
-                    <div className="module-title">SEO that Sticks</div>
-                    <p>Technical foundations, local SEO, content systems, and measurement that compound.</p>
-                  </div>
-                </button>
-              </div>
-            </nav>
-          </aside>
+  return (
+    <div style={{ marginTop: '3rem', padding: '2rem 2rem', borderRadius: '32px', background: 'rgba(255, 255, 255, 0.85)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255, 255, 255, 0.6)', boxShadow: '0 20px 50px -10px rgba(31, 38, 135, 0.15)', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(120deg, rgba(34,211,238,0.15), rgba(244,114,182,0.15), rgba(253,224,71,0.15), rgba(34,211,238,0.15))', backgroundSize: '300% 300%', animation: 'gradientMove 15s ease infinite', zIndex: -1, pointerEvents: 'none' }} />
+      <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ background: '#E0F2FE', color: '#0284C7', padding: '0.3rem 0.8rem', borderRadius: '100px', fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Assessment</div>
+        <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#64748B' }}>Question {currentQ + 1} of {questions.length}</span>
+      </div>
+      <h4 style={{ margin: '0 0 1.5rem 0', fontSize: '2rem', fontWeight: 900, color: '#0F172A', letterSpacing: '-0.02em', lineHeight: 1.1 }}>{title}</h4>
+      <div style={{ marginBottom: '2rem' }}>
+        <p style={{ fontSize: '1.2rem', fontWeight: 600, marginBottom: '1.5rem', color: '#1E293B', lineHeight: 1.5 }}>{question.question}</p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          {question.options.map((option, index) => (
+            <label key={index} style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem 1.25rem', borderRadius: '16px', border: '2px solid', borderColor: selected === index ? '#0EA5E9' : '#E2E8F0', background: selected === index ? '#F0F9FF' : '#FFFFFF', cursor: 'pointer', transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)', boxShadow: selected === index ? '0 4px 20px rgba(14, 165, 233, 0.15)' : '0 2px 4px rgba(0,0,0,0.02)' }} onClick={() => handleSelect(index)}>
+              <div style={{ width: '22px', height: '22px', borderRadius: '50%', border: selected === index ? '6px solid #0EA5E9' : '2px solid #CBD5E1', flexShrink: 0, transition: 'all 0.2s ease' }} />
+              <span style={{ flex: 1, fontSize: '1.05rem', color: selected === index ? '#0C4A6E' : '#334155', fontWeight: 500 }}>{option}</span>
+            </label>
+          ))}
         </div>
-
-        <div className="learn-capeweb-article-pane">
-          <div className="learn-capeweb-article" ref={articleRef}>
-            <Pillar5Content
-              snippetTitle={snippetTitle}
-              setSnippetTitle={setSnippetTitle}
-              snippetDesc={snippetDesc}
-              setSnippetDesc={setSnippetDesc}
-            />
-            <Pillar5Quiz quizResponses={quizResponses} onSelect={handleQuizResponse} onScore={handleScore} scoreMessage={scoreMessage} />
-            <Pillar5Completion />
-          </div>
-        </div>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <button onClick={handleNext} disabled={selected === null} style={{ padding: '0.75rem 2rem', background: '#0F172A', color: 'white', border: 'none', borderRadius: '100px', fontSize: '1rem', fontWeight: 700, cursor: selected === null ? 'not-allowed' : 'pointer', opacity: selected === null ? 0.5 : 1, transition: 'all 0.2s ease', boxShadow: '0 4px 12px rgba(15, 23, 42, 0.2)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          {isLast ? 'Finish Quiz' : 'Next Question'}<span>→</span>
+        </button>
       </div>
     </div>
   );
 }
 
-export function Pillar5Content({ snippetTitle, setSnippetTitle, snippetDesc, setSnippetDesc }) {
+// ==========================================
+// INTERACTIVE VISUALS
+// ==========================================
+
+// Interactive: Long Tail Simulator
+function LongTailSimulator() {
+  const [credits, setCredits] = useState(100);
+  const [ranking, setRanking] = useState(null); // { term: string, chance: number, cost: number, success: boolean }
+  const [history, setHistory] = useState([]);
+
+  const keywords = [
+    { term: "Insurance", cost: 90, chance: 1, label: "Head Term (Fatal)" },
+    { term: "Car Insurance", cost: 60, chance: 5, label: "Head Term (Hard)" },
+    { term: "Car Insurance for Students", cost: 20, chance: 40, label: "Medium Tail" },
+    { term: "Affordable insurance for 18 year old drivers in Cape Town", cost: 5, chance: 95, label: "Long Tail (Winning)" }
+  ];
+
+  const handleBid = (k) => {
+    if (credits < k.cost) return;
+
+    const success = Math.random() * 100 < k.chance;
+    const result = { ...k, success };
+
+    setRanking(result);
+    setCredits(prev => prev - k.cost);
+    setHistory(prev => [result, ...prev].slice(0, 3));
+  };
+
   return (
-    <>
-      <div className="article-eyebrow">Pillar 5 · Search Engine Optimization</div>
-      <h1>SEO that Sticks (CapeWeb Method)</h1>
-
-      <p className="article-summary">
-        <strong>Objective:</strong> You'll learn SEO from zero to confident:
-        how search engines work, how to choose keywords, how to structure pages, how to do local SEO in Cape Town,
-        how to publish content that ranks, and how to measure what leads to sales.
-        You'll finish with a practical <strong>SEO Passport</strong> and a "first 100 sales" SEO plan.
-      </p>
-
-      <div className="article-divider"></div>
-
-      {/* Section 1: SEO in plain English */}
-      <div className="mastery-section" data-topic="seo basics crawl index rank google how it works">
-        <h3>1) SEO in plain English: how Google finds you</h3>
-        <p>
-          SEO is not magic. It's a system.
-          Search engines: <strong>discover</strong> pages, <strong>crawl</strong> them, <strong>index</strong> them, and then <strong>rank</strong> them.
-          Your job is to make this easy — and to be the best answer for your customer.
-        </p>
-
-        <SEOPipelineDiagram />
-
-        <div className="workbook-section" style={{ backgroundColor: '#f8f9fa', border: '1px solid #e9ecef', padding: '1.5rem', borderRadius: '10px', margin: '1.5rem 0' }}>
-          <h4>🧭 Mission 1: Create your SEO "home base" accounts</h4>
-          <p>These are free and they make your SEO real (not guessing).</p>
-          <ul style={{ margin: '.75rem 0 0 1.25rem' }}>
-            <li>
-              <label><input data-progress="true" type="checkbox" /> Create / access Google Search Console</label>
-              — <a href="https://search.google.com/search-console/about" target="_blank" rel="noopener noreferrer">Open Search Console</a>
-            </li>
-            <li>
-              <label><input data-progress="true" type="checkbox" /> Create / access Google Analytics (GA4)</label>
-              — <a href="https://support.google.com/analytics/answer/9304153?hl=en" target="_blank" rel="noopener noreferrer">GA4 setup guide</a>
-            </li>
-            <li>
-              <label><input data-progress="true" type="checkbox" /> Run a PageSpeed test on your main page</label>
-              — <a href="https://pagespeed.web.dev/" target="_blank" rel="noopener noreferrer">PageSpeed Insights</a>
-            </li>
-          </ul>
-
-          <div style={{ marginTop: '1rem', background: '#e7f1ff', padding: '1rem', borderRadius: '8px', border: '1px solid #cfe2ff' }}>
-            <strong>🔧 CapeWeb shortcut:</strong> CapeWeb can connect Search Console + GA4 + conversion tracking properly (no messy duplication),
-            and set up a clean measurement baseline.
-          </div>
+    <div style={{ margin: '3rem 0', padding: '2rem', background: '#0F172A', borderRadius: '24px', color: 'white' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem', alignItems: 'center' }}>
+        <h3 style={{ margin: 0 }}>Interactive: The Keyword War</h3>
+        <div style={{ background: '#1E293B', padding: '0.5rem 1rem', borderRadius: '100px', border: '1px solid #334155' }}>
+          Credits: <span style={{ color: '#F59E0B', fontWeight: 800 }}>{credits}</span>
         </div>
       </div>
 
-      {/* Section 2: Keywords & Search Intent */}
-      <div className="mastery-section" data-topic="keywords search intent cape town local sa keyword research">
-        <h3>2) Keywords &amp; Search Intent (the "customer mind-reading" skill)</h3>
-        <p>
-          A keyword is what a person types into Google.
-          Search intent is what they <strong>really want</strong>.
-          If your page matches intent, you win.
-        </p>
-
-        <div style={{ padding: '1rem', border: '1px solid #e9ecef', borderRadius: '10px', background: '#fff' }}>
-          <strong>4 types of intent (simple):</strong>
-          <ul style={{ margin: '.75rem 0 0 1.25rem' }}>
-            <li><strong>Learn:</strong> "how to…" "what is…"</li>
-            <li><strong>Compare:</strong> "best…" "vs…" "price…"</li>
-            <li><strong>Buy/Book:</strong> "buy…" "near me" "quote"</li>
-            <li><strong>Navigate:</strong> "CapeWeb contact" "brand name + login"</li>
-          </ul>
-        </div>
-
-        <div className="workbook-section" style={{ backgroundColor: '#f8f9fa', border: '1px solid #e9ecef', padding: '1.5rem', borderRadius: '10px', margin: '1.5rem 0' }}>
-          <h4>🎯 Mission 2: Intent Match Game</h4>
-          <p>Pick the best page type for each search.</p>
-
-          <div className="quiz-question">
-            <p><strong>1)</strong> "website designer Cape Town price" should lead to:</p>
-            <div className="quiz-options">
-              <label><input type="radio" name="p5_intent_1" /> A long history page</label><br />
-              <label><input type="radio" name="p5_intent_1" /> A blog about "what is a website"</label><br />
-              <label><input type="radio" name="p5_intent_1" data-progress="true" /> A services/pricing page (with clear packages)</label>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
+        {keywords.map(k => (
+          <button
+            key={k.term}
+            onClick={() => handleBid(k)}
+            disabled={credits < k.cost}
+            style={{
+              padding: '1.25rem',
+              background: '#1E293B',
+              border: '2px solid #334155',
+              borderRadius: '16px',
+              color: 'white',
+              cursor: credits < k.cost ? 'not-allowed' : 'pointer',
+              opacity: credits < k.cost ? 0.5 : 1,
+              textAlign: 'left',
+              transition: 'all 0.2s'
+            }}
+          >
+            <div style={{ fontSize: '0.75rem', color: '#94A3B8', marginBottom: '0.25rem' }}>{k.label}</div>
+            <div style={{ fontWeight: 700, marginBottom: '0.5rem' }}>"{k.term}"</div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
+              <span>Cost: {k.cost}</span>
+              <span style={{ color: '#10B981' }}>Win: {k.chance}%</span>
             </div>
-            <details style={{ marginTop: '1rem', cursor: 'pointer' }}>
-              <summary style={{ color: '#0066cc', fontWeight: 900 }}>Check Answer</summary>
-              <div style={{ marginTop: '.5rem', paddingLeft: '1rem', borderLeft: '3px solid #0066cc' }}>
-                <p><strong>Correct:</strong> services/pricing page. That person wants to compare and decide.</p>
-              </div>
-            </details>
-          </div>
-
-          <hr style={{ border: 'none', borderTop: '1px solid #e9ecef', margin: '1rem 0' }} />
-
-          <div className="quiz-question">
-            <p><strong>2)</strong> "how to choose a payment gateway in South Africa" should lead to:</p>
-            <div className="quiz-options">
-              <label><input type="radio" name="p5_intent_2" data-progress="true" /> A helpful guide article (with next steps)</label><br />
-              <label><input type="radio" name="p5_intent_2" /> A checkout page</label><br />
-              <label><input type="radio" name="p5_intent_2" /> A blank page</label>
-            </div>
-            <details style={{ marginTop: '1rem', cursor: 'pointer' }}>
-              <summary style={{ color: '#0066cc', fontWeight: 900 }}>Check Answer</summary>
-              <div style={{ marginTop: '.5rem', paddingLeft: '1rem', borderLeft: '3px solid #0066cc' }}>
-                <p><strong>Correct:</strong> a guide. That person is learning before buying.</p>
-              </div>
-            </details>
-          </div>
-
-          <div style={{ marginTop: '1rem', background: '#e6f4ea', padding: '1rem', borderRadius: '8px', color: '#1e7e34' }}>
-            <strong>✅ CapeWeb rule:</strong> don't force "Buy Now" intent onto a "Learn" search. Build the right page for the right moment.
-          </div>
-        </div>
-
-        <div style={{ padding: '1rem', border: '1px solid #e9ecef', borderRadius: '10px', background: '#fff' }}>
-          <strong>Free keyword tools (beginner-friendly):</strong>
-          <ul style={{ margin: '.75rem 0 0 1.25rem' }}>
-            <li><a href="https://trends.google.com/trends/" target="_blank" rel="noopener noreferrer">Google Trends</a> (see interest over time)</li>
-            <li><a href="https://ads.google.com/home/tools/keyword-planner/" target="_blank" rel="noopener noreferrer">Keyword Planner</a> (requires Google Ads account)</li>
-            <li><a href="https://support.google.com/websearch/answer/106230?hl=en" target="_blank" rel="noopener noreferrer">Google autocomplete tips</a> (use suggestions as real-language clues)</li>
-          </ul>
-          <small style={{ color: '#6c757d' }}>CapeWeb can turn your keyword list into a content plan + landing pages that convert.</small>
-        </div>
+          </button>
+        ))}
       </div>
 
-      {/* Section 3: On-page SEO */}
-      <div className="mastery-section" data-topic="on page seo title tags meta description h1 headings internal links images">
-        <h3>3) On-page SEO: make one page the best answer</h3>
-        <p>
-          On-page SEO is the stuff you control on the page:
-          your title, headings, content structure, images, and internal links.
-          CapeWeb focuses on clarity first — because clarity converts.
-        </p>
-
-        <OnPageAnatomyDiagram />
-
-        <div className="workbook-section" style={{ backgroundColor: '#f8f9fa', border: '1px solid #e9ecef', padding: '1.5rem', borderRadius: '10px', margin: '1.5rem 0' }}>
-          <h4>🧪 Activity: Snippet Simulator (title + description)</h4>
-          <p>Write a title + description that makes a human want to click.</p>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            <div style={{ background: '#fff', border: '1px solid #e9ecef', borderRadius: '10px', padding: '1rem' }}>
-              <label style={{ fontWeight: 900, display: 'block' }}>Title (aim for clarity)</label>
-              <input
-                type="text"
-                placeholder="Example: Website Design in Cape Town | Fast, Conversion-Ready Builds"
-                value={snippetTitle}
-                onChange={(e) => setSnippetTitle(e.target.value)}
-                style={{ width: '100%', marginTop: '.5rem', padding: '.6rem', border: '1px solid #ced4da', borderRadius: '6px' }}
-              />
-              <label style={{ marginTop: '.75rem', fontWeight: 900, display: 'block' }}>Meta Description (promise + proof + next step)</label>
-              <textarea
-                rows="4"
-                placeholder="Example: Get a fast website that turns visitors into customers. Transparent packages, quick turnarounds. Book a call today."
-                value={snippetDesc}
-                onChange={(e) => setSnippetDesc(e.target.value)}
-                style={{ width: '100%', marginTop: '.5rem', padding: '.6rem', border: '1px solid #ced4da', borderRadius: '6px' }}
-              ></textarea>
-              <label style={{ marginTop: '.75rem' }}>
-                <input data-progress="true" type="checkbox" /> I wrote a title + description for 1 page
-              </label>
-            </div>
-
-            <div style={{ background: '#fff', border: '1px solid #e9ecef', borderRadius: '10px', padding: '1rem' }}>
-              <strong>Preview</strong>
-              <div style={{ marginTop: '.75rem', padding: '1rem', border: '1px solid #e9ecef', borderRadius: '10px', background: '#fff' }}>
-                <div style={{ fontWeight: 900, color: '#1a0dab', fontSize: '1.05rem' }}>
-                  {snippetTitle || 'Your Title Appears Here'}
-                </div>
-                <div style={{ color: '#006621', fontSize: '.9rem' }}>yourdomain.co.za › page</div>
-                <div style={{ color: '#545454', marginTop: '.35rem' }}>
-                  {snippetDesc || 'Your description appears here.'}
-                </div>
-              </div>
-
-              <details style={{ marginTop: '1rem', cursor: 'pointer' }}>
-                <summary style={{ color: '#0066cc', fontWeight: 900 }}>CapeWeb checklist for a good snippet</summary>
-                <div style={{ marginTop: '.5rem', paddingLeft: '1rem', borderLeft: '3px solid #0066cc' }}>
-                  <ul style={{ margin: '.5rem 0 0 1.25rem' }}>
-                    <li>Clear topic (no clever mystery)</li>
-                    <li>Location only when relevant (Cape Town / South Africa)</li>
-                    <li>Small proof (fast, reviews, "from" pricing)</li>
-                    <li>Next step (book, buy, WhatsApp)</li>
-                  </ul>
-                </div>
-              </details>
-            </div>
-          </div>
-
-          <div style={{ marginTop: '1rem', background: '#e6f4ea', padding: '1rem', borderRadius: '8px', color: '#1e7e34' }}>
-            <strong>✅ CapeWeb offer:</strong> CapeWeb can rewrite your top pages for conversion-first SEO (clear + fast + structured).
-            <a href="/contact" target="_blank" rel="noopener noreferrer" style={{ color: '#1e7e34', fontWeight: 900, textDecoration: 'underline' }}>Open CapeWeb →</a>
-          </div>
-        </div>
-      </div>
-
-      {/* Section 4: Technical SEO */}
-      <div className="mastery-section" data-topic="technical seo sitemap robots canonical schema core web vitals structured data">
-        <h3>4) Technical SEO (the foundation that makes ranking possible)</h3>
-        <p>
-          Technical SEO is about making your website easy for search engines to understand:
-          clean structure, fast pages, proper indexing, and correct signals (like canonical tags).
-          CapeWeb focuses on technical SEO because it prevents invisible problems.
-        </p>
-
-        <div className="comparison-table-wrapper">
-          <table className="capeweb-table" style={{ width: '100%', borderCollapse: 'collapse', margin: '1rem 0' }}>
-            <thead>
-              <tr style={{ background: '#f8f9fa', borderBottom: '2px solid #0b0f1a' }}>
-                <th style={{ padding: '.75rem', textAlign: 'left', borderRight: '1px solid #e9ecef' }}>Thing</th>
-                <th style={{ padding: '.75rem', textAlign: 'left', borderRight: '1px solid #e9ecef' }}>Why it matters</th>
-                <th style={{ padding: '.75rem', textAlign: 'left' }}>Where to learn / test</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr style={{ borderBottom: '1px solid #e9ecef' }}>
-                <td style={{ padding: '.75rem', borderRight: '1px solid #e9ecef' }}>Search Console</td>
-                <td style={{ padding: '.75rem', borderRight: '1px solid #e9ecef' }}>Shows indexing, errors, and what queries bring traffic</td>
-                <td style={{ padding: '.75rem' }}><a href="https://search.google.com/search-console/about" target="_blank" rel="noopener noreferrer">Search Console</a></td>
-              </tr>
-              <tr style={{ borderBottom: '1px solid #e9ecef' }}>
-                <td style={{ padding: '.75rem', borderRight: '1px solid #e9ecef' }}>Page speed (Core Web Vitals thinking)</td>
-                <td style={{ padding: '.75rem', borderRight: '1px solid #e9ecef' }}>Speed impacts UX and conversions</td>
-                <td style={{ padding: '.75rem' }}><a href="https://pagespeed.web.dev/" target="_blank" rel="noopener noreferrer">PageSpeed Insights</a></td>
-              </tr>
-              <tr style={{ borderBottom: '1px solid #e9ecef' }}>
-                <td style={{ padding: '.75rem', borderRight: '1px solid #e9ecef' }}>Sitemaps</td>
-                <td style={{ padding: '.75rem', borderRight: '1px solid #e9ecef' }}>Helps discovery for important pages</td>
-                <td style={{ padding: '.75rem' }}><a href="https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview" target="_blank" rel="noopener noreferrer">Sitemaps overview</a></td>
-              </tr>
-              <tr style={{ borderBottom: '1px solid #e9ecef' }}>
-                <td style={{ padding: '.75rem', borderRight: '1px solid #e9ecef' }}>Robots.txt</td>
-                <td style={{ padding: '.75rem', borderRight: '1px solid #e9ecef' }}>Controls crawling (easy to break SEO if wrong)</td>
-                <td style={{ padding: '.75rem' }}><a href="https://developers.google.com/search/docs/crawling-indexing/robots/intro" target="_blank" rel="noopener noreferrer">Robots.txt intro</a></td>
-              </tr>
-              <tr>
-                <td style={{ padding: '.75rem', borderRight: '1px solid #e9ecef' }}>Structured data (schema)</td>
-                <td style={{ padding: '.75rem', borderRight: '1px solid #e9ecef' }}>Helps search engines understand details; can enable rich results</td>
-                <td style={{ padding: '.75rem' }}>
-                  <a href="https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data" target="_blank" rel="noopener noreferrer">Structured data intro</a> ·
-                  <a href="https://search.google.com/test/rich-results" target="_blank" rel="noopener noreferrer">Rich Results Test</a> ·
-                  <a href="https://schema.org/" target="_blank" rel="noopener noreferrer">Schema.org</a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div className="workbook-section" style={{ backgroundColor: '#f8f9fa', border: '1px solid #e9ecef', padding: '1.5rem', borderRadius: '10px', margin: '1.5rem 0' }}>
-          <h4>🧰 Mission 3: The CapeWeb Technical SEO Checklist (beginner version)</h4>
-          <p>Tick what you can do today. This is "SEO that sticks."</p>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            <div style={{ background: '#fff', border: '1px solid #e9ecef', borderRadius: '10px', padding: '1rem' }}>
-              <strong>Indexing foundations</strong>
-              <ul style={{ margin: '.75rem 0 0 1.25rem' }}>
-                <li><label><input data-progress="true" type="checkbox" /> My site is accessible (not password-blocked)</label></li>
-                <li><label><input data-progress="true" type="checkbox" /> I can open my site on mobile with no layout issues</label></li>
-                <li><label><input data-progress="true" type="checkbox" /> I submitted a sitemap (or I know where it is)</label></li>
-                <li><label><input data-progress="true" type="checkbox" /> I checked Search Console for obvious errors</label></li>
-              </ul>
-            </div>
-
-            <div style={{ background: '#fff', border: '1px solid #e9ecef', borderRadius: '10px', padding: '1rem' }}>
-              <strong>Performance foundations</strong>
-              <ul style={{ margin: '.75rem 0 0 1.25rem' }}>
-                <li><label><input data-progress="true" type="checkbox" /> Images are compressed before upload</label></li>
-                <li><label><input data-progress="true" type="checkbox" /> I don't load 6 different fonts</label></li>
-                <li><label><input data-progress="true" type="checkbox" /> I removed heavy scripts I don't need</label></li>
-                <li><label><input data-progress="true" type="checkbox" /> I ran a PageSpeed test and noted my score</label></li>
-              </ul>
-            </div>
-          </div>
-
-          <div style={{ marginTop: '1rem', background: '#e7f1ff', padding: '1rem', borderRadius: '8px', border: '1px solid #cfe2ff' }}>
-            <strong>🔧 CapeWeb power move:</strong> technical SEO + speed is where most DIY SEO fails.
-            CapeWeb fixes the foundations so your content actually has a chance to rank.
-          </div>
-        </div>
-      </div>
-
-      {/* Section 5: Local SEO */}
-      <div className="mastery-section" data-topic="local seo google business profile cape town reviews map pack nap citations">
-        <h3>5) Local SEO (Cape Town): show up when people search "near me"</h3>
-        <p>
-          Local SEO is the fastest path to high-intent customers — because they already want a solution nearby.
-          The core asset is your <strong>Google Business Profile</strong> (GBP).
-        </p>
-
-        <LocalSEODiagram />
-
-        <div className="workbook-section" style={{ backgroundColor: '#f8f9fa', border: '1px solid #e9ecef', padding: '1.5rem', borderRadius: '10px', margin: '1.5rem 0' }}>
-          <h4>📍 Mission 4: Set up or improve your Google Business Profile</h4>
-          <p>This is a "registration" step that can produce leads faster than blogging.</p>
-
-          <ul style={{ margin: '.75rem 0 0 1.25rem' }}>
-            <li>
-              <label><input data-progress="true" type="checkbox" /> Create or claim your Google Business Profile</label>
-              — <a href="https://www.google.com/business/" target="_blank" rel="noopener noreferrer">Open Google Business Profile</a>
-            </li>
-            <li><label><input data-progress="true" type="checkbox" /> Add correct category + services</label></li>
-            <li><label><input data-progress="true" type="checkbox" /> Add photos (real ones beat stock)</label></li>
-            <li><label><input data-progress="true" type="checkbox" /> Create a simple review request message</label></li>
-          </ul>
-
-          <div style={{ marginTop: '1rem', background: '#fff', border: '1px solid #e9ecef', borderRadius: '10px', padding: '1rem' }}>
-            <strong>Copy/paste review request message:</strong>
-            <textarea
-              rows="4"
-              style={{ marginTop: '.5rem', width: '100%', padding: '.6rem', border: '1px solid #ced4da', borderRadius: '6px' }}
-              placeholder="Hi! Thanks for choosing us. If you were happy with the service/product, could you leave a quick Google review? It helps a small Cape Town business grow. Thank you!"
-            ></textarea>
-          </div>
-
-          <div style={{ marginTop: '1rem', background: '#e6f4ea', padding: '1rem', borderRadius: '8px', color: '#1e7e34' }}>
-            <strong>✅ CapeWeb upgrade:</strong> CapeWeb can optimize your GBP, build local landing pages, and connect local leads to automations (WhatsApp + email follow-up).
-          </div>
-        </div>
-      </div>
-
-      {/* Section 6: Content systems */}
-      <div className="mastery-section" data-topic="content strategy topic clusters internal linking seo briefs outlines content calendar">
-        <h3>6) Content systems: build "topic clusters" that compound</h3>
-        <p>
-          Random blog posts don't compound. Systems do.
-          A topic cluster is one main page (the big topic) + supporting pages (the smaller questions),
-          all linked together. This helps Google and humans understand what you do.
-        </p>
-
-        <TopicClusterDiagram />
-
-        <div className="workbook-section" style={{ backgroundColor: '#f8f9fa', border: '1px solid #e9ecef', padding: '1.5rem', borderRadius: '10px', margin: '1.5rem 0' }}>
-          <h4>🗓️ Mission 5: Build your first topic cluster (template)</h4>
-          <p>Write 1 pillar page + 3 supporting pages. Keep it beginner-simple.</p>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            <div>
-              <label style={{ fontWeight: 900, display: 'block', marginBottom: '.5rem' }}>Pillar page topic</label>
-              <input type="text" placeholder="Example: [Your service/product] in Cape Town" style={{ width: '100%', padding: '.6rem', border: '1px solid #ced4da', borderRadius: '6px' }} />
-              <label style={{ marginTop: '.75rem', fontWeight: 900, display: 'block' }}>Support page #1 (How to)</label>
-              <input type="text" placeholder="Example: How to choose a [thing] in South Africa" style={{ width: '100%', padding: '.6rem', border: '1px solid #ced4da', borderRadius: '6px' }} />
-            </div>
-
-            <div>
-              <label style={{ fontWeight: 900, display: 'block', marginBottom: '.5rem' }}>Support page #2 (Pricing / packages)</label>
-              <input type="text" placeholder="Example: [Service] pricing: what affects cost" style={{ width: '100%', padding: '.6rem', border: '1px solid #ced4da', borderRadius: '6px' }} />
-              <label style={{ marginTop: '.75rem', fontWeight: 900, display: 'block' }}>Support page #3 (Mistakes)</label>
-              <input type="text" placeholder="Example: Common mistakes when buying [thing]" style={{ width: '100%', padding: '.6rem', border: '1px solid #ced4da', borderRadius: '6px' }} />
-            </div>
-
-            <div style={{ gridColumn: 'span 2' }}>
-              <label style={{ fontWeight: 900, display: 'block', marginBottom: '.5rem' }}>Your CTA (one next step)</label>
-              <input type="text" placeholder="Example: WhatsApp for a quote / Book a call / Buy now" style={{ width: '100%', padding: '.6rem', border: '1px solid #ced4da', borderRadius: '6px' }} />
-              <label style={{ marginTop: '.75rem' }}>
-                <input data-progress="true" type="checkbox" /> I drafted my topic cluster (1 + 3 pages)
-              </label>
-            </div>
-          </div>
-
-          <div style={{ marginTop: '1rem', background: '#e6f4ea', padding: '1rem', borderRadius: '8px', color: '#1e7e34' }}>
-            <strong>✅ CapeWeb deliverable:</strong> CapeWeb can produce content briefs + outlines for your cluster so you publish faster (and better).
-          </div>
-        </div>
-
-        <div style={{ padding: '1rem', border: '1px solid #e9ecef', borderRadius: '10px', background: '#fff' }}>
-          <strong>Helpful reading:</strong>
-          <ul style={{ margin: '.75rem 0 0 1.25rem' }}>
-            <li><a href="https://developers.google.com/search/docs/fundamentals/creating-helpful-content" target="_blank" rel="noopener noreferrer">Create helpful, reliable, people-first content</a></li>
-            <li><a href="https://developers.google.com/search/docs/fundamentals/what-is-seo" target="_blank" rel="noopener noreferrer">What is SEO (Google)</a></li>
-          </ul>
-        </div>
-      </div>
-
-      {/* Section 7: Links & authority */}
-      <div className="mastery-section" data-topic="backlinks authority link building digital pr spam safe links partnerships">
-        <h3>7) Links &amp; authority (safe growth, not spam)</h3>
-        <p>
-          Links are like reputation signals. But buying spammy links can destroy trust.
-          CapeWeb uses "safe authority" methods: partnerships, real mentions, and useful resources.
-        </p>
-
-        <div className="workbook-section" style={{ backgroundColor: '#fff3cd', border: '1px solid #ffeeba', padding: '1.25rem', borderRadius: '10px', margin: '1.25rem 0', color: '#856404' }}>
-          <h4 style={{ marginTop: 0 }}>⚠️ SEO Safety Rule</h4>
-          <p style={{ margin: 0 }}>
-            Don't buy "1,000 backlinks for R199". That's how people get burned.
-            Build authority like a real business: real relationships + real value.
+      {ranking && (
+        <div style={{ padding: '1.5rem', background: ranking.success ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)', border: `2px solid ${ranking.success ? '#10B981' : '#EF4444'}`, borderRadius: '16px', textAlign: 'center', animation: 'fadeIn 0.3s' }}>
+          <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{ranking.success ? '🏆' : '💀'}</div>
+          <h4 style={{ margin: 0 }}>{ranking.success ? 'RANKED #1!' : 'Wasted Budget'}</h4>
+          <p style={{ margin: '0.5rem 0 0', color: '#CBD5E1' }}>
+            {ranking.success ? `You dominated the niche for "${ranking.term}".` : `Your R${ranking.cost} was eaten by giants.`}
           </p>
         </div>
+      )}
 
-        <div className="workbook-section" style={{ backgroundColor: '#f8f9fa', border: '1px solid #e9ecef', padding: '1.5rem', borderRadius: '10px', margin: '1.5rem 0' }}>
-          <h4>🤝 Mission 6: The "5 real links" plan (beginner version)</h4>
-          <p>Pick 5 sources that could realistically mention your business.</p>
-          <ol style={{ margin: '.75rem 0 0 1.25rem' }}>
-            <li><label><input data-progress="true" type="checkbox" /> 1 local community / directory relevant to your customers</label></li>
-            <li><label><input data-progress="true" type="checkbox" /> 1 partnership (supplier, collaborator, venue, school, coach)</label></li>
-            <li><label><input data-progress="true" type="checkbox" /> 1 client testimonial page (they link back)</label></li>
-            <li><label><input data-progress="true" type="checkbox" /> 1 guest contribution (real, helpful)</label></li>
-            <li><label><input data-progress="true" type="checkbox" /> 1 "resource" page you create (so people reference it)</label></li>
-          </ol>
-
-          <div style={{ marginTop: '1rem', background: '#e7f1ff', padding: '1rem', borderRadius: '8px', border: '1px solid #cfe2ff' }}>
-            <strong>🔧 CapeWeb upgrade:</strong> CapeWeb can help you build linkable assets (tools, guides, calculators, templates) that earn links naturally.
-          </div>
-        </div>
-      </div>
-
-      {/* Section 8: Measurement */}
-      <div className="mastery-section" data-topic="measurement seo reporting clicks impressions ctr conversions ga4 search console dashboard">
-        <h3>8) Measurement: stop guessing, start improving</h3>
-        <p>
-          SEO becomes fun when you can see what's working.
-          In Search Console you'll see <strong>queries</strong> (what people searched),
-          <strong>clicks</strong> (who came),
-          and <strong>impressions</strong> (how often you appeared).
-          In Analytics you'll see actions (leads, purchases, WhatsApp clicks).
-        </p>
-
-        <div className="comparison-table-wrapper">
-          <table className="capeweb-table" style={{ width: '100%', borderCollapse: 'collapse', margin: '1rem 0' }}>
-            <thead>
-              <tr style={{ background: '#f8f9fa', borderBottom: '2px solid #0b0f1a' }}>
-                <th style={{ padding: '.75rem', textAlign: 'left', borderRight: '1px solid #e9ecef' }}>Metric</th>
-                <th style={{ padding: '.75rem', textAlign: 'left', borderRight: '1px solid #e9ecef' }}>What it means</th>
-                <th style={{ padding: '.75rem', textAlign: 'left' }}>What you do with it</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr style={{ borderBottom: '1px solid #e9ecef' }}>
-                <td style={{ padding: '.75rem', borderRight: '1px solid #e9ecef' }}>Impressions</td>
-                <td style={{ padding: '.75rem', borderRight: '1px solid #e9ecef' }}>How often you appeared in search</td>
-                <td style={{ padding: '.75rem' }}>Growing? Good. Stuck? Improve relevance + content.</td>
-              </tr>
-              <tr style={{ borderBottom: '1px solid #e9ecef' }}>
-                <td style={{ padding: '.75rem', borderRight: '1px solid #e9ecef' }}>Clicks</td>
-                <td style={{ padding: '.75rem', borderRight: '1px solid #e9ecef' }}>How many people visited from search</td>
-                <td style={{ padding: '.75rem' }}>Low? Improve snippet + ranking + intent match.</td>
-              </tr>
-              <tr style={{ borderBottom: '1px solid #e9ecef' }}>
-                <td style={{ padding: '.75rem', borderRight: '1px solid #e9ecef' }}>CTR</td>
-                <td style={{ padding: '.75rem', borderRight: '1px solid #e9ecef' }}>Click-through rate (clicks ÷ impressions)</td>
-                <td style={{ padding: '.75rem' }}>Low? Rewrite title/description and strengthen trust.</td>
-              </tr>
-              <tr>
-                <td style={{ padding: '.75rem', borderRight: '1px solid #e9ecef' }}>Conversions</td>
-                <td style={{ padding: '.75rem', borderRight: '1px solid #e9ecef' }}>Leads/sales (WhatsApp clicks, forms, purchases)</td>
-                <td style={{ padding: '.75rem' }}>This is the real score. SEO exists to convert.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div className="workbook-section" style={{ backgroundColor: '#f8f9fa', border: '1px solid #e9ecef', padding: '1.5rem', borderRadius: '10px', margin: '1.5rem 0' }}>
-          <h4>📊 Mission 7: Set your "SEO Scoreboard"</h4>
-          <p>Pick 3 numbers you will check weekly (simple).</p>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            <div style={{ background: '#fff', border: '1px solid #e9ecef', borderRadius: '10px', padding: '1rem' }}>
-              <label style={{ fontWeight: 900, display: 'block' }}>Weekly #1</label>
-              <input type="text" placeholder="Example: Search clicks" style={{ width: '100%', marginTop: '.5rem', padding: '.6rem', border: '1px solid #ced4da', borderRadius: '6px' }} />
-              <label style={{ marginTop: '.75rem', fontWeight: 900, display: 'block' }}>Weekly #2</label>
-              <input type="text" placeholder="Example: WhatsApp CTA clicks" style={{ width: '100%', marginTop: '.5rem', padding: '.6rem', border: '1px solid #ced4da', borderRadius: '6px' }} />
-            </div>
-
-            <div style={{ background: '#fff', border: '1px solid #e9ecef', borderRadius: '10px', padding: '1rem' }}>
-              <label style={{ fontWeight: 900, display: 'block' }}>Weekly #3</label>
-              <input type="text" placeholder="Example: Form submissions / purchases" style={{ width: '100%', marginTop: '.5rem', padding: '.6rem', border: '1px solid #ced4da', borderRadius: '6px' }} />
-              <label style={{ marginTop: '.75rem' }}>
-                <input data-progress="true" type="checkbox" /> I chose my 3 SEO scoreboard metrics
-              </label>
-            </div>
-          </div>
-
-          <div style={{ marginTop: '1rem', background: '#e6f4ea', padding: '1rem', borderRadius: '8px', color: '#1e7e34' }}>
-            <strong>✅ CapeWeb Care Plan:</strong> Once your SEO is live, CapeWeb can run monthly iterations:
-            audit → improve → report → repeat.
-          </div>
-        </div>
-      </div>
-    </>
+      {credits <= 10 && !ranking?.success && (
+        <button onClick={() => { setCredits(100); setRanking(null); setHistory([]); }} style={{ marginTop: '1rem', background: 'transparent', border: 'none', color: '#3B82F6', textDecoration: 'underline', cursor: 'pointer', width: '100%' }}>Restart Simulation</button>
+      )}
+    </div>
   );
 }
 
-export function Pillar5Quiz({ quizResponses, onSelect, onScore, scoreMessage }) {
+// Interactive: Question Sieve (AI vs Human)
+function QuestionSieve() {
+  const questions = [
+    { q: "What is the capital of France?", type: "AI", explanation: "Factual, instant, AI dominates this." },
+    { q: "What does it feel like to fail a business?", type: "Human", explanation: "Emotional, lived experience. AI cannot fake this authentically yet." },
+    { q: "How to tie a tie?", type: "AI", explanation: "Procedural. SGE will show a video/diagram instantly." },
+    { q: "Is the Tesla Model 3 worth it in South Africa?", type: "Human", explanation: "Opinion, local nuance, value judgement." }
+  ];
+
+  const [index, setIndex] = useState(0);
+  const [feedback, setFeedback] = useState(null);
+
+  const handleGuess = (guess) => {
+    const isCorrect = guess === questions[index].type;
+    setFeedback({ isCorrect, ...questions[index] });
+    setTimeout(() => {
+      setFeedback(null);
+      setIndex(prev => (prev + 1) % questions.length);
+    }, 3000);
+  };
+
   return (
-    <div className="mastery-section">
-      <h3>🏁 Boss Battle: Pillar 5 Knowledge Test</h3>
-      <p>
-        Score <strong>9/12</strong> or higher before moving to Pillar 6.
-        CapeWeb wants you confident — not guessing.
-      </p>
-      <div className="workbook-section" style={{ backgroundColor: '#f8f9fa', border: '1px solid #e9ecef', padding: '1.5rem', borderRadius: '10px' }}>
-        {pillar5QuizQuestions.map((question, index) => (
-          <React.Fragment key={index}>
-            <div className="quiz-question">
-              <p>
-                <strong>{index + 1})</strong> {question.question}
-              </p>
-              {question.options.map((option, optionIndex) => (
-                <label key={optionIndex} style={{ display: 'block' }}>
-                  <input
-                    type="radio"
-                    name={`quiz-p5-${index}`}
-                    checked={quizResponses[index] === optionIndex}
-                    onChange={() => onSelect(index, optionIndex)}
-                  />{' '}
-                  {option}
-                </label>
-              ))}
+    <div style={{ margin: '3rem 0', padding: '2rem', background: '#0F172A', borderRadius: '24px', color: 'white', textAlign: 'center' }}>
+      <h3 style={{ marginBottom: '0.5rem' }}>Interactive: The "SGE" Survival Test</h3>
+      <p style={{ color: '#94A3B8', marginBottom: '2rem' }}>Which questions will AI steal? Which will humans protect?</p>
+
+      <div style={{ minHeight: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', fontWeight: 600, padding: '1rem', background: '#1E293B', borderRadius: '16px', marginBottom: '2rem' }}>
+        "{questions[index].q}"
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+        <button onClick={() => handleGuess('AI')} style={{ padding: '1.5rem', borderRadius: '16px', background: '#334155', color: 'white', border: 'none', cursor: 'pointer', fontSize: '1.1rem', fontWeight: 800 }}>🤖 AI Territory</button>
+        <button onClick={() => handleGuess('Human')} style={{ padding: '1.5rem', borderRadius: '16px', background: '#3B82F6', color: 'white', border: 'none', cursor: 'pointer', fontSize: '1.1rem', fontWeight: 800 }}>👤 Human Territory</button>
+      </div>
+
+      {feedback && (
+        <div style={{ marginTop: '2rem', padding: '1.5rem', borderRadius: '16px', background: feedback.isCorrect ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)', border: `2px solid ${feedback.isCorrect ? '#10B981' : '#EF4444'}` }}>
+          <div style={{ fontWeight: 800, marginBottom: '0.5rem' }}>{feedback.isCorrect ? 'Correct!' : 'Not Quite.'}</div>
+          <p style={{ margin: 0, fontSize: '0.95rem' }}>{feedback.explanation}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Interactive: Core Web Vitals Visualizer
+function CoreWebVitalsVisualizer() {
+  const [loading, setLoading] = useState(false);
+  const [metrics, setMetrics] = useState({ lcp: 0, cls: 0, inp: 0 });
+  const [config, setConfig] = useState({ optimize: false, stable: false });
+
+  const runTest = () => {
+    setLoading(true);
+    setMetrics({ lcp: 0, cls: 0, inp: 0 });
+
+    setTimeout(() => {
+      setMetrics({
+        lcp: config.optimize ? 1.2 : 4.5,
+        cls: config.stable ? 0.01 : 0.45,
+        inp: config.optimize ? 45 : 300
+      });
+      setLoading(false);
+    }, 2000);
+  };
+
+  const getStatus = (val, type) => {
+    if (type === 'lcp') return val < 2.5 ? '#10B981' : '#EF4444';
+    if (type === 'cls') return val < 0.1 ? '#10B981' : '#EF4444';
+    if (type === 'inp') return val < 200 ? '#10B981' : '#EF4444';
+  };
+
+  return (
+    <div style={{ margin: '3rem 0', padding: '2rem', background: '#0F172A', borderRadius: '24px', color: 'white' }}>
+      <h3 style={{ marginBottom: '0.5rem' }}>Interactive: Core Web Vitals Lab</h3>
+      <p style={{ color: '#94A3B8', marginBottom: '2rem' }}>How Google measures your site's health.</p>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
+        <div style={{ padding: '1.5rem', background: '#1E293B', borderRadius: '16px', textAlign: 'center', borderTop: `4px solid ${getStatus(metrics.lcp, 'lcp')}` }}>
+          <div style={{ fontSize: '0.75rem', color: '#94A3B8', textTransform: 'uppercase' }}>Loading (LCP)</div>
+          <div style={{ fontSize: '2rem', fontWeight: 800 }}>{loading ? '...' : `${metrics.lcp}s`}</div>
+        </div>
+        <div style={{ padding: '1.5rem', background: '#1E293B', borderRadius: '16px', textAlign: 'center', borderTop: `4px solid ${getStatus(metrics.cls, 'cls')}` }}>
+          <div style={{ fontSize: '0.75rem', color: '#94A3B8', textTransform: 'uppercase' }}>Stability (CLS)</div>
+          <div style={{ fontSize: '2rem', fontWeight: 800 }}>{loading ? '...' : metrics.cls}</div>
+        </div>
+        <div style={{ padding: '1.5rem', background: '#1E293B', borderRadius: '16px', textAlign: 'center', borderTop: `4px solid ${getStatus(metrics.inp, 'inp')}` }}>
+          <div style={{ fontSize: '0.75rem', color: '#94A3B8', textTransform: 'uppercase' }}>Interactivity (INP)</div>
+          <div style={{ fontSize: '2rem', fontWeight: 800 }}>{loading ? '...' : `${metrics.inp}ms`}</div>
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
+        <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#334155', padding: '0.8rem 1rem', borderRadius: '12px', cursor: 'pointer' }}>
+          <input type="checkbox" checked={config.optimize} onChange={e => setConfig(prev => ({ ...prev, optimize: e.target.checked }))} />
+          <span>Optimize Assets</span>
+        </label>
+        <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#334155', padding: '0.8rem 1rem', borderRadius: '12px', cursor: 'pointer' }}>
+          <input type="checkbox" checked={config.stable} onChange={e => setConfig(prev => ({ ...prev, stable: e.target.checked }))} />
+          <span>Pre-size Layout</span>
+        </label>
+      </div>
+
+      <button onClick={runTest} disabled={loading} style={{ width: '100%', padding: '1rem', borderRadius: '100px', background: '#3B82F6', color: 'white', border: 'none', fontWeight: 700, cursor: 'pointer' }}>
+        {loading ? 'Crawling...' : 'Run Google Audit'}
+      </button>
+    </div>
+  );
+}
+
+// Interactive: Map Trust Simulator
+function MapTrustSimulator() {
+  const [pins, setPins] = useState([
+    { id: 1, name: "Google Business", status: "Verified", consistent: true },
+    { id: 2, name: "Facebook Page", status: "Old Address", consistent: false },
+    { id: 3, name: "YellowPages", status: "No Phone", consistent: false }
+  ]);
+
+  const trustScore = Math.round((pins.filter(p => p.consistent).length / pins.length) * 100);
+
+  const fixPin = (id) => {
+    setPins(prev => prev.map(p => p.id === id ? { ...p, status: "Verified", consistent: true } : p));
+  };
+
+  return (
+    <div style={{ margin: '3rem 0', padding: '2rem', background: '#F8FAFC', borderRadius: '24px', border: '1px solid #E2E8F0' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+        <h3 style={{ margin: 0, color: '#0F172A' }}>Interactive: Local Trust Engine</h3>
+        <div style={{ padding: '0.5rem 1rem', background: '#10B981', color: 'white', borderRadius: '100px', fontWeight: 800 }}>
+          Local Visibility: {trustScore}%
+        </div>
+      </div>
+
+      <div style={{ background: '#E2E8F0', height: '200px', borderRadius: '16px', position: 'relative', overflow: 'hidden', marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{
+          width: `${trustScore * 2}px`,
+          height: `${trustScore * 2}px`,
+          background: 'rgba(16, 185, 129, 0.1)',
+          borderRadius: '50%',
+          border: '2px solid #10B981',
+          transition: 'all 0.5s ease'
+        }}></div>
+        <div style={{ position: 'absolute', fontSize: '2rem' }}>🏢</div>
+
+        {/* Pins */}
+        <div style={{ position: 'absolute', top: '20px', left: '40px', fontSize: '1.5rem', opacity: pins[1].consistent ? 1 : 0.4 }}>📍</div>
+        <div style={{ position: 'absolute', bottom: '30px', right: '50px', fontSize: '1.5rem', opacity: pins[2].consistent ? 1 : 0.4 }}>📍</div>
+      </div>
+
+      <div style={{ display: 'grid', gap: '1rem' }}>
+        {pins.map(p => (
+          <div key={p.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: 'white', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+            <div>
+              <div style={{ fontWeight: 700, color: '#0F172A' }}>{p.name}</div>
+              <div style={{ fontSize: '0.8rem', color: p.consistent ? '#10B981' : '#EF4444' }}>{p.status}</div>
             </div>
-            {index < pillar5QuizQuestions.length - 1 && <hr style={{ border: 'none', borderTop: '1px solid #e9ecef', margin: '1rem 0' }} />}
-          </React.Fragment>
+            {!p.consistent && (
+              <button onClick={() => fixPin(p.id)} style={{ padding: '0.5rem 1rem', borderRadius: '8px', background: '#3B82F6', color: 'white', border: 'none', fontWeight: 600, cursor: 'pointer' }}>
+                Fix NAP
+              </button>
+            )}
+          </div>
         ))}
+      </div>
+    </div>
+  );
+}
 
-        <button
-          type="button"
-          onClick={onScore}
-          style={{
-            marginTop: '1rem',
-            padding: '.75rem 1rem',
-            borderRadius: '8px',
-            border: '1px solid #0b0f1a',
-            background: '#0b0f1a',
-            color: '#fff',
-            fontWeight: 900,
-            cursor: 'pointer',
-          }}
-        >
-          Check my score
+// Interactive: E-E-A-T Validator
+function EEATValidator() {
+  const [selected, setSelected] = useState(null);
+  const scenarios = [
+    {
+      id: 1,
+      label: "AI-Generated Guide",
+      content: "General advice on hiking Table Mountain based on web data.",
+      score: "Low",
+      reason: "No lived 'Experience' or unique photos."
+    },
+    {
+      id: 2,
+      label: "Expert Local Guide",
+      content: "My personal 50th hike up the mountain, with weather-specific safety tips and 20 photos.",
+      score: "High",
+      reason: "High 'Experience' and 'Authoritativeness'."
+    }
+  ];
+
+  return (
+    <div style={{ margin: '3rem 0', padding: '2rem', background: '#0F172A', borderRadius: '24px', color: 'white' }}>
+      <h3 style={{ marginBottom: '1.5rem' }}>Interactive: The EEAT Filter</h3>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
+        {scenarios.map(s => (
+          <div
+            key={s.id}
+            onClick={() => setSelected(s)}
+            style={{
+              padding: '1.5rem',
+              background: '#1E293B',
+              borderRadius: '16px',
+              border: selected?.id === s.id ? '2px solid #3B82F6' : '2px solid transparent',
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+          >
+            <div style={{ fontWeight: 800, marginBottom: '0.5rem' }}>{s.label}</div>
+            <p style={{ fontSize: '0.9rem', color: '#94A3B8', margin: 0 }}>{s.content}</p>
+          </div>
+        ))}
+      </div>
+
+      {selected && (
+        <div style={{ marginTop: '2rem', padding: '1.5rem', background: 'rgba(59, 130, 246, 0.1)', borderRadius: '16px', border: '1px solid #3B82F6', animation: 'fadeIn 0.3s' }}>
+          <div style={{ fontWeight: 800, color: '#3B82F6', marginBottom: '0.5rem' }}>Google's Verdict: {selected.score} Trust</div>
+          <p style={{ margin: 0, fontSize: '0.95rem' }}>{selected.reason}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Interactive: Link Quality Visual
+function LinkQualityVisual() {
+  const [links, setLinks] = useState([]);
+  const [authority, setAuthority] = useState(0);
+
+  const addLink = (type) => {
+    const newLink = type === 'high'
+      ? { id: Date.now(), title: "BBC / News Site", power: 40, color: '#3B82F6' }
+      : { id: Date.now(), title: "Random Directory", power: 2, color: '#94A3B8' };
+
+    setLinks(prev => [...prev, newLink].slice(-10));
+    setAuthority(prev => Math.min(100, Math.round(prev + newLink.power)));
+  };
+
+  return (
+    <div style={{ margin: '3rem 0', padding: '2rem', background: '#0F172A', borderRadius: '24px', color: 'white' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+        <h3 style={{ margin: 0 }}>Interactive: Domain Authority Engine</h3>
+        <div style={{ padding: '0.5rem 1rem', background: '#3B82F6', color: 'white', borderRadius: '100px', fontWeight: 800 }}>
+          DA: {authority}
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', minHeight: '100px', padding: '1rem', background: '#1E293B', borderRadius: '16px', marginBottom: '2rem' }}>
+        {links.length === 0 && <p style={{ color: '#64748B', width: '100%', textAlign: 'center' }}>No backlinks yet.</p>}
+        {links.map(l => (
+          <div key={l.id} style={{ padding: '0.5rem 1rem', background: l.color, borderRadius: '8px', fontSize: '0.8rem', fontWeight: 700, animation: 'scaleIn 0.3s' }}>
+            {l.title} (+{l.power})
+          </div>
+        ))}
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+        <button onClick={() => addLink('low')} style={{ padding: '1rem', borderRadius: '12px', background: '#334155', color: 'white', border: 'none', cursor: 'pointer' }}>
+          Add Cheap Directory Link
         </button>
+        <button onClick={() => addLink('high')} style={{ padding: '1rem', borderRadius: '12px', background: '#3B82F6', color: 'white', border: 'none', fontWeight: 700, cursor: 'pointer' }}>
+          Earn Authority News Link
+        </button>
+      </div>
+    </div>
+  );
+}
 
-        <div
-          style={{
-            marginTop: '.75rem',
-            padding: '1rem',
-            borderRadius: '10px',
-            background: '#fff',
-            border: scoreMessage.startsWith('✅') ? '1px solid #c3e6cb' : scoreMessage.startsWith('❌') ? '1px solid #f5c6cb' : '1px solid #e9ecef',
-          }}
-        >
-          <strong>Score:</strong> {scoreMessage}
+// Interactive: Engagement Funnel Simulator
+function EngagementFunnelSimulator() {
+  const [quality, setQuality] = useState(50);
+
+  const traffic = 1000;
+  const engagementRate = (quality / 100).toFixed(2);
+  const engagedSessions = Math.round(traffic * engagementRate);
+  const conversionRate = (engagedSessions / traffic * 0.1).toFixed(2); // Simplified
+  const revenue = (engagedSessions * 10).toLocaleString();
+
+  return (
+    <div style={{ margin: '3rem 0', padding: '2rem', background: '#F8FAFC', borderRadius: '24px', border: '1px solid #E2E8F0' }}>
+      <h3 style={{ marginBottom: '0.5rem', color: '#0F172A' }}>Interactive: The Revenue Funnel</h3>
+      <p style={{ color: '#64748B', marginBottom: '2rem' }}>Adjust content quality to see how "Vanity" traffic turns into "Actionable" revenue.</p>
+
+      <div style={{ marginBottom: '2rem' }}>
+        <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#64748B', marginBottom: '0.5rem' }}>
+          Content Relevance & Quality: {quality}%
+        </label>
+        <input
+          type="range" min="10" max="100" value={quality}
+          onChange={e => setQuality(e.target.value)}
+          style={{ width: '100%', accentColor: '#10B981' }}
+        />
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem' }}>
+        <div style={{ padding: '1.25rem', background: 'white', borderRadius: '12px', border: '1px solid #E2E8F0', textAlign: 'center' }}>
+          <div style={{ fontSize: '0.75rem', color: '#64748B' }}>Traffic (Vanity)</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 800 }}>{traffic}</div>
+        </div>
+        <div style={{ padding: '1.25rem', background: '#DCFCE7', borderRadius: '12px', border: '1px solid #BBF7D0', textAlign: 'center' }}>
+          <div style={{ fontSize: '0.75rem', color: '#15803D' }}>Engaged Sessions</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#15803D' }}>{engagedSessions}</div>
+        </div>
+        <div style={{ padding: '1.25rem', background: '#DBEAFE', borderRadius: '12px', border: '1px solid #BFDBFE', textAlign: 'center' }}>
+          <div style={{ fontSize: '0.75rem', color: '#1E40AF' }}>Est. Revenue</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#1E40AF' }}>R{revenue}</div>
         </div>
       </div>
     </div>
+  );
+}
+
+// Interactive: Index Bloat Simulator
+function IndexBloatSimulator() {
+  const [blocked, setBlocked] = useState(false);
+  const [crawling, setCrawling] = useState(false);
+  const [stats, setStats] = useState({ products: 0, filters: 0 });
+
+  useEffect(() => {
+    let interval;
+    if (crawling) {
+      interval = setInterval(() => {
+        setStats(prev => ({
+          products: prev.products + (blocked ? 1 : 0.2),
+          filters: prev.filters + (blocked ? 0 : 5)
+        }));
+      }, 500);
+    }
+    return () => clearInterval(interval);
+  }, [crawling, blocked]);
+
+  return (
+    <div style={{ margin: '3rem 0', padding: '2rem', background: '#0F172A', borderRadius: '24px', color: 'white' }}>
+      <h3 style={{ marginBottom: '1.5rem' }}>Interactive: Googlebot Crawl Simulation</h3>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem', marginBottom: '2rem' }}>
+        <div style={{ padding: '1.5rem', background: '#1E293B', borderRadius: '16px', textAlign: 'center' }}>
+          <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>📦</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#10B981' }}>{Math.floor(stats.products)}</div>
+          <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>REAL Products Found</div>
+        </div>
+        <div style={{ padding: '1.5rem', background: '#1E293B', borderRadius: '16px', textAlign: 'center' }}>
+          <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🕸️</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 800, color: blocked ? '#64748B' : '#EF4444' }}>{Math.floor(stats.filters)}</div>
+          <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>Filter Junk Crawled</div>
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+        <button onClick={() => { setCrawling(!crawling); if (!crawling) setStats({ products: 0, filters: 0 }); }} style={{ padding: '1rem 2rem', borderRadius: '100px', background: '#3B82F6', color: 'white', border: 'none', fontWeight: 700, cursor: 'pointer' }}>
+          {crawling ? 'Stop Simulation' : 'Start Googlebot'}
+        </button>
+        <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', background: '#334155', padding: '0.8rem 1.5rem', borderRadius: '100px' }}>
+          <input type="checkbox" checked={blocked} onChange={e => setBlocked(e.target.checked)} />
+          <span>Enable robots.txt Filter Block</span>
+        </label>
+      </div>
+    </div>
+  );
+}
+
+function LongTailVisual() {
+  return (
+    <div style={{ margin: '2rem 0', height: '200px', background: '#F8FAFC', borderRadius: '16px', position: 'relative', display: 'flex', alignItems: 'flex-end', padding: '0 1rem' }}>
+      {/* Fat Head */}
+      <div style={{ width: '20%', height: '80%', background: '#EF4444', borderRadius: '8px 8px 0 0', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '0.8rem', textAlign: 'center' }}>
+        <strong>Head</strong>
+        <span>High Vol</span>
+        <span>Low Conv</span>
+      </div>
+      {/* Middle */}
+      <div style={{ width: '30%', height: '50%', background: '#F59E0B', borderRadius: '8px 8px 0 0' }}></div>
+      {/* Long Tail */}
+      <div style={{ width: '50%', height: '30%', background: '#10B981', borderRadius: '8px 8px 0 0', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '0.8rem', textAlign: 'center' }}>
+        <strong>Long Tail</strong>
+        <span>Low Vol</span>
+        <span>High Conv</span>
+      </div>
+    </div>
+  )
+}
+
+// Interactive: SERP Preview Editor
+function SERPPreviewEditor() {
+  const [title, setTitle] = useState("Best Pizza in Cape Town | My Restaurant");
+  const [desc, setDesc] = useState("We make the best wood-fired pizza in Cape Town. Come visit us for a slice of heaven. 24/7 service.");
+
+  return (
+    <div style={{ margin: '3rem 0', padding: '2rem', background: '#F8FAFC', borderRadius: '24px', border: '1px solid #E2E8F0' }}>
+      <h3 style={{ marginBottom: '1.5rem', color: '#0F172A' }}>Interactive: SERP Preview Editor</h3>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+        {/* Editor */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          <div>
+            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#64748B', marginBottom: '0.5rem', textTransform: 'uppercase' }}>
+              Title Tag ({title.length}/60 chars)
+            </label>
+            <input
+              value={title}
+              onChange={e => setTitle(e.target.value)}
+              style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: title.length > 60 ? '2px solid #EF4444' : '1px solid #CBD5E1', fontSize: '1rem' }}
+            />
+            {title.length > 60 && <p style={{ color: '#EF4444', fontSize: '0.75rem', marginTop: '0.25rem' }}>Title too long! Google will truncate it (...)</p>}
+          </div>
+
+          <div>
+            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#64748B', marginBottom: '0.5rem', textTransform: 'uppercase' }}>
+              Meta Description ({desc.length}/160 chars)
+            </label>
+            <textarea
+              value={desc}
+              rows={3}
+              onChange={e => setDesc(e.target.value)}
+              style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: desc.length > 160 ? '2px solid #EF4444' : '1px solid #CBD5E1', fontSize: '1rem', resize: 'none' }}
+            />
+            {desc.length > 160 && <p style={{ color: '#EF4444', fontSize: '0.75rem', marginTop: '0.25rem' }}>Description too long! Google will cut it off.</p>}
+          </div>
+        </div>
+
+        {/* Google Mockup */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#64748B', marginBottom: '0.5rem', textTransform: 'uppercase' }}>
+            Google Mobile Preview
+          </label>
+          <div style={{ background: 'white', padding: '1.5rem', borderRadius: '16px', border: '1px solid #E2E8F0', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '4px' }}>
+              <div style={{ width: '20px', height: '20px', background: '#F1F3F4', borderRadius: '50%' }}></div>
+              <div style={{ fontSize: '0.8rem', color: '#202124' }}>www.mygreatsite.co.za › pizza</div>
+            </div>
+            <div style={{
+              fontSize: '1.25rem',
+              color: '#1A0DAB',
+              marginBottom: '4px',
+              overflow: 'hidden',
+              display: '-webkit-box',
+              WebkitLineClamp: 1,
+              WebkitBoxOrient: 'vertical',
+              lineHeight: 1.3
+            }}>
+              {title}
+            </div>
+            <div style={{
+              fontSize: '0.9rem',
+              color: '#4D5156',
+              lineHeight: 1.5,
+              overflow: 'hidden',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical'
+            }}>
+              {desc}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SFERPVisual() {
+  return (
+    <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #E2E8F0', margin: '2rem 0', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
+      <div style={{ fontSize: '0.8rem', color: '#202124' }}>www.plumbers.co.za › cape-town</div>
+      <div style={{ fontSize: '1.2rem', color: '#1A0DAB', cursor: 'pointer', textDecoration: 'underline', marginBottom: '4px' }}>
+        Best Plumbers Cape Town | 24/7 Emergency Service
+      </div>
+      <div style={{ fontSize: '0.9rem', color: '#4D5156' }}>
+        We fix blocked drains, burst pipes and geysers. Call us now for a free quote.
+      </div>
+      <div style={{ marginTop: '0.5rem', fontSize: '0.8rem', display: 'flex', gap: '0.5rem' }}>
+        <span style={{ fontWeight: 'bold' }}>Key:</span>
+        <span style={{ color: '#1A0DAB' }}>Title Tag (Blue)</span>
+        <span style={{ color: '#4D5156' }}>Meta Description (Grey)</span>
+      </div>
+    </div>
+  )
+}
+
+function LinkJuiceVisual() {
+  const [flowing, setFlowing] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => setFlowing(f => !f), 2000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2rem', margin: '2rem 0' }}>
+      <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: '#3B82F6', color: 'white', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', boxShadow: '0 10px 20px rgba(59, 130, 246, 0.3)' }}>
+        <strong>News24</strong>
+        <small>Score: 90</small>
+      </div>
+      {/* Tube */}
+      <div style={{ width: '100px', height: '10px', background: '#E2E8F0', borderRadius: '5px', position: 'relative', overflow: 'hidden' }}>
+        <div style={{
+          width: '40px', height: '100%', background: '#3B82F6', borderRadius: '5px', position: 'absolute', top: 0,
+          left: flowing ? '100%' : '-40%',
+          transition: 'left 1s linear'
+        }} />
+      </div>
+      <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: flowing ? '#93C5FD' : '#E2E8F0', color: '#1E293B', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', transition: 'background 0.3s' }}>
+        <strong>You</strong>
+        <small>{flowing ? 'Score: 20' : 'Score: 10'}</small>
+      </div>
+    </div>
+  )
+}
+
+function ScenarioToggle({ oldTitle, oldContent, newTitle, newContent }) {
+  const [view, setView] = useState('old');
+  return (
+    <div style={{ margin: '3rem 0' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem', background: '#F1F5F9', padding: '0.5rem', borderRadius: '100px', width: 'fit-content', margin: '0 auto 2rem' }}>
+        <button onClick={() => setView('old')} style={{ padding: '0.6rem 1.5rem', borderRadius: '100px', border: 'none', background: view === 'old' ? '#fff' : 'transparent', color: view === 'old' ? '#EF4444' : '#64748B', fontWeight: 800, boxShadow: view === 'old' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>{oldTitle}</button>
+        <button onClick={() => setView('new')} style={{ padding: '0.6rem 1.5rem', borderRadius: '100px', border: 'none', background: view === 'new' ? '#fff' : 'transparent', color: view === 'new' ? '#10B981' : '#64748B', fontWeight: 800, boxShadow: view === 'new' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>{newTitle}</button>
+      </div>
+      {view === 'old' ? (
+        <div style={{ padding: '1.5rem', background: '#FEF2F2', borderRadius: '24px', border: '2px solid #FECACA', animation: 'fadeIn 0.5s' }}>
+          {oldContent}
+        </div>
+      ) : (
+        <div style={{ padding: '1.5rem', background: '#ECFDF5', borderRadius: '24px', border: '2px solid #A7F3D0', animation: 'fadeIn 0.5s' }}>
+          {newContent}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ==========================================
+// PILLAR 5 MODULES A-I
+// ==========================================
+
+// Module A: SEO Fundamentals
+export function Pillar5ModuleA({ onNext }) {
+  return (
+    <InteractiveLayout title="Module A: The Long Tail" subtitle="Picking fights you can win.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          Google results are a "Winner Take All" market. The #1 spot gets ~33% of clicks. The #10 spot gets &lt; 1%.
+          If you are a new shoe store, you cannot rank for "Shoes" (Competition: Nike, Adidas).
+        </p>
+
+        <LongTailSimulator />
+
+        <BookInsight title="The Long Tail" author="Chris Anderson" book="The Long Tail" color="#3B82F6">
+          <p>"The future of business is selling less of more."</p>
+        </BookInsight>
+
+        <ScenarioToggle
+          oldTitle="The Head (Hard)"
+          oldContent="Keyword: 'Insurance'. Volume: 1M. Competition: Huge Banks. Rank: Page 50. Revenue: R0."
+          newTitle="The Tail (Easy)"
+          newContent="Keyword: 'Insurance for Pet snakes'. Volume: 100. Competition: None. Rank: #1. Revenue: R5000."
+        />
+
+        {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%)', borderRadius: '24px', border: '1px solid #BFDBFE' }}>
+          <CWHeading level={3} style={{ color: '#1E40AF', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+          </CWHeading>
+
+          <p style={{ fontSize: '1.1rem', color: '#1E3A8A', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            <strong>Capital Efficiency.</strong> Ranking for high-volume "Head Terms" costs millions in backlinks and content. Smaller businesses scale faster by dominating 100 niche "Long Tail" terms where the competition is zero and the conversion rate is 10x higher.
+          </p>
+
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #BFDBFE', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+              🚀 How CapeWeb Helps You Scale
+            </h4>
+            <p style={{ fontSize: '0.95rem', color: '#4B5563', marginBottom: '1rem' }}>
+              We build content assets, not just pages.
+            </p>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                <span style={{ color: '#3B82F6', marginTop: '2px' }}>➜</span>
+                <span>
+                  <a href="/services?service=seo-that-sticks" style={{ color: '#3B82F6', textDecoration: 'underline' }}>SEO that Sticks</a>: We map your customer's journey and find the specific high-intent "Tail" keywords that your competitors have ignored.
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <MiniQuiz
+          questions={[
+            { question: "Why should you target 'Long Tail' keywords?", options: ["They have more traffic", "They are easier to rank for and have higher conversion intent", "They are shorter"], correctIndex: 1 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  );
+}
+
+// Module B: Keywords & Questions
+export function Pillar5ModuleB({ onNext }) {
+  return (
+    <InteractiveLayout title="Module B: Answering Questions" subtitle="Be the oracle.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          People don't just type words; they ask questions. With <strong>SGE (Search Generative Experience)</strong>, AI answers simple questions. To survive, you must provide deep, human insight.
+        </p>
+
+        <QuestionSieve />
+
+        <CWAlert type="warning" title="Keyword Cannibalization">
+          <strong>The Trap:</strong> You write 5 different blog posts all trying to rank for "Best Coffee in CT".
+          <br /><strong>The Result:</strong> Google gets confused about which page is the "Master" page and ranks NONE of them.
+        </CWAlert>
+
+        <ScenarioToggle
+          oldTitle="Generic Blog"
+          oldContent="'We offer great services at affordable prices'. (Boring, no one searches for this)."
+          newTitle="Radical Transparency"
+          newContent="'How much does a website cost in 2024?'. (Specific, high intent, builds trust)."
+        />
+
+        <BookInsight title="Radical Transparency" author="Marcus Sheridan" book="They Ask You Answer" color="#10B981">
+          <p>"If you are willing to answer the questions that your prospects are asking—and your competitors are afraid to answer—you will own the market."</p>
+        </BookInsight>
+
+        {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)', borderRadius: '24px', border: '1px solid #BBF7D0' }}>
+          <CWHeading level={3} style={{ color: '#15803D', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+          </CWHeading>
+
+          <p style={{ fontSize: '1.1rem', color: '#14532D', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            <strong>Trust & The SGE Threat.</strong> Google's AI (SGE) will steal "factual" traffic. To win, your content must answer the difficult, qualitative questions that AI can't: "Should I do this?", "What are the common pitfalls?", and "Is it worth the money?".
+          </p>
+
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #BBF7D0', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+              🚀 How CapeWeb Helps You Scale
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                <span style={{ color: '#10B981', marginTop: '2px' }}>➜</span>
+                <span>
+                  <a href="/services?service=content-that-converts" style={{ color: '#10B981', textDecoration: 'underline' }}>Content that Converts</a>: We help you build a "Knowledge Base" strategy that answers real customer anxieties, transforming your site from a brochure into a trusted advisor.
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <MiniQuiz
+          questions={[
+            { question: "What is 'Keyword Cannibalization'?", options: ["When keywords eat each other", "When your own pages compete against each other for the same term", "When you use too many keywords"], correctIndex: 1 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  );
+}
+
+// Module C: On-Page
+export function Pillar5ModuleC({ onNext }) {
+  return (
+    <InteractiveLayout title="Module C: SEO Real Estate" subtitle="Dominating the result page.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          You need to speak to two audiences: The Human (H1) and The Robot (Title Tag).
+          <strong>The Robot needs to know where to file your page.</strong> The Human needs to click.
+        </p>
+
+        <SERPPreviewEditor />
+
+        <h3>The Skyscraper Technique</h3>
+        <p className="cw-text-body">
+          Don't just write a blog post. Find the #1 ranking article for your target keyword. Analyze it. Then create a version that is <strong>10x better</strong> (More updated, better design, better data). Then, reach out to everyone who linked to the old version and tell them about yours.
+        </p>
+
+        {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%)', borderRadius: '24px', border: '1px solid #FED7AA' }}>
+          <CWHeading level={3} style={{ color: '#9A3412', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+          </CWHeading>
+
+          <p style={{ fontSize: '1.1rem', color: '#7C2D12', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            <strong>Click-Through Rate (CTR) = Market Share.</strong> Even if you are #3, a better Title and Meta Description can earn you more clicks than the #1 spot. SEO is as much about advertising psychology as it is about code.
+          </p>
+
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #FED7AA', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+              🚀 How CapeWeb Helps You Scale
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                <span style={{ color: '#F97316', marginTop: '2px' }}>➜</span>
+                <span>
+                  <a href="/services?service=performance-first" style={{ color: '#F97316', textDecoration: 'underline' }}>Performance First</a>: We ensure your technical "SEO Furniture" (H1s, Titles, Meta, Alt Text) is perfectly optimized for both humans and search engines from day one.
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <MiniQuiz
+          questions={[
+            { question: "What is the detailed difference between Title Tag and H1?", options: ["There is no difference", "Title Tag is for Google results, H1 is the top heading on the page itself", "H1 is for the footer"], correctIndex: 1 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  );
+}
+
+// Module D: Technical
+export function Pillar5ModuleD({ onNext }) {
+  return (
+    <InteractiveLayout title="Module D: Core Web Vitals" subtitle="Ranking via Experience.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          Google has a "Crawl Budget". If your site is slow or jumps around while loading, Google considers it a poor experience and penalizes your ranking.
+        </p>
+
+        <CoreWebVitalsVisualizer />
+
+        <CWCard>
+          <h4>Canonical Tags</h4>
+          <p>Telling Google "This is the ORIGINAL version" prevents duplicate content penalties. This is critical for e-commerce where the same product might appear under different categories.</p>
+        </CWCard>
+
+        {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F9FAF0 0%, #F0FDF4 100%)', borderRadius: '24px', border: '1px solid #DCFCE7' }}>
+          <CWHeading level={3} style={{ color: '#166534', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+          </CWHeading>
+
+          <p style={{ fontSize: '1.1rem', color: '#14532D', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            <strong>Conversion Rate Correlation.</strong> Every 100ms delay in load time can drop conversion rates by 7%. Technical SEO isn't just for ranking; it's a direct driver of revenue. If your site is slow, your marketing budget is being wasted on "Bounce" traffic.
+          </p>
+
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #DCFCE7', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+              🚀 How CapeWeb Helps You Scale
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                <span style={{ color: '#10B981', marginTop: '2px' }}>➜</span>
+                <span>
+                  <a href="/services?service=performance-first" style={{ color: '#10B981', textDecoration: 'underline' }}>Performance Monitoring</a>: We set up automated alerts that ping us the moment your PageSpeed scores dip, ensuring your "Evergreen" traffic remains stable.
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <MiniQuiz
+          questions={[
+            { question: "What does a Canonical Tag do?", options: ["It confuses Google", "It tells Google which URL is the 'Master' version to index", "It speeds up the site"], correctIndex: 1 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  )
+}
+
+// Module E: Local
+export function Pillar5ModuleE({ onNext }) {
+  return (
+    <InteractiveLayout title="Module E: NAP Consistency" subtitle="Proximity is power.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          For local businesses, Google looks for "Trust Signals" across the web. If your phone number is different on Facebook than it is on your website, Google loses trust in your location data.
+        </p>
+
+        <MapTrustSimulator />
+
+        <ScenarioToggle
+          oldTitle="Inconsistent (Bad)"
+          oldContent="FB: '12 Main Rd'. Web: '12 Main Road, Cape Town'. (Google is confused and lowers your proximity ranking)."
+          newTitle="Consistent (Good)"
+          newContent="FB: '12 Main Road, Cape Town'. Web: '12 Main Road, Cape Town'. (Google trusts and shows you to nearby searchers)."
+        />
+
+        {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FEFCE8 0%, #FEF9C3 100%)', borderRadius: '24px', border: '1px solid #FEF08A' }}>
+          <CWHeading level={3} style={{ color: '#854D0E', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+          </CWHeading>
+
+          <p style={{ fontSize: '1.1rem', color: '#713F12', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            <strong>The "Near Me" Economy.</strong> Over 70% of mobile searches lead to a physical store visit within 24 hours. If your NAP (Name, Address, Phone) isn't perfect, you are literally invisible to the customers standing in your neighborhood.
+          </p>
+
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #FEF08A', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+              🚀 How CapeWeb Helps You Scale
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                <span style={{ color: '#EAB308', marginTop: '2px' }}>➜</span>
+                <span>
+                  <strong>Local Presence Audit:</strong> We scan 50+ directories (Google, Bing, Yelp, Apple Maps) to find and fix inconsistent data that is currently suppressing your local rankings.
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <MiniQuiz
+          questions={[
+            { question: "What does NAP stand for in Local SEO?", options: ["Name, Address, Phone", "No Ads Please", "New App Protocol"], correctIndex: 0 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  )
+}
+
+// Module F: Content
+export function Pillar5ModuleF({ onNext }) {
+  return (
+    <InteractiveLayout title="Module F: E-E-A-T" subtitle="Google's Trust Metric.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          In the age of AI spam, Google prioritizes <strong>Experience</strong>. AI cannot taste food, hike a mountain, or run a boardroom.
+        </p>
+
+        <EEATValidator />
+
+        <BookInsight title="Experience vs Expertise" author="Google" book="Search Quality Guidelines" color="#F43F5E">
+          <p>"E-E-A-T stands for Experience, Expertise, Authoritativeness, and Trustworthiness. It is the framework Google uses to separate helpful content from search-engine-first junk."</p>
+        </BookInsight>
+
+        {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FFF1F2 0%, #FFE4E6 100%)', borderRadius: '24px', border: '1px solid #FECDD3' }}>
+          <CWHeading level={3} style={{ color: '#9F1239', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+          </CWHeading>
+
+          <p style={{ fontSize: '1.1rem', color: '#881337', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            <strong>The AI Filter.</strong> As search engines get flooded with AI-written text, they are becoming extremely selective. Businesses that post genuine case studies, customer photos, and "behind-the-scenes" expertise will skyrocket while generic blogs will disappear.
+          </p>
+
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #FECDD3', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+              🚀 How CapeWeb Helps You Scale
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                <span style={{ color: '#F43F5E', marginTop: '2px' }}>➜</span>
+                <span>
+                  <a href="/services?service=content-that-converts" style={{ color: '#F43F5E', textDecoration: 'underline' }}>Authority Strategy</a>: We don't just write for you; we help you extract the unique "Experience" from your team to create content that AI simply cannot replicate.
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <MiniQuiz
+          questions={[
+            { question: "Why does Google value 'Experience' (the extra E)?", options: ["AI cannot have real-world physical experience", "It likes fancy words", "It is easier to index"], correctIndex: 0 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  )
+}
+
+// Module G: Links
+export function Pillar5ModuleG({ onNext }) {
+  return (
+    <InteractiveLayout title="Module G: Digital PR" subtitle="Earning links, not buying them.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          A link from another site is a "Vote of Confidence". But in Google's world, the reputation of the voter matters as much as the vote itself. One link from a trusted news site is worth 10,000 links from unknown directories.
+        </p>
+
+        <LinkQualityVisual />
+
+        <p className="cw-text-body">Don't spam. Create news. Release a survey, a unique tool, or a controversial opinion backed by data. When journalists reference your work, you earn "Link Juice" that creates a permanent competitive moat.</p>
+
+        {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%)', borderRadius: '24px', border: '1px solid #C7D2FE' }}>
+          <CWHeading level={3} style={{ color: '#3730A3', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+          </CWHeading>
+
+          <p style={{ fontSize: '1.1rem', color: '#312E81', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            <strong>The Trust Moat.</strong> Backlinks are the hardest part of SEO to replicate. A competitor can copy your keywords and design, but they cannot easily "steal" the links you've earned from major publications. High authority links are a long-term asset that protects your rankings from algorithm updates.
+          </p>
+
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #C7D2FE', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+              🚀 How CapeWeb Helps You Scale
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                <span style={{ color: '#4F46E5', marginTop: '2px' }}>➜</span>
+                <span>
+                  <strong>Digital PR Strategy:</strong> We help you create "Linkable Assets"—data studies, calculators, or infographics—that naturally attract mentions from industry blogs and news outlets.
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <MiniQuiz
+          questions={[
+            { question: "Which backlink is more valuable?", options: ["One link from a high Domain Authority news site", "100 links from low quality directories", "A link from your own Facebook page"], correctIndex: 0 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  )
+}
+
+// Module H: Data
+export function Pillar5ModuleH({ onNext }) {
+  return (
+    <InteractiveLayout title="Module H: Actionable Metrics" subtitle="Ignoring vanity.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          <strong>Bounce Rate</strong> is dead. It is replaced by <strong>Engagement Rate</strong>. If someone spends 5 minutes reading your article and then leaves, that's a success, not a bounce.
+        </p>
+
+        <EngagementFunnelSimulator />
+
+        <ScenarioToggle
+          oldTitle="Vanity Metric"
+          oldContent="'We got 10,000 hits!' (But 99% left instantly because the page was slow or irrelevant)."
+          newTitle="Actionable Metric"
+          newContent="'We got 100 engaged sessions who stayed for 3 mins and clicked our pricing page'."
+        />
+
+        {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F0FDFA 0%, #CCFBF1 100%)', borderRadius: '24px', border: '1px solid #99F6E4' }}>
+          <CWHeading level={3} style={{ color: '#0F766E', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+          </CWHeading>
+
+          <p style={{ fontSize: '1.1rem', color: '#134E4A', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            <strong>ROI Transparency.</strong> Most SEO agencies report on "Clicks" because it's easy. We report on "Conversions" and "Engagement" because that's what pays the bills. Understanding where users drop off in your funnel allows you to fix 1% problems that have a 100% impact on bottom-line profit.
+          </p>
+
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #99F6E4', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+              🚀 How CapeWeb Helps You Scale
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                <span style={{ color: '#14B8A6', marginTop: '2px' }}>➜</span>
+                <span>
+                  <strong>GA4 Custom Dashboards:</strong> We set up simplified reporting that ignores the noise and shows you exactly how much revenue your SEO efforts are generating.
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <MiniQuiz
+          questions={[
+            { question: "Why is 'Engagement Rate' better than 'Bounce Rate'?", options: ["It looks nicer", "It accounts for users who read content without clicking further (positive intent)", "It is calculated by AI"], correctIndex: 1 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  )
+}
+
+// Module I: Ecommerce
+export function Pillar5ModuleI({ onNext }) {
+  return (
+    <InteractiveLayout title="Module I: The Index Bloat Killer" subtitle="Faceted Navigation.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          E-commerce sites often have thousands of filters (Red, Blue, Size 10). If Google indexes every possible combination, you get <strong>Index Bloat</strong>—the search engine gets lost in your junk pages and stops ranking your important ones.
+        </p>
+
+        <IndexBloatSimulator />
+
+        <CWAlert type="warning" title="The Technical Fix">
+          Use your <code>robots.txt</code> file to block the crawling of filtered URLs (e.g. <code>/products?color=*</code>). This forces Google to spend its "Crawl Budget" only on your high-value product and category pages.
+        </CWAlert>
+
+        {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%)', borderRadius: '24px', border: '1px solid #E2E8F0' }}>
+          <CWHeading level={3} style={{ color: '#334155', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+          </CWHeading>
+
+          <p style={{ fontSize: '1.1rem', color: '#1E293B', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            <strong>Inventory Visibility.</strong> If Google is busy crawling 10,000 "Red Size Large" combinations, it might miss the new product you just launched today. Solving Index Bloat ensures that your <em>entire</em> catalog is indexed and ready for customers to find.
+          </p>
+
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #E2E8F0', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+              🚀 How CapeWeb Helps You Scale
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                <span style={{ color: '#64748B', marginTop: '2px' }}>➜</span>
+                <span>
+                  <a href="/services?service=ecommerce-solutions" style={{ color: '#64748B', textDecoration: 'underline' }}>E-commerce Solutions</a>: We specialize in technical SEO for Shopify, WooCommerce, and Custom Stores, ensuring your faceted navigation helps users without hurting your search presence.
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <MiniQuiz
+          questions={[
+            { question: "What is 'Index Bloat' caused by Faceted Navigation?", options: ["The site gets fat", "Google indexing thousands of filter combinations as separate pages", "Images being too big"], correctIndex: 1 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  )
+}
+
+// ==========================================
+// FINAL QUIZ COMPONENT
+// ==========================================
+
+export function Pillar5Quiz({ quizResponses, onSelect, onScore, scoreMessage, onFinish }) {
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [isPassed, setIsPassed] = useState(false);
+
+  // Local state handling if props missing
+  const [localResponses, setLocalResponses] = useState({});
+  const activeResponses = quizResponses || localResponses;
+  const activeSetResponse = onSelect || ((qMvc, optIdx) => setLocalResponses(prev => ({ ...prev, [qMvc]: optIdx })));
+
+  const questions = pillar5QuizQuestions;
+  const isLastQuestion = currentQuestionIndex === questions.length - 1;
+  const hasAnsweredCurrent = activeResponses[currentQuestionIndex] !== undefined;
+
+  const handleNext = () => {
+    if (currentQuestionIndex < questions.length - 1) setCurrentQuestionIndex(c => c + 1);
+  };
+  const handlePrev = () => {
+    if (currentQuestionIndex > 0) setCurrentQuestionIndex(c => c - 1);
+  };
+  const handleScore = () => {
+    if (onScore) {
+      onScore();
+    } else {
+      let correct = 0;
+      questions.forEach((q, i) => { if (activeResponses[i] === q.correctIndex) correct++; });
+      if (correct >= 8) setIsPassed(true);
+    }
+    if (onFinish) onFinish();
+  };
+
+  if (scoreMessage && scoreMessage.includes('Pass')) {
+    return (
+      <CWCard>
+        <div style={{ textAlign: 'center', padding: '2rem' }}>
+          <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🎉</div>
+          <CWHeading level={3}>Pillar 5 Complete!</CWHeading>
+          <p style={{ fontSize: '1.2rem', marginBottom: '2rem' }}>{scoreMessage}</p>
+          <CWButton onClick={onFinish}>Continue to Certificate →</CWButton>
+        </div>
+      </CWCard>
+    );
+  }
+
+  return (
+    <QuizLayout title="Final Exam: SEO Mastery" currentStep={currentQuestionIndex + 1} totalSteps={questions.length}>
+      <div style={{ padding: '0 1rem' }}>
+        <h3 style={{ fontSize: '1.5rem', marginBottom: '2rem', minHeight: '60px' }}>
+          {questions[currentQuestionIndex].question}
+        </h3>
+        <div style={{ display: 'grid', gap: '1rem', marginBottom: '2rem' }}>
+          {questions[currentQuestionIndex].options.map((option, idx) => (
+            <button
+              key={idx}
+              onClick={() => activeSetResponse(currentQuestionIndex, idx)}
+              style={{
+                padding: '1.25rem',
+                borderRadius: '12px',
+                border: activeResponses[currentQuestionIndex] === idx ? '2px solid #0b0f1a' : '1px solid #E5E7EB',
+                background: activeResponses[currentQuestionIndex] === idx ? '#F8FAFC' : '#fff',
+                textAlign: 'left',
+                fontSize: '1.1rem',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1rem',
+                boxShadow: activeResponses[currentQuestionIndex] === idx ? '0 4px 12px rgba(0,0,0,0.05)' : 'none'
+              }}
+            >
+              <div style={{ width: '24px', height: '24px', borderRadius: '50%', border: '2px solid #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', background: activeResponses[currentQuestionIndex] === idx ? '#0b0f1a' : 'transparent', borderColor: activeResponses[currentQuestionIndex] === idx ? '#0b0f1a' : '#CBD5E1' }}>
+                {activeResponses[currentQuestionIndex] === idx && <div style={{ width: '10px', height: '10px', background: '#fff', borderRadius: '50%' }} />}
+              </div>
+              {option}
+            </button>
+          ))}
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem' }}>
+          <CWButton variant="ghost" onClick={handlePrev} disabled={currentQuestionIndex === 0} style={{ opacity: currentQuestionIndex === 0 ? 0 : 1 }}>← Previous</CWButton>
+          {isLastQuestion ? (
+            <CWButton variant="primary" onClick={handleScore} disabled={!hasAnsweredCurrent}>Submit Exam 🏁</CWButton>
+          ) : (
+            <CWButton variant="primary" onClick={handleNext} disabled={!hasAnsweredCurrent}>Next Question →</CWButton>
+          )}
+        </div>
+        {scoreMessage && !scoreMessage.includes('Pass') && (
+          <div style={{ marginTop: '2rem', padding: '1rem', background: '#FEF2F2', color: '#991B1B', borderRadius: '8px', textAlign: 'center' }}>{scoreMessage}</div>
+        )}
+      </div>
+    </QuizLayout>
   );
 }
 
 export function Pillar5Completion() {
   return (
-    <div className="completion-box" style={{ textAlign: 'center', marginTop: '2.5rem', paddingTop: '2rem', borderTop: '2px dashed #ced4da' }}>
-      <h3>🎉 Pillar 5 Complete</h3>
-      <p>
-        You can now build SEO the CapeWeb way: technical foundations, local SEO, content systems, safe authority, and real measurement.
-        When you say "continue to Pillar 6," CapeWeb will teach Social Media &amp; Digital Marketing — turning content into daily attention and sales.
+    <div style={{ textAlign: 'center', padding: '4rem 2rem' }}>
+      <h1>🎓</h1>
+      <CWHeading level={2}>SEO Master</CWHeading>
+      <p style={{ fontSize: '1.2rem', color: '#64748B', maxWidth: '600px', margin: '1rem auto' }}>
+        You now understand how to speak Google's language. From Keyword Cannibalization to Index Bloat, you are ready to drive organic revenue.
       </p>
     </div>
-  );
-}
-
-// SVG Diagrams
-function SEOPipelineDiagram() {
-  return (
-    <figure style={{ margin: '1.25rem 0', padding: '1rem', border: '1px solid #e9ecef', borderRadius: '10px', background: '#fff' }}>
-      <svg width="100%" viewBox="0 0 1200 260" role="img" aria-label="Diagram: SEO pipeline discovery to click to sale">
-        <defs>
-          <style>{`
-            .bx { fill:#fff; stroke:#0b0f1a; stroke-width:2; rx:14; }
-            .tx { font: 17px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#0b0f1a; font-weight:900; }
-            .sm { font: 13px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#495057; }
-            .ar { stroke:#0b0f1a; stroke-width:3; marker-end:url(#arrP5a); }
-          `}</style>
-          <marker id="arrP5a" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
-            <polygon points="0 0, 10 3.5, 0 7" fill="#0b0f1a"></polygon>
-          </marker>
-        </defs>
-
-        <rect className="bx" x="20" y="70" width="180" height="120"></rect>
-        <text className="tx" x="110" y="118" textAnchor="middle">Discover</text>
-        <text className="sm" x="110" y="145" textAnchor="middle">Links &amp; sitemaps</text>
-
-        <line className="ar" x1="200" y1="130" x2="260" y2="130"></line>
-
-        <rect className="bx" x="260" y="70" width="180" height="120"></rect>
-        <text className="tx" x="350" y="118" textAnchor="middle">Crawl</text>
-        <text className="sm" x="350" y="145" textAnchor="middle">Reads your pages</text>
-
-        <line className="ar" x1="440" y1="130" x2="500" y2="130"></line>
-
-        <rect className="bx" x="500" y="70" width="180" height="120"></rect>
-        <text className="tx" x="590" y="118" textAnchor="middle">Index</text>
-        <text className="sm" x="590" y="145" textAnchor="middle">Stores &amp; understands</text>
-
-        <line className="ar" x1="680" y1="130" x2="740" y2="130"></line>
-
-        <rect className="bx" x="740" y="70" width="180" height="120"></rect>
-        <text className="tx" x="830" y="118" textAnchor="middle">Rank</text>
-        <text className="sm" x="830" y="145" textAnchor="middle">Chooses best answer</text>
-
-        <line className="ar" x1="920" y1="130" x2="980" y2="130"></line>
-
-        <rect className="bx" x="980" y="70" width="200" height="120"></rect>
-        <text className="tx" x="1080" y="110" textAnchor="middle">Click</text>
-        <text className="sm" x="1080" y="135" textAnchor="middle">Your site gets a chance</text>
-        <text className="sm" x="1080" y="160" textAnchor="middle">to make a sale</text>
-      </svg>
-      <figcaption style={{ marginTop: '.75rem', color: '#6c757d', fontSize: '.95rem' }}>
-        CapeWeb focuses on the whole chain: not just rankings — sales.
-      </figcaption>
-    </figure>
-  );
-}
-
-function OnPageAnatomyDiagram() {
-  return (
-    <figure style={{ margin: '1.25rem 0', padding: '1rem', border: '1px solid #e9ecef', borderRadius: '10px', background: '#fff' }}>
-      <svg width="100%" viewBox="0 0 1200 420" role="img" aria-label="Diagram: Anatomy of a well-optimized page">
-        <defs>
-          <style>{`
-            .blk { fill:#fff; stroke:#0b0f1a; stroke-width:2; rx:14; }
-            .tx { font: 18px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#0b0f1a; font-weight:900; }
-            .sm { font: 13px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#495057; }
-          `}</style>
-        </defs>
-
-        <rect className="blk" x="80" y="40" width="1040" height="70"></rect>
-        <text className="tx" x="120" y="85">Title Tag</text>
-        <text className="sm" x="320" y="85">Clear topic + location + value (if relevant)</text>
-
-        <rect className="blk" x="80" y="130" width="1040" height="70"></rect>
-        <text className="tx" x="120" y="175">H1 Heading</text>
-        <text className="sm" x="320" y="175">Matches what the user searched for</text>
-
-        <rect className="blk" x="80" y="220" width="1040" height="70"></rect>
-        <text className="tx" x="120" y="265">Body Content</text>
-        <text className="sm" x="340" y="265">Simple sections, examples, answers to objections</text>
-
-        <rect className="blk" x="80" y="310" width="1040" height="70"></rect>
-        <text className="tx" x="120" y="355">Internal Links</text>
-        <text className="sm" x="340" y="355">Guide users (and Google) to your important pages</text>
-
-        <text className="sm" x="80" y="400">CapeWeb tip: The best SEO page also has a clean CTA ("Book", "Buy", "WhatsApp").</text>
-      </svg>
-      <figcaption style={{ marginTop: '.75rem', color: '#6c757d', fontSize: '.95rem' }}>
-        On-page SEO is where "rank" and "convert" meet.
-      </figcaption>
-    </figure>
-  );
-}
-
-function LocalSEODiagram() {
-  return (
-    <figure style={{ margin: '1.25rem 0', padding: '1rem', border: '1px solid #e9ecef', borderRadius: '10px', background: '#fff' }}>
-      <svg width="100%" viewBox="0 0 1200 340" role="img" aria-label="Diagram: Local SEO signals that influence local visibility">
-        <defs>
-          <style>{`
-            .bx { fill:#fff; stroke:#0b0f1a; stroke-width:2; rx:14; }
-            .tx { font: 18px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#0b0f1a; font-weight:900; }
-            .sm { font: 13px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#495057; }
-            .ar { stroke:#0b0f1a; stroke-width:3; marker-end:url(#arrP5b); }
-          `}</style>
-          <marker id="arrP5b" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
-            <polygon points="0 0, 10 3.5, 0 7" fill="#0b0f1a"></polygon>
-          </marker>
-        </defs>
-
-        <rect className="bx" x="450" y="30" width="300" height="90"></rect>
-        <text className="tx" x="600" y="70" textAnchor="middle">Local Visibility</text>
-        <text className="sm" x="600" y="95" textAnchor="middle">(Map pack + local results)</text>
-
-        <line className="ar" x1="600" y1="120" x2="600" y2="170"></line>
-
-        <rect className="bx" x="60" y="170" width="320" height="140"></rect>
-        <text className="tx" x="220" y="215" textAnchor="middle">Google Business Profile</text>
-        <text className="sm" x="220" y="240" textAnchor="middle">categories, services, photos</text>
-        <text className="sm" x="220" y="265" textAnchor="middle">hours, location, posts</text>
-
-        <rect className="bx" x="440" y="170" width="320" height="140"></rect>
-        <text className="tx" x="600" y="215" textAnchor="middle">Reviews</text>
-        <text className="sm" x="600" y="240" textAnchor="middle">quantity + quality</text>
-        <text className="sm" x="600" y="265" textAnchor="middle">freshness</text>
-
-        <rect className="bx" x="820" y="170" width="320" height="140"></rect>
-        <text className="tx" x="980" y="215" textAnchor="middle">Consistency</text>
-        <text className="sm" x="980" y="240" textAnchor="middle">Name, Address, Phone</text>
-        <text className="sm" x="980" y="265" textAnchor="middle">(same everywhere)</text>
-      </svg>
-      <figcaption style={{ marginTop: '.75rem', color: '#6c757d', fontSize: '.95rem' }}>
-        Local SEO is about trust and consistency. CapeWeb helps you set it up cleanly.
-      </figcaption>
-    </figure>
-  );
-}
-
-function TopicClusterDiagram() {
-  return (
-    <figure style={{ margin: '1.25rem 0', padding: '1rem', border: '1px solid #e9ecef', borderRadius: '10px', background: '#fff' }}>
-      <svg width="100%" viewBox="0 0 1200 420" role="img" aria-label="Diagram: Topic cluster with pillar page and supporting articles">
-        <defs>
-          <style>{`
-            .bx { fill:#fff; stroke:#0b0f1a; stroke-width:2; rx:16; }
-            .tx { font: 17px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#0b0f1a; font-weight:900; }
-            .sm { font: 12px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#495057; }
-            .ln { stroke:#0b0f1a; stroke-width:2.5; }
-          `}</style>
-        </defs>
-
-        <rect className="bx" x="430" y="40" width="340" height="110"></rect>
-        <text className="tx" x="600" y="85" textAnchor="middle">Pillar Page</text>
-        <text className="sm" x="600" y="112" textAnchor="middle">"Main topic: what you offer"</text>
-
-        <rect className="bx" x="120" y="250" width="260" height="110"></rect>
-        <text className="tx" x="250" y="295" textAnchor="middle">Support Page 1</text>
-        <text className="sm" x="250" y="322" textAnchor="middle">"How to…" question</text>
-
-        <rect className="bx" x="470" y="250" width="260" height="110"></rect>
-        <text className="tx" x="600" y="295" textAnchor="middle">Support Page 2</text>
-        <text className="sm" x="600" y="322" textAnchor="middle">"Price / package"</text>
-
-        <rect className="bx" x="820" y="250" width="260" height="110"></rect>
-        <text className="tx" x="950" y="295" textAnchor="middle">Support Page 3</text>
-        <text className="sm" x="950" y="322" textAnchor="middle">"Mistakes to avoid"</text>
-
-        <line className="ln" x1="520" y1="150" x2="310" y2="250"></line>
-        <line className="ln" x1="600" y1="150" x2="600" y2="250"></line>
-        <line className="ln" x1="680" y1="150" x2="890" y2="250"></line>
-
-        <text className="sm" x="600" y="400" textAnchor="middle">CapeWeb tip: Internal links are the glue that makes this work.</text>
-      </svg>
-      <figcaption style={{ marginTop: '.75rem', color: '#6c757d', fontSize: '.95rem' }}>
-        One topic cluster can outperform 20 random posts.
-      </figcaption>
-    </figure>
   );
 }

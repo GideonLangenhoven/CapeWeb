@@ -12,6 +12,9 @@ A comprehensive, production-ready design system for your AI automation website b
 
 1. **`src/styles/design-system.css`** (NEW)
    - Complete CSS custom properties (design tokens)
+   - **Monochrome UI Redesign**: Implemented a hybrid theme with a dark sidebar and a strictly white, high-legibility content pane. Updated typography to be black-on-white.
+   - **Sidebar Consistency**: Refactored Pillar 1 sidebar buttons to strictly match the design pattern of Pillars 2-11 (rich cards with descriptions), resolving styling inconsistencies.
+   - **Component Library**: Created `CapeWebUI.js` and `CapeWebLayouts.js` for phase 6 standardized components.
    - Color system with WCAG AA+ compliant palette
    - Typography scale using Inter font family
    - Spacing system based on 8px grid

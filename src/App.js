@@ -15,6 +15,7 @@ import ComponentLibrary from './pages/ComponentLibrary';
 import Learn from './pages/Learn';
 import './styles/main.css';
 import './styles/monochrome.css';
+import './styles/CapeWebDesignSystem.css'; // Phase 6 Design System
 import { ModalProvider } from './context/ModalContext';
 import Modal from './components/Modal'; // Import our new universal modal
 import useVoiceflowWidget from './hooks/useVoiceflowWidget'; // Import the Voiceflow widget hook

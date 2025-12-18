@@ -1,1002 +1,1176 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import * as confettiModule from 'canvas-confetti';
+import { gsap } from 'gsap';
+import { InteractiveLayout, QuizLayout } from './CapeWebLayouts';
+import { CWButton, CWHeading, CWCard, CWInput, CWBadge, CWAlert, BookInsight } from './CapeWebUI';
 
-// Quiz questions for Pillar 7
+// ==========================================
+// PILLAR 7 QUIZ DATA
+// ==========================================
 export const pillar7QuizQuestions = [
   {
-    question: 'What is the best first automation for a R0 founder?',
-    options: ['Lead capture → follow-up', 'Build a custom AI agent with 20 tools', 'Redesign your logo again'],
-    correctIndex: 0,
-  },
-  {
-    question: 'What should AI NOT do in customer chat?',
-    options: ['Draft a friendly reply', 'Invent facts, prices, or legal claims', 'Summarize a long message'],
+    question: 'How does a Large Language Model (LLM) like GPT work fundamentally?',
+    options: ['It Googles the answer', 'It predicts the next word (token) based on probability', 'It calls a human expert'],
     correctIndex: 1,
   },
   {
-    question: 'What is a "trigger"?',
-    options: ['The event that starts a workflow', 'A discount code', 'Your business name'],
-    correctIndex: 0,
-  },
-  {
-    question: 'What is the fastest way to reduce no-shows?',
-    options: ['Post more reels', 'Automated reminders + clear booking confirmation', 'Change your brand colors'],
+    question: 'What is "Prompt Engineering"?',
+    options: ['Designing physical machines', 'The skill of crafting inputs to guide AI to the best output', 'Fixing computer bugs'],
     correctIndex: 1,
   },
   {
-    question: 'What should your CRM pipeline do for you?',
-    options: ['Stop you from forgetting leads', 'Make coffee', 'Replace your product completely'],
+    question: 'in "Life 3.0", Max Tegmark defines Life 3.0 as beings who can redesign their own:',
+    options: ['Software and Hardware', 'Clothing', 'Houses'],
     correctIndex: 0,
   },
   {
-    question: 'Before marketing on WhatsApp, what must you have?',
-    options: ['Clear opt-in / permission', 'A viral TikTok', 'A 40-page business plan'],
+    question: 'What is a "Hallucination" in AI terms?',
+    options: ['When the AI sees ghosts', 'When the AI confidently states a fact that is completely false', 'When the server crashes'],
+    correctIndex: 1,
+  },
+  {
+    question: 'Which tool is best suited for visual automation (connecting apps like LEGO)?',
+    options: ['MS Paint', 'Zapier or Make.com', 'Notepad'],
+    correctIndex: 1,
+  },
+  {
+    question: 'What is "Code Interpreter" (or Advanced Data Analysis)?',
+    options: ['An AI that speaks code', 'A feature allowing AI to write and execute Python code to analyze data/Excel files', 'A translation service'],
+    correctIndex: 1,
+  },
+  {
+    question: 'In AI image generation (Midjourney), what is an "Aspect Ratio" parameter?',
+    options: ['--ar 16:9', '--high-quality', '--make-pretty'],
     correctIndex: 0,
+  },
+  {
+    question: 'What is the "Centaur" model of work?',
+    options: ['Half man, half horse', 'A human enhanced by AI tools specifically to outperform unenhanced humans', 'A chess opening'],
+    correctIndex: 1,
+  },
+  {
+    question: 'Why should you generally NOT use AI for final fact-checking?',
+    options: ['It is too expensive', 'It can hallucinate dates and events', 'It is too slow'],
+    correctIndex: 1,
+  },
+  {
+    question: 'What is an "AI Agent"?',
+    options: ['A spy', 'An AI system that can plan and execute multiple steps to achieve a goal autonomously', 'A support ticket'],
+    correctIndex: 1,
   },
 ];
 
-// Main Pillar 7 component (not used directly, exports parts)
-export default function CapeWebPillar7() {
-  return null;
-}
+// ==========================================
+// SHARED UTILS (MiniQuiz)
+// ==========================================
+function MiniQuiz({ questions, title = "Knowledge Check", onNext }) {
+  const [currentQ, setCurrentQ] = useState(0);
+  const [selected, setSelected] = useState(null);
+  const [score, setScore] = useState(0);
+  const [completed, setCompleted] = useState(false);
+  const [celebrating, setCelebrating] = useState(false);
+  const counterRef = useRef(null);
 
-// Content component
-export function Pillar7Content({
-  stack,
-  setStack,
-  bizName,
-  setBizName,
-  bizOffer,
-  setBizOffer,
-  bizArea,
-  setBizArea,
-  bizLink,
-  setBizLink,
-  promptRole,
-  setPromptRole,
-  promptTask,
-  setPromptTask,
-  promptRules,
-  setPromptRules,
-  promptFormat,
-  setPromptFormat,
-}) {
-  const [playbookGenerated, setPlaybookGenerated] = useState(false);
-  const [promptGenerated, setPromptGenerated] = useState(false);
-  const [quiz1Score, setQuiz1Score] = useState(null);
-  const [quiz1Q1, setQuiz1Q1] = useState('');
-  const [quiz1Q2, setQuiz1Q2] = useState('');
+  const question = questions[currentQ];
+  const isLast = currentQ === questions.length - 1;
 
-  const getStackOutput = () => {
-    const common = (
-      <>
-        <div style={{ fontWeight: 900, marginBottom: '.35rem' }}>Your setup checklist</div>
-        <ul style={{ margin: '.35rem 0 0 1.25rem' }}>
-          <li><strong>One inbox:</strong> pick ONE main channel to reply from first (WhatsApp is common).</li>
-          <li><strong>One lead list:</strong> every lead goes into ONE place (sheet or CRM).</li>
-          <li><strong>One next step:</strong> every reply ends with a clear action (book / buy / reply "YES").</li>
-        </ul>
-      </>
+  const playSuccessSound = () => {
+    try {
+      const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3');
+      audio.volume = 0.5;
+      audio.play().catch(e => console.log('Audio error', e));
+    } catch (e) { }
+  };
+
+  const handleSelect = (index) => setSelected(index);
+
+  const handleNext = () => {
+    const isCorrect = selected === question.correctIndex;
+    const newScore = isCorrect ? score + 1 : score;
+    setScore(newScore);
+
+    if (isLast) {
+      setCompleted(true);
+      const percentage = Math.round((newScore / questions.length) * 100);
+      if (percentage >= 70) {
+        setCelebrating(true);
+        playSuccessSound();
+      }
+    } else {
+      setCurrentQ(currentQ + 1);
+      setSelected(null);
+    }
+  };
+
+  const handleRestart = () => {
+    setCurrentQ(0);
+    setSelected(null);
+    setScore(0);
+    setCompleted(false);
+    setCelebrating(false);
+  };
+
+  useEffect(() => {
+    if (celebrating && counterRef.current) {
+      const percentage = Math.round((score / questions.length) * 100);
+      const tl = gsap.timeline();
+      counterRef.current.classList.remove('celebrate');
+      tl.set(counterRef.current, { opacity: 1 })
+        .fromTo(counterRef.current,
+          { innerText: 0, "--font-variation-weight": 300, scale: 0.8 },
+          {
+            innerText: percentage, duration: 3, snap: { innerText: 1 }, ease: "linear",
+            onUpdate: function () { const val = Math.ceil(this.targets()[0].innerText); counterRef.current.innerHTML = val + "%"; },
+            onComplete: () => {
+              counterRef.current.classList.add('celebrate');
+              const colors = ['#fbda61', '#ff5acd'];
+              const runConfetti = confettiModule.default || confettiModule;
+              if (typeof runConfetti === 'function') {
+                runConfetti({ particleCount: 150, spread: 100, origin: { y: 0.8 }, colors: colors, disableForReducedMotion: true });
+              }
+              setTimeout(() => setCelebrating(false), 3000);
+            }
+          }
+        )
+        .to(counterRef.current, { scale: 1, "--font-variation-weight": 600, duration: 1.2, ease: "elastic.out(1, 0.2)" });
+      return () => { if (counterRef.current) counterRef.current.classList.remove('celebrate'); };
+    }
+  }, [celebrating, score, questions.length]);
+
+  if (celebrating) {
+    return (
+      <div style={{ marginTop: '3rem', padding: '3rem 2rem', borderRadius: '32px', background: 'rgba(255, 255, 255, 0.95)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255, 255, 255, 0.6)', boxShadow: '0 20px 50px -10px rgba(31, 38, 135, 0.15)', position: 'relative', overflow: 'hidden', minHeight: '400px', display: 'grid', placeItems: 'center', fontFamily: '"Roboto Flex", sans-serif' }}>
+        <div style={{ textAlign: 'center', width: '100%' }}><h1 ref={counterRef} className="counter">0%</h1></div>
+      </div>
     );
+  }
 
-    const blocks = {
-      r0: (
-        <>
-          {common}
-          <hr style={{ border: 'none', borderTop: '1px solid #DEE2E6', margin: '.9rem 0' }} />
-          <div style={{ fontWeight: 900 }}>R0 Starter Stack</div>
-          <ol style={{ margin: '.35rem 0 0 1.25rem' }}>
-            <li>Google Form (lead capture)</li>
-            <li>Google Sheet (lead list)</li>
-            <li>Gmail templates (follow-ups)</li>
-            <li>WhatsApp Business (quick replies + labels)</li>
-          </ol>
-          <div style={{ marginTop: '.6rem', color: '#6c757d' }}>
-            Perfect for: first 10–30 leads when you need speed, not complexity.
-          </div>
-        </>
-      ),
-      crm: (
-        <>
-          {common}
-          <hr style={{ border: 'none', borderTop: '1px solid #DEE2E6', margin: '.9rem 0' }} />
-          <div style={{ fontWeight: 900 }}>Free CRM Upgrade</div>
-          <ol style={{ margin: '.35rem 0 0 1.25rem' }}>
-            <li>HubSpot CRM pipeline stages (New → Qualified → Pending → Won/Lost)</li>
-            <li>One form on your website/landing page</li>
-            <li>Email templates for follow-ups</li>
-          </ol>
-          <div style={{ marginTop: '.6rem', color: '#6c757d' }}>
-            Perfect for: first 100 sales when leads start piling up and you need organization.
-          </div>
-        </>
-      ),
-      automation: (
-        <>
-          {common}
-          <hr style={{ border: 'none', borderTop: '1px solid #DEE2E6', margin: '.9rem 0' }} />
-          <div style={{ fontWeight: 900 }}>No-Code Automations</div>
-          <ol style={{ margin: '.35rem 0 0 1.25rem' }}>
-            <li>Pick one tool: Zapier (simple), Make (powerful), or n8n (self-hosted)</li>
-            <li>Connect: form → sheet/CRM → email follow-up</li>
-            <li>Add logging: keep a "automation log" sheet so you can troubleshoot</li>
-          </ol>
-          <div style={{ marginTop: '.6rem', color: '#6c757d' }}>
-            Perfect for: when you're repeating the same steps every day.
-          </div>
-        </>
-      ),
-    };
-
-    return blocks[stack] || blocks.r0;
-  };
-
-  const generatePlaybook = () => {
-    setPlaybookGenerated(true);
-  };
-
-  const generatePrompt = () => {
-    setPromptGenerated(true);
-  };
-
-  const checkQuiz1 = () => {
-    let score = 0;
-    if (quiz1Q1 === 'true') score++;
-    if (quiz1Q2 === 'true') score++;
-    setQuiz1Score(score);
-  };
-
-  const getPlaybookTemplates = () => {
-    const name = bizName.trim() || 'Your Business';
-    const offer = bizOffer.trim() || 'your offer';
-    const area = bizArea.trim() || 'Cape Town';
-    const link = bizLink.trim() || '[your link]';
-
-    return [
-      {
-        title: '1) Price question',
-        text: `Hi 👋 Thanks for messaging ${name}. Quick question so I can price correctly: is this for (A) product only, (B) service only, or (C) product + service?\n\nHere's the next step: ${link}`,
-      },
-      {
-        title: '2) Availability / booking',
-        text: `Awesome — we can help. We operate in ${area}. You can book your slot here: ${link}\n\nIf you prefer, tell me: (1) your area, (2) your preferred day/time, and I'll confirm.`,
-      },
-      {
-        title: '3) "I\'m interested but not ready"',
-        text: `No stress — most people need a little time. Want me to remind you in 2 days or 7 days?\n\nReply "2" or "7" and I'll follow up.`,
-      },
-      {
-        title: '4) Proof / confidence builder',
-        text: `Great choice. Here's what you get with ${offer}:\n• Clear next steps\n• Fast delivery / turnaround\n• Support if you get stuck\n\nReady for the link? ${link}`,
-      },
-      {
-        title: '5) Review request',
-        text: `Thank you for choosing ${name} 🙏 If everything was good, could you leave a quick review? It helps a small Cape Town business grow.\n\nReply "YES" and I'll send the review link.`,
-      },
-    ];
-  };
-
-  const getGeneratedPrompt = () => {
-    const role = promptRole.trim() || 'You are my assistant for a small business.';
-    const task = promptTask.trim() || 'Help me write a customer reply.';
-    const rules = promptRules.trim() || 'Keep it short. Ask 1 clarifying question. Do not invent facts. If unsure, ask what you need.';
-    const format = promptFormat.trim() || '1 WhatsApp message + 1 follow-up option.';
-
-    return `ROLE:\n${role}\n\nTASK:\n${task}\n\nRULES:\n${rules}\n\nOUTPUT FORMAT:\n${format}`;
-  };
+  if (completed) {
+    const percentage = Math.round((score / questions.length) * 100);
+    const passed = percentage >= 70;
+    return (
+      <div style={{ marginTop: '3rem', padding: '2rem', textAlign: 'center', borderRadius: '24px', background: passed ? 'rgba(209, 250, 229, 0.8)' : 'rgba(254, 226, 226, 0.8)', backdropFilter: 'blur(20px)', border: passed ? '3px solid rgba(16, 185, 129, 0.3)' : '3px solid rgba(239, 68, 68, 0.3)', boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)' }}>
+        <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>{passed ? '🎉' : '📚'}</div>
+        <h3 style={{ fontSize: '2rem', color: passed ? '#065F46' : '#991B1B', marginBottom: '1rem' }}>{passed ? 'Great Job!' : 'Keep Learning!'}</h3>
+        <p style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.5rem', color: '#1F2937' }}>You scored {score} out of {questions.length} ({percentage}%)</p>
+        <p style={{ color: '#4B5563', marginBottom: '2rem', fontSize: '1.1rem' }}>{passed ? 'You are ready for the next module.' : 'Review the content and try again.'}</p>
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1.5rem', flexWrap: 'wrap' }}>
+          <CWButton onClick={handleRestart} variant={passed ? "secondary" : "primary"} style={{ opacity: passed ? 0.9 : 1 }}>{passed ? '↺ Retake Quiz' : '↺ Try Again'}</CWButton>
+          {passed && onNext && <CWButton onClick={onNext} variant="primary">Next Module →</CWButton>}
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <>
-      {/* SECTION 1 */}
-      <div className="mastery-section">
-        <h3>1) The 2AM Problem (and why CapeWeb starts here)</h3>
-        <p>
-          Meet our example founder: <strong>25 years old</strong>, living in <strong>Cape Town</strong>, starting with <strong>R0</strong>.
-          They're selling a <strong>product</strong> (a small physical item or digital download) <em>and</em> offering a <strong>service</strong>
-          (setup, consulting, delivery, installation, lessons—any service).
-        </p>
-        <p>
-          The problem is never "no ideas". The real problem is this:
-          <strong>leads arrive when you're busy</strong> (or asleep), and you lose sales because you reply too late.
-        </p>
+    <div style={{ marginTop: '3rem', padding: '2rem 2rem', borderRadius: '32px', background: 'rgba(255, 255, 255, 0.85)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255, 255, 255, 0.6)', boxShadow: '0 20px 50px -10px rgba(31, 38, 135, 0.15)', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(120deg, rgba(34,211,238,0.15), rgba(244,114,182,0.15), rgba(253,224,71,0.15), rgba(34,211,238,0.15))', backgroundSize: '300% 300%', animation: 'gradientMove 15s ease infinite', zIndex: -1, pointerEvents: 'none' }} />
+      <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ background: '#E0F2FE', color: '#0284C7', padding: '0.3rem 0.8rem', borderRadius: '100px', fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Assessment</div>
+        <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#64748B' }}>Question {currentQ + 1} of {questions.length}</span>
+      </div>
+      <h4 style={{ margin: '0 0 1.5rem 0', fontSize: '2rem', fontWeight: 900, color: '#0F172A', letterSpacing: '-0.02em', lineHeight: 1.1 }}>{title}</h4>
+      <div style={{ marginBottom: '2rem' }}>
+        <p style={{ fontSize: '1.2rem', fontWeight: 600, marginBottom: '1.5rem', color: '#1E293B', lineHeight: 1.5 }}>{question.question}</p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          {question.options.map((option, index) => (
+            <label key={index} style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem 1.25rem', borderRadius: '16px', border: '2px solid', borderColor: selected === index ? '#0EA5E9' : '#E2E8F0', background: selected === index ? '#F0F9FF' : '#FFFFFF', cursor: 'pointer', transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)', boxShadow: selected === index ? '0 4px 20px rgba(14, 165, 233, 0.15)' : '0 2px 4px rgba(0,0,0,0.02)' }} onClick={() => handleSelect(index)}>
+              <div style={{ width: '22px', height: '22px', borderRadius: '50%', border: selected === index ? '6px solid #0EA5E9' : '2px solid #CBD5E1', flexShrink: 0, transition: 'all 0.2s ease' }} />
+              <span style={{ flex: 1, fontSize: '1.05rem', color: selected === index ? '#0C4A6E' : '#334155', fontWeight: 500 }}>{option}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <button onClick={handleNext} disabled={selected === null} style={{ padding: '0.75rem 2rem', background: '#0F172A', color: 'white', border: 'none', borderRadius: '100px', fontSize: '1rem', fontWeight: 700, cursor: selected === null ? 'not-allowed' : 'pointer', opacity: selected === null ? 0.5 : 1, transition: 'all 0.2s ease', boxShadow: '0 4px 12px rgba(15, 23, 42, 0.2)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          {isLast ? 'Finish Quiz' : 'Next Question'}<span>→</span>
+        </button>
+      </div>
+    </div>
+  );
+}
 
-        <div className="workbook-section" style={{ background: '#0b0f1a', color: '#ffffff', border: '1px solid rgba(255,255,255,.12)', padding: '1.25rem', borderRadius: '10px' }}>
-          <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'flex-start', flexWrap: 'wrap' }}>
-            <div style={{ flex: 1, minWidth: '280px' }}>
-              <h4 style={{ margin: '0 0 .5rem 0' }}>🧭 CapeWeb's Rule</h4>
-              <p style={{ margin: 0, color: 'rgba(255,255,255,.85)' }}>
-                If a customer messages you at 2AM, your business should still guide them to the next step:
-                <strong>price</strong> → <strong>proof</strong> → <strong>pay / book</strong>.
-              </p>
-              <p style={{ margin: '.75rem 0 0 0', color: 'rgba(255,255,255,.85)' }}>
-                That's what CapeWeb builds: <strong>Automated assistants + booking flows + follow-ups</strong>.
-              </p>
+// ==========================================
+// INTERACTIVE VISUALS
+// ==========================================
 
-              <div style={{ marginTop: '1rem', display: 'flex', gap: '.75rem', flexWrap: 'wrap' }}>
-                <a href="/contact" target="_blank" rel="noopener noreferrer" className="card-cta" style={{ display: 'inline-flex', alignItems: 'center', gap: '.5rem', padding: '.65rem .9rem', borderRadius: '999px', background: '#ffffff', color: '#0b0f1a', textDecoration: 'none', fontWeight: 700 }}>
-                  Let's Talk <span aria-hidden="true">→</span>
-                </a>
-                <a href="https://help.openai.com/en/articles/8313428" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '.5rem', padding: '.65rem .9rem', borderRadius: '999px', border: '1px solid rgba(255,255,255,.25)', color: '#fff', textDecoration: 'none' }}>
-                  Why AI can be wrong
-                </a>
-              </div>
-            </div>
+// Interactive: The Centaur Lever
+function CentaurLever() {
+  const [leverage, setLeverage] = useState(50);
 
-            {/* Diagram */}
-            <div style={{ flex: 1, minWidth: '300px', background: 'rgba(255,255,255,.06)', border: '1px solid rgba(255,255,255,.12)', borderRadius: '12px', padding: '1rem' }}>
-              <div style={{ fontWeight: 800, marginBottom: '.5rem' }}>Diagram: Manual vs "Always-On"</div>
-              <ManualVsAlwaysOnDiagram />
-              <p style={{ margin: '.65rem 0 0 0', color: 'rgba(255,255,255,.82)', fontSize: '.95rem' }}>
-                Your goal: <strong>shrink time-to-response</strong> and keep the customer moving.
-              </p>
-            </div>
-          </div>
+  const output = Math.pow(leverage / 10, 2).toFixed(1);
+  const cost = (100 - leverage).toFixed(0);
+
+  return (
+    <div style={{ margin: '3rem 0', padding: '2rem', background: '#0F172A', borderRadius: '24px', color: 'white', textAlign: 'center' }}>
+      <h3 style={{ marginBottom: '1.5rem' }}>Interactive: The Leverage Gap</h3>
+      <div style={{ marginBottom: '2rem' }}>
+        <input
+          type="range"
+          min="1" max="100"
+          value={leverage}
+          onChange={(e) => setLeverage(parseInt(e.target.value))}
+          style={{ width: '100%', accentColor: '#3B82F6' }}
+        />
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: '#64748B', marginTop: '0.5rem' }}>
+          <span>PURE HUMAN</span>
+          <span>THE CENTAUR</span>
+          <span>PURE AI</span>
         </div>
       </div>
 
-      {/* SECTION 2 */}
-      <div className="mastery-section">
-        <h3>2) AI vs Automation (simple explanation)</h3>
-        <p>
-          <strong>Automation</strong> is a set of rules: "When X happens, do Y."<br />
-          <strong>AI</strong> is a helper brain for messy tasks: writing, summarizing, categorizing, answering FAQs (with guardrails).
-        </p>
-
-        <div className="comparison-table-wrapper">
-          <table className="capeweb-table">
-            <thead>
-              <tr>
-                <th>Thing</th>
-                <th>Best for</th>
-                <th>Example in a Cape Town startup</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Automation</strong></td>
-                <td>Repeating tasks</td>
-                <td>When a form is submitted → save lead → send a follow-up</td>
-              </tr>
-              <tr>
-                <td><strong>AI</strong></td>
-                <td>Language + decisions (with limits)</td>
-                <td>Turn a messy WhatsApp voice note into a neat quote request</td>
-              </tr>
-              <tr>
-                <td><strong>AI + Automation</strong></td>
-                <td>Scale without chaos</td>
-                <td>Auto-triage leads → route to CRM stage → send the right reply</td>
-              </tr>
-            </tbody>
-          </table>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+        <div style={{ padding: '1.5rem', background: '#1E293B', borderRadius: '16px' }}>
+          <div style={{ fontSize: '0.75rem', color: '#94A3B8', textTransform: 'uppercase' }}>Weekly Output</div>
+          <div style={{ fontSize: '2.5rem', fontWeight: 900, color: '#3B82F6' }}>{output}x</div>
         </div>
-
-        <div className="workbook-section" style={{ background: '#F8F9FA', border: '1px solid #E9ECEF', padding: '1.5rem', borderRadius: '10px', margin: '1.5rem 0' }}>
-          <h4>📝 Activity 1: Your "Invisible Team" List</h4>
-          <p style={{ marginTop: '.25rem' }}>
-            Tick what you want your business to do even when you are offline. (This powers your progress bar.)
-          </p>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '.65rem', marginTop: '1rem' }}>
-            <label style={{ display: 'flex', gap: '.5rem', alignItems: 'flex-start' }}>
-              <input data-progress="true" type="checkbox" />
-              <span><strong>Capture leads</strong> from IG/website into a list</span>
-            </label>
-            <label style={{ display: 'flex', gap: '.5rem', alignItems: 'flex-start' }}>
-              <input data-progress="true" type="checkbox" />
-              <span><strong>Reply fast</strong> with a helpful first message</span>
-            </label>
-            <label style={{ display: 'flex', gap: '.5rem', alignItems: 'flex-start' }}>
-              <input data-progress="true" type="checkbox" />
-              <span><strong>Send a booking link</strong> + reminders</span>
-            </label>
-            <label style={{ display: 'flex', gap: '.5rem', alignItems: 'flex-start' }}>
-              <input data-progress="true" type="checkbox" />
-              <span><strong>Follow up</strong> if the customer goes quiet</span>
-            </label>
-            <label style={{ display: 'flex', gap: '.5rem', alignItems: 'flex-start' }}>
-              <input data-progress="true" type="checkbox" />
-              <span><strong>Collect reviews</strong> after delivery/service</span>
-            </label>
-            <label style={{ display: 'flex', gap: '.5rem', alignItems: 'flex-start' }}>
-              <input data-progress="true" type="checkbox" />
-              <span><strong>Tag customers</strong> (new lead / paid / repeat)</span>
-            </label>
-          </div>
-
-          <details className="quiz-answer" style={{ marginTop: '1rem', cursor: 'pointer' }}>
-            <summary style={{ color: '#0B5ED7', fontWeight: 700 }}>Why this matters</summary>
-            <div className="answer-content" style={{ marginTop: '.6rem', paddingLeft: '1rem', borderLeft: '3px solid #0B5ED7' }}>
-              <p style={{ margin: 0 }}>
-                You're building a business with <strong>zero budget</strong>. Time is your currency. Automation gives you time back,
-                so you can do the only work that matters early on: <strong>talk to customers</strong> and <strong>make the first 100 sales</strong>.
-              </p>
-            </div>
-          </details>
+        <div style={{ padding: '1.5rem', background: '#1E293B', borderRadius: '16px' }}>
+          <div style={{ fontSize: '0.75rem', color: '#94A3B8', textTransform: 'uppercase' }}>Friction / Effort</div>
+          <div style={{ fontSize: '2.5rem', fontWeight: 900, color: '#F59E0B' }}>{cost}%</div>
         </div>
       </div>
+      <p style={{ marginTop: '1.5rem', fontSize: '0.9rem', color: '#94A3B8' }}>
+        {leverage < 30 && "Low output, high burnout risk. You are a manual laborer."}
+        {leverage >= 30 && leverage <= 70 && "Optimal. You use AI to multiply your human soul."}
+        {leverage > 70 && "High output, but low soul. Content sounds robotic."}
+      </p>
+    </div>
+  );
+}
 
-      {/* SECTION 3 */}
-      <div className="mastery-section">
-        <h3>3) The CapeWeb Stack (R0 first, then upgrade)</h3>
-        <p>
-          You don't start with fancy tools. You start with a simple spine, then you add muscle.
-          CapeWeb uses the same logic for client builds: <strong>simple → stable → scalable</strong>.
-        </p>
+// Interactive: Token Predictor Game
+function TokenPredictorGame() {
+  const [step, setStep] = useState(0);
+  const [showProb, setShowProb] = useState(false);
 
-        <div className="workbook-section" style={{ background: '#F8F9FA', border: '1px solid #E9ECEF', padding: '1.5rem', borderRadius: '10px' }}>
-          <h4>🧰 Activity 2: Pick Your Stack (and get a setup checklist)</h4>
-          <p style={{ marginTop: '.25rem' }}>Choose one. Don't overthink. Your first 100 sales do not need a "perfect stack".</p>
+  const sentences = [
+    { start: "The CEO decided to ", end: "automate", probs: ["automate (85%)", "quit (5%)", "dance (10%)"] },
+    { start: "Our best strategy is to ", end: "scale", probs: ["scale (92%)", "panic (3%)", "sleep (5%)"] }
+  ];
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '.75rem', marginTop: '1rem' }}>
-            <label style={{ border: '1px solid #DEE2E6', borderRadius: '10px', padding: '.9rem', background: '#fff', display: 'block' }}>
-              <input data-progress="true" type="radio" name="p7-stack" value="r0" checked={stack === 'r0'} onChange={(e) => setStack(e.target.value)} />
-              <div style={{ fontWeight: 800, marginTop: '.35rem' }}>R0 Starter</div>
-              <div style={{ color: '#6c757d', fontSize: '.92rem', marginTop: '.25rem' }}>Google Forms + Sheets + Gmail + WhatsApp Business</div>
-            </label>
+  return (
+    <div style={{ margin: '3rem 0', padding: '2.5rem', background: '#F8FAFC', borderRadius: '24px', border: '1px solid #E2E8F0', color: '#0F172A', textAlign: 'center' }}>
+      <h3 style={{ marginBottom: '1rem' }}>The Probability Engine</h3>
+      <p style={{ color: '#64748B', fontSize: '0.9rem', marginBottom: '2rem' }}>AI doesn't "think"—it guesses the next word based on percentage chance.</p>
 
-            <label style={{ border: '1px solid #DEE2E6', borderRadius: '10px', padding: '.9rem', background: '#fff', display: 'block' }}>
-              <input data-progress="true" type="radio" name="p7-stack" value="crm" checked={stack === 'crm'} onChange={(e) => setStack(e.target.value)} />
-              <div style={{ fontWeight: 800, marginTop: '.35rem' }}>Free CRM Upgrade</div>
-              <div style={{ color: '#6c757d', fontSize: '.92rem', marginTop: '.25rem' }}>HubSpot CRM + Forms + Email templates</div>
-            </label>
-
-            <label style={{ border: '1px solid #DEE2E6', borderRadius: '10px', padding: '.9rem', background: '#fff', display: 'block' }}>
-              <input data-progress="true" type="radio" name="p7-stack" value="automation" checked={stack === 'automation'} onChange={(e) => setStack(e.target.value)} />
-              <div style={{ fontWeight: 800, marginTop: '.35rem' }}>No-Code Automations</div>
-              <div style={{ color: '#6c757d', fontSize: '.92rem', marginTop: '.25rem' }}>Zapier / Make / n8n for workflows</div>
-            </label>
-          </div>
-
-          <div style={{ marginTop: '1rem', background: '#fff', border: '1px dashed #ADB5BD', borderRadius: '10px', padding: '1rem' }}>
-            {getStackOutput()}
-          </div>
-
-          <div style={{ marginTop: '1rem', display: 'flex', gap: '.75rem', flexWrap: 'wrap' }}>
-            <a href="https://www.hubspot.com/products/crm" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', fontWeight: 700, color: '#0B5ED7' }}>HubSpot CRM (Free)</a>
-            <a href="https://help.zapier.com/hc/en-us/articles/22234847450893-Zaps-quick-start-guide" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', fontWeight: 700, color: '#0B5ED7' }}>Zapier Quickstart</a>
-            <a href="https://help.make.com/webhooks" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', fontWeight: 700, color: '#0B5ED7' }}>Make Webhooks</a>
-            <a href="https://docs.n8n.io/" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', fontWeight: 700, color: '#0B5ED7' }}>n8n Docs</a>
-          </div>
-        </div>
-
-        <div className="workbook-section" style={{ background: '#0b0f1a', color: '#fff', border: '1px solid rgba(255,255,255,.12)', padding: '1.25rem', borderRadius: '10px', marginTop: '1.25rem' }}>
-          <h4 style={{ margin: '0 0 .5rem 0' }}>CapeWeb Implementation (what we do for clients)</h4>
-          <p style={{ margin: 0, color: 'rgba(255,255,255,.85)' }}>
-            When you're ready, CapeWeb installs:
-            <strong>AI chat + WhatsApp automations</strong>, <strong>lead routing + CRM sync</strong>,
-            <strong>booking flows + reminders</strong>, and <strong>reply playbooks + SOPs</strong>
-            so your business can keep selling while you build.
-          </p>
-          <div style={{ marginTop: '.9rem' }}>
-            <a href="/contact" target="_blank" rel="noopener noreferrer" className="card-cta" style={{ display: 'inline-flex', alignItems: 'center', gap: '.5rem', padding: '.65rem .9rem', borderRadius: '999px', background: '#ffffff', color: '#0b0f1a', textDecoration: 'none', fontWeight: 800 }}>
-              Get CapeWeb to build it <span aria-hidden="true">→</span>
-            </a>
-          </div>
-        </div>
+      <div style={{ fontSize: '1.5rem', fontFamily: 'monospace', padding: '2rem', background: 'white', borderRadius: '16px', border: '2px dashed #CBD5E1', marginBottom: '2rem' }}>
+        <span>{sentences[step].start}</span>
+        <span style={{ color: '#3B82F6', fontWeight: 800, borderBottom: '2px solid #3B82F6' }}>
+          {showProb ? sentences[step].end : '______'}
+        </span>
       </div>
 
-      {/* SECTION 4 - Continue in next part due to length */}
-      <div className="mastery-section">
-        <h3>4) Build Automation #1: "Lead Capture → Follow-Up"</h3>
-        <p>
-          This is the first automation CapeWeb uses to help founders reach their first sales.
-          It works for <strong>any</strong> business: product, service, or both.
-        </p>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1.1fr .9fr', gap: '1rem', alignItems: 'start' }}>
-          <div className="workbook-section" style={{ background: '#F8F9FA', border: '1px solid #E9ECEF', padding: '1.5rem', borderRadius: '10px' }}>
-            <h4>🧩 Step-by-step (R0 version)</h4>
-            <ol style={{ marginTop: '.5rem' }}>
-              <li>Create a simple lead form (Name, Phone, What they want, When they want it).</li>
-              <li>Connect it to a spreadsheet (your "lead list").</li>
-              <li>Auto-send a follow-up message (email first; WhatsApp next).</li>
-              <li>Add a "next step" link (book / buy / reply with one word).</li>
-            </ol>
-
-            <div style={{ marginTop: '1rem', borderRadius: '10px', background: '#fff', border: '1px solid #DEE2E6', padding: '1rem' }}>
-              <div style={{ fontWeight: 800 }}>Diagram: The Simple Spine</div>
-              <LeadCaptureFlowDiagram />
-              <div style={{ color: '#6c757d', fontSize: '.95rem', marginTop: '.5rem' }}>
-                Start with email follow-ups, then add WhatsApp once your flow is stable.
-              </div>
-            </div>
-
-            <div style={{ marginTop: '1rem' }}>
-              <a href="https://developers.google.com/apps-script/guides/triggers/" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', fontWeight: 800, color: '#0B5ED7' }}>
-                Google Apps Script Triggers (for automation)
-              </a>
-            </div>
-          </div>
-
-          <div className="workbook-section" style={{ background: '#fff', border: '1px solid #DEE2E6', padding: '1.5rem', borderRadius: '10px' }}>
-            <h4>⚙️ Optional: One tiny script (advanced, but copyable)</h4>
-            <p style={{ color: '#6c757d', marginTop: '.25rem' }}>
-              If you want the spreadsheet to email you every time a lead comes in, this is the idea:
-            </p>
-            <pre style={{ background: '#0b0f1a', color: '#fff', padding: '1rem', borderRadius: '10px', overflow: 'auto', fontSize: '.9rem' }}><code>{`// Apps Script (concept example)
-// Trigger: On form submit (in Google Sheets)
-function onFormSubmit(e) {
-  var row = e.values; // new submission row
-  var name = row[1];
-  var phone = row[2];
-  var need = row[3];
-
-  MailApp.sendEmail({
-    to: "you@yourdomain.com",
-    subject: "New lead: " + name,
-    htmlBody: "<b>Phone:</b> " + phone + "<br/>" +
-              "<b>Need:</b> " + need + "<br/>" +
-              "Reply fast. Your first 100 sales need speed."
-  });
-}`}</code></pre>
-
-            <details style={{ marginTop: '.75rem' }}>
-              <summary style={{ cursor: 'pointer', fontWeight: 800, color: '#0B5ED7' }}>When should you NOT do this?</summary>
-              <div style={{ marginTop: '.5rem', borderLeft: '3px solid #0B5ED7', paddingLeft: '1rem', color: '#0b0f1a' }}>
-                <p style={{ margin: 0 }}>
-                  If you feel overwhelmed, skip code. Use a <strong>simple checklist</strong> and reply manually fast.
-                  Automation is powerful—but only when it doesn't block you from selling today.
-                </p>
-              </div>
-            </details>
-
-            <div style={{ marginTop: '1rem', padding: '.9rem', borderRadius: '10px', background: '#E7F1FF', border: '1px solid #CFE2FF' }}>
-              <strong>✅ CapeWeb tip:</strong> For early-stage founders, we automate the
-              <strong>capture</strong> + <strong>follow-up</strong> first, and only then we add the "smart AI layer."
-            </div>
-          </div>
-        </div>
-
-        <div className="workbook-section" style={{ background: '#F8F9FA', border: '1px solid #E9ECEF', padding: '1.5rem', borderRadius: '10px', marginTop: '1rem' }}>
-          <h4>🧠 Quick Quiz (Automation basics)</h4>
-
-          <div className="quiz-question" style={{ marginTop: '.75rem' }}>
-            <p><strong>Q1:</strong> In an automation, what is a <em>trigger</em>?</p>
-            <div className="quiz-options" style={{ display: 'grid', gap: '.35rem' }}>
-              <label className="radio-item">
-                <input type="radio" name="p7-q1" value="false" checked={quiz1Q1 === 'false'} onChange={(e) => setQuiz1Q1(e.target.value)} />
-                {' '}The button that turns your phone on
-              </label>
-              <label className="radio-item">
-                <input data-progress="true" type="radio" name="p7-q1" value="true" checked={quiz1Q1 === 'true'} onChange={(e) => setQuiz1Q1(e.target.value)} />
-                {' '}The event that starts the workflow (e.g., "new form submitted")
-              </label>
-              <label className="radio-item">
-                <input type="radio" name="p7-q1" value="false2" checked={quiz1Q1 === 'false2'} onChange={(e) => setQuiz1Q1(e.target.value)} />
-                {' '}A logo or brand color
-              </label>
-            </div>
-          </div>
-
-          <div className="quiz-question" style={{ marginTop: '1rem' }}>
-            <p><strong>Q2:</strong> Why do we automate follow-ups for the first 100 sales?</p>
-            <div className="quiz-options" style={{ display: 'grid', gap: '.35rem' }}>
-              <label className="radio-item">
-                <input type="radio" name="p7-q2" value="false" checked={quiz1Q2 === 'false'} onChange={(e) => setQuiz1Q2(e.target.value)} />
-                {' '}Because robots are cooler than humans
-              </label>
-              <label className="radio-item">
-                <input data-progress="true" type="radio" name="p7-q2" value="true" checked={quiz1Q2 === 'true'} onChange={(e) => setQuiz1Q2(e.target.value)} />
-                {' '}Because most leads don't buy on the first message
-              </label>
-              <label className="radio-item">
-                <input type="radio" name="p7-q2" value="false2" checked={quiz1Q2 === 'false2'} onChange={(e) => setQuiz1Q2(e.target.value)} />
-                {' '}Because customers hate quick replies
-              </label>
-            </div>
-          </div>
-
-          <button type="button" onClick={checkQuiz1} style={{ marginTop: '1rem', padding: '.7rem .9rem', borderRadius: '10px', border: '1px solid #0B5ED7', background: '#0B5ED7', color: '#fff', fontWeight: 800, cursor: 'pointer' }}>
-            Check Score
+      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+        <button
+          onClick={() => setShowProb(true)}
+          style={{ padding: '0.8rem 2rem', borderRadius: '100px', background: '#3B82F6', color: 'white', border: 'none', fontWeight: 800, cursor: 'pointer' }}
+        >
+          PREDICT NEXT TOKEN
+        </button>
+        {showProb && (
+          <button
+            onClick={() => { setStep((step + 1) % sentences.length); setShowProb(false); }}
+            style={{ padding: '0.8rem 2rem', borderRadius: '100px', background: '#F1F5F9', color: '#0F172A', border: '1px solid #E2E8F0', fontWeight: 800, cursor: 'pointer' }}
+          >
+            NEXT SENTENCE
           </button>
-          {quiz1Score !== null && (
-            <div style={{ marginTop: '.75rem', fontWeight: 800, color: quiz1Score === 2 ? '#198754' : '#DC3545' }}>
-              Score: {quiz1Score}/2 {quiz1Score === 2 ? '✅ Nice. Keep building.' : '⚠️ Re-read the section and try again.'}
-            </div>
+        )}
+      </div>
+
+      {showProb && (
+        <div style={{ marginTop: '2rem', animation: 'fadeIn 0.3s' }}>
+          <div style={{ fontSize: '0.75rem', color: '#64748B', marginBottom: '1rem' }}>TOP PROBABILITIES:</div>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem' }}>
+            {sentences[step].probs.map(p => (
+              <span key={p} style={{ padding: '0.5rem 1rem', background: '#DBEAFE', color: '#1E40AF', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 600 }}>{p}</span>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Interactive: Prompt Refiner
+function PromptRefiner() {
+  const [tone, setTone] = useState('Professional');
+  const [context, setContext] = useState(false);
+
+  return (
+    <div style={{ margin: '3rem 0', padding: '2rem', background: '#0F172A', borderRadius: '24px', color: 'white' }}>
+      <h3 style={{ marginBottom: '1.5rem', textAlign: 'center' }}>Interactive: Prompt Engineering</h3>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '2rem' }}>
+        <div>
+          <label style={{ display: 'block', fontSize: '0.7rem', color: '#94A3B8', marginBottom: '1rem' }}>SET TONE</label>
+          <div style={{ display: 'grid', gap: '0.5rem' }}>
+            {['Professional', 'Funny', 'Aggressive', 'Scientific'].map(t => (
+              <button
+                key={t}
+                onClick={() => setTone(t)}
+                style={{
+                  padding: '0.8rem',
+                  background: tone === t ? '#3B82F6' : '#1E293B',
+                  border: 'none',
+                  borderRadius: '10px',
+                  color: 'white',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  fontSize: '0.85rem'
+                }}
+              >
+                {t}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div>
+          <label style={{ display: 'block', fontSize: '0.7rem', color: '#94A3B8', marginBottom: '1rem' }}>ADD CONTEXT?</label>
+          <button
+            onClick={() => setContext(!context)}
+            style={{
+              width: '100%',
+              padding: '1.5rem',
+              background: context ? '#10B981' : '#1E293B',
+              border: `2px ${context ? 'solid' : 'dashed'} ${context ? '#34D399' : '#475569'}`,
+              borderRadius: '16px',
+              color: 'white',
+              cursor: 'pointer',
+              transition: 'all 0.3s'
+            }}
+          >
+            {context ? '✅ CONTEXT ENABLED' : '❌ NO CONTEXT'}
+          </button>
+          <p style={{ marginTop: '1rem', fontSize: '0.7rem', color: '#64748B' }}>
+            Context includes: Goal, Target Audience, Constraints, and Examples.
+          </p>
+        </div>
+      </div>
+
+      <div style={{ padding: '1.5rem', background: '#1E293B', borderRadius: '16px', border: '1px solid #334155' }}>
+        <div style={{ fontSize: '0.7rem', color: '#64748B', marginBottom: '0.5rem' }}>AI OUTPUT (SIMULATED):</div>
+        <div style={{ fontSize: '0.9rem', lineHeight: 1.6, color: context ? '#F8FAFC' : '#94A3B8' }}>
+          {context ? (
+            tone === 'Professional' ? "Based on our market analysis of busy professionals, here are three strategic initiatives to optimize your workflow..." :
+              tone === 'Funny' ? "Look, your calendar is a dumpster fire. We're here to throw water on it. Here's the plan..." :
+                tone === 'Aggressive' ? "STOP WASTING TIME. Every second you spend manual tasking is cash burning. Get the tool now." :
+                  "The initial data set indicates a 40% variance in chronological efficiency when utilizing automated protocols..."
+          ) : (
+            "Here is a generic response that sounds like every other robot on the internet. I don't know who you are or what you want."
           )}
         </div>
       </div>
-
-      {/* Continue with remaining sections... */}
-      {/* Due to length, I'll add the rest in the component */}
-      <Pillar7RemainingContent
-        bizName={bizName}
-        setBizName={setBizName}
-        bizOffer={bizOffer}
-        setBizOffer={setBizOffer}
-        bizArea={bizArea}
-        setBizArea={setBizArea}
-        bizLink={bizLink}
-        setBizLink={setBizLink}
-        promptRole={promptRole}
-        setPromptRole={setPromptRole}
-        promptTask={promptTask}
-        setPromptTask={setPromptTask}
-        promptRules={promptRules}
-        setPromptRules={setPromptRules}
-        promptFormat={promptFormat}
-        setPromptFormat={setPromptFormat}
-        playbookGenerated={playbookGenerated}
-        generatePlaybook={generatePlaybook}
-        getPlaybookTemplates={getPlaybookTemplates}
-        promptGenerated={promptGenerated}
-        generatePrompt={generatePrompt}
-        getGeneratedPrompt={getGeneratedPrompt}
-      />
-    </>
+    </div>
   );
 }
 
-// Remaining content component
-function Pillar7RemainingContent({
-  bizName,
-  setBizName,
-  bizOffer,
-  setBizOffer,
-  bizArea,
-  setBizArea,
-  bizLink,
-  setBizLink,
-  promptRole,
-  setPromptRole,
-  promptTask,
-  setPromptTask,
-  promptRules,
-  setPromptRules,
-  promptFormat,
-  setPromptFormat,
-  playbookGenerated,
-  generatePlaybook,
-  getPlaybookTemplates,
-  promptGenerated,
-  generatePrompt,
-  getGeneratedPrompt,
-}) {
+function TokenPredictionVisual() {
+  const [word, setWord] = useState('');
+  const sentence = "The cat sat on the ";
+
+  useEffect(() => {
+    const words = ["mat (80%)", "hat (10%)", "floor (5%)"];
+    let i = 0;
+    const interval = setInterval(() => {
+      setWord(words[i]);
+      i = (i + 1) % words.length;
+    }, 1500);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <>
-      {/* SECTION 5 */}
-      <div className="mastery-section">
-        <h3>5) Build Automation #2: "Bookings + Reminders" (for services + product demos)</h3>
-        <p>
-          Even if you sell products, bookings still matter: pickups, installs, consultations, demos, measurements, deliveries.
-          Your calendar is a sales tool.
-        </p>
-
-        <div className="workbook-section" style={{ background: '#F8F9FA', border: '1px solid #E9ECEF', padding: '1.5rem', borderRadius: '10px' }}>
-          <h4>🗓️ Activity 3: Set up a booking flow</h4>
-          <p style={{ marginTop: '.25rem' }}>Choose one path:</p>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0,1fr))', gap: '.75rem', marginTop: '1rem' }}>
-            <div style={{ background: '#fff', border: '1px solid #DEE2E6', borderRadius: '10px', padding: '1rem' }}>
-              <div style={{ fontWeight: 800 }}>Path A (Simple)</div>
-              <ul style={{ margin: '.5rem 0 0 1.25rem' }}>
-                <li>Use your phone calendar</li>
-                <li>Use WhatsApp quick replies to send "Available times"</li>
-                <li>Confirm manually</li>
-              </ul>
-            </div>
-
-            <div style={{ background: '#fff', border: '1px solid #DEE2E6', borderRadius: '10px', padding: '1rem' }}>
-              <div style={{ fontWeight: 800 }}>Path B (Automated)</div>
-              <ul style={{ margin: '.5rem 0 0 1.25rem' }}>
-                <li>Create a booking link</li>
-                <li>Send reminders automatically</li>
-                <li>Reduce no-shows</li>
-              </ul>
-
-              <div style={{ marginTop: '.75rem' }}>
-                <a href="https://help.calendly.com/hc/en-us/articles/14078580813335-Calendly-scheduling-notifications" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', fontWeight: 800, color: '#0B5ED7' }}>
-                  Calendly notifications (how it works)
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div style={{ marginTop: '1rem', padding: '1rem', borderRadius: '10px', background: '#E6F4EA', border: '1px solid #C7E7D1' }}>
-            <strong>⚡ CapeWeb tip:</strong> Put your booking link in three places:
-            <strong>Instagram bio</strong>, <strong>website header</strong>, and <strong>WhatsApp auto-reply</strong>.
-            You want a customer to book in under 60 seconds.
-          </div>
-
-          <div style={{ marginTop: '1rem' }}>
-            <label style={{ display: 'flex', gap: '.5rem', alignItems: 'flex-start' }}>
-              <input data-progress="true" type="checkbox" />
-              <span>I placed my booking link in at least 2 places.</span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      {/* SECTION 6 */}
-      <div className="mastery-section">
-        <h3>6) WhatsApp + AI (do it safely and within platform rules)</h3>
-        <p>
-          In South Africa, WhatsApp is often the main sales channel. But automation on WhatsApp must be done carefully:
-          you need <strong>permission (opt-in)</strong>, you must avoid spammy behaviour, and you must follow platform policies.
-        </p>
-
-        <div className="workbook-section" style={{ background: '#FFF3CD', border: '1px solid #FFECB5', padding: '1.25rem', borderRadius: '10px' }}>
-          <h4 style={{ margin: '0 0 .5rem 0' }}>🛑 Important: Opt-In &amp; Policy Basics</h4>
-          <p style={{ margin: 0 }}>
-            Before you send marketing or follow-ups on WhatsApp, make sure the customer has clearly agreed to receive messages.
-            Keep proof (a checkbox, a DM where they asked, a form submission, etc.).
-          </p>
-          <p style={{ margin: '.65rem 0 0 0' }}>
-            Also, WhatsApp policies can change. Build your system so you can adjust fast (CapeWeb does this as part of our care plans).
-          </p>
-
-          <div style={{ marginTop: '.9rem', display: 'flex', gap: '.75rem', flexWrap: 'wrap' }}>
-            <a href="https://www.whatsapp.com/legal/business-policy?l=et&lang=en" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', fontWeight: 800, color: '#0B5ED7' }}>
-              WhatsApp Business Messaging Policy
-            </a>
-            <a href="https://www.whatsapp.com/legal/business-solution-terms?l=en" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', fontWeight: 800, color: '#0B5ED7' }}>
-              WhatsApp Business Solution Terms
-            </a>
-            <a href="https://inforegulator.org.za/" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', fontWeight: 800, color: '#0B5ED7' }}>
-              SA Information Regulator (POPIA)
-            </a>
-          </div>
-        </div>
-
-        <div className="workbook-section" style={{ background: '#F8F9FA', border: '1px solid #E9ECEF', padding: '1.5rem', borderRadius: '10px', marginTop: '1rem' }}>
-          <h4>💬 Activity 4: Build your WhatsApp "Reply Playbook"</h4>
-          <p style={{ marginTop: '.25rem' }}>
-            These are the messages that make you money: fast, friendly, and clear. Fill in the blanks and generate your templates.
-          </p>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0,1fr))', gap: '.75rem', marginTop: '1rem' }}>
-            <div>
-              <label style={{ fontWeight: 800, display: 'block', marginBottom: '.35rem' }}>Business name</label>
-              <input type="text" placeholder="e.g., CapeGlow" value={bizName} onChange={(e) => setBizName(e.target.value)} style={{ width: '100%', padding: '.65rem', borderRadius: '10px', border: '1px solid #CED4DA' }} />
-            </div>
-            <div>
-              <label style={{ fontWeight: 800, display: 'block', marginBottom: '.35rem' }}>Main offer</label>
-              <input type="text" placeholder="e.g., Starter Kit (product) + Setup Session (service)" value={bizOffer} onChange={(e) => setBizOffer(e.target.value)} style={{ width: '100%', padding: '.65rem', borderRadius: '10px', border: '1px solid #CED4DA' }} />
-            </div>
-            <div>
-              <label style={{ fontWeight: 800, display: 'block', marginBottom: '.35rem' }}>Service area</label>
-              <input type="text" placeholder="e.g., Cape Town (CBD, Southern Suburbs, Atlantic Seaboard)" value={bizArea} onChange={(e) => setBizArea(e.target.value)} style={{ width: '100%', padding: '.65rem', borderRadius: '10px', border: '1px solid #CED4DA' }} />
-            </div>
-            <div>
-              <label style={{ fontWeight: 800, display: 'block', marginBottom: '.35rem' }}>Booking / checkout link</label>
-              <input type="text" placeholder="https://yourlink..." value={bizLink} onChange={(e) => setBizLink(e.target.value)} style={{ width: '100%', padding: '.65rem', borderRadius: '10px', border: '1px solid #CED4DA' }} />
-            </div>
-          </div>
-
-          <button type="button" onClick={generatePlaybook} style={{ marginTop: '1rem', padding: '.75rem .95rem', borderRadius: '10px', border: '1px solid #0B5ED7', background: '#0B5ED7', color: '#fff', fontWeight: 900, cursor: 'pointer' }}>
-            Generate my reply playbook
-          </button>
-
-          <div style={{ marginTop: '1rem', background: '#fff', border: '1px solid #DEE2E6', borderRadius: '10px', padding: '1rem' }}>
-            {playbookGenerated ? (
-              <>
-                <div style={{ fontWeight: 900, marginBottom: '.5rem' }}>Your Reply Playbook (copy/paste)</div>
-                <div style={{ display: 'grid', gap: '.75rem' }}>
-                  {getPlaybookTemplates().map((t, idx) => (
-                    <div key={idx} style={{ border: '1px solid #DEE2E6', borderRadius: '10px', padding: '1rem', background: '#fff' }}>
-                      <div style={{ fontWeight: 900 }}>{t.title}</div>
-                      <textarea rows={4} value={t.text} readOnly style={{ width: '100%', marginTop: '.5rem', padding: '.65rem', borderRadius: '10px', border: '1px solid #CED4DA' }} />
-                      <div style={{ color: '#6c757d', fontSize: '.9rem', marginTop: '.35rem' }}>
-                        CapeWeb tip: end every message with 1 clear next step.
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </>
-            ) : (
-              <div style={{ color: '#6c757d' }}>Your templates will appear here.</div>
-            )}
-          </div>
-
-          <details style={{ marginTop: '1rem' }}>
-            <summary style={{ cursor: 'pointer', fontWeight: 900, color: '#0B5ED7' }}>Where to use these templates</summary>
-            <div style={{ marginTop: '.5rem', borderLeft: '3px solid #0B5ED7', paddingLeft: '1rem' }}>
-              <ul style={{ margin: '.25rem 0 0 1.25rem' }}>
-                <li>WhatsApp Business quick replies</li>
-                <li>Instagram DM saved replies</li>
-                <li>Email templates (Gmail canned responses)</li>
-                <li>Website chat assistant (CapeWeb can install an AI layer later)</li>
-              </ul>
-            </div>
-          </details>
-        </div>
-      </div>
-
-      {/* SECTION 7 */}
-      <div className="mastery-section">
-        <h3>7) AI Prompts that actually help (without breaking trust)</h3>
-        <p>
-          AI is powerful, but it can sound confident even when wrong. Use it like a <strong>junior assistant</strong>:
-          fast drafts, summaries, options—then you approve the final answer.
-        </p>
-
-        <div className="workbook-section" style={{ background: '#F8F9FA', border: '1px solid #E9ECEF', padding: '1.5rem', borderRadius: '10px' }}>
-          <h4>🧠 Activity 5: Build a "safe prompt" (copy/paste)</h4>
-          <p style={{ marginTop: '.25rem' }}>
-            CapeWeb prompts follow a simple pattern: <strong>Role</strong> → <strong>Task</strong> → <strong>Rules</strong> → <strong>Output format</strong>.
-          </p>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0,1fr))', gap: '.75rem', marginTop: '1rem' }}>
-            <div>
-              <label style={{ fontWeight: 900, display: 'block', marginBottom: '.35rem' }}>Role</label>
-              <input type="text" placeholder="You are my customer support assistant..." value={promptRole} onChange={(e) => setPromptRole(e.target.value)} style={{ width: '100%', padding: '.65rem', borderRadius: '10px', border: '1px solid #CED4DA' }} />
-            </div>
-            <div>
-              <label style={{ fontWeight: 900, display: 'block', marginBottom: '.35rem' }}>Task</label>
-              <input type="text" placeholder="Write a WhatsApp reply to a price question..." value={promptTask} onChange={(e) => setPromptTask(e.target.value)} style={{ width: '100%', padding: '.65rem', borderRadius: '10px', border: '1px solid #CED4DA' }} />
-            </div>
-            <div style={{ gridColumn: 'span 2' }}>
-              <label style={{ fontWeight: 900, display: 'block', marginBottom: '.35rem' }}>Rules (guardrails)</label>
-              <textarea rows={3} placeholder="Rules: Keep it under 80 words. Ask 1 clarifying question. Do not invent prices. If unsure, say what you need to confirm." value={promptRules} onChange={(e) => setPromptRules(e.target.value)} style={{ width: '100%', padding: '.65rem', borderRadius: '10px', border: '1px solid #CED4DA' }} />
-            </div>
-            <div style={{ gridColumn: 'span 2' }}>
-              <label style={{ fontWeight: 900, display: 'block', marginBottom: '.35rem' }}>Output format</label>
-              <input type="text" placeholder="Format: 1 WhatsApp message + 1 follow-up option" value={promptFormat} onChange={(e) => setPromptFormat(e.target.value)} style={{ width: '100%', padding: '.65rem', borderRadius: '10px', border: '1px solid #CED4DA' }} />
-            </div>
-          </div>
-
-          <button type="button" onClick={generatePrompt} style={{ marginTop: '1rem', padding: '.75rem .95rem', borderRadius: '10px', border: '1px solid #0B5ED7', background: '#0B5ED7', color: '#fff', fontWeight: 900, cursor: 'pointer' }}>
-            Generate my prompt
-          </button>
-
-          <div style={{ marginTop: '1rem', background: '#fff', border: '1px solid #DEE2E6', borderRadius: '10px', padding: '1rem' }}>
-            <div style={{ fontWeight: 900, marginBottom: '.35rem' }}>Your copyable prompt</div>
-            <textarea rows={6} value={promptGenerated ? getGeneratedPrompt() : ''} placeholder="Your prompt will appear here..." readOnly style={{ width: '100%', padding: '.65rem', borderRadius: '10px', border: '1px solid #CED4DA' }} />
-            <div style={{ marginTop: '.6rem', display: 'flex', gap: '.75rem', flexWrap: 'wrap' }}>
-              <a href="https://platform.openai.com/docs/quickstart" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', fontWeight: 800, color: '#0B5ED7' }}>OpenAI API quickstart</a>
-              <a href="https://openai.com/policies/usage-policies/" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', fontWeight: 800, color: '#0B5ED7' }}>OpenAI usage policies</a>
-              <a href="https://ai.google.dev/gemini-api/docs" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', fontWeight: 800, color: '#0B5ED7' }}>Google Gemini API docs</a>
-              <a href="https://console.anthropic.com/docs/en/api/getting-started" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', fontWeight: 800, color: '#0B5ED7' }}>Claude API docs</a>
-            </div>
-          </div>
-
-          <div style={{ marginTop: '1rem', padding: '1rem', borderRadius: '10px', background: '#E7F1FF', border: '1px solid #CFE2FF' }}>
-            <strong>✅ Truth rule:</strong> If the message includes legal, medical, pricing, delivery dates, or contracts—
-            <strong>verify before sending</strong>.
-          </div>
-
-          <label style={{ display: 'flex', gap: '.5rem', alignItems: 'flex-start', marginTop: '1rem' }}>
-            <input data-progress="true" type="checkbox" />
-            <span>I will never let AI invent facts or prices in customer chats.</span>
-          </label>
-        </div>
-      </div>
-
-      {/* SECTION 8 */}
-      <div className="mastery-section">
-        <h3>8) Build Automation #3: "CRM Pipeline + Lead Routing" (free)</h3>
-        <p>
-          A pipeline stops you from forgetting people. If you forget people, you lose sales.
-          A simple CRM pipeline is like a "sales to-do list" that updates itself.
-        </p>
-
-        <div className="workbook-section" style={{ background: '#F8F9FA', border: '1px solid #E9ECEF', padding: '1.5rem', borderRadius: '10px' }}>
-          <h4>🧱 Your first pipeline (copy this)</h4>
-          <div className="comparison-table-wrapper" style={{ marginTop: '.75rem' }}>
-            <table className="capeweb-table">
-              <thead>
-                <tr>
-                  <th>Stage</th>
-                  <th>Meaning</th>
-                  <th>Your next action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>New Lead</strong></td>
-                  <td>They asked anything</td>
-                  <td>Reply within 15 minutes</td>
-                </tr>
-                <tr>
-                  <td><strong>Qualified</strong></td>
-                  <td>They want it + can pay</td>
-                  <td>Send link / quote / booking</td>
-                </tr>
-                <tr>
-                  <td><strong>Pending</strong></td>
-                  <td>Waiting on payment/booking</td>
-                  <td>Follow up in 24 hours</td>
-                </tr>
-                <tr>
-                  <td><strong>Won</strong></td>
-                  <td>Paid/booked</td>
-                  <td>Deliver + ask for review</td>
-                </tr>
-                <tr>
-                  <td><strong>Lost</strong></td>
-                  <td>Not now</td>
-                  <td>Set a reminder for 30 days</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div style={{ marginTop: '1rem', display: 'flex', gap: '.75rem', flexWrap: 'wrap' }}>
-            <a href="https://www.hubspot.com/products/crm" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', fontWeight: 900, color: '#0B5ED7' }}>Get HubSpot CRM (free)</a>
-            <a href="https://help.brevo.com/hc/en-us/articles/14611647354002-Getting-started-with-Automations" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', fontWeight: 900, color: '#0B5ED7' }}>Brevo automations</a>
-            <a href="https://mailchimp.com/help/create-customer-journey/" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', fontWeight: 900, color: '#0B5ED7' }}>Mailchimp automation flows</a>
-            <a href="https://www.mailerlite.com/help/how-to-create-an-automation-workflow" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', fontWeight: 900, color: '#0B5ED7' }}>MailerLite workflows</a>
-          </div>
-
-          <label style={{ display: 'flex', gap: '.5rem', alignItems: 'flex-start', marginTop: '1rem' }}>
-            <input data-progress="true" type="checkbox" />
-            <span>I created (or planned) my pipeline stages exactly like above.</span>
-          </label>
-        </div>
-      </div>
-
-      {/* SECTION 9 */}
-      <div className="mastery-section">
-        <h3>9) Safety &amp; Compliance (POPIA mindset in plain English)</h3>
-        <p>
-          Automation uses customer data (names, phone numbers, addresses). In South Africa, you must treat that data like a real asset:
-          keep it safe, only collect what you need, and stop messaging when someone says stop.
-        </p>
-
-        <div className="workbook-section" style={{ background: '#F8F9FA', border: '1px solid #E9ECEF', padding: '1.5rem', borderRadius: '10px' }}>
-          <h4>🔒 Activity 6: The "Data Minimization" Checklist</h4>
-          <p style={{ marginTop: '.25rem' }}>Tick what you will follow from today:</p>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '.65rem', marginTop: '1rem' }}>
-            <label style={{ display: 'flex', gap: '.5rem', alignItems: 'flex-start' }}>
-              <input data-progress="true" type="checkbox" />
-              <span>I only collect data I need to fulfill the order/service.</span>
-            </label>
-            <label style={{ display: 'flex', gap: '.5rem', alignItems: 'flex-start' }}>
-              <input data-progress="true" type="checkbox" />
-              <span>I can prove consent (opt-in) for marketing messages.</span>
-            </label>
-            <label style={{ display: 'flex', gap: '.5rem', alignItems: 'flex-start' }}>
-              <input data-progress="true" type="checkbox" />
-              <span>I keep customer data in one "source of truth" (not random notes).</span>
-            </label>
-            <label style={{ display: 'flex', gap: '.5rem', alignItems: 'flex-start' }}>
-              <input data-progress="true" type="checkbox" />
-              <span>If someone opts out, I stop. No arguing. No "but…".</span>
-            </label>
-          </div>
-
-          <div style={{ marginTop: '1rem', padding: '1rem', borderRadius: '10px', background: '#fff', border: '1px solid #DEE2E6' }}>
-            <div style={{ fontWeight: 900 }}>Useful official places to start (South Africa)</div>
-            <ul style={{ margin: '.5rem 0 0 1.25rem' }}>
-              <li><a href="https://inforegulator.org.za/" target="_blank" rel="noopener noreferrer">Information Regulator (POPIA)</a></li>
-              <li><a href="https://inforegulator.bizportal.gov.za/Default.aspx" target="_blank" rel="noopener noreferrer">BizPortal – POPIA &amp; PAIA services</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </>
-  );
-}
-
-// Quiz component
-export function Pillar7Quiz({ quizResponses, onSelect, onScore, scoreMessage }) {
-  return (
-    <div className="workbook-section" style={{ background: '#0b0f1a', color: '#fff', border: '1px solid rgba(255,255,255,.12)', padding: '1.5rem', borderRadius: '10px', marginTop: '1.5rem' }}>
-      <h3 style={{ margin: '0 0 .75rem 0' }}>🏁 Pillar 7 Boss Battle: Can you run an "always-on" business?</h3>
-      <p style={{ margin: 0, color: 'rgba(255,255,255,.85)' }}>
-        Answer these 6 questions. Score <strong>5/6</strong> and you pass.
+    <div style={{ margin: '2rem 0', padding: '2rem', background: '#F8FAFC', borderRadius: '16px', fontSize: '1.2rem', fontFamily: 'monospace', textAlign: 'center' }}>
+      <span>{sentence}</span>
+      <span style={{ color: '#3B82F6', fontWeight: 'bold' }}>{word}</span>
+      <p style={{ fontSize: '0.8rem', color: '#64748B', marginTop: '1rem' }}>
+        The AI does not know what a "cat" is. It just calculates what word comes next mathematically.
       </p>
+    </div>
+  )
+}
 
-      <div style={{ marginTop: '1rem', display: 'grid', gap: '1rem' }}>
-        {pillar7QuizQuestions.map((question, index) => (
-          <div key={index} className="quiz-question">
-            <p><strong>Q{index + 1}:</strong> {question.question}</p>
-            {question.options.map((option, optionIndex) => (
-              <label key={optionIndex}>
-                <input
-                  data-progress="true"
-                  type="radio"
-                  name={`p7-boss-q${index + 1}`}
-                  checked={quizResponses[index] === optionIndex}
-                  onChange={() => onSelect(index, optionIndex)}
-                />
-                {' '}{option}
-              </label>
-            )).reduce((prev, curr) => [prev, <br key={`br-${index}`} />, curr])}
+// Interactive: Support Triage Sim
+function SupportTriageSim() {
+  const [automation, setAutomation] = useState(0);
+
+  return (
+    <div style={{ margin: '3rem 0', padding: '2rem', background: '#0F172A', borderRadius: '24px', color: 'white' }}>
+      <h3 style={{ marginBottom: '1.5rem', textAlign: 'center' }}>Interactive: The Support Triage</h3>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '2rem' }}>
+        <div style={{ padding: '1.5rem', background: '#1E293B', borderRadius: '16px', textAlign: 'center' }}>
+          <div style={{ fontSize: '0.75rem', color: '#94A3B8', marginBottom: '0.5rem' }}>HUMAN LOAD</div>
+          <div style={{ fontSize: '2rem', fontWeight: 800, color: automation > 70 ? '#10B981' : '#EF4444' }}>
+            {100 - automation}%
+          </div>
+        </div>
+        <div style={{ padding: '1.5rem', background: '#1E293B', borderRadius: '16px', textAlign: 'center' }}>
+          <div style={{ fontSize: '0.75rem', color: '#94A3B8', marginBottom: '0.5rem' }}>AI DEFLECTION</div>
+          <div style={{ fontSize: '2rem', fontWeight: 800, color: '#3B82F6' }}>
+            {automation}%
+          </div>
+        </div>
+      </div>
+
+      <input
+        type="range"
+        min="0" max="95"
+        value={automation}
+        onChange={(e) => setAutomation(parseInt(e.target.value))}
+        style={{ width: '100%', accentColor: '#3B82F6', marginBottom: '1.5rem' }}
+      />
+
+      <p style={{ textAlign: 'center', fontSize: '0.9rem', color: '#94A3B8' }}>
+        {automation < 20 && "Humans are drowning in 'Where is my order?' tickets."}
+        {automation >= 20 && automation <= 70 && "AI handles basic FAQs. Humans handle complex complaints."}
+        {automation > 70 && "Maximum efficiency. Humans only step in for VIP exceptions."}
+      </p>
+    </div>
+  );
+}
+
+// Interactive: Data Cruncher Visual
+function DataCruncherVisual() {
+  const [analyzing, setAnalyzing] = useState(false);
+  const [done, setDone] = useState(false);
+
+  const startAnalysis = () => {
+    setAnalyzing(true);
+    setDone(false);
+    setTimeout(() => {
+      setAnalyzing(false);
+      setDone(true);
+    }, 2000);
+  };
+
+  return (
+    <div style={{ margin: '3rem 0', padding: '2rem', background: '#F8FAFC', borderRadius: '24px', border: '1px solid #E2E8F0', color: '#0F172A', textAlign: 'center' }}>
+      <h3 style={{ marginBottom: '1rem' }}>The Python Bridge</h3>
+      <p style={{ color: '#64748B', fontSize: '0.85rem', marginBottom: '2rem' }}>AI can write code to analyze massive spreadsheets in seconds.</p>
+
+      <div style={{ height: '120px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', marginBottom: '2rem' }}>
+        <div style={{ padding: '1rem', background: 'white', border: '1px solid #E2E8F0', borderRadius: '8px', fontSize: '1.5rem' }}>📄 CSV</div>
+        <div style={{ fontSize: '1.5rem', color: analyzing ? '#3B82F6' : '#CBD5E1', animation: analyzing ? 'pulse 1s infinite' : 'none' }}>➜</div>
+        <div style={{ padding: '1.2rem', background: '#0F172A', color: '#10B981', borderRadius: '12px', fontFamily: 'monospace', fontSize: '0.8rem' }}>
+          {analyzing ? "import pandas as pd..." : "df.describe()"}
+        </div>
+        <div style={{ fontSize: '1.5rem', color: done ? '#10B981' : '#CBD5E1' }}>➜</div>
+        <div style={{ padding: '1rem', background: 'white', border: '2px solid #10B981', borderRadius: '8px', fontSize: '1.5rem', opacity: done ? 1 : 0.3 }}>📊 CHART</div>
+      </div>
+
+      <button
+        onClick={startAnalysis}
+        disabled={analyzing}
+        style={{ padding: '0.8rem 2rem', borderRadius: '100px', background: analyzing ? '#94A3B8' : '#0F172A', color: 'white', border: 'none', fontWeight: 800, cursor: 'pointer' }}
+      >
+        {analyzing ? 'CRUNCHING DATA...' : 'REVEAL PROFIT TRENDS'}
+      </button>
+
+      {done && (
+        <div style={{ marginTop: '1.5rem', color: '#166534', fontSize: '0.9rem', fontWeight: 600 }}>
+          Insight Found: Products in the "Home" category have 40% higher ROI.
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Interactive: Agent Task Chain
+function AgentTaskChain() {
+  const [step, setStep] = useState(-1);
+  const steps = [
+    { label: "RESEARCH", icon: "🔍", text: "Finding lead info..." },
+    { label: "ANALYZE", icon: "🧠", text: "Filtering for relevance..." },
+    { label: "DRAFT", icon: "✍️", text: "Writing personalized intro..." },
+    { label: "EXECUTE", icon: "🚀", text: "Sending outreach email..." }
+  ];
+
+  useEffect(() => {
+    if (step >= 0 && step < steps.length) {
+      const timer = setTimeout(() => setStep(step + 1), 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [step]);
+
+  return (
+    <div style={{ margin: '3rem 0', padding: '2rem', background: '#0F172A', borderRadius: '24px', color: 'white' }}>
+      <h3 style={{ marginBottom: '2rem', textAlign: 'center' }}>The Autonomous Workflow</h3>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem', marginBottom: '2rem' }}>
+        {steps.map((s, idx) => (
+          <div key={idx} style={{ textAlign: 'center', opacity: step >= idx ? 1 : 0.2, transition: 'all 0.4s' }}>
+            <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>{s.icon}</div>
+            <div style={{ fontSize: '0.6rem', fontWeight: 900, color: step === idx ? '#3B82F6' : '#94A3B8' }}>{s.label}</div>
+            <div style={{ height: '4px', background: step >= idx ? '#3B82F6' : '#334155', borderRadius: '10px', marginTop: '0.5rem' }} />
           </div>
         ))}
       </div>
 
-      <button
-        type="button"
-        onClick={onScore}
-        style={{ marginTop: '1rem', padding: '.75rem .95rem', borderRadius: '10px', border: '1px solid rgba(255,255,255,.2)', background: '#ffffff', color: '#0b0f1a', fontWeight: 900, cursor: 'pointer' }}
-      >
-        Score my Boss Battle
-      </button>
-
-      <div style={{ marginTop: '.75rem', fontWeight: 900 }}>
-        {scoreMessage}
-      </div>
-
-      <div style={{ marginTop: '1rem', padding: '1rem', borderRadius: '10px', background: 'rgba(255,255,255,.06)', border: '1px solid rgba(255,255,255,.12)' }}>
-        <strong>🏆 If you passed:</strong> You're ready for the next pillar—because you can now build systems that keep selling.
-        <div style={{ marginTop: '.5rem' }}>
-          <a href="/contact" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', fontWeight: 900, textDecoration: 'none', borderBottom: '1px solid rgba(255,255,255,.35)' }}>
-            Want CapeWeb to implement your "Invisible Team"? Click here →
-          </a>
-        </div>
+      <div style={{ height: '60px', textAlign: 'center' }}>
+        {step >= 0 && step < steps.length ? (
+          <p style={{ color: '#3B82F6', fontWeight: 600, animation: 'fadeIn 0.3s' }}>{steps[step].text}</p>
+        ) : step === steps.length ? (
+          <p style={{ color: '#10B981', fontWeight: 800 }}>✅ TASK COMPLETED AUTOMATICALLY</p>
+        ) : (
+          <button
+            onClick={() => setStep(0)}
+            style={{ padding: '0.6rem 1.5rem', borderRadius: '100px', background: '#3B82F6', color: 'white', border: 'none', fontWeight: 800, cursor: 'pointer' }}
+          >
+            DEPLOY AGENT
+          </button>
+        )}
       </div>
     </div>
   );
 }
 
-// Completion component
-export function Pillar7Completion() {
+// Interactive: Meeting Time Recovered
+function MeetingTimeRecovered() {
+  const [meetings, setMeetings] = useState(5);
+  const timeSaved = (meetings * 15) / 60;
+
   return (
-    <div className="completion-box" style={{ textAlign: 'center', marginTop: '2.25rem', paddingTop: '2rem', borderTop: '2px dashed #CED4DA' }}>
-      <h3>🎉 Pillar 7 Complete</h3>
-      <p style={{ maxWidth: '760px', margin: '.5rem auto 0 auto' }}>
-        You now understand AI vs automation, have a simple stack, a reply playbook, and 3 automation blueprints.
-        Your business is becoming "always-on"—the CapeWeb way.
+    <div style={{ margin: '3rem 0', padding: '2rem', background: '#F8FAFC', borderRadius: '24px', border: '1px solid #E2E8F0', textAlign: 'center' }}>
+      <h3 style={{ marginBottom: '1.5rem', color: '#0F172A' }}>The Focus Calculator</h3>
+      <p style={{ color: '#64748B', marginBottom: '2rem' }}>How much brain-power are you wasting on transcription?</p>
+
+      <div style={{ maxWidth: '400px', margin: '0 auto 2rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', fontWeight: 800, color: '#64748B', marginBottom: '0.5rem' }}>
+          <span>Meetings Per Week</span>
+          <span>{meetings}</span>
+        </div>
+        <input
+          type="range"
+          min="1" max="25"
+          value={meetings}
+          onChange={(e) => setMeetings(parseInt(e.target.value))}
+          style={{ width: '100%', accentColor: '#3B82F6' }}
+        />
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+        <div style={{ padding: '2rem', background: 'white', borderRadius: '16px', border: '1px solid #E2E8F0' }}>
+          <div style={{ fontSize: '0.75rem', color: '#64748B', textTransform: 'uppercase' }}>Time Saved / Week</div>
+          <div style={{ fontSize: '2.5rem', fontWeight: 900, color: '#10B981' }}>{timeSaved.toFixed(1)}h</div>
+        </div>
+        <div style={{ padding: '2rem', background: 'white', borderRadius: '16px', border: '1px solid #E2E8F0' }}>
+          <div style={{ fontSize: '0.75rem', color: '#64748B', textTransform: 'uppercase' }}>Notes Quality</div>
+          <div style={{ fontSize: '2.5rem', fontWeight: 900, color: '#3B82F6' }}>100%</div>
+        </div>
+      </div>
+
+      <p style={{ marginTop: '1.5rem', fontSize: '0.9rem', color: '#64748B' }}>
+        By automating notes, you gain back half a day of deep work every month.
       </p>
     </div>
   );
 }
 
-// SVG Diagrams
-function ManualVsAlwaysOnDiagram() {
+function ZapierFlowVisual() {
   return (
-    <svg viewBox="0 0 760 260" width="100%" height="auto" role="img" aria-label="Diagram showing manual reply delays vs automated flow">
-      <defs>
-        <linearGradient id="p7grad" x1="0" x2="1" y1="0" y2="0">
-          <stop offset="0" stopColor="#FDE047"></stop>
-          <stop offset="1" stopColor="#22D3EE"></stop>
-        </linearGradient>
-      </defs>
+    <div style={{ margin: '2rem 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+      <div style={{ padding: '1rem', background: '#F59E0B', color: 'white', borderRadius: '12px', width: '200px', textAlign: 'center', position: 'relative' }}>
+        <strong>⚡ Trigger</strong>
+        <div>New Lead (FB Ads)</div>
+      </div>
+      <div style={{ fontSize: '1.5rem' }}>⬇️</div>
+      <div style={{ padding: '1rem', background: '#3B82F6', color: 'white', borderRadius: '12px', width: '200px', textAlign: 'center' }}>
+        <strong>Action 1</strong>
+        <div>Add to Google Sheet</div>
+      </div>
+      <div style={{ fontSize: '1.5rem' }}>⬇️</div>
+      <div style={{ padding: '1rem', background: '#EF4444', color: 'white', borderRadius: '12px', width: '200px', textAlign: 'center' }}>
+        <strong>Action 2</strong>
+        <div>Slack Team "New Deal!"</div>
+      </div>
+    </div>
+  )
+}
 
-      {/* Manual lane */}
-      <rect x="20" y="30" width="720" height="90" rx="16" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.18)"></rect>
-      <text x="40" y="58" fill="#fff" fontSize="16" fontWeight="700">Manual</text>
-      <circle cx="170" cy="85" r="10" fill="#F472B6"></circle>
-      <text x="190" y="90" fill="rgba(255,255,255,.88)" fontSize="14">Lead messages at 2AM</text>
-      <rect x="410" y="70" width="280" height="30" rx="999" fill="rgba(244,114,182,.22)" stroke="rgba(244,114,182,.55)"></rect>
-      <text x="430" y="90" fill="#fff" fontSize="13">Waits… (you reply at 10AM)</text>
-
-      {/* Always-on lane */}
-      <rect x="20" y="145" width="720" height="90" rx="16" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.18)"></rect>
-      <text x="40" y="173" fill="#fff" fontSize="16" fontWeight="700">Always-On (CapeWeb build)</text>
-      <circle cx="170" cy="200" r="10" fill="url(#p7grad)"></circle>
-      <text x="190" y="205" fill="rgba(255,255,255,.88)" fontSize="14">Lead messages at 2AM</text>
-      <rect x="400" y="185" width="140" height="30" rx="10" fill="rgba(34,211,238,.20)" stroke="rgba(34,211,238,.60)"></rect>
-      <text x="415" y="205" fill="#fff" fontSize="13">Auto-reply</text>
-      <rect x="550" y="185" width="140" height="30" rx="10" fill="rgba(253,224,71,.18)" stroke="rgba(253,224,71,.65)"></rect>
-      <text x="566" y="205" fill="#fff" fontSize="13">Book / Pay</text>
-    </svg>
+function ScenarioToggle({ oldTitle, oldContent, newTitle, newContent }) {
+  const [view, setView] = useState('old');
+  return (
+    <div style={{ margin: '3rem 0' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem', background: '#F1F5F9', padding: '0.5rem', borderRadius: '100px', width: 'fit-content', margin: '0 auto 2rem' }}>
+        <button onClick={() => setView('old')} style={{ padding: '0.6rem 1.5rem', borderRadius: '100px', border: 'none', background: view === 'old' ? '#fff' : 'transparent', color: view === 'old' ? '#EF4444' : '#64748B', fontWeight: 800, boxShadow: view === 'old' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>{oldTitle}</button>
+        <button onClick={() => setView('new')} style={{ padding: '0.6rem 1.5rem', borderRadius: '100px', border: 'none', background: view === 'new' ? '#fff' : 'transparent', color: view === 'new' ? '#10B981' : '#64748B', fontWeight: 800, boxShadow: view === 'new' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>{newTitle}</button>
+      </div>
+      {view === 'old' ? (
+        <div style={{ padding: '1.5rem', background: '#FEF2F2', borderRadius: '24px', border: '2px solid #FECACA', animation: 'fadeIn 0.5s' }}>
+          {oldContent}
+        </div>
+      ) : (
+        <div style={{ padding: '1.5rem', background: '#ECFDF5', borderRadius: '24px', border: '2px solid #A7F3D0', animation: 'fadeIn 0.5s' }}>
+          {newContent}
+        </div>
+      )}
+    </div>
   );
 }
 
-function LeadCaptureFlowDiagram() {
+// ==========================================
+// PILLAR 7 MODULES A-I
+// ==========================================
+
+// Module A: AI Strategy
+export function Pillar7ModuleA({ onNext }) {
   return (
-    <svg viewBox="0 0 760 190" width="100%" height="auto" role="img" aria-label="Lead capture workflow diagram">
-      <defs>
-        <filter id="p7shadow" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="0" dy="6" stdDeviation="8" floodColor="rgba(0,0,0,.18)" />
-        </filter>
-      </defs>
+    <InteractiveLayout title="Module A: The Centaur Model" subtitle="Human + AI &gt; AI.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          The future belongs to the **Centaur**. In chess, a Centaur is a team of a Human + AI. This combination consistently outperforms both pure AI and pure Humans. Your goal is to use AI for the "Heavy Lifting" (Automation) while you focus on the "Heart" (Strategy & Soul).
+        </p>
 
-      <rect x="20" y="40" width="170" height="55" rx="14" fill="#ffffff" stroke="#0B5ED7" filter="url(#p7shadow)"></rect>
-      <text x="42" y="74" fontSize="14" fontWeight="800" fill="#0b0f1a">IG / Website</text>
+        <CentaurLever />
 
-      <line x1="190" y1="67" x2="265" y2="67" stroke="#0B5ED7" strokeWidth="3"></line>
-      <polygon points="265,67 250,59 250,75" fill="#0B5ED7"></polygon>
+        <ScenarioToggle
+          oldTitle="The Purist 👴"
+          oldContent="'I don't use AI. It is cheating.' (Writes 1 email per hour, laboriously researching every fact manually)."
+          newTitle="The Centaur 🤖"
+          newContent="'I use AI to draft, and I edit for soul.' (Writes 10 emails per hour, using AI to synthesize research in seconds)."
+        />
 
-      <rect x="270" y="40" width="190" height="55" rx="14" fill="#ffffff" stroke="#22C55E" filter="url(#p7shadow)"></rect>
-      <text x="292" y="74" fontSize="14" fontWeight="800" fill="#0b0f1a">Google Form</text>
+        <BookInsight title="The Future of Intelligence" author="Max Tegmark" book="Life 3.0" color="#3B82F6">
+          <p>"Life 3.0 designs its own software." We are entering an era where you can build tools without coding perfectly.</p>
+        </BookInsight>
 
-      <line x1="460" y1="67" x2="535" y2="67" stroke="#22C55E" strokeWidth="3"></line>
-      <polygon points="535,67 520,59 520,75" fill="#22C55E"></polygon>
+        {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%)', borderRadius: '24px', border: '1px solid #BFDBFE' }}>
+          <CWHeading level={3} style={{ color: '#1E40AF', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+          </CWHeading>
 
-      <rect x="540" y="40" width="200" height="55" rx="14" fill="#ffffff" stroke="#F97316" filter="url(#p7shadow)"></rect>
-      <text x="562" y="74" fontSize="14" fontWeight="800" fill="#0b0f1a">Leads Sheet</text>
+          <p style={{ fontSize: '1.1rem', color: '#1E3A8A', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            <strong>Algorithmic Advantage.</strong> Your competitors are already using AI to lower their costs. If you don't adopt the Centaur model, your margins will slowly be eaten by more efficient operators. AI doesn't replace you; a human using AI replaces a human who doesn't.
+          </p>
 
-      <line x1="140" y1="95" x2="140" y2="140" stroke="#0b0f1a" strokeWidth="2" opacity=".25"></line>
-      <line x1="365" y1="95" x2="365" y2="140" stroke="#0b0f1a" strokeWidth="2" opacity=".25"></line>
-      <line x1="640" y1="95" x2="640" y2="140" stroke="#0b0f1a" strokeWidth="2" opacity=".25"></line>
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #BFDBFE', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+              🚀 How CapeWeb Helps You Scale
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                <span style={{ color: '#3B82F6', marginTop: '2px' }}>➜</span>
+                <span>
+                  <a href="/services?service=ai-agents-sales-team" style={{ color: '#3B82F6', textDecoration: 'underline' }}>AI Sales Team</a>: We build custom GPT-powered sales reps that act as Centaurs for your business—handling the volume of "Qualified" leads while your human sales team focuses on closing high-ticket deals.
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
 
-      <rect x="180" y="125" width="400" height="48" rx="14" fill="#0b0f1a"></rect>
-      <text x="205" y="155" fontSize="14" fontWeight="800" fill="#ffffff">Auto-follow-up message + next step link</text>
-    </svg>
+        <MiniQuiz
+          questions={[
+            { question: "What is the 'Centaur' model in AI?", options: ["A mythical creature", "A collaboration where Human + AI outperforms either alone", "AI replacing humans entirely"], correctIndex: 1 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  );
+}
+
+// Module B: LLM Basics
+export function Pillar7ModuleB({ onNext }) {
+  return (
+    <InteractiveLayout title="Module B: How LLMs Work" subtitle="The stochastic parrot.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          ChatGPT does not "know" anything in the human sense. It is a mathematical model trained on human language to predict the **Next Token (Word)**. It is essentially a "Stochastic Parrot"—highly sophisticated autocomplete.
+        </p>
+
+        <TokenPredictorGame />
+
+        <CWAlert type="warning" title="The Hallucination Risk">
+          Because LLMs are probabilistic, they can lie confidently. They will invent court cases, citations, and names just to complete a pattern that looks "correct" to the algorithm.
+        </CWAlert>
+
+        {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)', borderRadius: '24px', border: '1px solid #FDE68A' }}>
+          <CWHeading level={3} style={{ color: '#92400E', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+          </CWHeading>
+
+          <p style={{ fontSize: '1.1rem', color: '#78350F', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            <strong>Risk Management.</strong> If you use AI for legal contracts or historical fact-checking without critical oversight, you are playing Russian Roulette with your brand's credibility. Understanding "how the engine works" allows you to use it for brainstorming and structure, while keeping humans responsible for accuracy.
+          </p>
+
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #FDE68A', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+              🚀 How CapeWeb Helps You Scale
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                <span style={{ color: '#D97706', marginTop: '2px' }}>➜</span>
+                <span>
+                  <a href="/services?service=brand-wikis-knowledge-bases" style={{ color: '#D97706', textDecoration: 'underline' }}>Brand Wikis</a>: We use <strong>Retrieval-Augmented Generation (RAG)</strong> to ground your AI in your own company's verified documents, effectively killing hallucinations and ensuring your AI "knows" your facts.
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <MiniQuiz
+          questions={[
+            { question: "How does an LLM generate text?", options: ["It thinks like a human", "It predicts the next token based on probability patterns", "It searches Google immediately"], correctIndex: 1 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  );
+}
+
+// Module C: Writing (Copy)
+export function Pillar7ModuleC({ onNext }) {
+  return (
+    <InteractiveLayout title="Module C: Prompt Engineering" subtitle="Garbage In, Garbage Out.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          The difference between a robot-sounding email and a conversion-focused masterpiece is the quality of the <strong>Context</strong> you provide. Prompt engineering is the art of giving the AI a "Role," a "Goal," and "Constraints."
+        </p>
+
+        <PromptRefiner />
+
+        <ScenarioToggle
+          oldTitle="Lazy Prompt"
+          oldContent="'Write an email about coffee.' Result: 'I am writing to tell you about our coffee. It is good. Buy now.' (Robotic and generic)."
+          newTitle="Context Prompt"
+          newContent="'Act as a world-class copywriter. Write a 100-word email for a new cold brew. Target audience: tired parents with zero time. Tone: Funny and empathetic.' Result: 'We know you haven't slept since 2019. Here's a cold-processed hug in a bottle...'"
+        />
+
+        {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FDF2F8 0%, #FCE7F3 100%)', borderRadius: '24px', border: '1px solid #FBCFE8' }}>
+          <CWHeading level={3} style={{ color: '#9D174D', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+          </CWHeading>
+
+          <p style={{ fontSize: '1.1rem', color: '#831843', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            <strong>Operational Velocity.</strong> Masterful prompting allows your marketing team to produce a week's worth of content in an hour. By creating a "Prompt Library" for your brand, you ensure that every AI output sounds like your best copywriter, regardless of who is typing the request.
+          </p>
+
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #FBCFE8', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+              🚀 How CapeWeb Helps You Scale
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                <span style={{ color: '#DB2777', marginTop: '2px' }}>➜</span>
+                <span>
+                  <a href="/services?service=content-that-converts" style={{ color: '#DB2777', textDecoration: 'underline' }}>Content that Converts</a>: We don't just write copy; we build "Prompt Engines" for your brand so your team can generate high-quality, high-soul content at scale without us.
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <MiniQuiz
+          questions={[
+            { question: "What acts as the biggest lever for quality AI output?", options: ["The internet speed", "The quality of the Prompt (Context)", "The time of day"], correctIndex: 1 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  );
+}
+
+// Module D: Design (Midjourney)
+export function Pillar7ModuleD({ onNext }) {
+  return (
+    <InteractiveLayout title="Module D: Generative Art" subtitle="Imagine anything.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          Tools like **Midjourney** and **DALL-E 3** allow you to create high-end brand assets, product mockups, and website visuals in seconds. You are no longer limited by your ability to draw or your budget for stock photos.
+        </p>
+
+        <CWCard style={{ background: '#0F172A', color: '#fff', padding: '2rem', border: '1px solid #334155' }}>
+          <div style={{ fontSize: '0.7rem', color: '#64748B', marginBottom: '1rem' }}>MIDJOURNEY PROMPT EXAMPLE:</div>
+          <code style={{ fontSize: '1rem', color: '#3B82F6' }}>/imagine prompt: a minimalist logo for a SaaS company, vector art, flat design, white background, high resolution --ar 16:9 --v 6.0</code>
+        </CWCard>
+
+        {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%)', borderRadius: '24px', border: '1px solid #DDD6FE' }}>
+          <CWHeading level={3} style={{ color: '#5B21B6', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🎨</span> Why This Matters for Business Owners
+          </CWHeading>
+
+          <p style={{ fontSize: '1.1rem', color: '#4C1D95', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            <strong>Brand Velocity.</strong> High-quality visuals are the "Entry Fee" for modern trust. Generative AI allows you to test 10 different visual directions for a landing page in the time it used to take to brief a designer. It de-risks the creative process and explodes your output of high-performing ad creative.
+          </p>
+
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #DDD6FE', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+              🚀 How CapeWeb Helps You Scale
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                <span style={{ color: '#8B5CF6', marginTop: '2px' }}>➜</span>
+                <span>
+                  <a href="/services?service=branding-team" style={{ color: '#8B5CF6', textDecoration: 'underline' }}>Branding Team</a>: We use advanced generative workflows to create unique, high-conversion visual assets that make your brand look like a billion-dollar company at a fraction of the cost.
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <MiniQuiz
+          questions={[
+            { question: "What is a major benefit of AI image generation for startups?", options: ["It is free forever", "Creating custom, high-quality assets without expensive stock photo subscriptions", "It can print paper"], correctIndex: 1 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  )
+}
+
+// Module E: No-Code Auto (Zapier)
+export function Pillar7ModuleE({ onNext }) {
+  return (
+    <InteractiveLayout title="Module E: Automation Pipelines" subtitle="Connecting the LEGO bricks.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          Automation is the "Digital Glue" of your business. Tools like **Zapier** and **Make** allow you to connect different apps—making data flow between your website, CRM, and communication tools without any human intervention.
+        </p>
+
+        <ZapierFlowVisual />
+
+        {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%)', borderRadius: '24px', border: '1px solid #FED7AA' }}>
+          <CWHeading level={3} style={{ color: '#9A3412', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>⚡</span> Why This Matters for Business Owners
+          </CWHeading>
+
+          <p style={{ fontSize: '1.1rem', color: '#7C2D12', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            <strong>Scale without Headcount.</strong> Most businesses hire humans to move data between spreadsheets and apps. Automation allows you to handle 10x the volume with 0x the additional staff. It ensures that <strong>no lead is ever forgotten</strong> and no customer falls through the cracks.
+          </p>
+
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #FED7AA', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+              🚀 How CapeWeb Helps You Scale
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                <span style={{ color: '#EA580C', marginTop: '2px' }}>➜</span>
+                <span>
+                  <a href="/services?service=automation-systems" style={{ color: '#EA580C', textDecoration: 'underline' }}>Automation Systems</a>: We map your entire customer journey and build the automated "Pipes" that handle everything from lead-capture to invoice-generation, freeing you to work <strong>on</strong> the business instead of <strong>in</strong> it.
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <MiniQuiz
+          questions={[
+            { question: "What is a 'Trigger' in automation?", options: ["Something that makes you angry", "The event that starts the automation workflow (e.g. New Email)", "The end result"], correctIndex: 1 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  )
+}
+
+// Module F: Support (Chatbots)
+export function Pillar7ModuleF({ onNext }) {
+  return (
+    <InteractiveLayout title="Module F: AI Support" subtitle="Instant answers.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          Modern customers expect answers in seconds, not hours. AI Chatbots, when properly integrated with your company's knowledge base, can handle 80% of routine queries with 100% accuracy, 24/7.
+        </p>
+
+        <SupportTriageSim />
+
+        <ScenarioToggle
+          oldTitle="Human Support"
+          oldContent="Reply time: 24 hours. Cost: High. Consistency: Variable based on agent's mood. Leads lost: 40% due to slow response."
+          newTitle="AI Support"
+          newContent="Reply time: 1.5 seconds. Cost: Low. Consistency: Perfect alignment with brand voice. Leads lost: 0%."
+        />
+
+        {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%)', borderRadius: '24px', border: '1px solid #A7F3D0' }}>
+          <CWHeading level={3} style={{ color: '#065F46', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>💬</span> Why This Matters for Business Owners
+          </CWHeading>
+
+          <p style={{ fontSize: '1.1rem', color: '#064E3B', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            <strong>The Trust Gap.</strong> Every minute a potential customer waits for a reply is a minute they spend looking at your competitor. AI support isn't about "replacing humans"; it's about being <strong>present</strong> when your customer is ready to buy—whether that's at 2 PM or 2 AM.
+          </p>
+
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #A7F3D0', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+              🚀 How CapeWeb Helps You Scale
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                <span style={{ color: '#10B981', marginTop: '2px' }}>➜</span>
+                <span>
+                  <a href="/services?service=ai-agents-sales-team" style={{ color: '#10B981', textDecoration: 'underline' }}>AI Sales Team</a>: We build "Intelligent Concierges" that don't just answer questions—they book appointments, qualify leads, and close sales directly inside your website or WhatsApp.
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <MiniQuiz
+          questions={[
+            { question: "What is the primary role of an AI Chatbot?", options: ["To annoy customers", "To handle repetitive Tier 1 queries instantly", "To replace all humans"], correctIndex: 1 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  )
+}
+
+// Module G: Data (Code Interpreter)
+export function Pillar7ModuleG({ onNext }) {
+  return (
+    <InteractiveLayout title="Module G: Data Analysis" subtitle="Your personal Data Scientist.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          Modern AI tools (like ChatGPT's Advanced Data Analysis) can write and execute Python code to crunch massive datasets. You can upload your sales spreadsheets and ask: "Which marketing channel has the highest ROI?" or "Predict our cash flow for next month."
+        </p>
+
+        <DataCruncherVisual />
+
+        {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%)', borderRadius: '24px', border: '1px solid #BAE6FD' }}>
+          <CWHeading level={3} style={{ color: '#0369A1', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>📊</span> Why This Matters for Business Owners
+          </CWHeading>
+
+          <p style={{ fontSize: '1.1rem', color: '#075985', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            <strong>Precision Decision Making.</strong> Most businesses run on "Gut Feel." AI-driven data analysis allows you to find the 20% of your products or customers that generate 80% of your profit. It's like having a Harvard-educated data scientist sitting in your pocket, ready to audit your business 24/7.
+          </p>
+
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #BAE6FD', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+              🚀 How CapeWeb Helps You Scale
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                <span style={{ color: '#0EA5E9', marginTop: '2px' }}>➜</span>
+                <span>
+                  <a href="/services?service=performance-monitoring" style={{ color: '#0EA5E9', textDecoration: 'underline' }}>Performance Monitoring</a>: We set up automated data pipelines that feed your sales data into AI analyzers, giving you a live "Profit Dashboard" that tells you exactly where to invest your next Marketing Rand.
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <MiniQuiz
+          questions={[
+            { question: "How does ChatGPT analyze data efficiently?", options: ["It reads it slowly", "It writes and executes Python code to crunch numbers", "It guesses"], correctIndex: 1 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  )
+}
+
+// Module H: Agents
+export function Pillar7ModuleH({ onNext }) {
+  return (
+    <InteractiveLayout title="Module H: Autonomous Agents" subtitle="Goal-directed AI.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          While a chatbot *replies* to you, an <strong>Agent</strong> executes for you. Agents are AI systems that can plan, use tools (like a browser or an email client), and perform multi-step tasks autonomously to reach a goal.
+        </p>
+
+        <AgentTaskChain />
+
+        {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F1F5F9 0%, #E2E8F0 100%)', borderRadius: '24px', border: '1px solid #CBD5E1' }}>
+          <CWHeading level={3} style={{ color: '#334155', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🤖</span> Why This Matters for Business Owners
+          </CWHeading>
+
+          <p style={{ fontSize: '1.1rem', color: '#1E293B', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            <strong>The Future of Labor.</strong> We are moving from "Human-in-the-loop" (you tell AI to do one thing) to "Human-on-the-loop" (you tell an Agent a goal, and it performs 10 tasks to get there). Autonomous Agents allow you to run entire departments—like lead research or content distribution—with minimal oversight.
+          </p>
+
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #CBD5E1', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+              🚀 How CapeWeb Helps You Scale
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                <span style={{ color: '#475569', marginTop: '2px' }}>➜</span>
+                <span>
+                  <a href="/services?service=ai-agents" style={{ color: '#475569', textDecoration: 'underline' }}>AI Agents</a>: We build custom agents that live on your servers and perform repetitive business tasks—from scraping competitor pricing to personalized outreach—so your team can focus on relationships.
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <MiniQuiz
+          questions={[
+            { question: "What distinguishes an 'Agent' from a 'Chatbot'?", options: ["The price", "Autonomy: Agents can plan and execute multiple steps to achieve a goal", "Agents have voices"], correctIndex: 1 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  )
+}
+
+// Module I: Productivity
+export function Pillar7ModuleI({ onNext }) {
+  return (
+    <InteractiveLayout title="Module I: Meeting Intelligence" subtitle="Never take notes again.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          The average founder spends 10+ hours a week in meetings. By using AI "Recorders" (like Otter or Fireflies), you can automate transcription, indexing, and action-item summaries—freeing your brain to actually *participate* in the conversation.
+        </p>
+
+        <MeetingTimeRecovered />
+
+        {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%)', borderRadius: '24px', border: '1px solid #E2E8F0' }}>
+          <CWHeading level={3} style={{ color: '#334155', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🎙️</span> Why This Matters for Business Owners
+          </CWHeading>
+
+          <p style={{ fontSize: '1.1rem', color: '#475569', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            <strong>Bandwidth Recovery.</strong> As a founder, your most valuable asset is your "Deep Work" time. Meeting automation doesn't just save you from taking notes; it creates a searchable "Corporate Brain" where you can recall exactly what was promised to a client 6 months ago in 2 seconds.
+          </p>
+
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #E2E8F0', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+              🚀 How CapeWeb Helps You Scale
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                <span style={{ color: '#475569', marginTop: '2px' }}>➜</span>
+                <span>
+                  <a href="/services?service=care-plans" style={{ color: '#475569', textDecoration: 'underline' }}>Care Plans</a>: We manage the complexity of your AI stack. From ensuring your meeting recorders are synced to your CRM to training your team on prompt libraries, we handle the tech so you can focus on the growth.
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <MiniQuiz
+          questions={[
+            { question: "What is the benefit of AI meeting assistants?", options: ["They interrupt you", "They transcribe and banish the need for manual note-taking", "They make coffee"], correctIndex: 1 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  )
+}
+
+// ==========================================
+// FINAL QUIZ COMPONENT
+// ==========================================
+
+export function Pillar7Quiz({ quizResponses, onSelect, onScore, scoreMessage, onFinish }) {
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [isPassed, setIsPassed] = useState(false);
+
+  // Local state handling if props missing
+  const [localResponses, setLocalResponses] = useState({});
+  const activeResponses = quizResponses || localResponses;
+  const activeSetResponse = onSelect || ((qMvc, optIdx) => setLocalResponses(prev => ({ ...prev, [qMvc]: optIdx })));
+
+  const questions = pillar7QuizQuestions;
+  const isLastQuestion = currentQuestionIndex === questions.length - 1;
+  const hasAnsweredCurrent = activeResponses[currentQuestionIndex] !== undefined;
+
+  const handleNext = () => {
+    if (currentQuestionIndex < questions.length - 1) setCurrentQuestionIndex(c => c + 1);
+  };
+  const handlePrev = () => {
+    if (currentQuestionIndex > 0) setCurrentQuestionIndex(c => c - 1);
+  };
+  const handleScore = () => {
+    if (onScore) {
+      onScore();
+    } else {
+      let correct = 0;
+      questions.forEach((q, i) => { if (activeResponses[i] === q.correctIndex) correct++; });
+      if (correct >= 8) setIsPassed(true);
+    }
+    if (onFinish) onFinish();
+  };
+
+  if (scoreMessage && scoreMessage.includes('Pass')) {
+    return (
+      <CWCard>
+        <div style={{ textAlign: 'center', padding: '2rem' }}>
+          <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🎉</div>
+          <CWHeading level={3}>AI Architect</CWHeading>
+          <p style={{ fontSize: '1.2rem', marginBottom: '2rem' }}>{scoreMessage}</p>
+          <CWButton onClick={onFinish}>Continue to Certificate →</CWButton>
+        </div>
+      </CWCard>
+    );
+  }
+
+  return (
+    <QuizLayout title="Final Exam: AI Automation" currentStep={currentQuestionIndex + 1} totalSteps={questions.length}>
+      <div style={{ padding: '0 1rem' }}>
+        <h3 style={{ fontSize: '1.5rem', marginBottom: '2rem', minHeight: '60px' }}>
+          {questions[currentQuestionIndex].question}
+        </h3>
+        <div style={{ display: 'grid', gap: '1rem', marginBottom: '2rem' }}>
+          {questions[currentQuestionIndex].options.map((option, idx) => (
+            <button
+              key={idx}
+              onClick={() => activeSetResponse(currentQuestionIndex, idx)}
+              style={{
+                padding: '1.25rem',
+                borderRadius: '12px',
+                border: activeResponses[currentQuestionIndex] === idx ? '2px solid #0b0f1a' : '1px solid #E5E7EB',
+                background: activeResponses[currentQuestionIndex] === idx ? '#F8FAFC' : '#fff',
+                textAlign: 'left',
+                fontSize: '1.1rem',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1rem',
+                boxShadow: activeResponses[currentQuestionIndex] === idx ? '0 4px 12px rgba(0,0,0,0.05)' : 'none'
+              }}
+            >
+              <div style={{ width: '24px', height: '24px', borderRadius: '50%', border: '2px solid #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', background: activeResponses[currentQuestionIndex] === idx ? '#0b0f1a' : 'transparent', borderColor: activeResponses[currentQuestionIndex] === idx ? '#0b0f1a' : '#CBD5E1' }}>
+                {activeResponses[currentQuestionIndex] === idx && <div style={{ width: '10px', height: '10px', background: '#fff', borderRadius: '50%' }} />}
+              </div>
+              {option}
+            </button>
+          ))}
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem' }}>
+          <CWButton variant="ghost" onClick={handlePrev} disabled={currentQuestionIndex === 0} style={{ opacity: currentQuestionIndex === 0 ? 0 : 1 }}>← Previous</CWButton>
+          {isLastQuestion ? (
+            <CWButton variant="primary" onClick={handleScore} disabled={!hasAnsweredCurrent}>Submit Exam 🏁</CWButton>
+          ) : (
+            <CWButton variant="primary" onClick={handleNext} disabled={!hasAnsweredCurrent}>Next Question →</CWButton>
+          )}
+        </div>
+        {scoreMessage && !scoreMessage.includes('Pass') && (
+          <div style={{ marginTop: '2rem', padding: '1rem', background: '#FEF2F2', color: '#991B1B', borderRadius: '8px', textAlign: 'center' }}>{scoreMessage}</div>
+        )}
+      </div>
+    </QuizLayout>
+  );
+}
+
+export function Pillar7Completion() {
+  return (
+    <div style={{ textAlign: 'center', padding: '4rem 2rem' }}>
+      <h1>🤖</h1>
+      <CWHeading level={2}>AI Architect</CWHeading>
+      <p style={{ fontSize: '1.2rem', color: '#64748B', maxWidth: '600px', margin: '1rem auto' }}>
+        You now wield the most powerful tools in history. Use them to multiply your output, not just to cheat on homework.
+      </p>
+    </div>
   );
 }

@@ -1,0 +1,192 @@
+:root {
+    /* -------------------------------------------------------------------------- */
+    /* CAPEWEB DESIGN SYSTEM TOKENS - PHASE 6 (REVISED: MONOCHROME HYBRID)        */
+    /* -------------------------------------------------------------------------- */
+
+    /* --- Brand Colors (Monochrome + Accent) --- */
+    --cw-brand-primary: #0b0f1a;
+    /* Ink Black - Main Brand Color */
+    --cw-brand-secondary: #4b5563;
+    /* Cool Gray */
+    --cw-brand-accent: #2563EB;
+    /* Royal Blue (for active states/links only) */
+
+    /* --- Neutral Scales (Light Mode Bases) --- */
+    --cw-white: #FFFFFF;
+    --cw-neutral-50: #F9FAFB;
+    --cw-neutral-100: #F3F4F6;
+    --cw-neutral-200: #E5E7EB;
+    /* Borders */
+    --cw-neutral-300: #D1D5DB;
+    --cw-neutral-400: #9CA3AF;
+    --cw-neutral-500: #6B7280;
+    --cw-neutral-600: #4B5563;
+    --cw-neutral-700: #374151;
+    /* Subheadings */
+    --cw-neutral-800: #1F2937;
+    --cw-neutral-900: #0b0f1a;
+    /* Headings */
+
+    /* --- Semantic Colors --- */
+    --cw-color-success: #10B981;
+    --cw-color-warning: #F59E0B;
+    --cw-color-error: #EF4444;
+    --cw-color-info: #3B82F6;
+
+    /* --- Vibrant Palette (From Services Page) --- */
+    --cw-color-vib-yellow: #fde047;
+    --cw-color-vib-cyan: #22d3ee;
+    --cw-color-vib-pink: #f472b6;
+    --cw-color-vib-orange: #fb923c;
+    --cw-color-vib-green: #4ade80;
+
+    /* --- Layout Surfaces --- */
+    /* Sidebar (Dark Mode - User Preference) */
+    /* Sidebar (Dark Mode - User Preference) */
+    --cw-bg-sidebar: #0b0f1a;
+    --cw-bg-sidebar-gradient: linear-gradient(135deg, #0b0f1a 0%, #111827 100%);
+    --cw-bg-sidebar-surface: rgba(255, 255, 255, 0.08);
+    /* Slightly lighter */
+    --cw-sidebar-text: #F3F4F6;
+    --cw-sidebar-text-muted: #9CA3AF;
+    --cw-sidebar-border: rgba(255, 255, 255, 0.1);
+
+    /* Content Pane (Light Mode - Readability) */
+    --cw-bg-body: #FFFFFF;
+    --cw-bg-surface: #F9FAFB;
+    --cw-bg-surface-hover: #F3F4F6;
+    --cw-text-body: #374151;
+    --cw-text-heading: #0b0f1a;
+    --cw-border-light: #E5E7EB;
+
+    /* --- Shadows --- */
+    /* --- Shadows --- */
+    --cw-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --cw-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --cw-shadow-lg: 0 10px 40px -10px rgba(0, 0, 0, 0.25);
+    /* Softer shadow */
+    --cw-shadow-vibrant: 0 0 20px rgba(34, 211, 238, 0.15);
+    /* Cyan Glow */
+
+    /* --- Typography --- */
+    --cw-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --cw-font-heading: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+    /* --- Spacing --- */
+    --cw-space-1: 0.25rem;
+    --cw-space-2: 0.5rem;
+    --cw-space-3: 0.75rem;
+    --cw-space-4: 1rem;
+    --cw-space-6: 1.5rem;
+    --cw-space-8: 2rem;
+    --cw-space-12: 3rem;
+
+    /* --- Border Radius --- */
+    --cw-radius-sm: 6px;
+    --cw-radius-md: 12px;
+    --cw-radius-lg: 20px;
+    --cw-radius-xl: 32px;
+    --cw-radius-full: 9999px;
+
+    /* --- Transitions --- */
+    --cw-transition-fast: 0.15s ease-out;
+    --cw-transition-normal: 0.25s ease-out;
+}
+
+/* Base Utility Classes */
+.cw-display-xl {
+    color: var(--cw-text-heading);
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+}
+
+/* Typography Overrides for maximum legibility */
+.learn-capeweb-article h1 {
+    color: var(--cw-brand-accent) !important;
+}
+
+.learn-capeweb-article h2,
+.learn-capeweb-article h3,
+.learn-capeweb-article h4,
+.learn-capeweb-article strong {
+    color: #000000 !important;
+    /* Force Black */
+}
+
+.learn-capeweb-article p,
+.learn-capeweb-article li {
+    color: #374151 !important;
+    /* Dark Gray covers contrast */
+    font-size: 1.1rem;
+    /* Easier to read for beginners */
+    line-height: 1.75;
+}
+
+.cw-display-lg {
+    color: var(--cw-text-heading);
+    font-size: 2.25rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+}
+
+.cw-heading-md {
+    color: var(--cw-text-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+}
+
+.cw-text-body {
+    color: var(--cw-text-body);
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.cw-label {
+    display: block;
+    font-weight: 600;
+    color: var(--cw-text-heading);
+    margin-bottom: 0.35rem;
+    font-size: 0.9rem;
+}
+
+/* Interactive Elements (Light Mode Default) */
+.cw-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--cw-white);
+    border: 1px solid var(--cw-border-light);
+    border-radius: var(--cw-radius-sm);
+    color: var(--cw-text-heading);
+    font-size: 1rem;
+    transition: var(--cw-transition-fast);
+}
+
+.cw-input:focus {
+    outline: none;
+    border-color: var(--cw-brand-primary);
+    box-shadow: 0 0 0 2px rgba(11, 15, 26, 0.1);
+}
+
+/* Prosemirror-like readability helpers */
+.cw-prose p {
+    margin-bottom: 1.25rem;
+    color: var(--cw-text-body);
+}
+
+.cw-prose strong {
+    color: var(--cw-text-heading);
+    font-weight: 600;
+}
+
+.cw-prose ul {
+    margin-bottom: 1.5rem;
+    padding-left: 1.5rem;
+}
+
+.cw-prose li {
+    margin-bottom: 0.5rem;
+    color: var(--cw-text-body);
+}

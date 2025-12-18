@@ -1,763 +1,922 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import * as confettiModule from 'canvas-confetti';
+import { gsap } from 'gsap';
+import { InteractiveLayout, QuizLayout } from './CapeWebLayouts';
+import { CWButton, CWHeading, CWCard, CWInput, CWBadge, CWAlert, BookInsight } from './CapeWebUI';
 
+// ==========================================
+// PILLAR 8 QUIZ DATA
+// ==========================================
 export const pillar8QuizQuestions = [
   {
-    question: 'The "master key" account that attackers use to reset everything is usually:',
-    options: ['Your logo file', 'Your email account', 'Your WhatsApp status'],
+    question: 'What is the "weakest link" in any security system according to Kevin Mitnick?',
+    options: ['The Firewall', 'The Encryption', 'The Human (Social Engineering)'],
+    correctIndex: 2,
+  },
+  {
+    question: 'What does 2FA stand for, and why is it essential?',
+    options: ['2 Fast Ads', 'Two-Factor Authentication (Something you know + Something you have)', 'Two False Attempts'],
     correctIndex: 1,
   },
   {
-    question: 'MFA means:',
-    options: ['Making fonts bigger', 'Adding a second login step so passwords alone aren\'t enough', 'Posting more often'],
+    question: 'In South Africa, what is the law governing data privacy?',
+    options: ['GDPR', 'POPIA (Protection of Personal Information Act)', 'HIPAA'],
     correctIndex: 1,
   },
   {
-    question: 'The safest response to "Click this link to verify your account" is:',
-    options: ['Click immediately', 'Open the real website/app directly and check there', 'Forward it to friends'],
+    question: 'What is "Phishing"?',
+    options: ['Catching fish', 'A fraudulent attempt to obtain sensitive info by disguising as a trustworthy entity', 'A database error'],
     correctIndex: 1,
   },
   {
-    question: 'A backup that you can\'t restore is:',
-    options: ['Still fine', 'Not a real backup', 'Better than MFA'],
+    question: 'What does HTTPS ensure on a website?',
+    options: ['That the site is fast', 'That the communication between user and server is encrypted', 'That the site is legal'],
     correctIndex: 1,
   },
   {
-    question: '"Proof of payment" screenshots are:',
-    options: ['Always reliable', 'Not reliable — verify in the real dashboard/bank app', 'Better than bank statements'],
+    question: 'If you receive an email from "The CEO" asking for urgent iTunes gift cards, what is it?',
+    options: ['A generous bonus', 'A "Spear Phishing" or "Whaling" attack', 'A mistake'],
     correctIndex: 1,
   },
   {
-    question: 'The first step in incident response is:',
-    options: ['Detect and confirm something is wrong', 'Panic', 'Delete everything'],
-    correctIndex: 0,
+    question: 'What is the best way to manage passwords?',
+    options: ['Write them on a sticky note', 'Use the same password everywhere', 'Use a Password Manager (1Password/LastPass) with unique passwords'],
+    correctIndex: 2,
   },
   {
-    question: 'HTTPS on a website mainly helps by:',
-    options: ['Making your logo bigger', 'Encrypting data between the visitor and your site', 'Ranking #1 instantly'],
+    question: 'What is "Ransomware"?',
+    options: ['Software that audits your money', 'Malware that encrypts your files and demands payment to unlock them', 'Free software'],
     correctIndex: 1,
   },
   {
-    question: 'A Risk Register is:',
-    options: ['A list of things that could go wrong + what you\'ll do', 'A list of risks + controls + owners + next actions', 'A logo moodboard'],
+    question: 'What does the "CIA Triad" stand for in security?',
+    options: ['Central Intelligence Agency', 'Confidentiality, Integrity, Availability', 'Control, Inspect, Audit'],
     correctIndex: 1,
   },
   {
-    question: '"Contain" in incident response means:',
-    options: ['Stop the spread (log out sessions, isolate accounts)', 'Tell everyone your password', 'Ignore it for 3 days'],
-    correctIndex: 0,
-  },
-  {
-    question: 'The most common way small businesses get hacked is:',
-    options: ['Hollywood-style brute force only', 'Phishing and social engineering', 'People guessing your brand colors'],
-    correctIndex: 1,
-  },
-  {
-    question: 'The best place to verify "urgent account issues" is:',
-    options: ['The link inside the message', 'The official website/app you open yourself', 'A random commenter'],
-    correctIndex: 1,
-  },
-  {
-    question: '"Security compromises" related to personal info in South Africa may involve:',
-    options: ['No action needed', 'POPIA reporting/notification obligations (check official guidance)', 'Only posting a story apology'],
+    question: 'Why are public backups (like public S3 buckets) dangerous?',
+    options: ['They cost money', 'Anyone on the internet can download your customer data', 'They are slow'],
     correctIndex: 1,
   },
 ];
 
-export function Pillar8Content() {
+// ==========================================
+// SHARED UTILS (MiniQuiz)
+// ==========================================
+function MiniQuiz({ questions, title = "Knowledge Check", onNext }) {
+  const [currentQ, setCurrentQ] = useState(0);
+  const [selected, setSelected] = useState(null);
+  const [score, setScore] = useState(0);
+  const [completed, setCompleted] = useState(false);
+  const [celebrating, setCelebrating] = useState(false);
+  const counterRef = useRef(null);
+
+  const question = questions[currentQ];
+  const isLast = currentQ === questions.length - 1;
+
+  const playSuccessSound = () => {
+    try {
+      const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3');
+      audio.volume = 0.5;
+      audio.play().catch(e => console.log('Audio error', e));
+    } catch (e) { }
+  };
+
+  const handleSelect = (index) => setSelected(index);
+
+  const handleNext = () => {
+    const isCorrect = selected === question.correctIndex;
+    const newScore = isCorrect ? score + 1 : score;
+    setScore(newScore);
+
+    if (isLast) {
+      setCompleted(true);
+      const percentage = Math.round((newScore / questions.length) * 100);
+      if (percentage >= 70) {
+        setCelebrating(true);
+        playSuccessSound();
+      }
+    } else {
+      setCurrentQ(currentQ + 1);
+      setSelected(null);
+    }
+  };
+
+  const handleRestart = () => {
+    setCurrentQ(0);
+    setSelected(null);
+    setScore(0);
+    setCompleted(false);
+    setCelebrating(false);
+  };
+
+  useEffect(() => {
+    if (celebrating && counterRef.current) {
+      const percentage = Math.round((score / questions.length) * 100);
+      const tl = gsap.timeline();
+      counterRef.current.classList.remove('celebrate');
+      tl.set(counterRef.current, { opacity: 1 })
+        .fromTo(counterRef.current,
+          { innerText: 0, "--font-variation-weight": 300, scale: 0.8 },
+          {
+            innerText: percentage, duration: 3, snap: { innerText: 1 }, ease: "linear",
+            onUpdate: function () { const val = Math.ceil(this.targets()[0].innerText); counterRef.current.innerHTML = val + "%"; },
+            onComplete: () => {
+              counterRef.current.classList.add('celebrate');
+              const colors = ['#fbda61', '#ff5acd'];
+              const runConfetti = confettiModule.default || confettiModule;
+              if (typeof runConfetti === 'function') {
+                runConfetti({ particleCount: 150, spread: 100, origin: { y: 0.8 }, colors: colors, disableForReducedMotion: true });
+              }
+              setTimeout(() => setCelebrating(false), 3000);
+            }
+          }
+        )
+        .to(counterRef.current, { scale: 1, "--font-variation-weight": 600, duration: 1.2, ease: "elastic.out(1, 0.2)" });
+      return () => { if (counterRef.current) counterRef.current.classList.remove('celebrate'); };
+    }
+  }, [celebrating, score, questions.length]);
+
+  if (celebrating) {
+    return (
+      <div style={{ marginTop: '3rem', padding: '3rem 2rem', borderRadius: '32px', background: 'rgba(255, 255, 255, 0.95)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255, 255, 255, 0.6)', boxShadow: '0 20px 50px -10px rgba(31, 38, 135, 0.15)', position: 'relative', overflow: 'hidden', minHeight: '400px', display: 'grid', placeItems: 'center', fontFamily: '"Roboto Flex", sans-serif' }}>
+        <div style={{ textAlign: 'center', width: '100%' }}><h1 ref={counterRef} className="counter">0%</h1></div>
+      </div>
+    );
+  }
+
+  if (completed) {
+    const percentage = Math.round((score / questions.length) * 100);
+    const passed = percentage >= 70;
+    return (
+      <div style={{ marginTop: '3rem', padding: '2rem', textAlign: 'center', borderRadius: '24px', background: passed ? 'rgba(209, 250, 229, 0.8)' : 'rgba(254, 226, 226, 0.8)', backdropFilter: 'blur(20px)', border: passed ? '3px solid rgba(16, 185, 129, 0.3)' : '3px solid rgba(239, 68, 68, 0.3)', boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)' }}>
+        <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>{passed ? '🎉' : '📚'}</div>
+        <h3 style={{ fontSize: '2rem', color: passed ? '#065F46' : '#991B1B', marginBottom: '1rem' }}>{passed ? 'Great Job!' : 'Keep Learning!'}</h3>
+        <p style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.5rem', color: '#1F2937' }}>You scored {score} out of {questions.length} ({percentage}%)</p>
+        <p style={{ color: '#4B5563', marginBottom: '2rem', fontSize: '1.1rem' }}>{passed ? 'You are ready for the next module.' : 'Review the content and try again.'}</p>
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1.5rem', flexWrap: 'wrap' }}>
+          <CWButton onClick={handleRestart} variant={passed ? "secondary" : "primary"} style={{ opacity: passed ? 0.9 : 1 }}>{passed ? '↺ Retake Quiz' : '↺ Try Again'}</CWButton>
+          {passed && onNext && <CWButton onClick={onNext} variant="primary">Next Module →</CWButton>}
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <>
-      {/* SECTION 1 */}
-      <div className="mastery-section" data-topic="cybersecurity basics risk management attack surface accounts devices website payments">
-        <h3>1) The real problem: your business has an "attack surface"</h3>
-        <p>
-          Cybersecurity is not about being scared. It's about being ready.
-          Your business has "doors" attackers can try: your email, Instagram, phone, website logins, payment links, and staff accounts.
-        </p>
-
-        <BusinessAttackSurfaceDiagram />
-
-        <div className="workbook-section" style={{ backgroundColor: '#f8f9fa', border: '1px solid #e9ecef', padding: '1.5rem', borderRadius: '10px', margin: '1.5rem 0' }}>
-          <h4>🧭 Mission 1: Your asset list (what you must protect)</h4>
-          <p>Tick what you use today. Write what you don't want to lose.</p>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '.75rem', marginTop: '.75rem' }}>
-            <label><input data-progress="true" type="checkbox" /> Email account (Gmail / Outlook)</label>
-            <label><input data-progress="true" type="checkbox" /> Instagram / Facebook Page</label>
-            <label><input data-progress="true" type="checkbox" /> Domain name (yourdomain.co.za)</label>
-            <label><input data-progress="true" type="checkbox" /> Website admin login (WordPress/Shopify/etc.)</label>
-            <label><input data-progress="true" type="checkbox" /> Payment provider dashboard (Pay links / payouts)</label>
-            <label><input data-progress="true" type="checkbox" /> Customer list / leads list</label>
-          </div>
-
-          <div style={{ marginTop: '1rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            <div style={{ background: '#fff', border: '1px solid #e9ecef', borderRadius: '10px', padding: '1rem' }}>
-              <label style={{ fontWeight: '900', display: 'block' }}>If I lose my phone, I lose:</label>
-              <textarea rows="3" placeholder="Example: WhatsApp chats, banking apps, email, photos..." style={{ width: '100%', marginTop: '.5rem', padding: '.65rem', border: '1px solid #ced4da', borderRadius: '8px' }}></textarea>
-            </div>
-            <div style={{ background: '#fff', border: '1px solid #e9ecef', borderRadius: '10px', padding: '1rem' }}>
-              <label style={{ fontWeight: '900', display: 'block' }}>If my Instagram gets hacked, I lose:</label>
-              <textarea rows="3" placeholder="Example: sales DMs, credibility, customers trust..." style={{ width: '100%', marginTop: '.5rem', padding: '.65rem', border: '1px solid #ced4da', borderRadius: '8px' }}></textarea>
-            </div>
-          </div>
-
-          <div style={{ marginTop: '1rem', background: '#e7f1ff', padding: '1rem', borderRadius: '8px', border: '1px solid #cfe2ff' }}>
-            <strong>🔧 CapeWeb shortcut:</strong> CapeWeb can run a "Security Surface Audit" and give you a simple plan:
-            what to lock down first, what can wait, and how to reduce risk fast.
-          </div>
-        </div>
+    <div style={{ marginTop: '3rem', padding: '2rem 2rem', borderRadius: '32px', background: 'rgba(255, 255, 255, 0.85)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255, 255, 255, 0.6)', boxShadow: '0 20px 50px -10px rgba(31, 38, 135, 0.15)', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(120deg, rgba(34,211,238,0.15), rgba(244,114,182,0.15), rgba(253,224,71,0.15), rgba(34,211,238,0.15))', backgroundSize: '300% 300%', animation: 'gradientMove 15s ease infinite', zIndex: -1, pointerEvents: 'none' }} />
+      <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ background: '#E0F2FE', color: '#0284C7', padding: '0.3rem 0.8rem', borderRadius: '100px', fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Assessment</div>
+        <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#64748B' }}>Question {currentQ + 1} of {questions.length}</span>
       </div>
-
-      <Pillar8RemainingContent />
-    </>
-  );
-}
-
-function Pillar8RemainingContent() {
-  return (
-    <>
-      {/* SECTION 2 */}
-      <div className="mastery-section" data-topic="passwords mfa 2fa passkeys password manager recovery codes">
-        <h3>2) Passwords + MFA: your first shield</h3>
-        <p>
-          A strong password is good. A strong password <strong>plus MFA</strong> is much better.
-          MFA (Multi‑Factor Authentication) means: even if someone knows your password, they still can't log in.
-        </p>
-
-        <div className="comparison-table-wrapper">
-          <table className="capeweb-table">
-            <thead>
-              <tr>
-                <th>Security option</th>
-                <th>Simple meaning</th>
-                <th>CapeWeb advice</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Password only</td>
-                <td>One key</td>
-                <td>Not enough for email or social</td>
-              </tr>
-              <tr>
-                <td>Password + SMS code</td>
-                <td>Extra code via phone</td>
-                <td>Better than nothing (but not best)</td>
-              </tr>
-              <tr>
-                <td>Authenticator app</td>
-                <td>Codes from an app</td>
-                <td><strong>Great baseline</strong> for small businesses</td>
-              </tr>
-              <tr>
-                <td>Passkeys / Security keys</td>
-                <td>Modern login method</td>
-                <td>Excellent if you can set it up</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div className="workbook-section" style={{ backgroundColor: '#f8f9fa', border: '1px solid #e9ecef', padding: '1.5rem', borderRadius: '10px', margin: '1.5rem 0' }}>
-          <h4>🛡️ Mission 2: Lock down the "master key" (email)</h4>
-          <p>Do this first. If email is hacked, attackers can reset everything else.</p>
-
-          <ul style={{ margin: '.75rem 0 0 1.25rem' }}>
-            <li><label><input data-progress="true" type="checkbox" /> Turn on MFA for your email</label> — <a href="https://myaccount.google.com/security-checkup" target="_blank" rel="noopener noreferrer">Google Security Checkup</a></li>
-            <li><label><input data-progress="true" type="checkbox" /> Save your recovery codes somewhere safe</label> (not in the same inbox)</li>
-            <li><label><input data-progress="true" type="checkbox" /> Update your recovery phone + email</label></li>
-            <li><label><input data-progress="true" type="checkbox" /> Use a password manager (optional but powerful)</label></li>
-          </ul>
-
-          <details style={{ marginTop: '1rem', cursor: 'pointer' }}>
-            <summary style={{ color: '#0066cc', fontWeight: '900' }}>Password manager options (starter-friendly)</summary>
-            <div style={{ marginTop: '.5rem', paddingLeft: '1rem', borderLeft: '3px solid #0066cc' }}>
-              <ul style={{ margin: '.5rem 0 0 1.25rem' }}>
-                <li><a href="https://bitwarden.com/" target="_blank" rel="noopener noreferrer">Bitwarden</a></li>
-                <li><a href="https://1password.com/" target="_blank" rel="noopener noreferrer">1Password</a></li>
-                <li><a href="https://support.apple.com/en-za/guide/iphone/iphf9219d8c3/ios" target="_blank" rel="noopener noreferrer">iPhone Passwords (Apple)</a></li>
-                <li><a href="https://support.google.com/chrome/answer/95606?hl=en" target="_blank" rel="noopener noreferrer">Chrome Password Manager</a></li>
-              </ul>
-              <p style={{ margin: '.75rem 0 0', color: '#495057' }}>
-                CapeWeb rule: <strong>unique passwords</strong> for email, domain registrar, website admin, and payments.
-              </p>
-            </div>
-          </details>
-
-          <div style={{ marginTop: '1rem', background: '#e6f4ea', padding: '1rem', borderRadius: '8px', color: '#1e7e34' }}>
-            <strong>✅ CapeWeb check:</strong> If you do just one thing today, do MFA on email + Instagram.
-          </div>
-        </div>
-
-        <div className="workbook-section" style={{ background: '#fff', border: '1px solid #e9ecef', padding: '1.25rem', borderRadius: '10px' }}>
-          <h4>Quick Links: lock down your key accounts</h4>
-          <ul style={{ margin: '.6rem 0 0 1.25rem' }}>
-            <li><a href="https://www.facebook.com/security/2fac/settings" target="_blank" rel="noopener noreferrer">Meta (Facebook/Instagram) 2FA settings</a></li>
-            <li><a href="https://support.tiktok.com/en/safety-hc/account-and-user-safety/2-step-verification" target="_blank" rel="noopener noreferrer">TikTok 2‑step verification</a></li>
-            <li><a href="https://support.google.com/accounts/answer/185839?hl=en" target="_blank" rel="noopener noreferrer">Google 2‑Step Verification</a></li>
-          </ul>
-        </div>
-      </div>
-
-      {/* SECTION 3 */}
-      <div className="mastery-section" data-topic="phishing scams social engineering fake invoices dms">
-        <h3>3) Phishing: the #1 way small businesses get hacked</h3>
-        <p>
-          Phishing is a trick message designed to steal your login or money.
-          It can arrive via email, WhatsApp, Instagram DM, or even a fake "invoice".
-        </p>
-
-        <div className="workbook-section" style={{ backgroundColor: '#fff3cd', border: '1px solid #ffeeba', padding: '1.25rem', borderRadius: '10px', margin: '1.25rem 0', color: '#856404' }}>
-          <h4 style={{ marginTop: 0 }}>⚠️ The 5 red flags</h4>
-          <ol style={{ margin: '.5rem 0 0 1.25rem' }}>
-            <li><strong>Urgency:</strong> "Do this now or you'll lose access."</li>
-            <li><strong>Unexpected link:</strong> "Click here to verify."</li>
-            <li><strong>Weird sender:</strong> close to a real address, but not the same.</li>
-            <li><strong>Attachment you didn't ask for:</strong> "invoice.pdf.exe" vibes.</li>
-            <li><strong>Secret request:</strong> "Don't tell anyone."</li>
-          </ol>
-        </div>
-
-        <div className="workbook-section" style={{ background: '#f8f9fa', border: '1px solid #e9ecef', padding: '1.5rem', borderRadius: '10px' }}>
-          <h4>🎮 Phishing Spotter Game</h4>
-          <p>Pick the safest response.</p>
-
-          <div className="quiz-question">
-            <p><strong>Scenario A:</strong> "Hi, we're your payment provider. Your account will be suspended. Click this link to log in."</p>
-            <div className="quiz-options">
-              <label><input data-progress="true" type="radio" name="p8_phish_a" value="a" /> Click the link and log in fast</label><br />
-              <label><input data-progress="true" type="radio" name="p8_phish_a" value="b" /> Reply and ask for their password</label><br />
-              <label><input data-progress="true" type="radio" name="p8_phish_a" value="c" /> Ignore the link, open the real website/app directly, check there</label>
-            </div>
-            <details style={{ marginTop: '1rem', cursor: 'pointer' }}>
-              <summary style={{ color: '#0066cc', fontWeight: '900' }}>Check Answer</summary>
-              <div style={{ marginTop: '.5rem', paddingLeft: '1rem', borderLeft: '3px solid #0066cc' }}>
-                <p><strong>Best:</strong> open the real website/app directly. Never trust surprise links.</p>
-              </div>
-            </details>
-          </div>
-
-          <hr style={{ border: 'none', borderTop: '1px solid #e9ecef', margin: '1rem 0' }} />
-
-          <div className="quiz-question">
-            <p><strong>Scenario B:</strong> You get a WhatsApp message: "This is the courier. Pay R35 here to release your parcel."</p>
-            <div className="quiz-options">
-              <label><input data-progress="true" type="radio" name="p8_phish_b" value="a" /> Pay, it's only R35</label><br />
-              <label><input data-progress="true" type="radio" name="p8_phish_b" value="b" /> Verify using the courier's official tracking page or call the official number</label><br />
-              <label><input data-progress="true" type="radio" name="p8_phish_b" value="c" /> Forward it to everyone</label>
-            </div>
-            <details style={{ marginTop: '1rem', cursor: 'pointer' }}>
-              <summary style={{ color: '#0066cc', fontWeight: '900' }}>Check Answer</summary>
-              <div style={{ marginTop: '.5rem', paddingLeft: '1rem', borderLeft: '3px solid #0066cc' }}>
-                <p><strong>Best:</strong> verify using official channels. Small fees are how scams "feel believable".</p>
-              </div>
-            </details>
-          </div>
-
-          <div style={{ marginTop: '1rem', background: '#e7f1ff', padding: '1rem', borderRadius: '8px', border: '1px solid #cfe2ff' }}>
-            <strong>🔧 CapeWeb suggestion:</strong> build a simple "payments policy" page and link it in your bio:
-            "We only accept payments through our official link. We never DM payment links."
-          </div>
-        </div>
-      </div>
-
-      {/* SECTION 4 */}
-      <div className="mastery-section" data-topic="backups device security updates encryption wifi 3-2-1">
-        <h3>4) Backups + device security (so you don't lose the business)</h3>
-        <p>
-          A business can survive a hack. It struggles to survive <strong>lost data</strong>.
-          Backups are your time machine.
-        </p>
-
-        <SimpleBackupStrategyDiagram />
-
-        <div className="workbook-section" style={{ background: '#f8f9fa', border: '1px solid #e9ecef', padding: '1.5rem', borderRadius: '10px' }}>
-          <h4>🧰 Mission 3: Build your backup plan (simple)</h4>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            <div style={{ background: '#fff', border: '1px solid #e9ecef', borderRadius: '10px', padding: '1rem' }}>
-              <strong>Pick where your backup lives:</strong>
-              <ul style={{ margin: '.75rem 0 0 1.25rem' }}>
-                <li><label><input data-progress="true" type="checkbox" /> Cloud drive (Google Drive / OneDrive / iCloud)</label></li>
-                <li><label><input data-progress="true" type="checkbox" /> External hard drive / USB (offline)</label></li>
-                <li><label><input data-progress="true" type="checkbox" /> Website backups (if you have a site)</label></li>
-              </ul>
-
-              <div style={{ marginTop: '.75rem' }}>
-                <strong>Helpful links:</strong>
-                <ul style={{ margin: '.5rem 0 0 1.25rem' }}>
-                  <li><a href="https://support.google.com/drive/answer/2424384?hl=en" target="_blank" rel="noopener noreferrer">Google Drive basics</a></li>
-                  <li><a href="https://support.microsoft.com/en-us/onedrive" target="_blank" rel="noopener noreferrer">OneDrive support</a></li>
-                  <li><a href="https://support.apple.com/en-za/icloud" target="_blank" rel="noopener noreferrer">iCloud support</a></li>
-                </ul>
-              </div>
-            </div>
-
-            <div style={{ background: '#fff', border: '1px solid #e9ecef', borderRadius: '10px', padding: '1rem' }}>
-              <strong>Pick a schedule:</strong>
-              <div style={{ marginTop: '.75rem' }}>
-                <label style={{ display: 'block' }}><input data-progress="true" type="radio" name="p8_backup_schedule" value="daily" /> Daily</label>
-                <label style={{ display: 'block' }}><input data-progress="true" type="radio" name="p8_backup_schedule" value="weekly" /> Weekly</label>
-                <label style={{ display: 'block' }}><input data-progress="true" type="radio" name="p8_backup_schedule" value="monthly" /> Monthly</label>
-              </div>
-
-              <label style={{ marginTop: '.75rem', fontWeight: '900', display: 'block' }}>When will you test a restore?</label>
-              <select id="p8_restore_test" style={{ width: '100%', marginTop: '.5rem', padding: '.65rem', border: '1px solid #ced4da', borderRadius: '8px' }}>
-                <option value="">Choose one…</option>
-                <option value="weekly">Every week</option>
-                <option value="monthly">Once a month</option>
-                <option value="quarterly">Every 3 months</option>
-              </select>
-              <label style={{ marginTop: '.75rem' }}><input data-progress="true" type="checkbox" /> I will test a restore (I understand why)</label>
-            </div>
-          </div>
-
-          <div style={{ marginTop: '1rem', background: '#e6f4ea', padding: '1rem', borderRadius: '8px', color: '#1e7e34' }}>
-            <strong>✅ CapeWeb Care Plan:</strong> CapeWeb can set up automated website backups + uptime monitoring + quick rollback if something breaks.
-          </div>
-        </div>
-
-        <div className="workbook-section" style={{ background: '#fff', border: '1px solid #e9ecef', padding: '1.25rem', borderRadius: '10px', marginTop: '1rem' }}>
-          <h4>Device safety checklist (R0)</h4>
-          <ul style={{ margin: '.6rem 0 0 1.25rem' }}>
-            <li><label><input data-progress="true" type="checkbox" /> Turn on phone lock (PIN/biometrics)</label></li>
-            <li><label><input data-progress="true" type="checkbox" /> Turn on "Find My Phone" / "Find My Device"</label></li>
-            <li><label><input data-progress="true" type="checkbox" /> Enable automatic updates</label></li>
-            <li><label><input data-progress="true" type="checkbox" /> Don't run the business on public Wi‑Fi without caution</label></li>
-          </ul>
-        </div>
-      </div>
-
-      {/* SECTION 5 */}
-      <div className="mastery-section" data-topic="website security https ssl updates wordpress shopify cloudflare waf forms spam">
-        <h3>5) Website security (even if your "website" is just a landing page)</h3>
-        <p>
-          Your website is a trust machine. If it's hacked or slow, customers leave.
-          CapeWeb secures websites with simple, proven steps: HTTPS, updates, secure forms, and protective layers.
-        </p>
-
-        <div className="workbook-section" style={{ background: '#f8f9fa', border: '1px solid #e9ecef', padding: '1.5rem', borderRadius: '10px' }}>
-          <h4>🧱 Mission 4: The CapeWeb Website Security Baseline</h4>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            <div style={{ background: '#fff', border: '1px solid #e9ecef', borderRadius: '10px', padding: '1rem' }}>
-              <strong>Must-haves</strong>
-              <ul style={{ margin: '.75rem 0 0 1.25rem' }}>
-                <li><label><input data-progress="true" type="checkbox" /> HTTPS is on (lock icon)</label></li>
-                <li><label><input data-progress="true" type="checkbox" /> Admin accounts use MFA</label></li>
-                <li><label><input data-progress="true" type="checkbox" /> Updates are applied monthly</label></li>
-                <li><label><input data-progress="true" type="checkbox" /> Website has backups</label></li>
-              </ul>
-
-              <div style={{ marginTop: '.75rem' }}>
-                <strong>Tools:</strong>
-                <ul style={{ margin: '.5rem 0 0 1.25rem' }}>
-                  <li><a href="https://letsencrypt.org/" target="_blank" rel="noopener noreferrer">Let's Encrypt (HTTPS)</a></li>
-                  <li><a href="https://www.cloudflare.com/" target="_blank" rel="noopener noreferrer">Cloudflare (basic WAF + bot protection)</a></li>
-                </ul>
-              </div>
-            </div>
-
-            <div style={{ background: '#fff', border: '1px solid #e9ecef', borderRadius: '10px', padding: '1rem' }}>
-              <strong>Quick scans (safe)</strong>
-              <ul style={{ margin: '.75rem 0 0 1.25rem' }}>
-                <li><label><input data-progress="true" type="checkbox" /> Ran a Security Headers scan</label> — <a href="https://securityheaders.com/" target="_blank" rel="noopener noreferrer">securityheaders.com</a></li>
-                <li><label><input data-progress="true" type="checkbox" /> Ran a Mozilla Observatory scan</label> — <a href="https://observatory.mozilla.org/" target="_blank" rel="noopener noreferrer">observatory.mozilla.org</a></li>
-                <li><label><input data-progress="true" type="checkbox" /> Checked my site for common web risks</label> — <a href="https://owasp.org/www-project-top-ten/" target="_blank" rel="noopener noreferrer">OWASP Top 10</a></li>
-              </ul>
-              <p style={{ marginTop: '.75rem', color: '#6c757d' }}>
-                Don't panic if you see warnings. Use the results as a checklist, not a judgment.
-              </p>
-            </div>
-          </div>
-
-          <div style={{ marginTop: '1rem', background: '#e7f1ff', padding: '1rem', borderRadius: '8px', border: '1px solid #cfe2ff' }}>
-            <strong>🔧 CapeWeb offer:</strong> We can harden your website: secure hosting, WAF setup, backups, updates, and monitoring —
-            so you focus on sales, not fires.
-          </div>
-        </div>
-      </div>
-
-      {/* SECTION 6 */}
-      <div className="mastery-section" data-topic="payments fraud chargebacks scams invoices links">
-        <h3>6) Fraud prevention (payments, invoices, and "fake proof")</h3>
-        <p>
-          Risk management isn't only hacking. It's also money risk: fake payments, chargebacks, and scams.
-          The CapeWeb rule is: <strong>verify money before releasing value</strong>.
-        </p>
-
-        <div className="workbook-section" style={{ background: '#fff', border: '1px solid #e9ecef', padding: '1.25rem', borderRadius: '10px' }}>
-          <h4>✅ Simple fraud rules (works for any business)</h4>
-          <ul style={{ margin: '.6rem 0 0 1.25rem' }}>
-            <li><label><input data-progress="true" type="checkbox" /> I don't trust screenshots as proof of payment</label></li>
-            <li><label><input data-progress="true" type="checkbox" /> I verify payment in the real dashboard / bank app</label></li>
-            <li><label><input data-progress="true" type="checkbox" /> I use one official payment link / provider</label></li>
-            <li><label><input data-progress="true" type="checkbox" /> I document delivery/collection (even a photo + date)</label></li>
-          </ul>
-
-          <details style={{ marginTop: '1rem', cursor: 'pointer' }}>
-            <summary style={{ color: '#0066cc', fontWeight: '900' }}>Simple example</summary>
-            <div style={{ marginTop: '.5rem', paddingLeft: '1rem', borderLeft: '3px solid #0066cc' }}>
-              <p style={{ margin: 0 }}>
-                Customer says: "I paid, here's a screenshot."<br />
-                <strong>Your reply:</strong> "Thanks! I'll confirm it in our payment dashboard now. Once it reflects, we deliver/book immediately."
-              </p>
-            </div>
-          </details>
-
-          <div style={{ marginTop: '1rem', background: '#fff3cd', border: '1px solid #ffeeba', padding: '1rem', borderRadius: '8px', color: '#856404' }}>
-            <strong>⚠️ Safety note:</strong> Don't post your bank details publicly in a way that can be edited or spoofed.
-            Use a secure payment link when possible.
-          </div>
-        </div>
-      </div>
-
-      {/* SECTION 7 */}
-      <div className="mastery-section" data-topic="incident response hacked account breach popia cybersecurity hub report">
-        <h3>7) Incident response: what to do if you get hacked</h3>
-        <p>
-          If something goes wrong, your job is not to panic. Your job is to follow a plan.
-          CapeWeb uses a simple 5‑step incident plan that normal people can execute.
-        </p>
-
-        <IncidentResponseDiagram />
-
-        <div className="workbook-section" style={{ background: '#f8f9fa', border: '1px solid #e9ecef', padding: '1.5rem', borderRadius: '10px' }}>
-          <h4>🧯 Mission 5: Your "If hacked…" checklist</h4>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            <div style={{ background: '#fff', border: '1px solid #e9ecef', borderRadius: '10px', padding: '1rem' }}>
-              <strong>Immediate actions</strong>
-              <ul style={{ margin: '.75rem 0 0 1.25rem' }}>
-                <li><label><input data-progress="true" type="checkbox" /> Change passwords (start with email)</label></li>
-                <li><label><input data-progress="true" type="checkbox" /> Turn on / re-check MFA</label></li>
-                <li><label><input data-progress="true" type="checkbox" /> Log out other sessions/devices</label></li>
-                <li><label><input data-progress="true" type="checkbox" /> Check forwarding rules in email</label></li>
-              </ul>
-            </div>
-
-            <div style={{ background: '#fff', border: '1px solid #e9ecef', borderRadius: '10px', padding: '1rem' }}>
-              <strong>When customer data might be involved</strong>
-              <ul style={{ margin: '.75rem 0 0 1.25rem' }}>
-                <li><label><input data-progress="true" type="checkbox" /> Create an incident log (what/when/who)</label></li>
-                <li><label><input data-progress="true" type="checkbox" /> Get support (hosting/payment provider)</label></li>
-                <li><label><input data-progress="true" type="checkbox" /> Check reporting obligations (POPIA)</label></li>
-              </ul>
-              <p style={{ marginTop: '.75rem', color: '#6c757d' }}>
-                If personal information is involved, you may have legal duties. When unsure, get professional advice.
-              </p>
-            </div>
-          </div>
-
-          <div style={{ marginTop: '1rem', background: '#fff', border: '1px solid #e9ecef', borderRadius: '10px', padding: '1rem' }}>
-            <strong>Helpful reporting channels (South Africa):</strong>
-            <ul style={{ margin: '.6rem 0 0 1.25rem' }}>
-              <li><a href="https://www.cybersecurityhub.gov.za/report-an-incident" target="_blank" rel="noopener noreferrer">Report an incident to the Cybersecurity Hub (CSIRT)</a></li>
-              <li><a href="https://inforegulator.org.za/" target="_blank" rel="noopener noreferrer">Information Regulator (POPIA)</a> — <a href="https://eservices.inforegulator.org.za/compromises/default.aspx" target="_blank" rel="noopener noreferrer">Security compromise portal</a></li>
-            </ul>
-          </div>
-
-          <div style={{ marginTop: '1rem', background: '#e7f1ff', padding: '1rem', borderRadius: '8px', border: '1px solid #cfe2ff' }}>
-            <strong>🔧 CapeWeb emergency support:</strong> If your site is compromised, CapeWeb can help: isolate, restore from backup, patch, and harden.
-          </div>
-        </div>
-      </div>
-
-      {/* SECTION 8 */}
-      <div className="mastery-section" data-topic="risk register likelihood impact controls risk management">
-        <h3>8) Risk management: build a simple Risk Register (so you don't forget)</h3>
-        <p>
-          A Risk Register is just a list of "things that could go wrong" and what you'll do about them.
-          This is how real businesses stay calm.
-        </p>
-
-        <div className="workbook-section" style={{ background: '#f8f9fa', border: '1px solid #e9ecef', padding: '1.5rem', borderRadius: '10px' }}>
-          <h4>🗂️ Mission 6: Your Risk Register (interactive)</h4>
-          <p style={{ marginTop: '.25rem' }}>Start with 3 risks. Add more later. Keep it simple.</p>
-
-          <div style={{ overflow: 'auto', background: '#fff', border: '1px solid #e9ecef', borderRadius: '10px', padding: '1rem' }}>
-            <table className="capeweb-table" style={{ minWidth: '920px' }}>
-              <thead>
-                <tr>
-                  <th>Risk</th>
-                  <th>Likelihood</th>
-                  <th>Impact</th>
-                  <th>Control (what you do)</th>
-                  <th>Owner</th>
-                  <th>Next action</th>
-                </tr>
-              </thead>
-              <tbody id="p8-risk-body">
-                <tr>
-                  <td><input type="text" placeholder="Instagram hacked" style={{ width: '100%', padding: '.5rem', border: '1px solid #ced4da', borderRadius: '8px' }} /></td>
-                  <td>
-                    <select style={{ width: '100%', padding: '.5rem', border: '1px solid #ced4da', borderRadius: '8px' }}>
-                      <option>Low</option><option defaultValue>Medium</option><option>High</option>
-                    </select>
-                  </td>
-                  <td>
-                    <select style={{ width: '100%', padding: '.5rem', border: '1px solid #ced4da', borderRadius: '8px' }}>
-                      <option>Low</option><option>Medium</option><option defaultValue>High</option>
-                    </select>
-                  </td>
-                  <td><input type="text" placeholder="MFA + recovery codes + admin access checks" style={{ width: '100%', padding: '.5rem', border: '1px solid #ced4da', borderRadius: '8px' }} /></td>
-                  <td><input type="text" placeholder="Me" style={{ width: '100%', padding: '.5rem', border: '1px solid #ced4da', borderRadius: '8px' }} /></td>
-                  <td><input type="text" placeholder="Turn on MFA today" style={{ width: '100%', padding: '.5rem', border: '1px solid #ced4da', borderRadius: '8px' }} /></td>
-                </tr>
-                <tr>
-                  <td><input type="text" placeholder="Lost phone / stolen laptop" style={{ width: '100%', padding: '.5rem', border: '1px solid #ced4da', borderRadius: '8px' }} /></td>
-                  <td>
-                    <select style={{ width: '100%', padding: '.5rem', border: '1px solid #ced4da', borderRadius: '8px' }}>
-                      <option defaultValue>Low</option><option>Medium</option><option>High</option>
-                    </select>
-                  </td>
-                  <td>
-                    <select style={{ width: '100%', padding: '.5rem', border: '1px solid #ced4da', borderRadius: '8px' }}>
-                      <option>Low</option><option defaultValue>Medium</option><option>High</option>
-                    </select>
-                  </td>
-                  <td><input type="text" placeholder="Device lock + Find My Device + backups" style={{ width: '100%', padding: '.5rem', border: '1px solid #ced4da', borderRadius: '8px' }} /></td>
-                  <td><input type="text" placeholder="Me" style={{ width: '100%', padding: '.5rem', border: '1px solid #ced4da', borderRadius: '8px' }} /></td>
-                  <td><input type="text" placeholder="Enable Find My Device" style={{ width: '100%', padding: '.5rem', border: '1px solid #ced4da', borderRadius: '8px' }} /></td>
-                </tr>
-                <tr>
-                  <td><input type="text" placeholder="Fake proof of payment" style={{ width: '100%', padding: '.5rem', border: '1px solid #ced4da', borderRadius: '8px' }} /></td>
-                  <td>
-                    <select style={{ width: '100%', padding: '.5rem', border: '1px solid #ced4da', borderRadius: '8px' }}>
-                      <option>Low</option><option defaultValue>Medium</option><option>High</option>
-                    </select>
-                  </td>
-                  <td>
-                    <select style={{ width: '100%', padding: '.5rem', border: '1px solid #ced4da', borderRadius: '8px' }}>
-                      <option>Low</option><option defaultValue>Medium</option><option>High</option>
-                    </select>
-                  </td>
-                  <td><input type="text" placeholder="Verify in dashboard; no screenshots" style={{ width: '100%', padding: '.5rem', border: '1px solid #ced4da', borderRadius: '8px' }} /></td>
-                  <td><input type="text" placeholder="Me" style={{ width: '100%', padding: '.5rem', border: '1px solid #ced4da', borderRadius: '8px' }} /></td>
-                  <td><input type="text" placeholder="Write payment policy and pin it" style={{ width: '100%', padding: '.5rem', border: '1px solid #ced4da', borderRadius: '8px' }} /></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div style={{ marginTop: '1rem', display: 'flex', gap: '.75rem', flexWrap: 'wrap' }}>
-            <button type="button" id="p8-add-risk" style={{ padding: '.7rem 1rem', borderRadius: '8px', border: '1px solid #0b0f1a', background: '#0b0f1a', color: '#fff', fontWeight: '900', cursor: 'pointer' }}>
-              + Add risk row
-            </button>
-            <button type="button" id="p8-export-risk" style={{ padding: '.7rem 1rem', borderRadius: '8px', border: '1px solid #0b0f1a', background: '#fff', color: '#0b0f1a', fontWeight: '900', cursor: 'pointer' }}>
-              Export as CSV
-            </button>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '.5rem', background: '#fff', border: '1px solid #e9ecef', borderRadius: '999px', padding: '.4rem .75rem' }}>
-              <input data-progress="true" type="checkbox" /> I created my first risk register
+      <h4 style={{ margin: '0 0 1.5rem 0', fontSize: '2rem', fontWeight: 900, color: '#0F172A', letterSpacing: '-0.02em', lineHeight: 1.1 }}>{title}</h4>
+      <div style={{ marginBottom: '2rem' }}>
+        <p style={{ fontSize: '1.2rem', fontWeight: 600, marginBottom: '1.5rem', color: '#1E293B', lineHeight: 1.5 }}>{question.question}</p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          {question.options.map((option, index) => (
+            <label key={index} style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem 1.25rem', borderRadius: '16px', border: '2px solid', borderColor: selected === index ? '#0EA5E9' : '#E2E8F0', background: selected === index ? '#F0F9FF' : '#FFFFFF', cursor: 'pointer', transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)', boxShadow: selected === index ? '0 4px 20px rgba(14, 165, 233, 0.15)' : '0 2px 4px rgba(0,0,0,0.02)' }} onClick={() => handleSelect(index)}>
+              <div style={{ width: '22px', height: '22px', borderRadius: '50%', border: selected === index ? '6px solid #0EA5E9' : '2px solid #CBD5E1', flexShrink: 0, transition: 'all 0.2s ease' }} />
+              <span style={{ flex: 1, fontSize: '1.05rem', color: selected === index ? '#0C4A6E' : '#334155', fontWeight: 500 }}>{option}</span>
             </label>
-          </div>
-
-          <div style={{ marginTop: '1rem', background: '#e6f4ea', padding: '1rem', borderRadius: '8px', color: '#1e7e34' }}>
-            <strong>✅ CapeWeb move:</strong> We turn your Risk Register into a monthly "shield routine" (updates, backups, access checks, scans).
-          </div>
+          ))}
         </div>
       </div>
-    </>
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <button onClick={handleNext} disabled={selected === null} style={{ padding: '0.75rem 2rem', background: '#0F172A', color: 'white', border: 'none', borderRadius: '100px', fontSize: '1rem', fontWeight: 700, cursor: selected === null ? 'not-allowed' : 'pointer', opacity: selected === null ? 0.5 : 1, transition: 'all 0.2s ease', boxShadow: '0 4px 12px rgba(15, 23, 42, 0.2)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          {isLast ? 'Finish Quiz' : 'Next Question'}<span>→</span>
+        </button>
+      </div>
+    </div>
   );
 }
 
-export function Pillar8Quiz({ quizResponses, onSelect, onScore, scoreMessage }) {
+// ==========================================
+// INTERACTIVE VISUALS
+// ==========================================
+
+function CIATriadVisual() {
+  const [active, setActive] = useState('c');
+  const details = {
+    c: { title: "Confidentiality", desc: "Keeping secrets secret. If this fails, your customer list is on the dark web.", icon: "🤫", color: "#3B82F6" },
+    i: { title: "Integrity", desc: "Keeping data accurate. If this fails, your bank balance says R0 instead of R100,000.", icon: "⚖️", color: "#10B981" },
+    a: { title: "Availability", desc: "Keeping systems online. If this fails, your website is down on Black Friday.", icon: "🟢", color: "#F59E0B" }
+  };
+
   return (
-    <div className="mastery-section" data-topic="pillar 8 test cybersecurity quiz mfa phishing backups incident response website">
-      <h3>🏁 Boss Battle: Cybersecurity &amp; Risk Test</h3>
-      <p>Score <strong>9/12</strong> or higher before moving to Pillar 9.</p>
-
-      <div id="p8-test" className="workbook-section" style={{ background: '#f8f9fa', border: '1px solid #e9ecef', padding: '1.5rem', borderRadius: '10px', margin: '1.5rem 0' }}>
-        {pillar8QuizQuestions.map((q, index) => (
-          <div key={index}>
-            {index > 0 && <hr style={{ border: 'none', borderTop: '1px solid #e9ecef', margin: '1rem 0' }} />}
-            <div className="quiz-question">
-              <p><strong>{index + 1})</strong> {q.question}</p>
-              {q.options.map((opt, optIndex) => (
-                <label key={optIndex} style={{ display: 'block' }}>
-                  <input
-                    type="radio"
-                    name={`p8q${index}`}
-                    checked={quizResponses[index] === optIndex}
-                    onChange={() => onSelect(index, optIndex)}
-                  /> {opt}
-                </label>
-              ))}
-            </div>
-          </div>
+    <div style={{ margin: '2rem 0', padding: '2rem', background: '#F8FAFC', borderRadius: '24px', border: '1px solid #E2E8F0' }}>
+      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginBottom: '1.5rem' }}>
+        {Object.keys(details).map(key => (
+          <button
+            key={key}
+            onClick={() => setActive(key)}
+            style={{
+              padding: '1rem', borderRadius: '12px', border: 'none',
+              background: active === key ? details[key].color : '#fff',
+              color: active === key ? 'white' : '#64748B',
+              cursor: 'pointer', flex: 1, fontWeight: 'bold', transition: 'all 0.2s',
+              boxShadow: active === key ? '0 4px 12px rgba(0,0,0,0.1)' : 'none'
+            }}
+          >
+            {details[key].title}
+          </button>
         ))}
+      </div>
+      <div style={{ textAlign: 'center', padding: '1rem' }}>
+        <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>{details[active].icon}</div>
+        <h4 style={{ color: details[active].color }}>{details[active].title}</h4>
+        <p style={{ color: '#475569' }}>{details[active].desc}</p>
+      </div>
+    </div>
+  );
+}
 
-        <button
-          type="button"
-          onClick={onScore}
-          style={{ marginTop: '1rem', padding: '.75rem 1rem', borderRadius: '8px', border: '1px solid #0b0f1a', background: '#0b0f1a', color: '#fff', fontWeight: '900', cursor: 'pointer' }}
-        >
-          Check my score
-        </button>
+function PasswordCrackerSim() {
+  const [pwd, setPwd] = useState('');
+  const [crackTime, setCrackTime] = useState('0 seconds');
+  const [color, setColor] = useState('#EF4444');
 
-        <div style={{ marginTop: '.75rem', padding: '1rem', borderRadius: '10px', background: '#fff', border: '1px solid #e9ecef' }}>
-          <strong>Score:</strong> {scoreMessage}
+  useEffect(() => {
+    let time = "0 seconds";
+    let c = "#EF4444";
+    if (pwd.length === 0) { time = "0 seconds"; c = "#EF4444"; }
+    else if (pwd.length < 6) { time = "Instantly"; c = "#EF4444"; }
+    else if (pwd.length < 8) { time = "2 minutes"; c = "#F97316"; }
+    else if (pwd.length < 12) {
+      time = /[0-9]/.test(pwd) && /[A-Z]/.test(pwd) ? "3 weeks" : "4 hours";
+      c = "#F59E0B";
+    }
+    else {
+      time = /[!@#$%^&*]/.test(pwd) ? "400 years" : "2 years";
+      c = "#10B981";
+    }
+    setCrackTime(time);
+    setColor(c);
+  }, [pwd]);
+
+  return (
+    <div style={{ margin: '2rem 0', padding: '2rem', background: '#0F172A', color: 'white', borderRadius: '24px' }}>
+      <h4 style={{ color: '#94A3B8', marginBottom: '1rem' }}>Brute Force Simulator</h4>
+      <input
+        type="text"
+        value={pwd}
+        onChange={(e) => setPwd(e.target.value)}
+        placeholder="Type a password..."
+        style={{ width: '100%', padding: '1rem', borderRadius: '12px', border: 'none', background: '#1E293B', color: 'white', marginBottom: '1.5rem', fontSize: '1.1rem' }}
+      />
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <span>Estimated Time to Crack:</span>
+        <span style={{ fontWeight: 'bold', fontSize: '1.2rem', color: color }}>{crackTime}</span>
+      </div>
+      <div style={{ height: '4px', background: '#334155', borderRadius: '2px', marginTop: '1rem', overflow: 'hidden' }}>
+        <div style={{ width: color === '#10B981' ? '100%' : color === '#F59E0B' ? '60%' : '10%', height: '100%', background: color, transition: 'all 0.5s' }} />
+      </div>
+    </div>
+  );
+}
+
+function PhishingGauntlet() {
+  const [step, setStep] = useState(0);
+  const [score, setScore] = useState(0);
+  const [showResult, setShowResult] = useState(false);
+
+  const scenarios = [
+    { text: "Email from 'microsoft-security@outlook.com' says your PC is infected.", legit: false, hint: "Check the domain: Microsoft uses @microsoft.com" },
+    { text: "SMS from your bank saying 'Deduction of R5000 authorized. If not you, click bit.ly/bank-help'.", legit: false, hint: "Banks never send shortened bit.ly links for security." },
+    { text: "Email from 'it-support@yourcompany.com' with an attachment 'Office_Party_Photos.exe'.", legit: false, hint: ".exe files are almost always malicious in emails." }
+  ];
+
+  const handleChoice = (isLegit) => {
+    const correct = isLegit === scenarios[step].legit;
+    if (correct) setScore(score + 1);
+    if (step < scenarios.length - 1) {
+      setStep(step + 1);
+    } else {
+      setShowResult(true);
+    }
+  };
+
+  return (
+    <div style={{ margin: '2rem 0', padding: '2rem', background: '#FFF7ED', borderRadius: '24px', border: '1px solid #FFEDD5' }}>
+      {!showResult ? (
+        <>
+          <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between' }}>
+            <span style={{ fontWeight: 'bold', color: '#C2410C' }}>Phishing Gauntlet</span>
+            <span>{step + 1} / {scenarios.length}</span>
+          </div>
+          <p style={{ fontSize: '1.1rem', marginBottom: '2rem', minHeight: '60px' }}>{scenarios[step].text}</p>
+          <div style={{ display: 'flex', gap: '1rem' }}>
+            <button onClick={() => handleChoice(true)} style={{ flex: 1, padding: '1rem', borderRadius: '12px', border: '1px solid #FED7AA', background: 'white', cursor: 'pointer' }}>Legit ✅</button>
+            <button onClick={() => handleChoice(false)} style={{ flex: 1, padding: '1rem', borderRadius: '12px', border: '1px solid #FED7AA', background: 'white', cursor: 'pointer' }}>Fishy 🎣</button>
+          </div>
+        </>
+      ) : (
+        <div style={{ textAlign: 'center' }}>
+          <h4>Result: {score}/{scenarios.length} identified!</h4>
+          <p>{score === 3 ? "You are a human firewall!" : "Keep practicing. Hackers only need you to slip up once."}</p>
+          <button onClick={() => { setStep(0); setScore(0); setShowResult(false); }} style={{ marginTop: '1rem', padding: '0.5rem 1rem', background: '#C2410C', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>Restart</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SSLCipherSim() {
+  const [msg, setMsg] = useState('Hello');
+  const [encrypted, setEncrypted] = useState('');
+
+  useEffect(() => {
+    setEncrypted(msg.split('').map(c => String.fromCharCode(c.charCodeAt(0) + 5)).join(''));
+  }, [msg]);
+
+  return (
+    <div style={{ margin: '2rem 0', padding: '2rem', background: '#F0FDF4', borderRadius: '24px', border: '1px solid #DCFCE7' }}>
+      <div style={{ marginBottom: '1.5rem' }}>
+        <label style={{ display: 'block', color: '#166534', marginBottom: '0.5rem' }}>Client Type (Your Input):</label>
+        <input type="text" value={msg} onChange={e => setMsg(e.target.value)} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #BBF7D0' }} />
+      </div>
+      <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+        <div style={{ flex: 1, padding: '1rem', background: 'white', borderRadius: '12px', border: '1px dashed #166534', textAlign: 'center' }}>
+          <div style={{ fontSize: '0.8rem', color: '#166534' }}>In-Transit (Encrypted)</div>
+          <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{encrypted}</div>
+        </div>
+        <div style={{ fontSize: '1.5rem' }}>🔒</div>
+        <div style={{ flex: 1, padding: '1rem', background: 'white', borderRadius: '12px', border: '1px solid #BBF7D0', textAlign: 'center' }}>
+          <div style={{ fontSize: '0.8rem', color: '#166534' }}>Server Receives</div>
+          <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{msg}</div>
         </div>
       </div>
     </div>
+  );
+}
+
+function ScenarioToggle({ oldTitle, oldContent, newTitle, newContent }) {
+  const [view, setView] = useState('old');
+  return (
+    <div style={{ margin: '3rem 0' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem', background: '#F1F5F9', padding: '0.5rem', borderRadius: '100px', width: 'fit-content', margin: '0 auto 2rem' }}>
+        <button onClick={() => setView('old')} style={{ padding: '0.6rem 1.5rem', borderRadius: '100px', border: 'none', background: view === 'old' ? '#fff' : 'transparent', color: view === 'old' ? '#EF4444' : '#64748B', fontWeight: 800, boxShadow: view === 'old' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>{oldTitle}</button>
+        <button onClick={() => setView('new')} style={{ padding: '0.6rem 1.5rem', borderRadius: '100px', border: 'none', background: view === 'new' ? '#fff' : 'transparent', color: view === 'new' ? '#10B981' : '#64748B', fontWeight: 800, boxShadow: view === 'new' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>{newTitle}</button>
+      </div>
+      {view === 'old' ? (
+        <div style={{ padding: '2rem', background: '#FEF2F2', borderRadius: '24px', border: '2px solid #FECACA', animation: 'fadeIn 0.5s', color: '#991B1B' }}>
+          {oldContent}
+        </div>
+      ) : (
+        <div style={{ padding: '2rem', background: '#ECFDF5', borderRadius: '24px', border: '2px solid #A7F3D0', animation: 'fadeIn 0.5s', color: '#064E3B' }}>
+          {newContent}
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+// ==========================================
+// PILLAR 8 MODULES A-I
+// ==========================================
+
+// Module A: Fundamentals
+export function Pillar8ModuleA({ onNext }) {
+  return (
+    <InteractiveLayout title="Module A: The CIA Triad" subtitle="More than just secrets.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          Security is not just about keeping data <strong>Secret</strong>. It is also about keeping it <strong>Correct</strong> and <strong>Accessible</strong>.
+        </p>
+
+        <CIATriadVisual />
+
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%)', borderRadius: '24px', border: '1px solid #E2E8F0' }}>
+          <CWHeading level={3} style={{ color: '#1E293B', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🛡️</span> Why This Matters for Business Owners
+          </CWHeading>
+
+          <p style={{ fontSize: '1.1rem', color: '#334155', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            <strong>The Trust Tax.</strong> If you lose customer data (Confidentiality), you lose trust. If your inventory numbers are hacked (Integrity), you lose money. If your site is down (Availability), you lose sales. Digital security is the floor of your business—it must be solid.
+          </p>
+
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #E2E8F0', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+              🚀 How CapeWeb Helps You Scale
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                <span style={{ color: '#3B82F6', marginTop: '2px' }}>➜</span>
+                <span>
+                  <a href="/services?service=care-plans" style={{ color: '#3B82F6', textDecoration: 'underline' }}>Security & Care Plans</a>: We monitor your "Availability" 24/7/365, ensuring your digital assets remain online and un-tampered with while you focus on growth.
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <MiniQuiz
+          questions={[
+            { question: "What does Integrity mean in the CIA Triad?", options: ["The data is secret", "The data is accurate and untampered", "The data is profitable"], correctIndex: 1 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  );
+}
+
+
+// Module B: Passwords
+export function Pillar8ModuleB({ onNext }) {
+  return (
+    <InteractiveLayout title="Module B: Authentication" subtitle="You are the password.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          "Password123" is cracked in 0.001 seconds. Diversity and length are your shields.
+        </p>
+
+        <PasswordCrackerSim />
+
+        <ScenarioToggle
+          oldTitle="The Sticky Note 📝"
+          oldContent="Using the same 3 passwords for Gmail, Bank, and Facebook. One leak in a minor app means the hacker has the 'Skeleton Key' to your entire life."
+          newTitle="The Vault 🔐"
+          newContent="Using a Password Manager. You remember one complex 'Master Key', while the app generates and remembers 64-character random strings for everything else."
+        />
+
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%)', borderRadius: '24px', border: '1px solid #C7D2FE' }}>
+          <CWHeading level={3} style={{ color: '#3730A3', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🔑</span> Why This Matters for Business Owners
+          </CWHeading>
+
+          <p style={{ fontSize: '1.1rem', color: '#312E81', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            <strong>Account Takeover (ATO).</strong> If a hacker gets into your business email, they can reset your bank passwords, message your customers, and destroy your brand in hours. MFA (Multi-Factor Authentication) is not a feature; it's a requirement for survival.
+          </p>
+
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #C7D2FE', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+              🚀 How CapeWeb Helps You Scale
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                <span style={{ color: '#3B82F6', marginTop: '2px' }}>➜</span>
+                <span>
+                  <a href="/services?service=automation-systems" style={{ color: '#3B82F6', textDecoration: 'underline' }}>Secure Infrastructure</a>: We set up secure employee access systems using SSO (Single Sign-On), so you can revoke access for any ex-employee with one click.
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <MiniQuiz
+          questions={[
+            { question: "What is Multi-Factor Authentication (MFA)?", options: ["Using two passwords", "Combining 'Something you Know' with 'Something you Have'", "Asking a friend"], correctIndex: 1 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  );
+}
+
+
+// Module C: Phishing
+export function Pillar8ModuleC({ onNext }) {
+  return (
+    <InteractiveLayout title="Module C: Social Engineering" subtitle="Hacking the human.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          Hackers don't always break firewalls; they trick you into opening the door. This is called <strong>Phishing</strong>.
+        </p>
+
+        <PhishingGauntlet />
+
+        <BookInsight title="The Art of Deception" author="Kevin Mitnick" book="The Art of Deception" color="#EF4444">
+          <p>"The human factor is truly security's weakest link."</p>
+        </BookInsight>
+
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%)', borderRadius: '24px', border: '1px solid #FED7AA' }}>
+          <CWHeading level={3} style={{ color: '#9A3412', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🎣</span> Why This Matters for Business Owners
+          </CWHeading>
+
+          <p style={{ fontSize: '1.1rem', color: '#7C2D12', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            <strong>Human Vulnerability.</strong> You can spend R100,000 on software, but it only takes one intern clicking one bad link to compromise the entire network. Social engineering is the #1 way companies are actually breached.
+          </p>
+
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #FED7AA', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+              🚀 How CapeWeb Helps You Scale
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                <span style={{ color: '#3B82F6', marginTop: '2px' }}>➜</span>
+                <span>
+                  <a href="/services?service=ai-agents-sales-team" style={{ color: '#3B82F6', textDecoration: 'underline' }}>Filtered Communications</a>: Our AI triage agents act as a buffer, filtering out malicious intent and phishing attempts before they ever hit your team's inbox.
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <MiniQuiz
+          questions={[
+            { question: "What is 'Social Engineering'?", options: ["Building social apps", "Manipulating people into performing actions or divulging confidential info", "Coding with friends"], correctIndex: 1 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  );
+}
+
+
+// Module D: Website Security
+export function Pillar8ModuleD({ onNext }) {
+  return (
+    <InteractiveLayout title="Module D: Securing the Web" subtitle="HTTPS & Headers.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          <strong>HTTPS (TLS/SSL):</strong> Encrypts the tunnel between user and server. Without it, your customer's data is readable by anyone on the same network.
+        </p>
+
+        <SSLCipherSim />
+
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)', borderRadius: '24px', border: '1px solid #BBF7D0' }}>
+          <CWHeading level={3} style={{ color: '#166534', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🖥️</span> Why This Matters for Business Owners
+          </CWHeading>
+
+          <p style={{ fontSize: '1.1rem', color: '#14532D', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            <strong>SEO & Trust.</strong> Google penalizes sites without SSL. Browsers show a scary "Not Secure" warning. Most importantly, without HTTPS, you are legally liable if customer credit card info is intercepted on your checkout page.
+          </p>
+
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #BBF7D0', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+              🚀 How CapeWeb Helps You Scale
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                <span style={{ color: '#3B82F6', marginTop: '2px' }}>➜</span>
+                <span>
+                  <a href="/services?service=performance-monitoring" style={{ color: '#3B82F6', textDecoration: 'underline' }}>Secure Hosting</a>: We implement automatic SSL renewal and HSTS (Strict Transport Security) on all our client sites, ensuring 100% encryption by default.
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <MiniQuiz
+          questions={[
+            { question: "What happens if a site does not have HTTPS?", options: ["It is slower", "Data sent is visible to anyone on the network", "Google bans it"], correctIndex: 1 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  );
+}
+
+
+// Module E: POPIA
+export function Pillar8ModuleE({ onNext }) {
+  return (
+    <InteractiveLayout title="Module E: POPIA Compliance" subtitle="Privacy is Law.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          In South Africa, <strong>POPIA</strong> mandates how you treat customer data. You cannot spam people. You must secure their data.
+        </p>
+        <CWAlert type="info" title="The Golden Rule">
+          Treat customer data like toxic waste. Only collect what you absolutely need. If you don't have it, you can't lose it.
+        </CWAlert>
+
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FDF2F8 0%, #FCE7F3 100%)', borderRadius: '24px', border: '1px solid #FBCFE8' }}>
+          <CWHeading level={3} style={{ color: '#9D174D', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>⚖️</span> Why This Matters for Business Owners
+          </CWHeading>
+
+          <p style={{ fontSize: '1.1rem', color: '#831843', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            <strong>Legal Liability.</strong> Fines for POPIA violations can reach R10 million, or even prison time for severe negligence. Proper compliance isn't just a legal chore—it's a competitive advantage that builds long-term customer loyalty.
+          </p>
+
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #FBCFE8', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+              🚀 How CapeWeb Helps You Scale
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                <span style={{ color: '#3B82F6', marginTop: '2px' }}>➜</span>
+                <span>
+                  <a href="/services?service=content-converts" style={{ color: '#3B82F6', textDecoration: 'underline' }}>Privacy-First Marketing</a>: We help you build "Owned" email lists via ethical, opt-in funnels that comply with POPIA while maintaining high conversion rates.
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <MiniQuiz
+          questions={[
+            { question: "Under POPIA, what must you do if you have a data breach?", options: ["Hide it", "Notify the Information Regulator and affected parties", "Delete the data"], correctIndex: 1 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  );
+}
+
+
+// Module F: Device Security
+export function Pillar8ModuleF({ onNext }) {
+  return (
+    <InteractiveLayout title="Module F: Endpoint Protection" subtitle="My laptop was stolen.">
+      <div className="cw-prose">
+        <p>If your laptop is stolen, is the data safe? <strong>Full Disk Encryption (FileVault / BitLocker)</strong> scrambles the hard drive.</p>
+
+        <ScenarioToggle
+          oldTitle="Unencrypted 💻"
+          oldContent="Thief takes Hard Drive out of laptop. Plugs it into his PC. Reads all your business records, spreadsheets, and client contacts instantly."
+          newTitle="Encrypted 🔐"
+          newContent="Thief takes Hard Drive out. Sees only garbage code. Without your recovery key, the data is essentially non-existent to them."
+        />
+
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F1F5F9 0%, #E2E8F0 100%)', borderRadius: '24px', border: '1px solid #CBD5E1' }}>
+          <CWHeading level={3} style={{ color: '#334155', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🛡️</span> Why This Matters for Business Owners
+          </CWHeading>
+
+          <p style={{ fontSize: '1.1rem', color: '#1E293B', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            <strong>Physical Loss.</strong> We spend so much energy on hackers that we forget about the coffee shop thief. A stolen laptop with customer data on it is a POPIA breach. Encryption turns a catastrophe into a minor insurance claim.
+          </p>
+
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #CBD5E1', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+              🚀 How CapeWeb Helps You Scale
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                <span style={{ color: '#3B82F6', marginTop: '2px' }}>➜</span>
+                <span>
+                  <a href="/services?service=care-plans" style={{ color: '#3B82F6', textDecoration: 'underline' }}>Remote Management</a>: We can set up MDM (Mobile Device Management) for your team, allowing you to remotely wipe any lost or stolen device instantly.
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <MiniQuiz
+          questions={[
+            { question: "What protects data if the physical device is stolen?", options: ["A strong password", "Full Disk Encryption", "GPS Tracking"], correctIndex: 1 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  );
+}
+
+
+// Module G: Cloud Security
+export function Pillar8ModuleG({ onNext }) {
+  return (
+    <InteractiveLayout title="Module G: Cloud configuration" subtitle="The open bucket.">
+      <div className="cw-prose">
+        <p>The #1 cause of massive data leaks is <strong>Misconfigured Cloud Storage</strong>. Developers set "permissions: public" for ease of testing and forget to change it back.</p>
+        <p><strong>Principle of Least Privilege:</strong> Give a system ONLY the access it needs, nothing more.</p>
+
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%)', borderRadius: '24px', border: '1px solid #A7F3D0' }}>
+          <CWHeading level={3} style={{ color: '#065F46', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>☁️</span> Why This Matters for Business Owners
+          </CWHeading>
+
+          <p style={{ fontSize: '1.1rem', color: '#064E3B', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            <strong>Scale Breaches.</strong> One bad cloud setting can leak your entire database in seconds. Cloud systems are incredibly powerful but require precise configuration. It's not the cloud that is insecure—it's the way humans set it up.
+          </p>
+
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #A7F3D0', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+              🚀 How CapeWeb Helps You Scale
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                <span style={{ color: '#3B82F6', marginTop: '2px' }}>➜</span>
+                <span>
+                  <a href="/services?service=performance-monitoring" style={{ color: '#3B82F6', textDecoration: 'underline' }}>Cloud Audits</a>: We perform security audits of your AWS, GCP, or Azure environments to ensure no sensitive "Buckets" are exposed to the public internet.
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <MiniQuiz
+          questions={[
+            { question: "What is the 'Principle of Least Privilege'?", options: ["Being mean", "Granting only the minimum permissions necessary to do the job", "Giving admin access to everyone"], correctIndex: 1 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  );
+}
+
+
+// Module H: Incident Response
+export function Pillar8ModuleH({ onNext }) {
+  return (
+    <InteractiveLayout title="Module H: Incident Response" subtitle="Don't panic. Prepare.">
+      <div className="cw-prose">
+        <p>Breaches happen. How you respond defines your survival.</p>
+
+        <CWCard>
+          <h4 style={{ color: '#EF4444' }}>The Breach Protocol</h4>
+          <ol>
+            <li><strong>Identify:</strong> Use monitoring to detect anomalies early.</li>
+            <li><strong>Contain:</strong> Isolate infected systems immediately.</li>
+            <li><strong>Eradicate:</strong> Identify and remove the root cause.</li>
+            <li><strong>Recover:</strong> Restore from clean, off-site backups.</li>
+          </ol>
+        </CWCard>
+
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FEF2F2 0%, #FEE2E2 100%)', borderRadius: '24px', border: '1px solid #FECACA' }}>
+          <CWHeading level={3} style={{ color: '#991B1B', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🚨</span> Why This Matters for Business Owners
+          </CWHeading>
+
+          <p style={{ fontSize: '1.1rem', color: '#7F1D1D', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            <strong>Business Continuity.</strong> A ransomware attack can lock you out of your data for weeks. Without an Incident Response plan and redundant backups, that is often a "Company Ending Event." Preparation is the difference between a bad day and bankruptcy.
+          </p>
+
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #FECACA', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+              🚀 How CapeWeb Helps You Scale
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                <span style={{ color: '#3B82F6', marginTop: '2px' }}>➜</span>
+                <span>
+                  <a href="/services?service=care-plans" style={{ color: '#3B82F6', textDecoration: 'underline' }}>Disaster Recovery</a>: We implement automatic, immutable off-site backups for all client websites, so we can roll back to a clean state in minutes if a breach occurs.
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <MiniQuiz
+          questions={[
+            { question: "What is the first meaningful step after noticing a breach?", options: ["Identifying and Containment (Stopping the spread)", "Posting on Twitter", "Firing the intern"], correctIndex: 0 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  );
+}
+
+
+// Module I: Training
+export function Pillar8ModuleI({ onNext }) {
+  return (
+    <InteractiveLayout title="Module I: Security Culture" subtitle="The Human Firewall.">
+      <div className="cw-prose">
+        <p>Tech cannot fix human error. You must train your staff.</p>
+        <p>Create a "No Blame" culture. If someone clicks a link, they should feel safe reporting it immediately, rather than hiding it out of fear of being fired.</p>
+
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #ECFEFF 0%, #CFFAFE 100%)', borderRadius: '24px', border: '1px solid #A5F3FC' }}>
+          <CWHeading level={3} style={{ color: '#083344', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>👥</span> Why This Matters for Business Owners
+          </CWHeading>
+
+          <p style={{ fontSize: '1.1rem', color: '#164E63', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            <strong>Operational Resilience.</strong> Security is a team sport. If everyone in your company understands the value of security, they become your strongest defense. A security-conscious culture is the only thing that works when the software fails.
+          </p>
+
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #A5F3FC', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+              🚀 How CapeWeb Helps You Scale
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                <span style={{ color: '#3B82F6', marginTop: '2px' }}>➜</span>
+                <span>
+                  <a href="/services?service=ai-agents-sales-team" style={{ color: '#3B82F6', textDecoration: 'underline' }}>Policy Training</a>: We can build custom AI training assistants that teach your team about your specific company security policies in an interactive, non-boring way.
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <MiniQuiz
+          questions={[
+            { question: "Who is responsible for security?", options: ["The IT Guy", "Everyone", "The Government"], correctIndex: 1 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  );
+}
+
+
+// ==========================================
+// FINAL QUIZ COMPONENT
+// ==========================================
+
+export function Pillar8Quiz({ quizResponses, onSelect, onScore, scoreMessage, onFinish }) {
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [isPassed, setIsPassed] = useState(false);
+
+  // Local state handling if props missing
+  const [localResponses, setLocalResponses] = useState({});
+  const activeResponses = quizResponses || localResponses;
+  const activeSetResponse = onSelect || ((qMvc, optIdx) => setLocalResponses(prev => ({ ...prev, [qMvc]: optIdx })));
+
+  const questions = pillar8QuizQuestions;
+  const isLastQuestion = currentQuestionIndex === questions.length - 1;
+  const hasAnsweredCurrent = activeResponses[currentQuestionIndex] !== undefined;
+
+  const handleNext = () => {
+    if (currentQuestionIndex < questions.length - 1) setCurrentQuestionIndex(c => c + 1);
+  };
+  const handlePrev = () => {
+    if (currentQuestionIndex > 0) setCurrentQuestionIndex(c => c - 1);
+  };
+  const handleScore = () => {
+    if (onScore) {
+      onScore();
+    } else {
+      let correct = 0;
+      questions.forEach((q, i) => { if (activeResponses[i] === q.correctIndex) correct++; });
+      if (correct >= 8) setIsPassed(true);
+    }
+    if (onFinish) onFinish();
+  };
+
+  if (scoreMessage && scoreMessage.includes('Pass')) {
+    return (
+      <CWCard>
+        <div style={{ textAlign: 'center', padding: '2rem' }}>
+          <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🎉</div>
+          <CWHeading level={3}>Security Cleared</CWHeading>
+          <p style={{ fontSize: '1.2rem', marginBottom: '2rem' }}>{scoreMessage}</p>
+          <CWButton onClick={onFinish}>Continue to Certificate →</CWButton>
+        </div>
+      </CWCard>
+    );
+  }
+
+  return (
+    <QuizLayout title="Final Exam: Cyber Security" currentStep={currentQuestionIndex + 1} totalSteps={questions.length}>
+      <div style={{ padding: '0 1rem' }}>
+        <h3 style={{ fontSize: '1.5rem', marginBottom: '2rem', minHeight: '60px' }}>
+          {questions[currentQuestionIndex].question}
+        </h3>
+        <div style={{ display: 'grid', gap: '1rem', marginBottom: '2rem' }}>
+          {questions[currentQuestionIndex].options.map((option, idx) => (
+            <button
+              key={idx}
+              onClick={() => activeSetResponse(currentQuestionIndex, idx)}
+              style={{
+                padding: '1.25rem',
+                borderRadius: '12px',
+                border: activeResponses[currentQuestionIndex] === idx ? '2px solid #0b0f1a' : '1px solid #E5E7EB',
+                background: activeResponses[currentQuestionIndex] === idx ? '#F8FAFC' : '#fff',
+                textAlign: 'left',
+                fontSize: '1.1rem',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1rem',
+                boxShadow: activeResponses[currentQuestionIndex] === idx ? '0 4px 12px rgba(0,0,0,0.05)' : 'none'
+              }}
+            >
+              <div style={{ width: '24px', height: '24px', borderRadius: '50%', border: '2px solid #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', background: activeResponses[currentQuestionIndex] === idx ? '#0b0f1a' : 'transparent', borderColor: activeResponses[currentQuestionIndex] === idx ? '#0b0f1a' : '#CBD5E1' }}>
+                {activeResponses[currentQuestionIndex] === idx && <div style={{ width: '10px', height: '10px', background: '#fff', borderRadius: '50%' }} />}
+              </div>
+              {option}
+            </button>
+          ))}
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem' }}>
+          <CWButton variant="ghost" onClick={handlePrev} disabled={currentQuestionIndex === 0} style={{ opacity: currentQuestionIndex === 0 ? 0 : 1 }}>← Previous</CWButton>
+          {isLastQuestion ? (
+            <CWButton variant="primary" onClick={handleScore} disabled={!hasAnsweredCurrent}>Submit Exam 🏁</CWButton>
+          ) : (
+            <CWButton variant="primary" onClick={handleNext} disabled={!hasAnsweredCurrent}>Next Question →</CWButton>
+          )}
+        </div>
+        {scoreMessage && !scoreMessage.includes('Pass') && (
+          <div style={{ marginTop: '2rem', padding: '1rem', background: '#FEF2F2', color: '#991B1B', borderRadius: '8px', textAlign: 'center' }}>{scoreMessage}</div>
+        )}
+      </div>
+    </QuizLayout>
   );
 }
 
 export function Pillar8Completion() {
   return (
-    <div className="completion-box" style={{ textAlign: 'center', marginTop: '2.5rem', paddingTop: '2rem', borderTop: '2px dashed #ced4da' }}>
-      <h3>🎉 Pillar 8 Complete</h3>
-      <p>
-        You can now protect your business like a pro: MFA, phishing awareness, backups, website baseline, fraud rules, incident plan, and a risk register.
-        When you say "continue," we'll move to Pillar 9 (Financial Systems &amp; eCommerce) — so you can get paid cleanly and track profit.
+    <div style={{ textAlign: 'center', padding: '4rem 2rem' }}>
+      <h1>🔐</h1>
+      <CWHeading level={2}>Cyber Guardian</CWHeading>
+      <p style={{ fontSize: '1.2rem', color: '#64748B', maxWidth: '600px', margin: '1rem auto' }}>
+        You now understand the threats. You have locked the digital doors. You are no longer "Low Hanging Fruit" for hackers.
       </p>
     </div>
-  );
-}
-
-function BusinessAttackSurfaceDiagram() {
-  return (
-    <figure style={{ margin: '1.25rem 0', padding: '1rem', border: '1px solid #e9ecef', borderRadius: '10px', background: '#fff' }}>
-      <svg width="100%" viewBox="0 0 1200 430" role="img" aria-label="Diagram: Business attack surface map">
-        <defs>
-          <style>{`
-            .bx { fill:#fff; stroke:#0b0f1a; stroke-width:2; }
-            .tx { font: 18px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#0b0f1a; font-weight:900; }
-            .sm { font: 13px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#495057; }
-            .ln { stroke:#0b0f1a; stroke-width:2; opacity:.25; }
-          `}</style>
-        </defs>
-
-        <rect className="bx" x="430" y="40" width="340" height="100" rx="16" />
-        <text className="tx" x="600" y="85" textAnchor="middle">Your Business</text>
-        <text className="sm" x="600" y="110" textAnchor="middle">Protect the "doors"</text>
-
-        <rect className="bx" x="70" y="200" width="220" height="90" rx="16" />
-        <text className="tx" x="180" y="245" textAnchor="middle">Email</text>
-        <text className="sm" x="180" y="270" textAnchor="middle">(the master key)</text>
-
-        <rect className="bx" x="330" y="200" width="220" height="90" rx="16" />
-        <text className="tx" x="440" y="245" textAnchor="middle">Social</text>
-        <text className="sm" x="440" y="270" textAnchor="middle">(IG / FB / TikTok)</text>
-
-        <rect className="bx" x="590" y="200" width="220" height="90" rx="16" />
-        <text className="tx" x="700" y="245" textAnchor="middle">Website</text>
-        <text className="sm" x="700" y="270" textAnchor="middle">(logins / forms)</text>
-
-        <rect className="bx" x="850" y="200" width="280" height="90" rx="16" />
-        <text className="tx" x="990" y="245" textAnchor="middle">Payments</text>
-        <text className="sm" x="990" y="270" textAnchor="middle">(links / fraud)</text>
-
-        <rect className="bx" x="250" y="320" width="260" height="90" rx="16" />
-        <text className="tx" x="380" y="365" textAnchor="middle">Devices</text>
-        <text className="sm" x="380" y="390" textAnchor="middle">(phones / laptops)</text>
-
-        <rect className="bx" x="540" y="320" width="420" height="90" rx="16" />
-        <text className="tx" x="750" y="365" textAnchor="middle">People + Process</text>
-        <text className="sm" x="750" y="390" textAnchor="middle">(phishing, habits, training)</text>
-
-        <line className="ln" x1="600" y1="140" x2="180" y2="200" />
-        <line className="ln" x1="600" y1="140" x2="440" y2="200" />
-        <line className="ln" x1="600" y1="140" x2="700" y2="200" />
-        <line className="ln" x1="600" y1="140" x2="990" y2="200" />
-        <line className="ln" x1="600" y1="140" x2="380" y2="320" />
-        <line className="ln" x1="600" y1="140" x2="750" y2="320" />
-      </svg>
-      <figcaption style={{ marginTop: '.75rem', color: '#6c757d', fontSize: '.95rem' }}>
-        CapeWeb security starts with the "master key": your email. If email is safe, everything becomes easier.
-      </figcaption>
-    </figure>
-  );
-}
-
-function SimpleBackupStrategyDiagram() {
-  return (
-    <figure style={{ margin: '1.25rem 0', padding: '1rem', border: '1px solid #e9ecef', borderRadius: '10px', background: '#fff' }}>
-      <svg width="100%" viewBox="0 0 1200 360" role="img" aria-label="Diagram: Simple backup strategy">
-        <defs>
-          <style>{`
-            .bx { fill:#fff; stroke:#0b0f1a; stroke-width:2; }
-            .tx { font: 18px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#0b0f1a; font-weight:900; }
-            .sm { font: 13px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#495057; }
-            .ln { stroke:#0b0f1a; stroke-width:2.5; }
-          `}</style>
-          <marker id="arrP8a" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
-            <polygon points="0 0, 10 3.5, 0 7" fill="#0b0f1a" />
-          </marker>
-        </defs>
-
-        <rect className="bx" x="70" y="70" width="300" height="110" rx="16" />
-        <text className="tx" x="220" y="120" textAnchor="middle">Copy #1</text>
-        <text className="sm" x="220" y="145" textAnchor="middle">Your working files</text>
-
-        <rect className="bx" x="450" y="70" width="300" height="110" rx="16" />
-        <text className="tx" x="600" y="120" textAnchor="middle">Copy #2</text>
-        <text className="sm" x="600" y="145" textAnchor="middle">Cloud backup</text>
-
-        <rect className="bx" x="830" y="70" width="300" height="110" rx="16" />
-        <text className="tx" x="980" y="120" textAnchor="middle">Copy #3</text>
-        <text className="sm" x="980" y="145" textAnchor="middle">Offline / external backup</text>
-
-        <line className="ln" x1="370" y1="125" x2="450" y2="125" markerEnd="url(#arrP8a)" />
-        <line className="ln" x1="750" y1="125" x2="830" y2="125" markerEnd="url(#arrP8a)" />
-
-        <rect className="bx" x="240" y="220" width="720" height="110" rx="16" />
-        <text className="tx" x="600" y="265" textAnchor="middle">Rule: test restores</text>
-        <text className="sm" x="600" y="290" textAnchor="middle">A backup you can't restore is not a real backup.</text>
-      </svg>
-      <figcaption style={{ marginTop: '.75rem', color: '#6c757d', fontSize: '.95rem' }}>
-        You don't need fancy. You need consistent.
-      </figcaption>
-    </figure>
-  );
-}
-
-function IncidentResponseDiagram() {
-  return (
-    <figure style={{ margin: '1.25rem 0', padding: '1rem', border: '1px solid #e9ecef', borderRadius: '10px', background: '#fff' }}>
-      <svg width="100%" viewBox="0 0 1200 280" role="img" aria-label="Diagram: Incident response steps">
-        <defs>
-          <style>{`
-            .bx { fill:#fff; stroke:#0b0f1a; stroke-width:2; }
-            .tx { font: 16px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#0b0f1a; font-weight:900; }
-            .sm { font: 12px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#495057; }
-            .ar { stroke:#0b0f1a; stroke-width:3; }
-          `}</style>
-          <marker id="arrP8b" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
-            <polygon points="0 0, 10 3.5, 0 7" fill="#0b0f1a" />
-          </marker>
-        </defs>
-
-        <rect className="bx" x="30" y="80" width="210" height="120" rx="16" />
-        <text className="tx" x="135" y="120" textAnchor="middle">1) Detect</text>
-        <text className="sm" x="135" y="145" textAnchor="middle">something is wrong</text>
-
-        <line className="ar" x1="240" y1="140" x2="300" y2="140" markerEnd="url(#arrP8b)" />
-
-        <rect className="bx" x="300" y="80" width="210" height="120" rx="16" />
-        <text className="tx" x="405" y="120" textAnchor="middle">2) Contain</text>
-        <text className="sm" x="405" y="145" textAnchor="middle">stop the spread</text>
-
-        <line className="ar" x1="510" y1="140" x2="570" y2="140" markerEnd="url(#arrP8b)" />
-
-        <rect className="bx" x="570" y="80" width="210" height="120" rx="16" />
-        <text className="tx" x="675" y="120" textAnchor="middle">3) Fix</text>
-        <text className="sm" x="675" y="145" textAnchor="middle">reset access</text>
-
-        <line className="ar" x1="780" y1="140" x2="840" y2="140" markerEnd="url(#arrP8b)" />
-
-        <rect className="bx" x="840" y="80" width="210" height="120" rx="16" />
-        <text className="tx" x="945" y="120" textAnchor="middle">4) Notify</text>
-        <text className="sm" x="945" y="145" textAnchor="middle">customers/regulator</text>
-
-        <line className="ar" x1="1050" y1="140" x2="1110" y2="140" markerEnd="url(#arrP8b)" />
-
-        <rect className="bx" x="1110" y="80" width="60" height="120" rx="16" />
-        <text className="tx" x="1140" y="120" textAnchor="middle">5)</text>
-        <text className="tx" x="1140" y="145" textAnchor="middle">Learn</text>
-      </svg>
-      <figcaption style={{ marginTop: '.75rem', color: '#6c757d', fontSize: '.95rem' }}>
-        A plan beats panic. CapeWeb installs this process in your SOPs.
-      </figcaption>
-    </figure>
   );
 }

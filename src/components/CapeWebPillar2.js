@@ -1,13 +1,8 @@
-import React, { useMemo, useRef, useState, useEffect } from 'react';
-import '../styles/CapeWebBlueprint.css';
-
-const pillar2Modules = [
-  { id: 'module-a', title: 'Module A · Choose Your Legal Setup', description: 'Decide your business structure and "make it real" without wasting money.' },
-  { id: 'module-b', title: 'Module B · Register & Tax Basics', description: 'Understand CIPC, SARS, eFiling, VAT, and micro-business options.' },
-  { id: 'module-c', title: 'Module C · Customers, POPIA & Online Selling', description: 'Protect your business with policies: CPA, ECTA, POPIA, PAIA.' },
-  { id: 'module-d', title: 'Module D · Employers & Ongoing Compliance', description: 'PAYE/UIF/Compensation Fund + annual returns + beneficial ownership.' },
-  { id: 'module-bonus', title: 'Bonus · Cape Town Permits & Tenders', description: 'City licences, informal trading permits, B-BBEE basics, CSD & eTenders.' },
-];
+import React, { useState, useEffect, useRef } from 'react';
+import * as confettiModule from 'canvas-confetti';
+import { gsap } from 'gsap';
+import { InteractiveLayout, QuizLayout, ReadingLayout } from './CapeWebLayouts';
+import { CWButton, CWHeading, CWCard, CWInput, CWBadge, CWAlert, BookInsight } from './CapeWebUI';
 
 export const pillar2QuizQuestions = [
   {
@@ -78,1380 +73,1915 @@ export const pillar2QuizQuestions = [
   },
 ];
 
-export default function CapeWebPillar2() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [activeModule, setActiveModule] = useState('module-a');
-  const [quizResponses, setQuizResponses] = useState({});
-  const [scoreMessage, setScoreMessage] = useState('Not checked yet.');
-  const [progress, setProgress] = useState({ done: 0, total: 0, pct: 0 });
-  const normalizedQuery = searchTerm.trim().toLowerCase();
-  const articleRef = useRef(null);
-  const navRef = useRef(null);
+// ==========================================
+// PILLAR 2 INTERACTIVE COMPONENTS
+// ==========================================
 
-  const handleModuleChange = (moduleId) => {
-    setActiveModule(moduleId);
-    if (articleRef.current) {
-      articleRef.current.scrollTop = 0;
-    }
-  };
-
-  const handleQuizResponse = (questionIndex, optionIndex) => {
-    setQuizResponses((prev) => ({ ...prev, [questionIndex]: optionIndex }));
-  };
-
-  const handleScore = () => {
-    const correct = pillar2QuizQuestions.reduce((sum, question, index) => {
-      return sum + (quizResponses[index] === question.correctIndex ? 1 : 0);
-    }, 0);
-    const message =
-      correct >= 7
-        ? `✅ Pass! You scored ${correct}/10. You're ready for Pillar 3.`
-        : `❌ ${correct}/10. Revisit the sections you missed and try again.`;
-    setScoreMessage(message);
-  };
-
-  const updateProgress = () => {
-    const items = document.querySelectorAll('[data-scroll-section-id="pillar2"] input[data-progress="true"]');
-    const total = items.length;
-    let done = 0;
-    items.forEach((el) => {
-      if ((el.type === 'checkbox' || el.type === 'radio') && el.checked) done += 1;
-    });
-    const pct = total ? Math.round((done / total) * 100) : 0;
-    setProgress({ done, total, pct });
-  };
-
-  useEffect(() => {
-    updateProgress();
-    const handleChange = (e) => {
-      if (e.target?.matches('input[data-progress="true"]')) {
-        updateProgress();
-      }
-    };
-    document.addEventListener('change', handleChange);
-    return () => document.removeEventListener('change', handleChange);
-  }, []);
-
-  // Scroll isolation for article pane
-  useEffect(() => {
-    const el = articleRef.current;
-    if (!el) return undefined;
-
-    const handleWheel = (event) => {
-      const { scrollTop, scrollHeight, clientHeight } = el;
-      const isScrollingDown = event.deltaY > 0;
-      const isScrollingUp = event.deltaY < 0;
-      const isAtTop = scrollTop === 0;
-      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
-
-      if ((isScrollingDown && !isAtBottom) || (isScrollingUp && !isAtTop)) {
-        event.stopPropagation();
-      }
-    };
-
-    const handleMouseEnter = () => {
-      document.body.style.overflow = 'hidden';
-    };
-
-    const handleMouseLeave = () => {
-      document.body.style.overflow = '';
-    };
-
-    el.addEventListener('wheel', handleWheel, { passive: true });
-    el.addEventListener('mouseenter', handleMouseEnter);
-    el.addEventListener('mouseleave', handleMouseLeave);
-
-    return () => {
-      el.removeEventListener('wheel', handleWheel);
-      el.removeEventListener('mouseenter', handleMouseEnter);
-      el.removeEventListener('mouseleave', handleMouseLeave);
-      document.body.style.overflow = '';
-    };
-  }, []);
-
-  // Scroll isolation for navigation pane
-  useEffect(() => {
-    const el = navRef.current;
-    if (!el) return undefined;
-
-    const handleWheel = (event) => {
-      const { scrollTop, scrollHeight, clientHeight } = el;
-      const isScrollingDown = event.deltaY > 0;
-      const isScrollingUp = event.deltaY < 0;
-      const isAtTop = scrollTop === 0;
-      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
-
-      if ((isScrollingDown && !isAtBottom) || (isScrollingUp && !isAtTop)) {
-        event.stopPropagation();
-      }
-    };
-
-    const handleMouseEnter = () => {
-      document.body.style.overflow = 'hidden';
-    };
-
-    const handleMouseLeave = () => {
-      document.body.style.overflow = '';
-    };
-
-    el.addEventListener('wheel', handleWheel, { passive: true });
-    el.addEventListener('mouseenter', handleMouseEnter);
-    el.addEventListener('mouseleave', handleMouseLeave);
-
-    return () => {
-      el.removeEventListener('wheel', handleWheel);
-      el.removeEventListener('mouseenter', handleMouseEnter);
-      el.removeEventListener('mouseleave', handleMouseLeave);
-      document.body.style.overflow = '';
-    };
-  }, []);
-
-  const renderModuleContent = () => {
-    if (normalizedQuery) {
-      // When searching, show all matching content
-      return (
-        <>
-          {activeModule === 'module-a' || normalizedQuery ? <Pillar2ModuleA /> : null}
-          {activeModule === 'module-b' || normalizedQuery ? <Pillar2ModuleB /> : null}
-          {activeModule === 'module-c' || normalizedQuery ? <Pillar2ModuleC /> : null}
-          {activeModule === 'module-d' || normalizedQuery ? <Pillar2ModuleD /> : null}
-          {activeModule === 'module-bonus' || normalizedQuery ? <Pillar2ModuleBonus /> : null}
-        </>
-      );
-    }
-
-    // Show only active module when not searching
-    switch (activeModule) {
-      case 'module-a':
-        return <Pillar2ModuleA />;
-      case 'module-b':
-        return <Pillar2ModuleB />;
-      case 'module-c':
-        return <Pillar2ModuleC />;
-      case 'module-d':
-        return <Pillar2ModuleD />;
-      case 'module-bonus':
-        return <Pillar2ModuleBonus />;
-      default:
-        return <Pillar2ModuleA />;
-    }
-  };
+function LiabilityShieldInteractive() {
+  const [mode, setMode] = useState('sole'); // 'sole' | 'pty'
 
   return (
-    <div data-scroll-section-id="pillar2">
-      <div className="blueprint-heading reveal-text">
-        <div className="expand-label">CapeWeb University</div>
-        <h2 className="expand-title-section" style={{ marginBottom: '1rem' }}>
-          Pillar 2: Make it legal in South Africa — without fear, confusion, or expensive mistakes.
-        </h2>
-        <p className="expand-text-lg" style={{ maxWidth: '820px' }}>
-          You are the founder (25, starting at R0) launching in Cape Town. Your goal is your <strong>first 100 sales</strong>. This pillar
-          teaches the legal + compliance basics step-by-step, using a simple example you can adapt to any business: a hybrid business (a{' '}
-          <strong>product</strong> + a <strong>service</strong>) selling online and locally in Cape Town. CapeWeb is your guide — we simplify
-          the path, give you checklists and templates, and help you avoid rookie mistakes.
-        </p>
+    <div style={{ margin: '3rem 0', fontFamily: 'Inter, sans-serif' }}>
+      <h3 style={{ marginBottom: '1.5rem', textAlign: 'center' }}>Scenario: The "Delivery Accident"</h3>
 
-        <div style={{ marginTop: '1rem', padding: '1rem', border: '1px solid #e9ecef', borderRadius: '10px', background: '#f8f9fa', maxWidth: '980px' }}>
-          <strong>Important (read this once):</strong>
-          <ul style={{ margin: '.75rem 0 0 1.25rem' }}>
-            <li>This learning content is <strong>general information</strong>, not legal or tax advice.</li>
-            <li>For contracts, tax decisions, and high-risk industries, use a qualified attorney/accountant.</li>
-            <li>CapeWeb can help you implement the practical parts (compliance pages, policies, workflows, secure web systems).</li>
-          </ul>
-          <div style={{ marginTop: '.75rem' }}>
-            <a
-              href="/contact"
-              target="_blank"
-              rel="noopener"
-              style={{
-                display: 'inline-block',
-                padding: '.65rem 1rem',
-                borderRadius: '8px',
-                background: '#0b0f1a',
-                color: '#fff',
-                textDecoration: 'none',
-                fontWeight: 700,
-              }}
-            >
-              Talk to CapeWeb about a Compliance Setup Pack →
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div className="learn-capeweb-layout">
-        <div className="learn-capeweb-toc-wrapper">
-          <aside className="learn-capeweb-toc">
-            <section className="learn-capeweb-controls">
-              <div className="search-bar-wrapper">
-                <input
-                  id="capeweb-search-p2"
-                  type="text"
-                  placeholder="🔍 Search CapeWeb topics..."
-                  className="learn-capeweb-search"
-                  aria-label="Search CapeWeb blueprint content"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-              <p className="search-hint">Browse by pillar or type what you want to learn.</p>
-
-              <div style={{ marginTop: '.75rem', padding: '.75rem', border: '1px solid #e9ecef', borderRadius: '10px', background: '#fff' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '.75rem' }}>
-                  <strong>Compliance Passport</strong>
-                  <span style={{ fontSize: '.9rem', color: '#6c757d' }}>
-                    {progress.pct}% complete
-                  </span>
-                </div>
-                <div style={{ marginTop: '.5rem', height: '10px', background: '#e9ecef', borderRadius: '999px', overflow: 'hidden' }}>
-                  <div style={{ height: '10px', width: `${progress.pct}%`, background: '#0b0f1a' }}></div>
-                </div>
-                <p style={{ margin: '.5rem 0 0', fontSize: '.9rem', color: '#6c757d' }}>
-                  Tick the checkboxes inside the pillar to track your progress.
-                </p>
-              </div>
-            </section>
-
-            <nav className="learn-capeweb-nav" aria-label="CapeWeb Blueprint Navigation" ref={navRef}>
-              {pillar2Modules.map((module) => (
-                <button
-                  key={module.id}
-                  type="button"
-                  className={`pillar-module ${activeModule === module.id ? 'is-active' : ''}`}
-                  aria-current={activeModule === module.id ? 'true' : 'false'}
-                  onClick={() => handleModuleChange(module.id)}
-                  style={{ marginBottom: '.5rem' }}
-                >
-                  <div className="module-pill">Pillar 2</div>
-                  <div>
-                    <div className="module-title">{module.title}</div>
-                    <p>{module.description}</p>
-                  </div>
-                </button>
-              ))}
-            </nav>
-          </aside>
-        </div>
-
-        <div className="learn-capeweb-article-pane">
-          <div className="learn-capeweb-article" ref={articleRef}>
-            <div className="article-eyebrow">Pillar 2 · Legal, Governance & Compliance</div>
-            <h1>Legally Ready for Your First 100 Sales (South Africa + Cape Town)</h1>
-
-            <p className="article-summary">
-              <strong>Objective:</strong> You will understand the legal basics to trade confidently in South Africa: business structure,
-              registration, tax basics, POPIA, consumer rules for online selling, and ongoing compliance. You'll leave with a{' '}
-              <strong>Compliance Passport</strong> checklist and a clear "what to do next" plan.
-            </p>
-
-            <div className="article-divider"></div>
-
-            {renderModuleContent()}
-
-            {!normalizedQuery && (
-              <>
-                <Pillar2Quiz quizResponses={quizResponses} onSelect={handleQuizResponse} onScore={handleScore} scoreMessage={scoreMessage} />
-                <Pillar2Completion />
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Module A: Choose Your Legal Setup
-export function Pillar2ModuleA() {
-  return (
-    <div className="mastery-section" data-topic="legal setup structure sole proprietor pty ltd">
-      <h3>Module A · Choose Your Legal Setup (Simple Decision, Big Impact)</h3>
-
-      <p>
-        Here's the truth: you can make your first sales while learning — but you must know which legal path you're on. CapeWeb's job is to
-        keep you safe while you move fast.
-      </p>
-
-      <div style={{ padding: '1rem', border: '1px solid #e9ecef', borderRadius: '10px', background: '#fff' }}>
-        <strong>Teaching example (adaptable):</strong>
-        <p style={{ margin: '.5rem 0 0', color: '#495057' }}>
-          A 25-year-old Cape Town founder launches a hybrid business: <strong>a product</strong> (digital starter pack) +{' '}
-          <strong>a service</strong> (done-with-you setup). Your business can be totally different — the steps stay the same.
+      {/* Story Context */}
+      <div style={{
+        background: '#FEF3C7',
+        border: '1px solid #F59E0B',
+        borderRadius: '12px',
+        padding: '1.5rem',
+        marginBottom: '2rem',
+        textAlign: 'center'
+      }}>
+        <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🚚💥</div>
+        <p style={{ margin: 0, color: '#92400E', fontSize: '1.1rem' }}>
+          You run a delivery business. Your driver accidentally crashes into a luxury car.
+          <br /><strong>The Damage Claim: R500,000.</strong> Your business only has R50,000 in the bank.
         </p>
       </div>
 
-      <figure style={{ margin: '1.25rem 0', padding: '1rem', border: '1px solid #e9ecef', borderRadius: '10px', background: '#fff' }}>
-        <LegalStructureDecisionTree />
-        <figcaption style={{ marginTop: '.75rem', color: '#6c757d', fontSize: '.95rem' }}>
-          This is not "one right answer" — it's about choosing a safe path for your stage.
-        </figcaption>
-      </figure>
-
-      <div className="workbook-section" style={{ backgroundColor: '#f8f9fa', border: '1px solid #e9ecef', padding: '1.5rem', borderRadius: '10px', margin: '1.5rem 0' }}>
-        <h4>🧾 Activity: Your "Legal Setup" Snapshot</h4>
-        <p>Answer these like a founder, not like a perfectionist.</p>
-
-        <div className="canvas-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-          <div className="canvas-box">
-            <label style={{ fontWeight: 700, display: 'block', marginBottom: '.5rem' }}>What are you selling first?</label>
-            <label>
-              <input data-progress="true" type="checkbox" /> A product (digital or physical)
-            </label>
-            <br />
-            <label>
-              <input data-progress="true" type="checkbox" /> A service (done-for-you or done-with-you)
-            </label>
-            <br />
-            <small style={{ color: '#6c757d' }}>Hybrid is normal in South Africa. Many businesses start like this.</small>
-          </div>
-
-          <div className="canvas-box">
-            <label style={{ fontWeight: 700, display: 'block', marginBottom: '.5rem' }}>Your risk level right now</label>
-            <select id="p2-risk" style={{ width: '100%', padding: '.6rem', border: '1px solid #ced4da', borderRadius: '6px' }}>
-              <option value="">Choose…</option>
-              <option value="low">Low risk (small orders, simple service)</option>
-              <option value="medium">Medium risk (bigger payments, deliveries, refunds)</option>
-              <option value="high">High risk (contracts, staff, expensive work)</option>
-            </select>
-            <small style={{ color: '#6c757d' }}>If you're unsure: pick "Medium".</small>
-          </div>
-
-          <div className="canvas-box" style={{ gridColumn: 'span 2' }}>
-            <label style={{ fontWeight: 700, display: 'block', marginBottom: '.5rem' }}>Your stage (be honest)</label>
-            <label>
-              <input data-progress="true" type="radio" name="p2-stage" /> I'm testing first 10–100 sales (speed matters)
-            </label>
-            <br />
-            <label>
-              <input data-progress="true" type="radio" name="p2-stage" /> I already have contracts/large orders (structure matters)
-            </label>
-          </div>
-        </div>
-
-        <div style={{ marginTop: '1rem', background: '#e6f4ea', padding: '1rem', borderRadius: '8px', color: '#1e7e34' }}>
-          <strong>✅ CapeWeb guidance:</strong> With a starting budget of <strong>R0</strong>, your mission is <strong>first 100 sales</strong>.
-          Don't let paperwork stop progress — but don't ignore compliance either. CapeWeb keeps you moving with a checklist-based approach.
-        </div>
-      </div>
-
-      <div className="workbook-section" style={{ backgroundColor: '#fff3cd', border: '1px solid #ffeeba', padding: '1.25rem', borderRadius: '10px', margin: '1.25rem 0', color: '#856404' }}>
-        <h4 style={{ marginTop: 0 }}>⚠️ Rookie Mistake Warning</h4>
-        <p style={{ margin: 0 }}>
-          Don't confuse "being legal" with "being perfect." The goal is to be <strong>safe enough</strong> to sell and grow. CapeWeb will help
-          you tighten compliance as revenue increases.
-        </p>
-      </div>
-    </div>
-  );
-}
-
-// Module B: Register & Tax Basics
-export function Pillar2ModuleB() {
-  return (
-    <div className="mastery-section" data-topic="cipc bizportal sars efiling vat turnover tax">
-      <h3>Module B · Register & Tax Basics (The "Do It Once, Do It Right" Setup)</h3>
-
-      <p>This module gives you the "legal rails" your business runs on. You'll learn what to register, where, and why.</p>
-
-      <div className="comparison-table-wrapper">
-        <table className="capeweb-table">
-          <thead>
-            <tr>
-              <th>Goal</th>
-              <th>Where</th>
-              <th>Link</th>
-              <th>What CapeWeb helps with</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Register a company (optional early, common later)</td>
-              <td>CIPC / BizPortal</td>
-              <td>
-                <a href="https://www.cipc.co.za/" target="_blank" rel="noopener">
-                  CIPC
-                </a>{' '}
-                ·{' '}
-                <a href="https://bizportal.gov.za/" target="_blank" rel="noopener">
-                  BizPortal
-                </a>
-              </td>
-              <td>Explain the steps simply, help you avoid incorrect details that cause delays.</td>
-            </tr>
-            <tr>
-              <td>Understand business tax registration path</td>
-              <td>SARS</td>
-              <td>
-                <a href="https://www.sars.gov.za/businesses-and-employers/small-businesses-taxpayers/starting-a-business-and-tax/registering/" target="_blank" rel="noopener">
-                  SARS: Registering
-                </a>
-              </td>
-              <td>Translate tax language into a founder checklist (what to do now vs later).</td>
-            </tr>
-            <tr>
-              <td>VAT (only if you must / or if it benefits you)</td>
-              <td>SARS VAT</td>
-              <td>
-                <a href="https://www.sars.gov.za/types-of-tax/value-added-tax/register-for-vat/" target="_blank" rel="noopener">
-                  SARS: Register for VAT
-                </a>
-              </td>
-              <td>Help you avoid VAT mistakes on invoices and pricing (once relevant).</td>
-            </tr>
-            <tr>
-              <td>Micro-business simplified tax option</td>
-              <td>SARS Turnover Tax</td>
-              <td>
-                <a href="https://www.sars.gov.za/types-of-tax/turnover-tax/" target="_blank" rel="noopener">
-                  SARS: Turnover Tax
-                </a>
-              </td>
-              <td>Explain if/when simplified tax might fit your stage (with professional referral if needed).</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <figure style={{ margin: '1.25rem 0', padding: '1rem', border: '1px solid #e9ecef', borderRadius: '10px', background: '#fff' }}>
-        <RegistrationFlowDiagram />
-        <figcaption style={{ marginTop: '.75rem', color: '#6c757d', fontSize: '.95rem' }}>
-          Keep it simple: set the rails → sell → improve compliance as you grow.
-        </figcaption>
-      </figure>
-
-      <div className="workbook-section" style={{ backgroundColor: '#f8f9fa', border: '1px solid #e9ecef', padding: '1.5rem', borderRadius: '10px', margin: '1.5rem 0' }}>
-        <h4>🧭 Activity: Your Registration Plan (Pick ONE path for now)</h4>
-        <p>Choose the path that matches your stage (R0 budget + first 100 sales goal).</p>
-
-        <div className="quiz-options">
-          <label className="radio-item">
-            <input data-progress="true" type="radio" name="p2_path" value="test" />
-            <strong>Path 1:</strong> Test Sales Path (start simple, tighten later)
-          </label>
-          <br />
-          <label className="radio-item">
-            <input data-progress="true" type="radio" name="p2_path" value="company" />
-            <strong>Path 2:</strong> Register Company Path (structure first, sell after)
-          </label>
-        </div>
-
-        <div style={{ marginTop: '1rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-          <div style={{ background: '#fff', border: '1px solid #e9ecef', borderRadius: '10px', padding: '1rem' }}>
-            <strong>Test Sales Path Checklist</strong>
-            <ul style={{ margin: '.75rem 0 0 1.25rem' }}>
-              <li>
-                <label>
-                  <input data-progress="true" type="checkbox" /> Keep a simple sales record (date, customer, amount)
-                </label>
-              </li>
-              <li>
-                <label>
-                  <input data-progress="true" type="checkbox" /> Use clear terms (refunds + delivery + service scope)
-                </label>
-              </li>
-              <li>
-                <label>
-                  <input data-progress="true" type="checkbox" /> Set up a "business email" + basic invoices
-                </label>
-              </li>
-              <li>
-                <label>
-                  <input data-progress="true" type="checkbox" /> Plan when you'll formalise (after 20 sales or big contract)
-                </label>
-              </li>
-            </ul>
-          </div>
-
-          <div style={{ background: '#fff', border: '1px solid #e9ecef', borderRadius: '10px', padding: '1rem' }}>
-            <strong>Register Company Path Checklist</strong>
-            <ul style={{ margin: '.75rem 0 0 1.25rem' }}>
-              <li>
-                <label>
-                  <input data-progress="true" type="checkbox" /> Register via{' '}
-                  <a href="https://bizportal.gov.za/" target="_blank" rel="noopener">
-                    BizPortal
-                  </a>
-                </label>
-              </li>
-              <li>
-                <label>
-                  <input data-progress="true" type="checkbox" /> Confirm SARS steps using{' '}
-                  <a href="https://www.sars.gov.za/businesses-and-employers/small-businesses-taxpayers/starting-a-business-and-tax/registering/" target="_blank" rel="noopener">
-                    SARS Registering
-                  </a>
-                </label>
-              </li>
-              <li>
-                <label>
-                  <input data-progress="true" type="checkbox" /> Open eFiling profile (for admin & compliance)
-                </label>
-              </li>
-              <li>
-                <label>
-                  <input data-progress="true" type="checkbox" /> Plan your annual compliance tasks (returns, declarations)
-                </label>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div style={{ marginTop: '1rem', background: '#e6f4ea', padding: '1rem', borderRadius: '8px', color: '#1e7e34' }}>
-          <strong>✅ CapeWeb speed tip:</strong> If you start with the "Test Sales Path", CapeWeb can still set you up with professional
-          policies and a fast website later — without slowing down your first 100 sales.
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Module C: Tax Responsibilities
-export function Pillar2ModuleC() {
-  return (
-    <div className="mastery-section" data-topic="consumer law ecta cpa refunds returns contracts">
-      <h3>Module C · Customers, Online Selling & POPIA (Protect Your Business)</h3>
-
-      <p>
-        Your first 100 sales will come from trust. Trust comes from clarity. These basics protect you when things go wrong: refunds,
-        complaints, chargebacks, disputes, and data privacy.
-      </p>
-
-      <div style={{ padding: '1rem', border: '1px solid #e9ecef', borderRadius: '10px', background: '#fff' }}>
-        <strong>How CapeWeb helps (practical):</strong>
-        <ul style={{ margin: '.75rem 0 0 1.25rem' }}>
-          <li>
-            <strong>Content that converts</strong>: clear offers and pages (no confusing "fine print").
-          </li>
-          <li>
-            <strong>Automation built-in</strong>: proof of consent, lead tracking, and clean customer communication.
-          </li>
-          <li>
-            <strong>Care plans</strong>: keep your site, policies, and flows updated as you grow.
-          </li>
-        </ul>
-      </div>
-
-      <h4 style={{ marginTop: '1.5rem' }}>1) Consumer Protection Basics (CPA)</h4>
-      <p>
-        The Consumer Protection Act exists to protect customers and enforce fair business behaviour. Your goal as a founder is simple: be
-        clear, be fair, keep records.
-      </p>
-
-      <div className="comparison-table-wrapper">
-        <table className="capeweb-table">
-          <thead>
-            <tr>
-              <th>Topic</th>
-              <th>Why it matters for your first 100 sales</th>
-              <th>Official starting point</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Consumer rights & fair marketing</td>
-              <td>Avoid misleading claims and angry customers.</td>
-              <td>
-                <a href="https://www.gov.za/documents/consumer-protection-act" target="_blank" rel="noopener">
-                  Consumer Protection Act (Gov)
-                </a>{' '}
-                ·{' '}
-                <a href="https://thencc.org.za/" target="_blank" rel="noopener">
-                  National Consumer Commission
-                </a>
-              </td>
-            </tr>
-            <tr>
-              <td>E-commerce & online transactions</td>
-              <td>Online sales need extra clarity (terms, checkout, proof).</td>
-              <td>
-                <a href="https://www.gov.za/documents/electronic-communications-and-transactions-act" target="_blank" rel="noopener">
-                  ECTA (Gov)
-                </a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h4 style={{ marginTop: '1.5rem' }}>2) POPIA (Data Privacy) — Don't Panic, Just Follow the Rules</h4>
-      <p>
-        If you collect customer info (names, emails, phone numbers, addresses), you must respect privacy and keep data safe. POPIA is enforced
-        by the Information Regulator.
-      </p>
-
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', margin: '1rem 0' }}>
-        <div style={{ background: '#fff', border: '1px solid #e9ecef', borderRadius: '10px', padding: '1rem' }}>
-          <strong>Official POPIA starts here</strong>
-          <ul style={{ margin: '.75rem 0 0 1.25rem' }}>
-            <li>
-              <a href="https://inforegulator.org.za/" target="_blank" rel="noopener">
-                Information Regulator
-              </a>
-            </li>
-            <li>
-              <a href="https://inforegulator.bizportal.gov.za/Default.aspx" target="_blank" rel="noopener">
-                Information Regulator Services (BizPortal)
-              </a>
-            </li>
-            <li>
-              <a href="https://www.gov.za/documents/protection-personal-information-act" target="_blank" rel="noopener">
-                POPIA Act (Gov)
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div style={{ background: '#fff', border: '1px solid #e9ecef', borderRadius: '10px', padding: '1rem' }}>
-          <strong>What founders must do (simple)</strong>
-          <ul style={{ margin: '.75rem 0 0 1.25rem' }}>
-            <li>Collect only what you need</li>
-            <li>Tell people why you collect it</li>
-            <li>Keep it secure (passwords, access control)</li>
-            <li>Don't spam (consent matters)</li>
-            <li>Have a privacy policy + process</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Module D: Employers & Ongoing Compliance
-export function Pillar2ModuleD() {
-  return (
-    <div className="mastery-section" data-topic="employer paye uif compensation fund annual returns beneficial ownership governance">
-      <h3>Module D · Employers & Ongoing Compliance (Stay in Good Standing)</h3>
-
-      <p>
-        As you grow beyond the first 100 sales, you will likely hire help. When that happens, there are employer obligations. Also, registered
-        entities have ongoing filing responsibilities. CapeWeb helps you build a simple compliance calendar so nothing surprises you.
-      </p>
-
-      <h4>1) If you hire employees (even one)</h4>
-      <div className="comparison-table-wrapper">
-        <table className="capeweb-table">
-          <thead>
-            <tr>
-              <th>Compliance</th>
-              <th>What it's for</th>
-              <th>Link</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>PAYE (Employees' Tax)</td>
-              <td>Registering as an employer for Employees' Tax.</td>
-              <td>
-                <a href="https://www.sars.gov.za/types-of-tax/pay-as-you-earn/registering/" target="_blank" rel="noopener">
-                  SARS: PAYE Registering
-                </a>
-              </td>
-            </tr>
-            <tr>
-              <td>UIF (uFiling)</td>
-              <td>Register, declare, and pay UIF contributions online.</td>
-              <td>
-                <a href="https://ufiling.labour.gov.za/uif/" target="_blank" rel="noopener">
-                  UIF uFiling
-                </a>
-              </td>
-            </tr>
-            <tr>
-              <td>Compensation Fund</td>
-              <td>Insurance cover for occupational injuries/diseases for employees.</td>
-              <td>
-                <a href="https://cfonline.labour.gov.za/OnlineSubmissions/" target="_blank" rel="noopener">
-                  Compensation Fund: Online Submissions
-                </a>{' '}
-                ·{' '}
-                <a href="https://www.gov.za/services/compensation-fund/register-compensation-fund" target="_blank" rel="noopener">
-                  Gov: Register with Compensation Fund
-                </a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h4 style={{ marginTop: '1.5rem' }}>2) If you registered a company: Annual Returns + Beneficial Ownership</h4>
-      <p>Being registered is not "set and forget." CIPC expects ongoing submissions for companies/CCs to stay in good standing.</p>
-
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', margin: '1rem 0' }}>
-        <div style={{ background: '#fff', border: '1px solid #e9ecef', borderRadius: '10px', padding: '1rem' }}>
-          <strong>CIPC Annual Returns (official tools)</strong>
-          <ul style={{ margin: '.75rem 0 0 1.25rem' }}>
-            <li>
-              <a href="https://annualreturns.cipc.co.za/Login.aspx" target="_blank" rel="noopener">
-                Annual Returns Portal
-              </a>
-            </li>
-            <li>
-              <a href="https://www.cipc.co.za/wp-content/uploads/2024/07/Step-by-step-guide-on-how-to-file-AR_v4.0.pdf" target="_blank" rel="noopener">
-                Step-by-step filing guide (PDF)
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div style={{ background: '#fff', border: '1px solid #e9ecef', borderRadius: '10px', padding: '1rem' }}>
-          <strong>Beneficial Ownership (official guidance)</strong>
-          <ul style={{ margin: '.75rem 0 0 1.25rem' }}>
-            <li>
-              <a href="https://www.cipc.co.za/wp-content/uploads/2023/08/USER-GUIDELINES-BO-LEGISLATIVE-REQUIREMENTS_Aug-23.pdf" target="_blank" rel="noopener">
-                Beneficial ownership user guidelines (PDF)
-              </a>
-            </li>
-            <li>
-              <a href="https://www.cipc.co.za/" target="_blank" rel="noopener">
-                CIPC Home
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <figure style={{ margin: '1.25rem 0', padding: '1rem', border: '1px solid #e9ecef', borderRadius: '10px', background: '#fff' }}>
-        <ComplianceCalendarDiagram />
-        <figcaption style={{ marginTop: '.75rem', color: '#6c757d', fontSize: '.95rem' }}>
-          CapeWeb builds compliance like a calendar — not like a panic attack.
-        </figcaption>
-      </figure>
-    </div>
-  );
-}
-
-// Bonus Module: Cape Town Permits & Tenders
-export function Pillar2ModuleBonus() {
-  return (
-    <div className="mastery-section" data-topic="cape town permits licence informal trading coa">
-      <h3>Bonus · Cape Town Permits, Licences & Tender Readiness</h3>
-
-      <p>
-        Most online-first businesses won't need special permits at day 1. But Cape Town has specific licences/permits for certain activities
-        (especially food, entertainment, hawking, etc.). This section helps you check quickly.
-      </p>
-
-      <div className="comparison-table-wrapper">
-        <table className="capeweb-table">
-          <thead>
-            <tr>
-              <th>If your business does this…</th>
-              <th>You may need…</th>
-              <th>Where to check/apply</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Runs certain health/entertainment/meal supply activities</td>
-              <td>Business licence (depending on category)</td>
-              <td>
-                <a href="https://www.capetown.gov.za/City-Connect/Apply/Licences-and-permits/Business-and-trade/Apply-for-a-business-licence/" target="_blank" rel="noopener">
-                  City of Cape Town: Apply for a business licence
-                </a>
-              </td>
-            </tr>
-            <tr>
-              <td>Sells goods in public spaces</td>
-              <td>Informal trading permit</td>
-              <td>
-                <a href="https://www.capetown.gov.za/City-Connect/Apply/Licences-and-permits/Business-and-trade/Apply-for-an-informal-trading-permit" target="_blank" rel="noopener">
-                  City of Cape Town: Informal trading permit
-                </a>
-              </td>
-            </tr>
-            <tr>
-              <td>Handles/sells food (premises or person in charge)</td>
-              <td>Certificate of Acceptability (COA)</td>
-              <td>
-                <a href="https://www.capetown.gov.za/City-Connect/Apply/Health-and-safety/Environmental-health/Apply-for-a-certificate-of-acceptability" target="_blank" rel="noopener">
-                  City of Cape Town: COA
-                </a>
-              </td>
-            </tr>
-            <tr>
-              <td>Sells liquor in Western Cape</td>
-              <td>Liquor licensing process</td>
-              <td>
-                <a href="https://www.wcla.gov.za/" target="_blank" rel="noopener">
-                  WCLA
-                </a>{' '}
-                ·{' '}
-                <a href="https://www.wcla.gov.za/licensing/application-forms/new-liquor-licence/" target="_blank" rel="noopener">
-                  New Liquor Licence forms
-                </a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div className="workbook-section" style={{ backgroundColor: '#f8f9fa', border: '1px solid #e9ecef', padding: '1.5rem', borderRadius: '10px', margin: '1.5rem 0' }}>
-        <h4>🏛️ Bonus: Government tenders & supplier registration (optional)</h4>
-        <p>If one day you want to supply government (services or products), this is your path:</p>
-
-        <ol style={{ margin: '.75rem 0 0 1.25rem' }}>
-          <li>
-            <label>
-              <input data-progress="true" type="checkbox" /> Register on the Central Supplier Database (CSD)
-            </label>
-          </li>
-          <li>
-            <label>
-              <input data-progress="true" type="checkbox" /> Use CSD credentials to access eTenders
-            </label>
-          </li>
-          <li>
-            <label>
-              <input data-progress="true" type="checkbox" /> Prepare B-BBEE documents (where relevant)
-            </label>
-          </li>
-        </ol>
-
-        <p style={{ marginTop: '1rem' }}>
-          Links:{' '}
-          <a href="https://secure.csd.gov.za/" target="_blank" rel="noopener">
-            CSD Portal
-          </a>{' '}
-          ·{' '}
-          <a href="https://secure.csd.gov.za/Account/Register" target="_blank" rel="noopener">
-            CSD Register
-          </a>{' '}
-          ·{' '}
-          <a href="https://www.etenders.gov.za/" target="_blank" rel="noopener">
-            eTenders
-          </a>
-        </p>
-      </div>
-    </div>
-  );
-}
-
-export function Pillar2Quiz({ quizResponses, onSelect, onScore, scoreMessage }) {
-  return (
-    <div className="mastery-section">
-      <h3>🏁 Boss Battle: Pillar 2 Knowledge Test</h3>
-      <p>
-        Score <strong>7/10</strong> or higher before moving to Pillar 3.
-      </p>
-      <div className="workbook-section" style={{ backgroundColor: '#f8f9fa', border: '1px solid #e9ecef', padding: '1.5rem', borderRadius: '10px' }}>
-        {pillar2QuizQuestions.map((question, index) => (
-          <React.Fragment key={index}>
-            <div className="quiz-question">
-              <p>
-                <strong>{index + 1})</strong> {question.question}
-              </p>
-              {question.options.map((option, optionIndex) => (
-                <label key={optionIndex} className="radio-item" style={{ display: 'block' }}>
-                  <input
-                    type="radio"
-                    name={`quiz-${index}`}
-                    checked={quizResponses[index] === optionIndex}
-                    onChange={() => onSelect(index, optionIndex)}
-                  />{' '}
-                  {option}
-                </label>
-              ))}
-            </div>
-            {index < pillar2QuizQuestions.length - 1 && <hr style={{ border: 'none', borderTop: '1px solid #e9ecef', margin: '1rem 0' }} />}
-          </React.Fragment>
-        ))}
-
+      {/* Toggle */}
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '2rem' }}>
         <button
-          type="button"
-          onClick={onScore}
+          onClick={() => setMode('sole')}
           style={{
-            marginTop: '1rem',
-            padding: '.75rem 1rem',
-            borderRadius: '8px',
-            border: '1px solid #0b0f1a',
-            background: '#0b0f1a',
-            color: '#fff',
+            padding: '0.75rem 1.5rem',
+            borderRadius: '50px',
+            border: mode === 'sole' ? '2px solid #EF4444' : '1px solid #E5E7EB',
+            background: mode === 'sole' ? '#FEF2F2' : '#fff',
+            color: mode === 'sole' ? '#991B1B' : '#6B7280',
             fontWeight: 700,
             cursor: 'pointer',
+            transition: 'all 0.3s'
           }}
         >
-          Check my score
+          Sole Proprietor
         </button>
-
-        <div
+        <button
+          onClick={() => setMode('pty')}
           style={{
-            marginTop: '.75rem',
-            padding: '1rem',
-            borderRadius: '10px',
-            background: '#fff',
-            border: scoreMessage.startsWith('✅') ? '1px solid #c3e6cb' : scoreMessage.startsWith('❌') ? '1px solid #f5c6cb' : '1px solid #e9ecef',
+            padding: '0.75rem 1.5rem',
+            borderRadius: '50px',
+            border: mode === 'pty' ? '2px solid #10B981' : '1px solid #E5E7EB',
+            background: mode === 'pty' ? '#D1FAE5' : '#fff',
+            color: mode === 'pty' ? '#065F46' : '#6B7280',
+            fontWeight: 700,
+            cursor: 'pointer',
+            transition: 'all 0.3s'
           }}
         >
-          <strong>Score:</strong> {scoreMessage}
+          Pty (Ltd) Company
+        </button>
+      </div>
+
+      {/* Visualization */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', alignItems: 'start' }}>
+        {/* Business Assets */}
+        <div style={{
+          background: '#fff',
+          border: '2px solid #E5E7EB',
+          borderRadius: '16px',
+          padding: '1.5rem',
+          opacity: 0.8
+        }}>
+          <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            🏢 The Business
+          </h4>
+          <div style={{ padding: '0.5rem', background: '#F3F4F6', borderRadius: '8px', marginBottom: '0.5rem', display: 'flex', justifyContent: 'space-between' }}>
+            <span>Bank Account:</span>
+            <span style={{ fontWeight: 700, color: '#DC2626' }}>Took R50,000</span>
+          </div>
+          <div style={{ padding: '0.5rem', background: '#F3F4F6', borderRadius: '8px', display: 'flex', justifyContent: 'space-between' }}>
+            <span>Remaining Dept:</span>
+            <span style={{ fontWeight: 700, color: '#DC2626' }}>R450,000</span>
+          </div>
+        </div>
+
+        {/* Personal Assets */}
+        <div style={{
+          background: mode === 'sole' ? '#FEF2F2' : '#ECFDF5',
+          border: mode === 'sole' ? '2px solid #EF4444' : '2px solid #10B981',
+          borderRadius: '16px',
+          padding: '1.5rem',
+          position: 'relative',
+          transition: 'all 0.5s'
+        }}>
+          <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            🏠 Personal Life
+          </h4>
+
+          {mode === 'sole' ? (
+            <div style={{ animation: 'shake 0.5s' }}>
+              <div style={{ padding: '0.5rem', background: '#FEE2E2', borderRadius: '8px', marginBottom: '0.5rem', color: '#991B1B' }}>
+                ⚠️ <strong>House:</strong> SEIZED to pay debt
+              </div>
+              <div style={{ padding: '0.5rem', background: '#FEE2E2', borderRadius: '8px', marginBottom: '0.5rem', color: '#991B1B' }}>
+                ⚠️ <strong>Car:</strong> SEIZED to pay debt
+              </div>
+              <div style={{ marginTop: '1rem', fontWeight: 700, color: '#DC2626' }}>
+                Result: You lose eveything.
+              </div>
+            </div>
+          ) : (
+            <div style={{ animation: 'fadeIn 0.5s' }}>
+              <div style={{ padding: '0.5rem', background: '#fff', borderRadius: '8px', marginBottom: '0.5rem' }}>
+                ✅ <strong>House:</strong> SAFE
+              </div>
+              <div style={{ padding: '0.5rem', background: '#fff', borderRadius: '8px', marginBottom: '0.5rem' }}>
+                ✅ <strong>Car:</strong> SAFE
+              </div>
+              <div style={{ marginTop: '1rem', fontWeight: 700, color: '#059669' }}>
+                Result: Only the company fails. You are safe.
+              </div>
+            </div>
+          )}
+
+          {/* Shield Icon Overlay for Pty Ltd */}
+          {mode === 'pty' && (
+            <div style={{
+              position: 'absolute', top: '-15px', right: '-15px',
+              background: '#10B981', color: '#fff',
+              width: '50px', height: '50px', borderRadius: '50%',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem',
+              boxShadow: '0 5px 15px rgba(16, 185, 129, 0.4)'
+            }}>
+              🛡️
+            </div>
+          )}
         </div>
       </div>
     </div>
+  );
+}
+
+function ComplianceRoadmapInteractive() {
+  const [activeStep, setActiveStep] = useState(0);
+
+  const steps = [
+    {
+      id: 1,
+      label: 'CIPC',
+      title: 'Company Registration',
+      desc: 'Reserve your name and register your Pty Ltd. You get a K/M number (Registration Number).',
+      cost: 'R175',
+      time: '2-5 Days'
+    },
+    {
+      id: 2,
+      label: 'SARS',
+      title: 'Income Tax Number',
+      desc: 'Automatic with CIPC. You need this number to open a bank account.',
+      cost: 'Free',
+      time: 'Instant'
+    },
+    {
+      id: 3,
+      label: 'BANK',
+      title: 'Business Account',
+      desc: 'Separate your money. Requires: ID, Address (FICA), and CIPC documents (Notice of Incorporation).',
+      cost: 'R0 - R100/pm',
+      time: '1 Day'
+    },
+    {
+      id: 4,
+      label: 'TRADE',
+      title: 'Ready to Sell',
+      desc: 'You can now invoice clients legally as a business.',
+      cost: '-',
+      time: 'Forever'
+    }
+  ];
+
+  return (
+    <div style={{ margin: '3rem 0' }}>
+      <h3 style={{ textAlign: 'center', marginBottom: '2rem' }}>The "make it official" Timeline</h3>
+
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2rem' }}>
+        {steps.map((step, i) => (
+          <React.Fragment key={step.id}>
+            {/* Node */}
+            <div
+              onClick={() => setActiveStep(i)}
+              style={{
+                width: '60px', height: '60px', borderRadius: '50%',
+                background: activeStep === i ? '#0b0f1a' : (i < activeStep ? '#10B981' : '#E5E7EB'),
+                color: activeStep === i ? '#fff' : (i < activeStep ? '#fff' : '#6B7280'),
+                display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.8rem',
+                cursor: 'pointer', transition: 'all 0.3s',
+                boxShadow: activeStep === i ? '0 0 0 4px #bae6fd' : 'none',
+                zIndex: 2
+              }}
+            >
+              {i < activeStep ? '✓' : step.label}
+            </div>
+
+            {/* Connector */}
+            {i < steps.length - 1 && (
+              <div style={{
+                height: '4px', width: '60px',
+                background: i < activeStep ? '#10B981' : '#E5E7EB',
+                transition: 'background 0.5s ease'
+              }} />
+            )}
+          </React.Fragment>
+        ))}
+      </div>
+
+      {/* Detail Card */}
+      <div style={{
+        background: '#fff', border: '1px solid #E5E7EB', borderRadius: '16px', padding: '2rem',
+        textAlign: 'center', animation: 'fadeIn 0.3s ease',
+        boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)'
+      }} key={activeStep}>
+        <CWBadge status="neutral" style={{ marginBottom: '1rem' }}>Step {activeStep + 1}: {steps[activeStep].label}</CWBadge>
+        <h4 style={{ fontSize: '1.5rem', margin: '0 0 1rem' }}>{steps[activeStep].title}</h4>
+        <p style={{ fontSize: '1.1rem', color: '#4B5563', maxWidth: '500px', margin: '0 auto 1.5rem' }}>
+          {steps[activeStep].desc}
+        </p>
+
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', fontSize: '0.9rem', color: '#6B7280' }}>
+          <div>💰 Cost: <strong style={{ color: '#0b0f1a' }}>{steps[activeStep].cost}</strong></div>
+          <div>⏱️ Time: <strong style={{ color: '#0b0f1a' }}>{steps[activeStep].time}</strong></div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+
+// Helper: Mini Quiz
+function MiniQuiz({ questions, title = "Knowledge Check", onNext }) {
+  const [currentQ, setCurrentQ] = useState(0);
+  const [selected, setSelected] = useState(null);
+  const [score, setScore] = useState(0);
+  const [completed, setCompleted] = useState(false);
+  const [celebrating, setCelebrating] = useState(false);
+  const counterRef = useRef(null);
+
+  const question = questions[currentQ];
+  const isLast = currentQ === questions.length - 1;
+
+  // Celebration Sound Effect
+  const playSuccessSound = () => {
+    try {
+      const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3');
+      audio.volume = 0.5;
+      audio.play().catch(e => console.log('Audio play failed', e));
+    } catch (e) {
+      console.error("Audio error", e);
+    }
+  };
+
+  const handleSelect = (index) => {
+    setSelected(index);
+  };
+
+  const handleNext = () => {
+    // Calculate score for THIS question
+    const isCorrect = selected === question.correctIndex;
+    const newScore = isCorrect ? score + 1 : score;
+    setScore(newScore);
+
+    if (isLast) {
+      setCompleted(true);
+      const percentage = Math.round((newScore / questions.length) * 100);
+
+      if (percentage >= 70) {
+        setCelebrating(true);
+        playSuccessSound();
+      }
+    } else {
+      setCurrentQ(currentQ + 1);
+      setSelected(null);
+    }
+  };
+
+  const handleRestart = () => {
+    setCurrentQ(0);
+    setSelected(null);
+    setScore(0);
+    setCompleted(false);
+    setCelebrating(false);
+  };
+
+  // Celebration Animation Effect
+  useEffect(() => {
+    if (celebrating && counterRef.current) {
+      const percentage = Math.round((score / questions.length) * 100);
+
+      // GSAP Animation
+      const tl = gsap.timeline();
+      counterRef.current.classList.remove('celebrate');
+
+      tl.set(counterRef.current, { opacity: 1 })
+        .fromTo(counterRef.current,
+          {
+            innerText: 0,
+            "--font-variation-weight": 300,
+            scale: 0.8
+          },
+          {
+            innerText: percentage,
+            duration: 3,
+            snap: { innerText: 1 },
+            ease: "linear",
+            onUpdate: function () {
+              const val = Math.ceil(this.targets()[0].innerText);
+              counterRef.current.innerHTML = val + "%";
+            },
+            onComplete: () => {
+              counterRef.current.classList.add('celebrate');
+              const colors = ['#fbda61', '#ff5acd'];
+              const runConfetti = confettiModule.default || confettiModule;
+
+              if (typeof runConfetti === 'function') {
+                runConfetti({
+                  particleCount: 150,
+                  spread: 100,
+                  origin: { y: 0.8 },
+                  colors: colors,
+                  disableForReducedMotion: true
+                });
+              }
+
+              setTimeout(() => {
+                setCelebrating(false);
+              }, 3000);
+            }
+          }
+        )
+        .to(counterRef.current, {
+          scale: 1,
+          "--font-variation-weight": 600,
+          duration: 1.2,
+          ease: "elastic.out(1, 0.2)"
+        });
+
+      return () => {
+        if (counterRef.current) counterRef.current.classList.remove('celebrate');
+      };
+    }
+  }, [celebrating, score, questions.length]);
+
+  // Full Screen Celebration Overlay
+  if (celebrating) {
+    return (
+      <div style={{
+        marginTop: '3rem',
+        padding: '3rem 2rem',
+        borderRadius: '32px',
+        background: 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: 'blur(24px)',
+        border: '1px solid rgba(255, 255, 255, 0.6)',
+        boxShadow: '0 20px 50px -10px rgba(31, 38, 135, 0.15)',
+        position: 'relative',
+        overflow: 'hidden',
+        minHeight: '400px',
+        display: 'grid',
+        placeItems: 'center',
+        fontFamily: '"Roboto Flex", sans-serif'
+      }}>
+        <div style={{ textAlign: 'center', width: '100%' }}>
+          <h1 ref={counterRef} className="counter">0%</h1>
+        </div>
+      </div>
+    );
+  }
+
+  if (completed) {
+    const percentage = Math.round((score / questions.length) * 100);
+    const passed = percentage >= 70;
+
+    return (
+      <div style={{
+        marginTop: '3rem',
+        padding: '2rem',
+        textAlign: 'center',
+        borderRadius: '24px',
+        background: passed ? 'rgba(209, 250, 229, 0.8)' : 'rgba(254, 226, 226, 0.8)',
+        backdropFilter: 'blur(20px)',
+        border: passed ? '3px solid rgba(16, 185, 129, 0.3)' : '3px solid rgba(239, 68, 68, 0.3)',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
+      }}>
+        <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>{passed ? '🎉' : '📚'}</div>
+        <h3 style={{ fontSize: '2rem', color: passed ? '#065F46' : '#991B1B', marginBottom: '1rem' }}>
+          {passed ? 'Great Job!' : 'Keep Learning!'}
+        </h3>
+        <p style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.5rem', color: '#1F2937' }}>
+          You scored {score} out of {questions.length} ({percentage}%)
+        </p>
+        <p style={{ color: '#4B5563', marginBottom: '2rem', fontSize: '1.1rem' }}>
+          {passed ? 'You are ready for the next module.' : 'Review the content and try again.'}
+        </p>
+
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1.5rem', flexWrap: 'wrap' }}>
+          <CWButton onClick={handleRestart} variant={passed ? "secondary" : "primary"} style={{ opacity: passed ? 0.9 : 1 }}>
+            {passed ? '↺ Retake Quiz' : '↺ Try Again'}
+          </CWButton>
+
+          {passed && onNext && (
+            <CWButton onClick={onNext} variant="primary">
+              Next Module →
+            </CWButton>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // Question Card
+  return (
+    <div style={{
+      marginTop: '3rem',
+      padding: '2rem 2rem',
+      borderRadius: '32px',
+      background: 'rgba(255, 255, 255, 0.85)',
+      backdropFilter: 'blur(24px)',
+      border: '1px solid rgba(255, 255, 255, 0.6)',
+      boxShadow: '0 20px 50px -10px rgba(31, 38, 135, 0.15)',
+      position: 'relative',
+      overflow: 'hidden'
+    }}>
+      {/* Moving Gradient Background */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        background: 'linear-gradient(120deg, rgba(34,211,238,0.15), rgba(244,114,182,0.15), rgba(253,224,71,0.15), rgba(34,211,238,0.15))',
+        backgroundSize: '300% 300%',
+        animation: 'gradientMove 15s ease infinite',
+        zIndex: -1,
+        pointerEvents: 'none'
+      }} />
+
+      <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{
+          background: '#E0F2FE',
+          color: '#0284C7',
+          padding: '0.3rem 0.8rem',
+          borderRadius: '100px',
+          fontSize: '0.75rem',
+          fontWeight: 800,
+          letterSpacing: '0.05em',
+          textTransform: 'uppercase'
+        }}>
+          Assessment
+        </div>
+        <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#64748B' }}>
+          Question {currentQ + 1} of {questions.length}
+        </span>
+      </div>
+
+      <h4 style={{
+        margin: '0 0 1.5rem 0',
+        fontSize: '2rem',
+        fontWeight: 900,
+        color: '#0F172A',
+        letterSpacing: '-0.02em',
+        lineHeight: 1.1
+      }}>
+        {title}
+      </h4>
+
+      <div style={{ marginBottom: '2rem' }}>
+        <p style={{ fontSize: '1.2rem', fontWeight: 600, marginBottom: '1.5rem', color: '#1E293B', lineHeight: 1.5 }}>
+          {question.question}
+        </p>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          {question.options.map((option, index) => (
+            <label
+              key={index}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1rem',
+                padding: '1rem 1.25rem',
+                borderRadius: '16px',
+                border: '2px solid',
+                borderColor: selected === index ? '#0EA5E9' : '#E2E8F0',
+                background: selected === index ? '#F0F9FF' : '#FFFFFF',
+                cursor: 'pointer',
+                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                boxShadow: selected === index ? '0 4px 20px rgba(14, 165, 233, 0.15)' : '0 2px 4px rgba(0,0,0,0.02)'
+              }}
+              onClick={() => handleSelect(index)}
+            >
+              <div style={{
+                width: '22px',
+                height: '22px',
+                borderRadius: '50%',
+                border: selected === index ? '6px solid #0EA5E9' : '2px solid #CBD5E1',
+                flexShrink: 0,
+                transition: 'all 0.2s ease'
+              }} />
+
+              <span style={{ flex: 1, fontSize: '1.05rem', color: selected === index ? '#0C4A6E' : '#334155', fontWeight: 500 }}>
+                {option}
+              </span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <button
+          onClick={handleNext}
+          disabled={selected === null}
+          style={{
+            padding: '0.75rem 2rem',
+            background: '#0F172A',
+            color: 'white',
+            border: 'none',
+            borderRadius: '100px',
+            fontSize: '1rem',
+            fontWeight: 700,
+            cursor: selected === null ? 'not-allowed' : 'pointer',
+            opacity: selected === null ? 0.5 : 1,
+            transition: 'all 0.2s ease',
+            boxShadow: '0 4px 12px rgba(15, 23, 42, 0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem'
+          }}
+        >
+          {isLast ? 'Finish Quiz' : 'Next Question'}
+          <span>→</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+const moduleAQuestions = [
+  {
+    question: "When starting with R0 and NO sales, your priority is:",
+    options: ["Registering a corporation immediately", "Getting your first 10 sales (Testing)", "Designing a logo"],
+    correctIndex: 1
+  },
+  {
+    question: "Why might you choose a Sole Proprietor setup first?",
+    options: ["It has zero setup cost and allows immediate trading", "It protects you from liability", "It makes you look big"],
+    correctIndex: 0
+  }
+];
+
+// Module A: Legal Structure (Sole Prop vs Pty Ltd)
+export function Pillar2ModuleA({ onNext }) {
+  return (
+    <InteractiveLayout title="Module A: Choose Your Legal Setup" subtitle="Decide your business structure and 'make it real'.">
+      <p style={{ fontSize: '1.1rem', marginBottom: '2rem', lineHeight: '1.6' }}>
+        Here's the truth: you can make your first sales before you register a company. But you need to understand the risk.
+        <br /><strong>The choice is simple:</strong> Speed (Sole Prop) vs Safety (Pty Ltd).
+      </p>
+
+      {/* Interactive Liability Simulator */}
+      <CWCard style={{ marginBottom: '2rem', background: '#F8FAFC' }}>
+        <CWHeading level={4} style={{ textAlign: 'center' }}>Interactive: Understand "Limited Liability"</CWHeading>
+        <p style={{ textAlign: 'center', marginBottom: '0' }}>Click the options below to see what happens when things go wrong.</p>
+        <LiabilityShieldInteractive />
+      </CWCard>
+
+      <CWHeading level={3}>Your Options Explained</CWHeading>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', margin: '1.5rem 0' }}>
+        <div style={{ padding: '1.5rem', background: '#fff', border: '1px solid #E5E7EB', borderRadius: '16px' }}>
+          <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>👤</div>
+          <h4 style={{ margin: '0 0 0.5rem' }}>Sole Proprietor</h4>
+          <p style={{ fontSize: '0.9rem', color: '#6B7280' }}>You ARE the business.</p>
+          <ul style={{ fontSize: '0.9rem', lineHeight: '1.6' }}>
+            <li>✅ Free & Instant start</li>
+            <li>✅ Less paperwork</li>
+            <li>❌ <strong>High Risk:</strong> Personal assets not safe</li>
+            <li>❌ Harder to get corporate contracts</li>
+          </ul>
+        </div>
+
+        <div style={{ padding: '1.5rem', background: '#0b0f1a', color: '#fff', borderRadius: '16px', boxShadow: '0 10px 30px -10px rgba(0,0,0,0.3)' }}>
+          <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🏢</div>
+          <h4 style={{ margin: '0 0 0.5rem', color: '#fff' }}>Pty (Ltd) Company</h4>
+          <p style={{ fontSize: '0.9rem', color: '#9CA3AF' }}>A separate legal person.</p>
+          <ul style={{ fontSize: '0.9rem', lineHeight: '1.6', color: '#D1D5DB' }}>
+            <li>✅ <strong>Safe:</strong> Limited liability protection</li>
+            <li>✅ Professional image</li>
+            <li>✅ Required for funding & tenders</li>
+            <li>❌ Costs money (~R175) & more admin</li>
+          </ul>
+        </div>
+      </div>
+
+      {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
+      <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%)', borderRadius: '24px', border: '1px solid #BAE6FD' }}>
+        <CWHeading level={3} style={{ color: '#0369A1', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+        </CWHeading>
+
+        <p style={{ fontSize: '1.1rem', color: '#334155', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+          In the age of <strong>AI and Automation</strong>, business moves at light speed. Speed is an asset, but <em>fragility</em> is a killer.
+        </p>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+          <div>
+            <h4 style={{ color: '#0C4A6E', marginBottom: '0.5rem' }}>1. Algorithmic Trust</h4>
+            <p style={{ fontSize: '0.95rem', color: '#475569', lineHeight: '1.6' }}>
+              Modern platforms (Stripe, PayPal, Google Merchant Center) use automated bots to verify your business. A registered Pty Ltd with a valid CIPC number gets the "Green Light" instantly. Sole proprietors often face manual reviews and delays.
+            </p>
+          </div>
+          <div>
+            <h4 style={{ color: '#0C4A6E', marginBottom: '0.5rem' }}>2. The "Scale" Shield</h4>
+            <p style={{ fontSize: '0.95rem', color: '#475569', lineHeight: '1.6' }}>
+              Automation allows you to service 10,000 customers as easily as 10. But increased scale means increased risk. If ONE customer sues, you don't want to lose your house. A corporation is the vessel that holds the risk while you reap the rewards.
+            </p>
+          </div>
+        </div>
+
+        <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #E0F2FE', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+          <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+            🚀 How CapeWeb Helps You Scale
+          </h4>
+          <p style={{ fontSize: '0.95rem', color: '#4B5563', marginBottom: '1rem' }}>
+            Once you've "made it official" with your registration, you need to look the part to capture market share.
+          </p>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+            <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+              <span style={{ color: '#0EA5E9', marginTop: '2px' }}>➜</span>
+              <span>
+                <strong>Brand Authority:</strong> We build <em>Design Systems & Brand Kits</em> (see our <a href="/services?service=future-digital-branding" style={{ color: '#0EA5E9', textDecoration: 'underline' }}>Content that Converts</a> service) ensuring your new company looks like a Fortune 500 from Day 1.
+              </span>
+            </li>
+            <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+              <span style={{ color: '#0EA5E9', marginTop: '2px' }}>➜</span>
+              <span>
+                <strong>Automated Operations:</strong> Now that you are a legal entity, build the "Digital Staff" to run it. Our <a href="/services?service=ai-agents-sales-team" style={{ color: '#0EA5E9', textDecoration: 'underline' }}>AI Agents & Sales Team</a> service helps you deploy 24/7 support without hiring a massive HR department.
+              </span>
+            </li>
+          </ul>
+          <p style={{ fontSize: '0.85rem', color: '#64748B', marginTop: '1rem', fontStyle: 'italic', borderTop: '1px solid #F1F5F9', paddingTop: '0.75rem' }}>
+            Get the legal structure right, and we'll build the digital engine on top of it.
+          </p>
+        </div>
+      </div>
+
+      <BookInsight
+        title="Corporations are the secret of the rich"
+        author="Robert Kiyosaki"
+        book="Rich Dad Poor Dad"
+        color="#16A34A"
+      >
+        <p>"The rich use corporations to protect themselves and their money. As an individual, you earn, get taxed, and spend what is left. A corporation earns, spends everything it can, and is taxed on what is left."</p>
+        <p><strong>Lesson:</strong> Eventually, you want a Pty Ltd to separate your business money from your personal life.</p>
+      </BookInsight>
+
+      <MiniQuiz questions={moduleAQuestions} title="Roadmap Knowledge Check" onNext={onNext} />
+    </InteractiveLayout>
+  );
+}
+
+const moduleBQuestions = [
+  {
+    question: "CIPC is mainly used for:",
+    options: ["Company Registration & IP", "Traffic Fines", "Collecting Vat"],
+    correctIndex: 0
+  },
+  {
+    question: "When should you open a business bank account?",
+    options: ["Never", "After registering with CIPC (using your MoI)", "Before you have a business name"],
+    correctIndex: 1
+  }
+];
+
+// Module B: Register & Tax Basics
+// Module B: Register & Tax Basics
+export function Pillar2ModuleB({ onNext }) {
+  return (
+    <InteractiveLayout title="Module B: Register & Tax Basics" subtitle="The 'Setup Rails' for your business.">
+      <p style={{ fontSize: '1.1rem', marginBottom: '2rem' }}>
+        This module gives you the "legal rails" your business runs on. You'll learn what to register, where, and why.
+      </p>
+
+      {/* Interactive Roadmap */}
+      <ComplianceRoadmapInteractive />
+
+      <CWCard>
+        <CWHeading level={4} style={{ marginBottom: '1rem' }}>Resources to get it done</CWHeading>
+        <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
+          {/* Item 1 */}
+          <div style={{ padding: '1rem', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+            <div style={{ fontWeight: 700, marginBottom: '0.25rem' }}>1. BizPortal (CIPC)</div>
+            <div style={{ color: '#64748B', fontSize: '0.9rem' }}>The easiest way to register. Do it all online.</div>
+            <CWButton href="https://bizportal.gov.za/" target="_blank" style={{ marginTop: '0.5rem', fontSize: '0.8rem', padding: '0.4rem 0.8rem' }}>Visit BizPortal ↗</CWButton>
+          </div>
+          {/* Item 2 */}
+          <div style={{ padding: '1rem', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+            <div style={{ fontWeight: 700, marginBottom: '0.25rem' }}>2. SARS eFiling</div>
+            <div style={{ color: '#64748B', fontSize: '0.9rem' }}>Activate your Tax Profile once you have your company number.</div>
+            <CWButton href="https://www.sars.gov.za/" target="_blank" style={{ marginTop: '0.5rem', fontSize: '0.8rem', padding: '0.4rem 0.8rem' }}>Visit SARS ↗</CWButton>
+          </div>
+        </div>
+      </CWCard>
+
+      <BookInsight title="Take your profit first" author="Mike Michalowicz" book="Profit First" color="#FACC15">
+        <p>"The old formula is: Sales - Expenses = Profit. The new formula is: Sales - Profit = Expenses."</p>
+        <p><strong>Lesson:</strong> When you set up your bank accounts (Step 3), open a separate savings account called 'PROFIT' and put 1% of every sale there immediately. Do this before paying expenses.</p>
+      </BookInsight>
+
+      <CWCard style={{ marginBottom: '2rem', background: '#FEF2F2', border: '1px solid #FECACA' }}>
+        <h4 style={{ color: '#991B1B', marginBottom: '0.5rem' }}>Scenario: The "Unregistered" Deal</h4>
+        <p style={{ margin: 0, color: '#4B5563' }}>
+          <strong>The Situation:</strong> You finally land a big corporate client (Woolworths/Checkers). They love your product.
+          <br /><br />
+          <strong>The Problem:</strong> They ask for your "Vendor Application". It requires a CIPC Registration Number, a Tax Clearance Certificate, and a Business Bank Letter.
+          <br /><br />
+          <strong>The Result:</strong> You don't have them. By the time you register (2 weeks), they have moved to another supplier.
+          <br />
+          <span style={{ fontWeight: 700, color: '#DC2626' }}>Don't let admin kill your big break. Get the basics done now.</span>
+        </p>
+      </CWCard>
+
+      {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
+      <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%)', borderRadius: '24px', border: '1px solid #6EE7B7' }}>
+        <CWHeading level={3} style={{ color: '#047857', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+        </CWHeading>
+
+        <p style={{ fontSize: '1.1rem', color: '#064E3B', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+          In the modern economy, <strong>Financial Data is Oil</strong>. If your data is messy (mixed personal/business expenses), you cannot use powerful AI tools to automate your growth.
+        </p>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+          <div>
+            <h4 style={{ color: '#065F46', marginBottom: '0.5rem' }}>1. "Autopilot" Accounting</h4>
+            <p style={{ fontSize: '0.95rem', color: '#064E3B', lineHeight: '1.6' }}>
+              Tools like Xero and Sage now use AI to categorize your expenses automatically. This <em>only</em> works if you have a dedicated Business Bank Account. If you mix your personal Netflix subscription with your business server costs, the automation breaks.
+            </p>
+          </div>
+          <div>
+            <h4 style={{ color: '#065F46', marginBottom: '0.5rem' }}>2. Global Payment Gateways</h4>
+            <p style={{ fontSize: '0.95rem', color: '#064E3B', lineHeight: '1.6' }}>
+              Want to sell to the world? Platforms like PayPal Business, Stripe, and Yoco require a verified business bank letter and tax number. Without these rails, you are capped at "hobbyist" limits.
+            </p>
+          </div>
+        </div>
+
+        <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #D1FAE5', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+          <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+            🚀 How CapeWeb Helps You Scale
+          </h4>
+          <p style={{ fontSize: '0.95rem', color: '#4B5563', marginBottom: '1rem' }}>
+            We build the high-performance engines that generate revenue. You provide the bank account to catch it.
+          </p>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+            <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+              <span style={{ color: '#10B981', marginTop: '2px' }}>➜</span>
+              <span>
+                <strong>High-Speed Revenue:</strong> Our <a href="/services?service=shopify-speed-audit" style={{ color: '#10B981', textDecoration: 'underline' }}>Performance First</a> web builds ensure customers don't bounce. We optimize the "Add to Cart" speed; you just need the Merchant Account to process the card.
+              </span>
+            </li>
+            <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+              <span style={{ color: '#10B981', marginTop: '2px' }}>➜</span>
+              <span>
+                <strong>Systematized Growth:</strong> With <a href="/services?service=roi-custom-web-dev" style={{ color: '#10B981', textDecoration: 'underline' }}>Care Plans</a>, we treat your website like a software product. Just as you separate your finances, we separate your "Business Tech" from hobby projects, ensuring 99.9% uptime.
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      {/* Activity Section Replaced by MiniQuiz */}
+      <MiniQuiz questions={moduleBQuestions} title="Roadmap Knowledge Check" onNext={onNext} />
+    </InteractiveLayout>
+  );
+}
+
+// Helper: Compliance Calendar
+function ComplianceCalendarDiagram() {
+  return (
+    <CWCard>
+      <CWHeading level={4} style={{ marginBottom: '1rem' }}>The Compliance "Heartbeat" (Annual Cycle)</CWHeading>
+      <div style={{ display: 'grid', gap: '1rem', marginTop: '1rem' }}>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <CWBadge status="neutral">Monthly</CWBadge>
+          <span>PAYE/UIF (EMP201) - By the 7th of every month</span>
+        </div>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <CWBadge status="warning">Feb & Aug</CWBadge>
+          <span>Provisional Tax (IRP6) - Every 6 months</span>
+        </div>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <CWBadge status="brand">May</CWBadge>
+          <span>Employer Recon (EMP501) - Annual Reconciliation</span>
+        </div>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <CWBadge status="neutral">Anniversary</CWBadge>
+          <span>CIPC Annual Returns (Every year on company birthday)</span>
+        </div>
+      </div>
+    </CWCard>
+  )
+}
+
+const moduleCQuestions = [
+  {
+    question: "POPIA is primarily about:",
+    options: ["Posting on Instagram", "Protecting personal information (Privacy)", "Population control"],
+    correctIndex: 1
+  },
+  {
+    question: "If selling online (ECTA), you must:",
+    options: ["Start a podcast", "Provide clear contact details, terms, and refund policies on your site", "Ask for a photo ID"],
+    correctIndex: 1
+  }
+];
+
+// Interactive: Refund Scenario
+function RefundScenarioInteractive() {
+  const [outcome, setOutcome] = useState(null);
+
+  return (
+    <div style={{ margin: '3rem 0' }}>
+      <h3 style={{ textAlign: 'center', marginBottom: '1.5rem' }}>Scenario: The Unhappy Customer</h3>
+
+      <div style={{
+        background: '#F3F4F6', padding: '1.5rem', borderRadius: '12px', border: '1px solid #E5E7EB',
+        marginBottom: '2rem', textAlign: 'center'
+      }}>
+        <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>😠</div>
+        <p style={{ fontStyle: 'italic', fontSize: '1.1rem', color: '#374151' }}>
+          "This product broke after 2 days! I want my money back immediately!"
+        </p>
+        <p style={{ fontSize: '0.9rem', color: '#6B7280', marginTop: '0.5rem' }}>
+          (According to CPA, they are within their rights to return defective goods within 6 months)
+        </p>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(250px, 1fr) minmax(250px, 1fr)', gap: '1rem' }}>
+        {/* Bad Choice */}
+        <button
+          onClick={() => setOutcome('bad')}
+          style={{
+            padding: '1.5rem', borderRadius: '12px', border: '2px solid #EF4444', background: '#fff',
+            textAlign: 'left', cursor: 'pointer', opacity: outcome === 'good' ? 0.5 : 1
+          }}
+        >
+          <strong style={{ display: 'block', color: '#DC2626', marginBottom: '0.5rem' }}>🚫 Fight It</strong>
+          <div style={{ fontSize: '0.95rem', color: '#4B5563' }}>Cite your "No Refunds" policy (which is illegal) and block them.</div>
+        </button>
+
+        {/* Good Choice */}
+        <button
+          onClick={() => setOutcome('good')}
+          style={{
+            padding: '1.5rem', borderRadius: '12px', border: '2px solid #10B981', background: '#fff',
+            textAlign: 'left', cursor: 'pointer', opacity: outcome === 'bad' ? 0.5 : 1
+          }}
+        >
+          <strong style={{ display: 'block', color: '#059669', marginBottom: '0.5rem' }}>✅ Resolve It</strong>
+          <div style={{ fontSize: '0.95rem', color: '#4B5563' }}>Apologize, refund/replace immediately, and ask for feedback.</div>
+        </button>
+      </div>
+
+      {/* Outcome Reveal */}
+      {outcome === 'bad' && (
+        <div style={{ marginTop: '2rem', padding: '1.5rem', background: '#FEF2F2', border: '1px solid #FCA5A5', borderRadius: '12px', animation: 'fadeIn 0.5s' }}>
+          <strong style={{ color: '#991B1B', fontSize: '1.1rem' }}>Result: Disaster 💥</strong>
+          <p style={{ margin: '0.5rem 0 0', color: '#7F1D1D' }}>
+            They report you to the Consumer Ombudsman (CGSO). You get fined. They post on HelloPeter. You lose 10 future customers.
+          </p>
+        </div>
+      )}
+
+      {outcome === 'good' && (
+        <div style={{ marginTop: '2rem', padding: '1.5rem', background: '#ECFDF5', border: '1px solid #6EE7B7', borderRadius: '12px', animation: 'fadeIn 0.5s' }}>
+          <strong style={{ color: '#065F46', fontSize: '1.1rem' }}>Result: Trust Built 🤝</strong>
+          <p style={{ margin: '0.5rem 0 0', color: '#064E3B' }}>
+            Compliance isn't just law; it's marketing. They might not buy again, but they won't destroy your reputation.
+          </p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Module C: Tax Responsibilities (Customers & POPIA)
+export function Pillar2ModuleC({ onNext }) {
+  return (
+    <InteractiveLayout title="Module C: Customers & Privacy (CPA & POPIA)" subtitle="Protecting your business by respecting your customers.">
+      <p style={{ fontSize: '1.1rem', marginBottom: '2rem' }}>
+        Your first 100 sales will come from trust. Trust comes from clarity. You need to know the rules of the game when dealing with people's money and data.
+      </p>
+
+      <RefundScenarioInteractive />
+
+      <CWHeading level={3}>The 2 Big Laws You Must Know</CWHeading>
+
+      <div style={{ display: 'grid', gap: '1.5rem', marginBottom: '2rem' }}>
+        <CWCard>
+          <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+            <div style={{ fontSize: '2rem' }}>🛡️</div>
+            <div>
+              <h4 style={{ margin: '0 0 0.5rem' }}>CPA (Consumer Protection Act)</h4>
+              <p style={{ margin: 0, color: '#4B5563' }}>
+                <strong>The Rule:</strong> You cannot say "No Refunds" on defective goods. Customers have a 6-month warranty on quality.
+                <br /><br />
+                <strong>Action:</strong> Update your website Terms & Conditions to be fair and legal.
+              </p>
+            </div>
+          </div>
+        </CWCard>
+
+        <CWCard>
+          <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+            <div style={{ fontSize: '2rem' }}>🔒</div>
+            <div>
+              <h4 style={{ margin: '0 0 0.5rem' }}>POPIA (The Privacy Act)</h4>
+              <p style={{ margin: 0, color: '#4B5563' }}>
+                <strong>The Rule:</strong> You cannot spam people. You must protect their data (names, emails, phones).
+                <br /><br />
+                <strong>Action:</strong> Add a Privacy Policy to your site. Only email people who opted in.
+              </p>
+            </div>
+          </div>
+        </CWCard>
+
+      </div>
+
+      {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
+      <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%)', borderRadius: '24px', border: '1px solid #BFDBFE' }}>
+        <CWHeading level={3} style={{ color: '#1E40AF', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+        </CWHeading>
+
+        <p style={{ fontSize: '1.1rem', color: '#1E3A8A', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+          Compliance isn't just about avoiding fines; it's about <strong>Conversion Rate Optimization</strong>. Modern customers are "Privacy Aware". If they don't see a Privacy Policy or clear Terms, they abandon cart.
+        </p>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+          <div>
+            <h4 style={{ color: '#1E40AF', marginBottom: '0.5rem' }}>1. The "Trust" Premium</h4>
+            <p style={{ fontSize: '0.95rem', color: '#1E3A8A', lineHeight: '1.6' }}>
+              Big brands (Takealot, Amazon) have trained users to expect clear return policies and data protection. If you look "sketchy", you lose the sale. Compliance signals legitimacy.
+            </p>
+          </div>
+          <div>
+            <h4 style={{ color: '#1E40AF', marginBottom: '0.5rem' }}>2. Ad Platform Bans</h4>
+            <p style={{ fontSize: '0.95rem', color: '#1E3A8A', lineHeight: '1.6' }}>
+              Meta (Facebook/Instagram) and Google Ads <strong>will ban your ad account</strong> if you run lead forms without a linked Privacy Policy. Recovering a banned ad account can take months.
+            </p>
+          </div>
+        </div>
+
+        <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #DBEAFE', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+          <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+            🚀 How CapeWeb Helps You Scale
+          </h4>
+          <p style={{ fontSize: '0.95rem', color: '#4B5563', marginBottom: '1rem' }}>
+            We automate the "boring" legal pages so you can focus on the exciting sales.
+          </p>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+            <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+              <span style={{ color: '#3B82F6', marginTop: '2px' }}>➜</span>
+              <span>
+                <strong>Compliance-Ready SEO:</strong> Our <a href="/services?service=seo-2025-beyond-keywords" style={{ color: '#3B82F6', textDecoration: 'underline' }}>SEO that Sticks</a> service includes technical schema that tells Google explicitly "Here is our Return Policy" and "Here is our Privacy Policy", boosting your search trust score.
+              </span>
+            </li>
+            <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+              <span style={{ color: '#3B82F6', marginTop: '2px' }}>➜</span>
+              <span>
+                <strong>Automated Reply Playbooks:</strong> When a customer asks for a refund, don't panic. Our <a href="/services?service=ai-agents-sales-team" style={{ color: '#3B82F6', textDecoration: 'underline' }}>AI Agents</a> can handle the initial inquiry using pre-approved, compliant scripts (CPA-friendly) so you don't accidentally break the law in a heated email.
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <BookInsight title="Trust is the Currency" author="Marcus Sheridan" book="They Ask You Answer" color="#3B82F6">
+        <p>"If you are willing to answer the questions your competitors are afraid to answer, you will win the trust of the market."</p>
+        <p><strong>Lesson:</strong> A clear Refund Policy (CPA) and Privacy Policy (POPIA) effectively answer the question: <em>"Can I trust you?"</em></p>
+      </BookInsight>
+
+      <MiniQuiz questions={moduleCQuestions} title="Roadmap Knowledge Check" onNext={onNext} />
+
+    </InteractiveLayout >
+  );
+}
+
+// Interactive: Compliance Calendar
+function ComplianceCalendarInteractive() {
+  const [month, setMonth] = useState('Feb');
+
+  const events = {
+    'Feb': { task: 'Provisional Tax (1st Payment)', desc: 'Estimate your annual profit and pay half the tax to avoid interest.' },
+    'May': { task: 'Employer Recon (EMP501)', desc: 'If you have employees, reconcile your PAYE data with SARS.' },
+    'Aug': { task: 'Provisional Tax (2nd Payment)', desc: 'Pay the second half of your estimated tax.' },
+    'Anniversary': { task: 'CIPC Annual Return', desc: 'Pay CIPC (~R100) to keep your company active. Happens on the month you registered.' }
+  };
+
+  return (
+    <div style={{ margin: '3rem 0' }}>
+      <h3 style={{ textAlign: 'center', marginBottom: '1.5rem' }}>Your Annual "Compliance Heartbeat"</h3>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
+        {Object.keys(events).map(m => (
+          <button
+            key={m}
+            onClick={() => setMonth(m)}
+            style={{
+              padding: '0.75rem 1.5rem', borderRadius: '50px',
+              background: month === m ? '#0b0f1a' : '#F3F4F6',
+              color: month === m ? '#fff' : '#374151',
+              border: 'none', cursor: 'pointer', fontWeight: 700,
+              transition: 'all 0.2s'
+            }}
+          >
+            {m}
+          </button>
+        ))}
+      </div>
+
+      <div style={{
+        background: '#fff', border: '1px solid #E5E7EB', borderRadius: '16px', padding: '2rem', textAlign: 'center',
+        boxShadow: '0 10px 30px -10px rgba(0,0,0,0.1)', minHeight: '150px'
+      }} key={month}>
+        <div style={{ fontSize: '1.2rem', color: '#6B7280', marginBottom: '0.5rem', fontStyle: 'italic' }}>
+          In {month === 'Anniversary' ? 'your registration month' : month}...
+        </div>
+        <h4 style={{ fontSize: '1.8rem', margin: '0 0 1rem', color: '#0b0f1a' }}>{events[month].task}</h4>
+        <p style={{ fontSize: '1.1rem', color: '#4B5563', maxWidth: '500px', margin: '0 auto' }}>
+          {events[month].desc}
+        </p>
+      </div>
+    </div>
+  )
+}
+
+export function Pillar2ModuleD({ onNext }) {
+  return (
+    <InteractiveLayout title="Module D: Ongoing Compliance" subtitle="Stay in business. Avoid the fines.">
+      <p style={{ fontSize: '1.1rem', marginBottom: '2rem' }}>
+        Registering is easy. Staying registered requires discipline. You have a few key dates every year that you cannot miss.
+      </p>
+
+      <ComplianceCalendarInteractive />
+
+      <BookInsight
+        title="Don't Lose Your Company"
+        author="Michael Gerber"
+        book="The E-Myth Revisited"
+        quote="The technician works IN the business. The entrepreneur works ON the business."
+        takeaway="Governance is working ON your business. Scheduling your annual returns is an entrepreneurial act."
+        color="#EF4444"
+      />
+
+      <CWCard style={{ marginBottom: '2rem', background: '#FFF7ED', border: '1px solid #FED7AA' }}>
+        <h4 style={{ color: '#9A3412', marginBottom: '0.5rem' }}>Scenario: The R100 Disaster</h4>
+        <p style={{ margin: 0, color: '#4B5563' }}>
+          <strong>The Situation:</strong> Sarah runs a successful design agency. She forgets to pay her CIPC Annual Return fee (R100) for two years.
+          <br /><br />
+          <strong>The Crisis:</strong> One day, her card declines. The bank has frozen her account because CIPC "Deregistered" her company.
+          <br /><br />
+          <strong>The Fix:</strong> It takes 3 months of paperwork and R4,000 in penalties to re-activate it. She can't pay staff for 2 weeks.
+          <br />
+          <span style={{ fontWeight: 700, color: '#C2410C' }}>Set a calendar reminder. Pay the R100.</span>
+        </p>
+      </CWCard>
+
+      {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
+      <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%)', borderRadius: '24px', border: '1px solid #FDBA74' }}>
+        <CWHeading level={3} style={{ color: '#EA580C', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+        </CWHeading>
+
+        <p style={{ fontSize: '1.1rem', color: '#9A3412', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+          Compliance isn't just a "CFO thing"; it's a <strong>Value Protector</strong>. If you ever plan to sell your business, investors will look at your "Good Standing" history first.
+        </p>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+          <div>
+            <h4 style={{ color: '#C2410C', marginBottom: '0.5rem' }}>1. The "Exit" Premium</h4>
+            <p style={{ fontSize: '0.95rem', color: '#9A3412', lineHeight: '1.6' }}>
+              A business with 5 years of perfect CIPC and SARS compliance is worth significantly more than a "messy" one. It proves operational maturity.
+            </p>
+          </div>
+          <div>
+            <h4 style={{ color: '#C2410C', marginBottom: '0.5rem' }}>2. Credit & Funding</h4>
+            <p style={{ fontSize: '0.95rem', color: '#9A3412', lineHeight: '1.6' }}>
+              Banks use automated scoring. If your CIPC status is "Deregistration Process", your credit application is auto-rejected instantly. No human ever sees it.
+            </p>
+          </div>
+        </div>
+
+        <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #FED7AA', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+          <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+            🚀 How CapeWeb Helps You Scale
+          </h4>
+          <p style={{ fontSize: '0.95rem', color: '#4B5563', marginBottom: '1rem' }}>
+            We keep your digital house in order so you can keep your legal house in order.
+          </p>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+            <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+              <span style={{ color: '#F97316', marginTop: '2px' }}>➜</span>
+              <span>
+                <strong>Zero-Downtime Infrastructure:</strong> Just like CIPC requires annual upkeep, your website needs it too. Our <a href="/services?service=roi-custom-web-dev" style={{ color: '#F97316', textDecoration: 'underline' }}>Performance Monitoring</a> ensures your site never gets "deregistered" from the internet due to technical debt.
+              </span>
+            </li>
+            <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+              <span style={{ color: '#F97316', marginTop: '2px' }}>➜</span>
+              <span>
+                <strong>Systematized Operations:</strong> Use our <a href="/services?service=ai-agents-sales-team" style={{ color: '#F97316', textDecoration: 'underline' }}>Booking Flows & Reminders</a> to set up internal alerts for your own team—"Tax Filing Due in 3 days"—so you never miss a deadline again.
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <CWAlert type="info" title="What about hiring?">
+        Module E covers Employees, PAYE, and Labor Law in detail. This module is about the company itself.
+      </CWAlert>
+
+      {/* Mini Quiz for Module D */}
+      <MiniQuiz
+        question="When must a company file Annual Returns with CIPC?"
+        questions={[
+          {
+            question: "When must a company file Annual Returns with CIPC?",
+            options: ["Every month", "Only when making profit", "Every year on the anniversary of registration"],
+            correctIndex: 2
+          }
+        ]}
+        title="Roadmap Knowledge Check"
+        onNext={onNext}
+      />
+    </InteractiveLayout>
+  );
+}
+
+
+
+// Bonus Module: Cape Town Permits
+const moduleBonusQuestions = [
+  {
+    question: "Which business needs a Certificate of Acceptability (COA)?",
+    options: ["Web Design Agency", "Food Truck", "Clothing Store"],
+    correctIndex: 1
+  },
+  {
+    question: "What happens if you ignore CIPC Annual Returns?",
+    options: ["Deregsitration (Company Closed)", "R50 Fine", "Nothing"],
+    correctIndex: 0
+  }
+];
+
+export function Pillar2ModuleBonus({ onNext }) {
+  return (
+    <InteractiveLayout title="Bonus: Cape Town Permits & Tenders" subtitle="Local rules for local businesses.">
+      <p style={{ fontSize: '1.1rem', marginBottom: '2rem' }}>
+        Most online-first businesses won't need special permits at Day 1. But Cape Town has specific licences for food, events, and public spaces.
+      </p>
+
+      <CWCard>
+        <CWHeading level={4} style={{ marginBottom: '1rem' }}>Do you need a permit?</CWHeading>
+        <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
+          <div style={{ padding: '1rem', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
+            <div style={{ fontWeight: 700 }}>1. Food & Health</div>
+            <p style={{ fontSize: '0.9rem', color: '#64748B', margin: '0.5rem 0' }}>Preparing or selling food? You need a <strong>Certificate of Acceptability (COA)</strong>.</p>
+            <CWButton href="https://www.capetown.gov.za/City-Connect/Apply/Health-and-safety/Environmental-health/Apply-for-a-certificate-of-acceptability" target="_blank" style={{ fontSize: '0.8rem', padding: '0.4rem 0.8rem' }}>Apply for COA ↗</CWButton>
+          </div>
+          <div style={{ padding: '1rem', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
+            <div style={{ fontWeight: 700 }}>2. Trading in Public</div>
+            <p style={{ fontSize: '0.9rem', color: '#64748B', margin: '0.5rem 0' }}>Selling goods on the street or in markets? You need an <strong>Informal Trading Permit</strong>.</p>
+            <CWButton href="https://www.capetown.gov.za/City-Connect/Apply/Licences-and-permits/Business-and-trade/Apply-for-an-informal-trading-permit" target="_blank" style={{ fontSize: '0.8rem', padding: '0.4rem 0.8rem' }}>View Permits ↗</CWButton>
+          </div>
+        </div>
+      </CWCard>
+
+      <div style={{ marginTop: '2rem' }}>
+        <CWAlert type="info" title="Government Tenders (CSD)">
+          Want to sell to the government? You must register on the <strong>Central Supplier Database (CSD)</strong>. It's free and online.
+          <br />
+          <a href="https://secure.csd.gov.za/" target="_blank" rel="noopener" style={{ fontWeight: 700, textDecoration: 'underline', display: 'inline-block', marginTop: '0.5rem' }}>Go to CSD Portal ↗</a>
+        </CWAlert>
+      </div>
+
+      {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
+      <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%)', borderRadius: '24px', border: '1px solid #BAE6FD' }}>
+        <CWHeading level={3} style={{ color: '#0369A1', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+        </CWHeading>
+
+        <p style={{ fontSize: '1.1rem', color: '#0C4A6E', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+          Your service might be digital, but your <em>presence</em> is often physical. Even if you run a cloud kitchen or a pop-up market stall, the City of Cape Town has bylaws. Ignoring them can lead to your equipment being confiscated.
+        </p>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+          <div>
+            <h4 style={{ color: '#0369A1', marginBottom: '0.5rem' }}>1. The "Pop-Up" Economy</h4>
+            <p style={{ fontSize: '0.95rem', color: '#075985', lineHeight: '1.6' }}>
+              Want to run a stall at the Oranjezicht City Farm Market? You need your COA (Certificate of Acceptability). No certificate, no trading. This simple paper unlocks high-traffic retail spaces.
+            </p>
+          </div>
+          <div>
+            <h4 style={{ color: '#0369A1', marginBottom: '0.5rem' }}>2. Event Partnerships</h4>
+            <p style={{ fontSize: '0.95rem', color: '#075985', lineHeight: '1.6' }}>
+              If you want to partner with big events (like the Cape Town Cycle Tour), their risk officers will demand your permits. Being "permit-ready" makes you a low-risk partner they love to hire.
+            </p>
+          </div>
+        </div>
+
+        <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #E0F2FE', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+          <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+            🚀 How CapeWeb Helps You Scale
+          </h4>
+          <p style={{ fontSize: '0.95rem', color: '#4B5563', marginBottom: '1rem' }}>
+            Once you have the permit to trade, we help you dominate the location.
+          </p>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+            <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+              <span style={{ color: '#0EA5E9', marginTop: '2px' }}>➜</span>
+              <span>
+                <strong>Local SEO Dominance:</strong> We optimize your <a href="/services?service=seo-2025-beyond-keywords" style={{ color: '#0EA5E9', textDecoration: 'underline' }}>Google My Business</a> profile so when people search "Best Food Stall Cape Town", you show up first on the map.
+              </span>
+            </li>
+            <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+              <span style={{ color: '#0EA5E9', marginTop: '2px' }}>➜</span>
+              <span>
+                <strong>QR Code Menus & Payments:</strong> We build <a href="/services?service=shopify-speed-audit" style={{ color: '#0EA5E9', textDecoration: 'underline' }}>Instant Mobile Checkouts</a>. Customers at your stall scan a QR code, order, and pay in seconds—no clunky card machines required.
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <CWHeading level={3} style={{ marginTop: '3rem' }}>The "Don't Get Sued" Checklist</CWHeading>
+      <div style={{ display: 'grid', gap: '1.5rem', marginBottom: '2rem' }}>
+        <CWCard style={{ borderLeft: '4px solid #EF4444' }}>
+          <h4 style={{ margin: '0 0 0.5rem', color: '#991B1B' }}>Mistake 1: The "Handshake" Deal</h4>
+          <p style={{ margin: 0, color: '#4B5563' }}>
+            Never hire an employee or start a big client project without a signed contract.
+          </p>
+        </CWCard>
+
+        <CWCard style={{ borderLeft: '4px solid #F59E0B' }}>
+          <h4 style={{ margin: '0 0 0.5rem', color: '#92400E' }}>Mistake 2: Ignoring CIPC Annual Returns</h4>
+          <p style={{ margin: 0, color: '#4B5563' }}>
+            If you don't pay your R100/year, they <strong>deregister</strong> your company. Your bank account freezes. It's a nightmare to fix.
+          </p>
+        </CWCard>
+
+        <CWCard style={{ borderLeft: '4px solid #10B981' }}>
+          <h4 style={{ margin: '0 0 0.5rem', color: '#065F46' }}>Mistake 3: Mixing Money</h4>
+          <p style={{ margin: 0, color: '#4B5563' }}>
+            Using your business account for groceries. Stop it. It pierces your "Corporate Veil" and makes you personally liable.
+          </p>
+        </CWCard>
+      </div>
+
+      <MiniQuiz
+        questions={moduleBonusQuestions}
+        title="Roadmap Knowledge Check"
+        onNext={onNext}
+      />
+    </InteractiveLayout >
+  );
+}
+
+export function Pillar2Quiz({ onFinish }) {
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [quizResponses, setQuizResponses] = useState({});
+  const [scoreMessage, setScoreMessage] = useState('Not checked yet.');
+  const [isPassed, setIsPassed] = useState(false);
+
+  // Filter valid questions just in case
+  const questions = pillar2QuizQuestions;
+  const isLastQuestion = currentQuestionIndex === questions.length - 1;
+  const hasAnsweredCurrent = quizResponses[currentQuestionIndex] !== undefined;
+
+  const handleNext = () => {
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(c => c + 1);
+    }
+  };
+
+  const handlePrev = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(c => c - 1);
+    }
+  };
+
+  const onSelect = (qIndex, optIndex) => {
+    setQuizResponses(prev => ({ ...prev, [qIndex]: optIndex }));
+  };
+
+  const onScore = () => {
+    let score = 0;
+    questions.forEach((q, index) => {
+      if (quizResponses[index] === q.correctIndex) {
+        score++;
+      }
+    });
+
+    const passMark = Math.ceil(questions.length * 0.7);
+    if (score >= passMark) {
+      setScoreMessage(`✅ PASSED! You scored ${score}/${questions.length}.`);
+      setIsPassed(true);
+      if (confettiModule && confettiModule.default) confettiModule.default({ particleCount: 200, spread: 120, origin: { y: 0.6 } });
+    } else {
+      setScoreMessage(`❌ You scored ${score}/${questions.length}. You need ${passMark} to pass. Review the modules and try again.`);
+      setIsPassed(false);
+    }
+  };
+
+  const currentQ = questions[currentQuestionIndex];
+
+  return (
+    <QuizLayout title="Final Check: Legal & Compliance" progress={(currentQuestionIndex + 1) / questions.length * 100}>
+      <div style={{ marginBottom: '2rem' }}>
+        <CWHeading level={4} style={{ marginBottom: '1.5rem', fontSize: '1.25rem' }}>
+          Question {currentQuestionIndex + 1} of {questions.length}
+        </CWHeading>
+
+        <CWCard>
+          <p style={{ fontSize: '1.2rem', fontWeight: 600, marginBottom: '1.5rem' }}>
+            {currentQ.question}
+          </p>
+          <div style={{ display: 'grid', gap: '0.75rem' }}>
+            {currentQ.options.map((option, optIndex) => (
+              <label key={optIndex} style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1rem',
+                padding: '1rem',
+                borderRadius: '0.5rem',
+                border: quizResponses[currentQuestionIndex] === optIndex ? '2px solid #000' : '1px solid #e2e8f0',
+                cursor: 'pointer',
+                background: quizResponses[currentQuestionIndex] === optIndex ? '#F9FAFB' : '#fff',
+                transition: 'all 0.2s ease'
+              }}>
+                <input
+                  type="radio"
+                  name={`q-${currentQuestionIndex}`}
+                  checked={quizResponses[currentQuestionIndex] === optIndex}
+                  onChange={() => onSelect(currentQuestionIndex, optIndex)}
+                  style={{ width: '1.2rem', height: '1.2rem', accentColor: 'black' }}
+                />
+                <span style={{ fontSize: '1.05rem', fontWeight: quizResponses[currentQuestionIndex] === optIndex ? 600 : 400 }}>
+                  {option}
+                </span>
+              </label>
+            ))}
+          </div>
+        </CWCard>
+      </div>
+
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '2rem' }}>
+        <CWButton
+          variant="secondary"
+          onClick={handlePrev}
+          disabled={currentQuestionIndex === 0}
+          style={{
+            opacity: currentQuestionIndex === 0 ? 0 : 1,
+            pointerEvents: currentQuestionIndex === 0 ? 'none' : 'auto',
+            minWidth: '120px',
+            justifyContent: 'center'
+          }}
+        >
+          ← Back
+        </CWButton>
+
+        {!isLastQuestion ? (
+          <CWButton
+            onClick={handleNext}
+            disabled={!hasAnsweredCurrent}
+            variant="primary"
+            style={{ minWidth: '160px', justifyContent: 'center' }}
+          >
+            Next Question →
+          </CWButton>
+        ) : (
+          !isPassed && (
+            <CWButton
+              onClick={onScore}
+              disabled={!hasAnsweredCurrent}
+              variant="primary"
+              style={{
+                backgroundColor: '#10B981',
+                borderColor: '#10B981',
+                minWidth: '160px',
+                justifyContent: 'center',
+                boxShadow: '0 4px 14px rgba(16, 185, 129, 0.4)'
+              }}
+            >
+              See Results
+            </CWButton>
+          )
+        )}
+      </div>
+
+      {scoreMessage !== 'Not checked yet.' && (
+        <div style={{ marginTop: '2rem', textAlign: 'center' }}>
+          <CWAlert type={isPassed ? 'success' : 'error'}>
+            {scoreMessage}
+          </CWAlert>
+          {isPassed && onFinish && (
+            <CWButton
+              variant="primary"
+              style={{ marginTop: '1.5rem', minWidth: '200px', justifyContent: 'center', fontSize: '1.1rem', padding: '1rem 2rem' }}
+              onClick={onFinish}
+            >
+              Finish Pillar 2 →
+            </CWButton>
+          )}
+        </div>
+      )}
+    </QuizLayout>
   );
 }
 
 export function Pillar2Completion() {
+  const [form, setForm] = useState({ firstName: '', lastName: '', email: '' });
+  const [status, setStatus] = useState('idle');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus('submitting');
+
+    // Simulating success
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    setStatus('success');
+    downloadSummary();
+  };
+
+  const downloadSummary = () => {
+    const content = `
+                CAPEWEB UNIVERSITY - PILLAR 2 PASSPORT
+======================================
+Generated for: ${form.firstName} ${form.lastName}
+Date: ${new Date().toLocaleDateString()}
+
+Congratulations on completing Pillar 2: Structure & Compliance!
+
+KEY CONCEPTS MASTERED:
+----------------------
+1. Legal Structure: Chose the right vehicle (Sole Prop vs Pty Ltd).
+2. Registration: CIPC & SARS setup.
+3. Tax Discipline: Separate accounts, Profit First.
+4. Consumer Trust: Clear policies (CPA, ECTA, POPIA).
+5. The Employer System: PAYE, UIF, COIDA ready.
+
+RECOMMENDED READING LIST:
+-------------------------
+- Rich Dad Poor Dad by Robert Kiyosaki
+- Profit First by Mike Michalowicz
+- They Ask You Answer by Marcus Sheridan
+- The E-Myth Revisited by Michael Gerber
+
+YOUR NEXT STEP:
+---------------
+Pillar 3: Digital HQ (The Build).
+Now that you are legal, let's build the machine that sells.
+
+CapeWeb University © ${new Date().getFullYear()}
+        `;
+
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `CapeWeb_Pillar2_Passport_${form.firstName}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
+  if (status === 'success') {
+    return (
+      <ReadingLayout title="Pillar 2 Complete!">
+        <CWCard style={{ textAlign: 'center', padding: '3rem' }}>
+          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🎓</div>
+          <h2 className="cw-heading-md">Passport Issued!</h2>
+          <p style={{ color: 'var(--cw-text-secondary)', margin: '1rem 0' }}>
+            Your summary has been downloaded. You are now "Business Ready".
+          </p>
+          <CWButton variant="primary" onClick={() => window.location.reload()}>Proceed to Pillar 3 (Coming Soon)</CWButton>
+        </CWCard>
+      </ReadingLayout>
+    );
+  }
+
   return (
-    <div className="completion-box" style={{ textAlign: 'center', marginTop: '2.5rem', paddingTop: '2rem', borderTop: '2px dashed #ced4da' }}>
-      <h3>🎉 Pillar 2 Complete</h3>
-      <p>
-        You now understand how South African compliance works at a practical level: structure, registrations, tax basics, customer rules,
-        POPIA, and ongoing duties. When you say "continue to Pillar 3", CapeWeb will guide you to build your fast, legal-ready digital HQ
-        (website + forms + conversion systems).
-      </p>
+    <ReadingLayout title="Pillar 2 Complete!">
+      <CWCard style={{ maxWidth: '600px', margin: '0 auto', padding: '2rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>🎉</div>
+          <h2 className="cw-heading-md">You Are Legally Ready!</h2>
+          <p style={{ color: 'var(--cw-text-secondary)' }}>
+            You've completed the Compliance Pillar. Claim your summary and reading list below.
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '1rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div>
+              <label className="cw-label">First Name</label>
+              <CWInput required value={form.firstName} onChange={e => setForm({ ...form, firstName: e.target.value })} placeholder="Name" />
+            </div>
+            <div>
+              <label className="cw-label">Last Name</label>
+              <CWInput required value={form.lastName} onChange={e => setForm({ ...form, lastName: e.target.value })} placeholder="Surname" />
+            </div>
+          </div>
+          <div>
+            <label className="cw-label">Email Address</label>
+            <CWInput required type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} placeholder="name@example.com" />
+          </div>
+
+          <div style={{ background: '#F0F9FF', padding: '1rem', borderRadius: '8px', fontSize: '0.9rem', color: '#0369A1', border: '1px solid #BAE6FD' }}>
+            <strong>🎁 Includes:</strong>
+            <ul style={{ margin: '0.5rem 0 0 1.2rem' }}>
+              <li>Full Pillar 2 Checklist (Text version)</li>
+              <li>Legal/Finance Book List</li>
+              <li>CapeWeb University "Sophomore" Status</li>
+            </ul>
+          </div>
+
+          <CWButton type="submit" variant="primary" style={{ width: '100%', justifyContent: 'center', marginTop: '1rem' }} disabled={status === 'submitting'}>
+            {status === 'submitting' ? 'Generating...' : 'Download My Summary & Finish'}
+          </CWButton>
+        </form>
+      </CWCard>
+    </ReadingLayout>
+  );
+}
+
+
+// ========================================
+// MODULE E: WORKFORCE & LABOR LAW
+// ========================================
+
+// Interactive: Hiring Calculator
+function HiringCalculatorInteractive() {
+  const [salary, setSalary] = useState(10000);
+
+  // Costs (Employer Contributions)
+  const uif = salary * 0.01; // 1%
+  const sdl = salary > 41666 ? salary * 0.01 : 0; // SDL only if payroll > R500k/yr (simplification) -> Let's just show it as a potential cost or 0
+  const coida = salary * 0.01; // Approx 1% risk
+  const totalEmployerCost = salary + uif + coida + sdl;
+
+  // Deductions (Employee Pays)
+  const uifEmployee = salary * 0.01;
+  const paye = salary > 7916 ? (salary - 7916) * 0.18 : 0; // Very rough simplified progressive tax for demo
+  const netPay = salary - uifEmployee - paye;
+
+  return (
+    <div style={{ margin: '3rem 0' }}>
+      <h3 style={{ textAlign: 'center', marginBottom: '1.5rem' }}>The "True Cost" of an Employee</h3>
+
+      <div style={{ background: '#fff', padding: '2rem', borderRadius: '16px', boxShadow: '0 10px 40px -10px rgba(0,0,0,0.1)', border: '1px solid #E5E7EB' }}>
+        <div style={{ marginBottom: '2rem', textAlign: 'center' }}>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 700, fontSize: '1.1rem' }}>Gross Monthly Salary: R{salary}</label>
+          <input
+            type="range" min="5000" max="50000" step="1000"
+            value={salary} onChange={(e) => setSalary(Number(e.target.value))}
+            style={{ width: '100%', maxWidth: '400px', accentColor: '#0b0f1a' }}
+          />
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
+
+          {/* Employee View */}
+          <div style={{ background: '#F0F9FF', padding: '1.5rem', borderRadius: '12px', border: '1px solid #BAE6FD' }}>
+            <h4 style={{ margin: '0 0 1rem', color: '#0369A1' }}>👮‍♂️ What they take home</h4>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+              <span>Gross:</span> <span>R{salary.toFixed(0)}</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', color: '#DC2626' }}>
+              <span>- PAYE (Tax):</span> <span>R{paye.toFixed(0)}</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem', color: '#DC2626' }}>
+              <span>- UIF (1%):</span> <span>R{uifEmployee.toFixed(0)}</span>
+            </div>
+            <div style={{ borderTop: '2px solid #BAE6FD', paddingTop: '1rem', display: 'flex', justifyContent: 'space-between', fontWeight: 800, fontSize: '1.2rem', color: '#0369A1' }}>
+              <span>Net Pay:</span> <span>R{netPay.toFixed(0)}</span>
+            </div>
+          </div>
+
+          {/* Employer View */}
+          <div style={{ background: '#FDF2F8', padding: '1.5rem', borderRadius: '12px', border: '1px solid #FBCFE8' }}>
+            <h4 style={{ margin: '0 0 1rem', color: '#BE185D' }}>🏢 What it costs YOU</h4>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+              <span>Gross Salary:</span> <span>R{salary.toFixed(0)}</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', color: '#BE185D' }}>
+              <span>+ UIF (1%):</span> <span>R{uif.toFixed(0)}</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', color: '#BE185D' }}>
+              <span>+ COIDA (~1%):</span> <span>R{coida.toFixed(0)}</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem', color: '#BE185D' }}>
+              <span>+ SDL (1%):</span> <span>{sdl > 0 ? `R${sdl.toFixed(0)}` : 'R0 (Exempt)'}</span>
+            </div>
+            <div style={{ borderTop: '2px solid #FBCFE8', paddingTop: '1rem', display: 'flex', justifyContent: 'space-between', fontWeight: 800, fontSize: '1.2rem', color: '#BE185D' }}>
+              <span>Total Cost:</span> <span>R{totalEmployerCost.toFixed(0)}</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  );
+  )
 }
 
-// SVG Diagram: Legal Structure Decision Tree
-function LegalStructureDecisionTree() {
+// Module E: Workforce & Labor Law
+export function Pillar2ModuleE({ onNext }) {
   return (
-    <svg viewBox="0 0 800 480" style={{ width: '100%', maxWidth: '800px', height: 'auto' }}>
-      <defs>
-        <linearGradient id="gradStructure1" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style={{ stopColor: '#c6ff35', stopOpacity: 0.3 }} />
-          <stop offset="100%" style={{ stopColor: '#0b0f1a', stopOpacity: 0.15 }} />
-        </linearGradient>
-        <linearGradient id="gradStructure2" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style={{ stopColor: '#ffc107', stopOpacity: 0.3 }} />
-          <stop offset="100%" style={{ stopColor: '#ff6b35', stopOpacity: 0.2 }} />
-        </linearGradient>
-      </defs>
+    <InteractiveLayout title="Module E: Hiring & Labor Law" subtitle="Hiring your first employee cleanly.">
+      <p style={{ fontSize: '1.1rem', marginBottom: '2rem' }}>
+        Hiring is exciting but risky. In South Africa, labor laws are strict.
+        <br /><strong>The Golden Rule:</strong> Hire slow, fire rarely (because it's hard), and always use a contract.
+      </p>
 
-      {/* Start node */}
-      <rect x="280" y="10" width="240" height="60" rx="12" fill="url(#gradStructure1)" stroke="#0b0f1a" strokeWidth="2" />
-      <text x="400" y="35" textAnchor="middle" fontSize="14" fontWeight="700" fill="#0b0f1a">
-        Starting Point
-      </text>
-      <text x="400" y="55" textAnchor="middle" fontSize="13" fill="#495057">
-        What's your stage?
-      </text>
+      <HiringCalculatorInteractive />
 
-      {/* Arrow from start */}
-      <line x1="400" y1="70" x2="400" y2="110" stroke="#0b0f1a" strokeWidth="2" markerEnd="url(#arrowhead)" />
+      <CWHeading level={3}>The "Big 3" You Must Pay</CWHeading>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
+        <CWCard>
+          <strong style={{ color: '#0b0f1a', fontSize: '1.1rem' }}>1. PAYE (Tax)</strong>
+          <p style={{ fontSize: '0.9rem', color: '#4B5563' }}>You deduct this from their salary and pay it to SARS. If you don't, you are liable.</p>
+        </CWCard>
+        <CWCard>
+          <strong style={{ color: '#0b0f1a', fontSize: '1.1rem' }}>2. UIF (1%)</strong>
+          <p style={{ fontSize: '0.9rem', color: '#4B5563' }}>1% from them, 1% from you. Protects them if they lose their job.</p>
+        </CWCard>
+        <CWCard>
+          <strong style={{ color: '#0b0f1a', fontSize: '1.1rem' }}>3. COIDA (Injuries)</strong>
+          <p style={{ fontSize: '0.9rem', color: '#4B5563' }}>Workplace insurance. Annual fee to Department of Labour. Mandatory.</p>
+        </CWCard>
+      </div>
 
-      {/* Decision: Risk level */}
-      <rect x="280" y="110" width="240" height="70" rx="12" fill="#fff" stroke="#0b0f1a" strokeWidth="2" />
-      <text x="400" y="135" textAnchor="middle" fontSize="13" fontWeight="700" fill="#0b0f1a">
-        Is your risk HIGH?
-      </text>
-      <text x="400" y="155" textAnchor="middle" fontSize="12" fill="#6c757d">
-        (contracts, staff, deliveries,
-      </text>
-      <text x="400" y="170" textAnchor="middle" fontSize="12" fill="#6c757d">
-        expensive work)
-      </text>
+      <CWAlert type="warning" title="Scenario: The 'Casual' Gardener">
+        <strong>The Trap:</strong> You hire a gardener for the office. He works every Tuesday. You pay him cash. After 6 months, you tell him "We don't need you anymore."
+        <br /><br />
+        <strong>The CCMA Result:</strong> He is not a casual worker; he is a part-time employee. You fired him without process. You owe him 6 months' salary as a penalty.
+        <br />
+        <strong>Lesson:</strong> Anyone who works regular hours is likely an employee.
+      </CWAlert>
 
-      {/* Path: Yes - High Risk → Pty Ltd */}
-      <line x1="520" y1="145" x2="600" y2="145" stroke="#0b0f1a" strokeWidth="2" />
-      <line x1="600" y1="145" x2="600" y2="220" stroke="#0b0f1a" strokeWidth="2" markerEnd="url(#arrowhead)" />
-      <text x="565" y="140" fontSize="12" fontWeight="700" fill="#0b0f1a">
-        YES
-      </text>
+      {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
+      <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F3E8FF 0%, #E9D5FF 100%)', borderRadius: '24px', border: '1px solid #D8B4FE' }}>
+        <CWHeading level={3} style={{ color: '#7E22CE', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+        </CWHeading>
 
-      {/* High Risk Result: Pty Ltd */}
-      <rect x="530" y="220" width="180" height="90" rx="10" fill="url(#gradStructure2)" stroke="#d32f2f" strokeWidth="2" />
-      <text x="620" y="245" textAnchor="middle" fontSize="14" fontWeight="700" fill="#0b0f1a">
-        Register Pty Ltd
-      </text>
-      <text x="620" y="265" textAnchor="middle" fontSize="11" fill="#495057">
-        Limited liability,
-      </text>
-      <text x="620" y="280" textAnchor="middle" fontSize="11" fill="#495057">
-        separate legal entity,
-      </text>
-      <text x="620" y="295" textAnchor="middle" fontSize="11" fill="#495057">
-        compliance required
-      </text>
+        <p style={{ fontSize: '1.1rem', color: '#6B21A8', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+          Your employees are your biggest asset, but "Labor Risk" is your biggest liability. A solid Human Systems infrastructure allows you to focus on leadership rather than fighting in court.
+        </p>
 
-      {/* Path: No - Low/Medium Risk */}
-      <line x1="280" y1="145" x2="200" y2="145" stroke="#0b0f1a" strokeWidth="2" />
-      <line x1="200" y1="145" x2="200" y2="220" stroke="#0b0f1a" strokeWidth="2" markerEnd="url(#arrowhead)" />
-      <text x="230" y="140" fontSize="12" fontWeight="700" fill="#0b0f1a">
-        NO
-      </text>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+          <div>
+            <h4 style={{ color: '#6B21A8', marginBottom: '0.5rem' }}>1. Scalable Culture</h4>
+            <p style={{ fontSize: '0.95rem', color: '#581C87', lineHeight: '1.6' }}>
+              Clear contracts and KPIs (Key Performance Indicators) attract "A-Players". High performers want to know the rules of the game. Ambiguity attracts slackers.
+            </p>
+          </div>
+          <div>
+            <h4 style={{ color: '#6B21A8', marginBottom: '0.5rem' }}>2. Automate the "Admin"</h4>
+            <p style={{ fontSize: '0.95rem', color: '#581C87', lineHeight: '1.6' }}>
+              Using software for payroll (SimplePay) removes the "Sunday Night Stress" of calculating PAYE. If you don't automate it, you will eventually make a mistake that costs you fines.
+            </p>
+          </div>
+        </div>
 
-      {/* Second Decision: First sales or partner? */}
-      <rect x="90" y="220" width="220" height="70" rx="10" fill="#fff" stroke="#0b0f1a" strokeWidth="2" />
-      <text x="200" y="245" textAnchor="middle" fontSize="13" fontWeight="700" fill="#0b0f1a">
-        Need partners?
-      </text>
-      <text x="200" y="265" textAnchor="middle" fontSize="11" fill="#6c757d">
-        More than one owner?
-      </text>
-      <text x="200" y="280" textAnchor="middle" fontSize="11" fill="#6c757d">
-        Profit sharing?
-      </text>
+        <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #E9D5FF', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+          <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+            🚀 How CapeWeb Helps You Scale
+          </h4>
+          <p style={{ fontSize: '0.95rem', color: '#4B5563', marginBottom: '1rem' }}>
+            While you hire humans, we build the "Digital Employees" that never sleep.
+          </p>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+            <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+              <span style={{ color: '#A855F7', marginTop: '2px' }}>➜</span>
+              <span>
+                <strong>Reduced Headcount:</strong> Before you hire your next support staff, consider our <a href="/services?service=ai-agents-sales-team" style={{ color: '#A855F7', textDecoration: 'underline' }}>AI Agents</a>. One AI agent can handle the workload of 5 humans for a fraction of the cost, with zero UIF/PAYE paperwork.
+              </span>
+            </li>
+            <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+              <span style={{ color: '#A855F7', marginTop: '2px' }}>➜</span>
+              <span>
+                <strong>Training Materials:</strong> We build internal <a href="/services?service=future-digital-branding" style={{ color: '#A855F7', textDecoration: 'underline' }}>Brand Wikis & Knowledge Bases</a> so when you do hire, your new employee can "download" your company brain in days, not months.
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
 
-      {/* Path: Yes - Partners → CC */}
-      <line x1="200" y1="290" x2="200" y2="340" stroke="#0b0f1a" strokeWidth="2" markerEnd="url(#arrowhead)" />
-      <text x="210" y="320" fontSize="12" fontWeight="700" fill="#0b0f1a">
-        YES
-      </text>
+      <BookInsight title="Safety helps performance" author="Simon Sinek" book="Leaders Eat Last" color="#6366F1">
+        <p>"When people feel safe, they can focus their energy on the work. When they feel unsafe, they spend their energy protecting themselves."</p>
+        <p><strong>Lesson:</strong> Contracts and UIF aren't just admin; they make your team feel safe, which makes them work better.</p>
+      </BookInsight>
 
-      <rect x="110" y="340" width="180" height="80" rx="10" fill="url(#gradStructure2)" stroke="#f57c00" strokeWidth="2" />
-      <text x="200" y="365" textAnchor="middle" fontSize="14" fontWeight="700" fill="#0b0f1a">
-        Register CC
-      </text>
-      <text x="200" y="385" textAnchor="middle" fontSize="11" fill="#495057">
-        Multiple members,
-      </text>
-      <text x="200" y="400" textAnchor="middle" fontSize="11" fill="#495057">
-        shared governance
-      </text>
-
-      {/* Path: No - Solo → Sole Proprietor */}
-      <line x1="310" y1="255" x2="380" y2="255" stroke="#0b0f1a" strokeWidth="2" />
-      <line x1="380" y1="255" x2="380" y2="340" stroke="#0b0f1a" strokeWidth="2" markerEnd="url(#arrowhead)" />
-      <text x="325" y="250" fontSize="12" fontWeight="700" fill="#0b0f1a">
-        NO
-      </text>
-
-      <rect x="310" y="340" width="180" height="90" rx="10" fill="url(#gradStructure1)" stroke="#388e3c" strokeWidth="2" />
-      <text x="400" y="365" textAnchor="middle" fontSize="14" fontWeight="700" fill="#0b0f1a">
-        Sole Proprietor
-      </text>
-      <text x="400" y="385" textAnchor="middle" fontSize="11" fill="#495057">
-        Start fast, low cost,
-      </text>
-      <text x="400" y="400" textAnchor="middle" fontSize="11" fill="#495057">
-        you = the business,
-      </text>
-      <text x="400" y="415" textAnchor="middle" fontSize="11" fill="#495057">
-        personal liability
-      </text>
-
-      {/* Arrowhead marker */}
-      <defs>
-        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" fill="#0b0f1a">
-          <polygon points="0 0, 10 3, 0 6" />
-        </marker>
-      </defs>
-
-      {/* Legend */}
-      <text x="20" y="460" fontSize="11" fill="#6c757d" fontStyle="italic">
-        Choose the path that matches your risk + stage.
-      </text>
-    </svg>
+      <MiniQuiz
+        question="Which contribution is shared 50/50 between employer and employee?"
+        questions={[
+          {
+            question: "Which contribution is shared 50/50 between employer and employee?",
+            options: ["PAYE", "UIF (Unemployment Insurance)", "COIDA"],
+            correctIndex: 1
+          }
+        ]}
+        title="Roadmap Knowledge Check"
+        onNext={onNext}
+      />
+    </InteractiveLayout>
   );
 }
 
-// SVG Diagram: Registration Flow
-function RegistrationFlowDiagram() {
+// ========================================
+// MODULE F: B-BBEE, TENDERS & SUPPLIER DEVELOPMENT
+// ========================================
+
+// Interactive: B-BBEE Calculator
+function BBBEEStatusInteractive() {
+  const [turnover, setTurnover] = useState(1000000); // 1m
+  const [blackOwnership, setBlackOwnership] = useState(0);
+
+  let classification = 'Generic (Large Enterprise)';
+  let level = 'Level 8 (Non-Compliant)';
+  let strategy = 'Complex Scorecard';
+
+  if (turnover < 10000000) {
+    classification = 'EME (Exempt Micro Enterprise)';
+    strategy = 'Automatic Level 4 (Just an Affidavit)';
+    level = 'Level 4';
+    if (blackOwnership === 100) level = 'Level 1';
+    else if (blackOwnership >= 51) level = 'Level 2';
+  } else if (turnover < 50000000) {
+    classification = 'QSE (Qualifying Small Enterprise)';
+    strategy = 'Simplified Scorecard';
+    level = 'Calculated by Agency';
+    if (blackOwnership === 100) level = 'Level 1 (Automatic)';
+    else if (blackOwnership >= 51) level = 'Level 2 (Automatic)';
+  }
+
   return (
-    <svg viewBox="0 0 700 360" style={{ width: '100%', maxWidth: '700px', height: 'auto' }}>
-      <defs>
-        <linearGradient id="gradReg1" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style={{ stopColor: '#c6ff35', stopOpacity: 0.4 }} />
-          <stop offset="100%" style={{ stopColor: '#0b0f1a', stopOpacity: 0.2 }} />
-        </linearGradient>
-        <linearGradient id="gradReg2" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style={{ stopColor: '#4fc3f7', stopOpacity: 0.4 }} />
-          <stop offset="100%" style={{ stopColor: '#0277bd', stopOpacity: 0.3 }} />
-        </linearGradient>
-        <linearGradient id="gradReg3" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style={{ stopColor: '#81c784', stopOpacity: 0.4 }} />
-          <stop offset="100%" style={{ stopColor: '#388e3c', stopOpacity: 0.3 }} />
-        </linearGradient>
-      </defs>
+    <div style={{ margin: '3rem 0' }}>
+      <h3 style={{ textAlign: 'center', marginBottom: '1.5rem' }}>B-BBEE Status Predictor</h3>
 
-      {/* Step 1: CIPC */}
-      <rect x="40" y="80" width="180" height="100" rx="12" fill="url(#gradReg1)" stroke="#0b0f1a" strokeWidth="2" />
-      <text x="130" y="110" textAnchor="middle" fontSize="16" fontWeight="700" fill="#0b0f1a">
-        Step 1
-      </text>
-      <text x="130" y="135" textAnchor="middle" fontSize="14" fontWeight="600" fill="#0b0f1a">
-        CIPC / BizPortal
-      </text>
-      <text x="130" y="155" textAnchor="middle" fontSize="11" fill="#495057">
-        Register company,
-      </text>
-      <text x="130" y="170" textAnchor="middle" fontSize="11" fill="#495057">
-        reserve name
-      </text>
+      <div style={{ background: '#fff', padding: '2rem', borderRadius: '16px', boxShadow: '0 10px 40px -10px rgba(0,0,0,0.1)', border: '1px solid #E5E7EB' }}>
 
-      {/* Arrow 1 → 2 */}
-      <line x1="220" y1="130" x2="270" y2="130" stroke="#0b0f1a" strokeWidth="2" markerEnd="url(#arrowhead2)" />
-      <text x="245" y="120" textAnchor="middle" fontSize="11" fontWeight="700" fill="#0b0f1a">
-        THEN
-      </text>
+        <div style={{ marginBottom: '2rem' }}>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 700 }}>Annual Turnover: R{turnover.toLocaleString()}</label>
+          <input
+            type="range" min="0" max="60000000" step="100000"
+            value={turnover} onChange={(e) => setTurnover(Number(e.target.value))}
+            style={{ width: '100%', accentColor: '#0b0f1a' }}
+          />
+          <div style={{ fontSize: '0.8rem', color: '#6B7280', display: 'flex', justifyContent: 'space-between' }}>
+            <span>R0</span><span>R10m (EME Limit)</span><span>R50m (QSE Limit)</span><span>R60m+</span>
+          </div>
+        </div>
 
-      {/* Step 2: SARS */}
-      <rect x="270" y="80" width="180" height="100" rx="12" fill="url(#gradReg2)" stroke="#0b0f1a" strokeWidth="2" />
-      <text x="360" y="110" textAnchor="middle" fontSize="16" fontWeight="700" fill="#0b0f1a">
-        Step 2
-      </text>
-      <text x="360" y="135" textAnchor="middle" fontSize="14" fontWeight="600" fill="#0b0f1a">
-        SARS
-      </text>
-      <text x="360" y="155" textAnchor="middle" fontSize="11" fill="#495057">
-        Get Income Tax number,
-      </text>
-      <text x="360" y="170" textAnchor="middle" fontSize="11" fill="#495057">
-        open eFiling
-      </text>
+        <div style={{ marginBottom: '2rem' }}>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 700 }}>Black Ownership: {blackOwnership}%</label>
+          <input
+            type="range" min="0" max="100" step="1"
+            value={blackOwnership} onChange={(e) => setBlackOwnership(Number(e.target.value))}
+            style={{ width: '100%', accentColor: '#0b0f1a' }}
+          />
+        </div>
 
-      {/* Arrow 2 → 3 */}
-      <line x1="450" y1="130" x2="500" y2="130" stroke="#0b0f1a" strokeWidth="2" markerEnd="url(#arrowhead2)" />
-      <text x="475" y="120" textAnchor="middle" fontSize="11" fontWeight="700" fill="#0b0f1a">
-        THEN
-      </text>
-
-      {/* Step 3: Start Selling */}
-      <rect x="500" y="80" width="180" height="100" rx="12" fill="url(#gradReg3)" stroke="#0b0f1a" strokeWidth="2" />
-      <text x="590" y="110" textAnchor="middle" fontSize="16" fontWeight="700" fill="#0b0f1a">
-        Step 3
-      </text>
-      <text x="590" y="135" textAnchor="middle" fontSize="14" fontWeight="600" fill="#0b0f1a">
-        Start Selling
-      </text>
-      <text x="590" y="155" textAnchor="middle" fontSize="11" fill="#495057">
-        Legally ready,
-      </text>
-      <text x="590" y="170" textAnchor="middle" fontSize="11" fill="#495057">
-        first 100 sales
-      </text>
-
-      {/* Alternative path label */}
-      <rect x="100" y="220" width="500" height="100" rx="10" fill="#fff" stroke="#e9ecef" strokeWidth="2" strokeDasharray="5,5" />
-      <text x="350" y="245" textAnchor="middle" fontSize="13" fontWeight="700" fill="#856404">
-        Or: Start with "Test Sales Path"
-      </text>
-      <text x="350" y="265" textAnchor="middle" fontSize="11" fill="#6c757d">
-        Skip registration, use simple invoicing + clear terms,
-      </text>
-      <text x="350" y="280" textAnchor="middle" fontSize="11" fill="#6c757d">
-        plan to formalize after 20 sales or when you get a big contract.
-      </text>
-      <text x="350" y="300" textAnchor="middle" fontSize="11" fontStyle="italic" fill="#6c757d">
-        CapeWeb guides you with the practical parts either way.
-      </text>
-
-      {/* Title */}
-      <text x="350" y="40" textAnchor="middle" fontSize="18" fontWeight="700" fill="#0b0f1a">
-        Registration Flow: "Structure First" Path
-      </text>
-
-      {/* Arrowhead marker */}
-      <defs>
-        <marker id="arrowhead2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" fill="#0b0f1a">
-          <polygon points="0 0, 10 3, 0 6" />
-        </marker>
-      </defs>
-    </svg>
-  );
+        <div style={{ background: '#F3F4F6', padding: '1.5rem', borderRadius: '12px', border: '1px solid #E5E7EB' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+            <div>
+              <div style={{ fontSize: '0.85rem', color: '#4B5563' }}>Classification</div>
+              <div style={{ fontWeight: 700, color: '#0b0f1a' }}>{classification}</div>
+            </div>
+            <div>
+              <div style={{ fontSize: '0.85rem', color: '#4B5563' }}>Est. Level</div>
+              <div style={{ fontWeight: 700, color: '#059669' }}>{level}</div>
+            </div>
+          </div>
+          <div style={{ fontSize: '0.9rem', color: '#374151', borderTop: '1px solid #E5E7EB', paddingTop: '1rem' }}>
+            <strong>Strategy:</strong> {strategy}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }
 
-// SVG Diagram: Compliance Calendar
-function ComplianceCalendarDiagram() {
+const moduleFQuestions = [
+  {
+    question: "If your revenue is under R10m, what B-BBEE proof do you need?",
+    options: ["An expensive audit", "A Sworn Affidavit", "Nothing"],
+    correctIndex: 1
+  }
+];
+
+export function Pillar2ModuleF({ onNext }) {
   return (
-    <svg viewBox="0 0 800 500" style={{ width: '100%', maxWidth: '800px', height: 'auto' }}>
-      <defs>
-        <linearGradient id="gradCal1" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" style={{ stopColor: '#c6ff35', stopOpacity: 0.4 }} />
-          <stop offset="100%" style={{ stopColor: '#c6ff35', stopOpacity: 0.15 }} />
-        </linearGradient>
-        <linearGradient id="gradCal2" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" style={{ stopColor: '#4fc3f7', stopOpacity: 0.4 }} />
-          <stop offset="100%" style={{ stopColor: '#4fc3f7', stopOpacity: 0.15 }} />
-        </linearGradient>
-        <linearGradient id="gradCal3" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" style={{ stopColor: '#ff6b6b', stopOpacity: 0.4 }} />
-          <stop offset="100%" style={{ stopColor: '#ff6b6b', stopOpacity: 0.15 }} />
-        </linearGradient>
-      </defs>
+    <InteractiveLayout title="Module F: B-BBEE & Tenders" subtitle="Opening the doors to government & corporate deals.">
+      <p style={{ fontSize: '1.1rem', marginBottom: '2rem' }}>
+        In South Africa, B-BBEE is a business reality. You can ignore it and sell B2C, or embrace it and unlock B2G (Government) and B2B (Corporate) revenue.
+      </p>
 
-      {/* Title */}
-      <text x="400" y="35" textAnchor="middle" fontSize="20" fontWeight="700" fill="#0b0f1a">
-        Compliance Calendar: What Happens When
-      </text>
+      <CWHeading level={3}>Do you need a B-BBEE Certificate?</CWHeading>
+      <div style={{ background: '#F0FDF4', padding: '1.5rem', borderRadius: '12px', border: '1px solid #BBF7D0', marginBottom: '2rem' }}>
+        <p style={{ margin: 0, color: '#166534', fontSize: '1.1rem' }}>
+          <strong>Good News:</strong> If your turnover is under R10 Million/year, you are an <strong>EME</strong> (Exempt Micro Enterprise).
+          <br /><br />
+          You do <strong>NOT</strong> need an audit. You just need a <strong>Sworn Affidavit</strong> signed at a police station. It costs R0.
+        </p>
+      </div>
 
-      {/* Column 1: Weekly/As-You-Go */}
-      <rect x="40" y="70" width="220" height="380" rx="12" fill="url(#gradCal1)" stroke="#0b0f1a" strokeWidth="2" />
-      <text x="150" y="100" textAnchor="middle" fontSize="16" fontWeight="700" fill="#0b0f1a">
-        Weekly / As-You-Go
-      </text>
+      <BBBEEStatusInteractive />
 
-      <g transform="translate(60, 120)">
-        <circle cx="5" cy="5" r="4" fill="#0b0f1a" />
-        <text x="15" y="10" fontSize="12" fill="#0b0f1a">
-          Record all sales
-        </text>
-      </g>
+      <CWCard style={{ marginBottom: '2rem', background: '#F0FDF4', border: '1px solid #BBF7D0' }}>
+        <h4 style={{ color: '#166534', marginBottom: '0.5rem' }}>Scenario: The "Cheapest" Loss</h4>
+        <p style={{ margin: 0, color: '#4B5563' }}>
+          <strong>The Situation:</strong> You bid for a R500k government catering contract. Your price is the best (cheapest).
+          <br /><br />
+          <strong>The Result:</strong> You lose to a competitor who was 10% more expensive. Why? They had a Level 1 B-BBEE Affidavit. You had nothing (Level 8).
+          <br /><br />
+          <strong>Lesson:</strong> In government work, Price represents 80-90 points. B-BBEE represents 10-20 points. You cannot win without those points.
+        </p>
+      </CWCard>
 
-      <g transform="translate(60, 145)">
-        <circle cx="5" cy="5" r="4" fill="#0b0f1a" />
-        <text x="15" y="10" fontSize="12" fill="#0b0f1a">
-          Issue invoices
-        </text>
-      </g>
+      {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
+      <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)', borderRadius: '24px', border: '1px solid #86EFAC' }}>
+        <CWHeading level={3} style={{ color: '#166534', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+        </CWHeading>
 
-      <g transform="translate(60, 170)">
-        <circle cx="5" cy="5" r="4" fill="#0b0f1a" />
-        <text x="15" y="10" fontSize="12" fill="#0b0f1a">
-          Track expenses
-        </text>
-      </g>
+        <p style={{ fontSize: '1.1rem', color: '#14532D', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+          Tenders are not just for construction companies. Large corporates (banks, insurers, retailers) spend billions on digital services every year. They <strong>must</strong> spend 3% of their profit on Supplier Development (you).
+        </p>
 
-      <g transform="translate(60, 195)">
-        <circle cx="5" cy="5" r="4" fill="#0b0f1a" />
-        <text x="15" y="10" fontSize="12" fill="#0b0f1a">
-          Save receipts
-        </text>
-      </g>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+          <div>
+            <h4 style={{ color: '#15803D', marginBottom: '0.5rem' }}>1. The "Supplier Development" Pot</h4>
+            <p style={{ fontSize: '0.95rem', color: '#14532D', lineHeight: '1.6' }}>
+              Big companies get B-BBEE points for training their suppliers. This often means they will pay YOU to improve your own business (buy you laptops, software, or advanced training) just so they can claim the points.
+            </p>
+          </div>
+          <div>
+            <h4 style={{ color: '#15803D', marginBottom: '0.5rem' }}>2. Corporate Vendor Lists</h4>
+            <p style={{ fontSize: '0.95rem', color: '#14532D', lineHeight: '1.6' }}>
+              You cannot get a contract with a bank if you are not B-BBEE compliant. It is the "Gatekeeper" requirement. Once you are in, the contracts are usually 12-24 months long (stable recurring revenue).
+            </p>
+          </div>
+        </div>
 
-      <g transform="translate(60, 220)">
-        <circle cx="5" cy="5" r="4" fill="#0b0f1a" />
-        <text x="15" y="10" fontSize="12" fill="#0b0f1a">
-          Respond to customers
-        </text>
-      </g>
+        <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #DCFCE7', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+          <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+            🚀 How CapeWeb Helps You Scale
+          </h4>
+          <p style={{ fontSize: '0.95rem', color: '#4B5563', marginBottom: '1rem' }}>
+            When you pitch for a tender, your proposal needs to look world-class.
+          </p>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+            <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+              <span style={{ color: '#22C55E', marginTop: '2px' }}>➜</span>
+              <span>
+                <strong>Tender-Ready Documents:</strong> Our <a href="/services?service=future-digital-branding" style={{ color: '#22C55E', textDecoration: 'underline' }}>Branding Team</a> designs professional capabilities decks and company profiles that scream "competence" before they even read your price.
+              </span>
+            </li>
+            <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+              <span style={{ color: '#22C55E', marginTop: '2px' }}>➜</span>
+              <span>
+                <strong>Automated Client Onboarding:</strong> If you win a tender, you might get 500 new "users" or "clients" overnight. Our <a href="/services?service=ai-agents-sales-team" style={{ color: '#22C55E', textDecoration: 'underline' }}>Automation Systems</a> ensure you can handle the sudden spike in volume without breaking a sweat.
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
 
-      <g transform="translate(60, 245)">
-        <circle cx="5" cy="5" r="4" fill="#0b0f1a" />
-        <text x="15" y="10" fontSize="12" fill="#0b0f1a">
-          Update privacy policy
-        </text>
-        <text x="15" y="25" fontSize="10" fill="#6c757d">
-          (as business changes)
-        </text>
-      </g>
+      <BookInsight title="Context matters" author="Vusi Thembekwayo" book="Vusi: Business & Life Lessons" color="#0b0f1a">
+        <p>"You cannot copy Silicon Valley in South Africa. We have different rules, different history, and different structures."</p>
+        <p><strong>Lesson:</strong> B-BBEE is part of the SA landscape. Don't fight it; understand it and use it as a strategic lever.</p>
+      </BookInsight>
 
-      <rect x="60" y="280" width="180" height="60" rx="8" fill="#fff" stroke="#0b0f1a" strokeWidth="1" />
-      <text x="150" y="300" textAnchor="middle" fontSize="11" fontWeight="700" fill="#0b0f1a">
-        Why it matters:
-      </text>
-      <text x="150" y="318" textAnchor="middle" fontSize="10" fill="#495057">
-        Build habits early —
-      </text>
-      <text x="150" y="332" textAnchor="middle" fontSize="10" fill="#495057">
-        compliance = good records
-      </text>
+      <CWHeading level={3}>How to find Tenders</CWHeading>
+      <div style={{ display: 'grid', gap: '1rem', marginBottom: '2rem' }}>
+        <a href="https://www.etenders.gov.za/" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+          <CWCard hoverable>
+            <strong>eTenders Portal</strong> (National Treasury)
+          </CWCard>
+        </a>
+        <a href="https://secure.csd.gov.za/" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+          <CWCard hoverable>
+            <strong>CSD (Central Supplier Database)</strong> - You MUST register here to get paid.
+          </CWCard>
+        </a>
+      </div>
 
-      {/* Column 2: Monthly */}
-      <rect x="290" y="70" width="220" height="380" rx="12" fill="url(#gradCal2)" stroke="#0b0f1a" strokeWidth="2" />
-      <text x="400" y="100" textAnchor="middle" fontSize="16" fontWeight="700" fill="#0b0f1a">
-        Monthly
-      </text>
-
-      <g transform="translate(310, 120)">
-        <circle cx="5" cy="5" r="4" fill="#0b0f1a" />
-        <text x="15" y="10" fontSize="12" fill="#0b0f1a">
-          VAT return (if registered)
-        </text>
-      </g>
-
-      <g transform="translate(310, 145)">
-        <circle cx="5" cy="5" r="4" fill="#0b0f1a" />
-        <text x="15" y="10" fontSize="12" fill="#0b0f1a">
-          PAYE submission
-        </text>
-        <text x="15" y="25" fontSize="10" fill="#6c757d">
-          (if you have employees)
-        </text>
-      </g>
-
-      <g transform="translate(310, 180)">
-        <circle cx="5" cy="5" r="4" fill="#0b0f1a" />
-        <text x="15" y="10" fontSize="12" fill="#0b0f1a">
-          UIF declaration
-        </text>
-        <text x="15" y="25" fontSize="10" fill="#6c757d">
-          (if you have employees)
-        </text>
-      </g>
-
-      <g transform="translate(310, 215)">
-        <circle cx="5" cy="5" r="4" fill="#0b0f1a" />
-        <text x="15" y="10" fontSize="12" fill="#0b0f1a">
-          Review cash flow
-        </text>
-      </g>
-
-      <g transform="translate(310, 240)">
-        <circle cx="5" cy="5" r="4" fill="#0b0f1a" />
-        <text x="15" y="10" fontSize="12" fill="#0b0f1a">
-          Reconcile bank statements
-        </text>
-      </g>
-
-      <rect x="310" y="280" width="180" height="60" rx="8" fill="#fff" stroke="#0b0f1a" strokeWidth="1" />
-      <text x="400" y="300" textAnchor="middle" fontSize="11" fontWeight="700" fill="#0b0f1a">
-        Why it matters:
-      </text>
-      <text x="400" y="318" textAnchor="middle" fontSize="10" fill="#495057">
-        Stay on top of taxes,
-      </text>
-      <text x="400" y="332" textAnchor="middle" fontSize="10" fill="#495057">
-        avoid penalties
-      </text>
-
-      {/* Column 3: Annual */}
-      <rect x="540" y="70" width="220" height="380" rx="12" fill="url(#gradCal3)" stroke="#0b0f1a" strokeWidth="2" />
-      <text x="650" y="100" textAnchor="middle" fontSize="16" fontWeight="700" fill="#0b0f1a">
-        Annual
-      </text>
-
-      <g transform="translate(560, 120)">
-        <circle cx="5" cy="5" r="4" fill="#0b0f1a" />
-        <text x="15" y="10" fontSize="12" fill="#0b0f1a">
-          Income tax return
-        </text>
-      </g>
-
-      <g transform="translate(560, 145)">
-        <circle cx="5" cy="5" r="4" fill="#0b0f1a" />
-        <text x="15" y="10" fontSize="12" fill="#0b0f1a">
-          CIPC Annual Return
-        </text>
-        <text x="15" y="25" fontSize="10" fill="#6c757d">
-          (if company/CC registered)
-        </text>
-      </g>
-
-      <g transform="translate(560, 180)">
-        <circle cx="5" cy="5" r="4" fill="#0b0f1a" />
-        <text x="15" y="10" fontSize="12" fill="#0b0f1a">
-          Beneficial ownership
-        </text>
-        <text x="15" y="25" fontSize="10" fill="#6c757d">
-          (if required)
-        </text>
-      </g>
-
-      <g transform="translate(560, 215)">
-        <circle cx="5" cy="5" r="4" fill="#0b0f1a" />
-        <text x="15" y="10" fontSize="12" fill="#0b0f1a">
-          Compensation Fund return
-        </text>
-        <text x="15" y="25" fontSize="10" fill="#6c757d">
-          (if employees)
-        </text>
-      </g>
-
-      <g transform="translate(560, 250)">
-        <circle cx="5" cy="5" r="4" fill="#0b0f1a" />
-        <text x="15" y="10" fontSize="12" fill="#0b0f1a">
-          Renew licences/permits
-        </text>
-        <text x="15" y="25" fontSize="10" fill="#6c757d">
-          (if applicable)
-        </text>
-      </g>
-
-      <rect x="560" y="290" width="180" height="60" rx="8" fill="#fff" stroke="#0b0f1a" strokeWidth="1" />
-      <text x="650" y="310" textAnchor="middle" fontSize="11" fontWeight="700" fill="#0b0f1a">
-        Why it matters:
-      </text>
-      <text x="650" y="328" textAnchor="middle" fontSize="10" fill="#495057">
-        Stay in good standing,
-      </text>
-      <text x="650" y="342" textAnchor="middle" fontSize="10" fill="#495057">
-        avoid deregistration
-      </text>
-
-      {/* Bottom note */}
-      <text x="400" y="480" textAnchor="middle" fontSize="11" fontStyle="italic" fill="#6c757d">
-        CapeWeb helps you build this calendar into your workflow — not as panic, but as rhythm.
-      </text>
-    </svg>
+      <MiniQuiz
+        questions={moduleFQuestions}
+        title="Roadmap Knowledge Check"
+        onNext={onNext}
+      />
+    </InteractiveLayout>
   );
 }
+
+
+

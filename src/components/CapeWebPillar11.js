@@ -1,778 +1,583 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import * as confettiModule from 'canvas-confetti';
+import { gsap } from 'gsap';
+import { InteractiveLayout, QuizLayout } from './CapeWebLayouts';
+import { CWButton, CWHeading, CWCard, CWInput, CWBadge, CWAlert, BookInsight } from './CapeWebUI';
 
+// ==========================================
+// PILLAR 11 QUIZ DATA
+// ==========================================
 export const pillar11QuizQuestions = [
   {
-    question: "CapeWeb's CX formula is:",
-    options: ['Clarity + Speed + Trust', 'More posts + more stress'],
+    question: 'According to "Delivering Happiness" (Zappos), what is customer service?',
+    options: ['A cost center', 'The new marketing', 'A department for complaints'],
+    correctIndex: 1,
+  },
+  {
+    question: 'What is "NPS" (Net Promoter Score)?',
+    options: ['No Problem Sir', 'A metric measuring customer loyalty ("How likely are you to recommend us?")', 'New Product Strategy'],
+    correctIndex: 1,
+  },
+  {
+    question: 'What is the "Service Recovery Paradox"?',
+    options: ['Customers are angrier when you fix problems', 'A customer whose problem is resolved quickly and excellently is often MORE loyal than one who never had a problem', 'Service is impossible'],
+    correctIndex: 1,
+  },
+  {
+    question: 'What is "Churn"?',
+    options: ['Making butter', 'The percentage of customers who cancel your service', 'A type of engine'],
+    correctIndex: 1,
+  },
+  {
+    question: 'Why is a Knowledge Base (Help Center) critical?',
+    options: ['It is fun to write', 'It allows customers to help themselves instanty (Self-Service) without waiting for a human', 'It improves SEO only'],
+    correctIndex: 1,
+  },
+  {
+    question: 'What is the primary goal of "The Effortless Experience"?',
+    options: ['To delight customers with gifts', 'To reduce the effort/friction required for a customer to get their problem solved', 'To ignore customers'],
+    correctIndex: 1,
+  },
+  {
+    question: 'What is an SLA (Service Level Agreement)?',
+    options: ['A guarantee to respond/fix issues within a certain time', 'Slow Life Act', 'Standard Legal Advice'],
     correctIndex: 0,
   },
   {
-    question: 'With R0 budget, the best support setup is usually:',
-    options: ['One main support channel + one backup', 'Ten different inboxes'],
-    correctIndex: 0,
+    question: 'What is the most expensive type of customer?',
+    options: ['An angry one', 'A new one (Acquisition cost is 5-25x higher than retention cost)', 'A loyal one'],
+    correctIndex: 1,
   },
   {
-    question: 'A support promise is:',
-    options: ['Clear expectations about reply times and hours', 'A secret rule you never tell customers'],
-    correctIndex: 0,
+    question: 'What is "Omnichannel" support?',
+    options: ['Supporting only one channel', 'Providing a seamless experience across Email, Chat, Phone, and Social', 'Omnipotent support'],
+    correctIndex: 1,
   },
   {
-    question: 'Templates help because they:',
-    options: ['Save time and keep replies consistent', 'Make customers feel ignored'],
-    correctIndex: 0,
-  },
-  {
-    question: 'An FAQ is useful because it:',
-    options: ['Reduces repeated questions and increases trust', 'Replaces your product quality'],
-    correctIndex: 0,
-  },
-  {
-    question: 'Service recovery begins with:',
-    options: ['Calm + listening ("I hear you")', 'Blaming the customer'],
-    correctIndex: 0,
-  },
-  {
-    question: 'A customer journey map helps you:',
-    options: ['Improve the right moments (discover → buy → support)', 'Choose brand colors'],
-    correctIndex: 0,
-  },
-  {
-    question: 'A weekly CX loop should include:',
-    options: ['Top questions → update FAQ/templates → choose 1 improvement', 'Ignore support messages until weekend'],
-    correctIndex: 0,
-  },
-  {
-    question: 'Reviews help growth because they:',
-    options: ['Increase trust and reduce buyer fear', 'Make delivery faster automatically'],
-    correctIndex: 0,
-  },
-  {
-    question: 'A good "guide energy" reply sounds like:',
-    options: ['"No stress — I\'ll help you. Here\'s what we do next…"', '"Not my problem."'],
+    question: 'What is "Customer Success" vs "Customer Support"?',
+    options: ['Success is proactive (helping them grow); Support is reactive (fixing breaks)', 'They are the same', 'Success is for VIPs'],
     correctIndex: 0,
   },
 ];
 
-export function Pillar11Content() {
-  const [supportHQ, setSupportHQ] = useState('whatsapp');
-  const [hours, setHours] = useState('');
-  const [frt, setFrt] = useState('');
-  const [promise, setPromise] = useState('');
-  const [copyMessage, setCopyMessage] = useState('');
+// ==========================================
+// SHARED UTILS (MiniQuiz)
+// ==========================================
+function MiniQuiz({ questions, title = "Knowledge Check", onNext }) {
+  const [currentQ, setCurrentQ] = useState(0);
+  const [selected, setSelected] = useState(null);
+  const [score, setScore] = useState(0);
+  const [completed, setCompleted] = useState(false);
+  const [celebrating, setCelebrating] = useState(false);
+  const counterRef = useRef(null);
 
-  const [template1, setTemplate1] = useState('');
-  const [template2, setTemplate2] = useState('');
-  const [template3, setTemplate3] = useState('');
-  const [template4, setTemplate4] = useState('');
-  const [template5, setTemplate5] = useState('');
-  const [exportMessage, setExportMessage] = useState('');
+  const question = questions[currentQ];
+  const isLast = currentQ === questions.length - 1;
 
-  const [faqQuestions, setFaqQuestions] = useState('');
-  const [faqAnswer, setFaqAnswer] = useState('');
-  const [faqMessage, setFaqMessage] = useState('');
-
-  const generatePromise = () => {
-    const h = hours || 'Mon–Fri 9:00–17:00';
-    const t = frt || 'within 2 hours (during support hours)';
-    const text =
-      `Thanks for reaching out! We're here to help.\n\n` +
-      `Support hours: ${h}.\n` +
-      `We reply ${t}.\n\n` +
-      `To solve this fast, please share your order number (or a short description + photo if relevant).`;
-    setPromise(text);
-    setCopyMessage('');
+  const playSuccessSound = () => {
+    try {
+      const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3');
+      audio.volume = 0.5;
+      audio.play().catch(e => console.log('Audio error', e));
+    } catch (e) { }
   };
 
-  const copyPromise = async () => {
-    try {
-      await navigator.clipboard.writeText(promise);
-      setCopyMessage('Copied!');
-    } catch (e) {
-      setCopyMessage('Copy failed (select & copy manually).');
+  const handleSelect = (index) => setSelected(index);
+
+  const handleNext = () => {
+    const isCorrect = selected === question.correctIndex;
+    const newScore = isCorrect ? score + 1 : score;
+    setScore(newScore);
+
+    if (isLast) {
+      setCompleted(true);
+      const percentage = Math.round((newScore / questions.length) * 100);
+      if (percentage >= 70) {
+        setCelebrating(true);
+        playSuccessSound();
+      }
+    } else {
+      setCurrentQ(currentQ + 1);
+      setSelected(null);
     }
   };
 
-  const getTemplates = () => ({
-    first_response: template1.trim(),
-    delivery_update: template2.trim(),
-    faq_answer: template3.trim(),
-    refund_path: template4.trim(),
-    review_request: template5.trim(),
-  });
-
-  const exportTemplates = () => {
-    const data = getTemplates();
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'capeweb-support-templates.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    setExportMessage('Exported!');
-    setTimeout(() => setExportMessage(''), 2500);
+  const handleRestart = () => {
+    setCurrentQ(0);
+    setSelected(null);
+    setScore(0);
+    setCompleted(false);
+    setCelebrating(false);
   };
 
-  const copyTemplates = async () => {
-    const t = getTemplates();
-    const text =
-      `TEMPLATE 1 (First response)\n${t.first_response}\n\n` +
-      `TEMPLATE 2 (Delivery/service update)\n${t.delivery_update}\n\n` +
-      `TEMPLATE 3 (FAQ answer)\n${t.faq_answer}\n\n` +
-      `TEMPLATE 4 (Refund path)\n${t.refund_path}\n\n` +
-      `TEMPLATE 5 (Review request)\n${t.review_request}\n`;
-    try {
-      await navigator.clipboard.writeText(text);
-      setExportMessage('Copied!');
-    } catch (e) {
-      setExportMessage('Copy failed (select & copy manually).');
+  useEffect(() => {
+    if (celebrating && counterRef.current) {
+      const percentage = Math.round((score / questions.length) * 100);
+      const tl = gsap.timeline();
+      counterRef.current.classList.remove('celebrate');
+      tl.set(counterRef.current, { opacity: 1 })
+        .fromTo(counterRef.current,
+          { innerText: 0, "--font-variation-weight": 300, scale: 0.8 },
+          {
+            innerText: percentage, duration: 3, snap: { innerText: 1 }, ease: "linear",
+            onUpdate: function () { const val = Math.ceil(this.targets()[0].innerText); counterRef.current.innerHTML = val + "%"; },
+            onComplete: () => {
+              counterRef.current.classList.add('celebrate');
+              const colors = ['#fbda61', '#ff5acd'];
+              const runConfetti = confettiModule.default || confettiModule;
+              if (typeof runConfetti === 'function') {
+                runConfetti({ particleCount: 150, spread: 100, origin: { y: 0.8 }, colors: colors, disableForReducedMotion: true });
+              }
+              setTimeout(() => setCelebrating(false), 3000);
+            }
+          }
+        )
+        .to(counterRef.current, { scale: 1, "--font-variation-weight": 600, duration: 1.2, ease: "elastic.out(1, 0.2)" });
+      return () => { if (counterRef.current) counterRef.current.classList.remove('celebrate'); };
     }
-    setTimeout(() => setExportMessage(''), 2500);
-  };
+  }, [celebrating, score, questions.length]);
 
-  const exportFAQ = () => {
-    const qsText = faqQuestions.trim();
-    const sample = faqAnswer.trim();
+  if (celebrating) {
+    return (
+      <div style={{ marginTop: '3rem', padding: '3rem 2rem', borderRadius: '32px', background: 'rgba(255, 255, 255, 0.95)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255, 255, 255, 0.6)', boxShadow: '0 20px 50px -10px rgba(31, 38, 135, 0.15)', position: 'relative', overflow: 'hidden', minHeight: '400px', display: 'grid', placeItems: 'center', fontFamily: '"Roboto Flex", sans-serif' }}>
+        <div style={{ textAlign: 'center', width: '100%' }}><h1 ref={counterRef} className="counter">0%</h1></div>
+      </div>
+    );
+  }
 
-    const md =
-      `# FAQ\n\n## Questions (draft)\n${qsText ? qsText.split('\n').map((l) => `- ${l}`).join('\n') : '- (Add your questions here)'}\n\n## Sample answer style\n${sample || '(Add a sample answer here)'}\n`;
-
-    const blob = new Blob([md], { type: 'text/markdown;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'capeweb-faq-draft.md';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-
-    setFaqMessage('FAQ exported!');
-    setTimeout(() => setFaqMessage(''), 2500);
-  };
+  if (completed) {
+    const percentage = Math.round((score / questions.length) * 100);
+    const passed = percentage >= 70;
+    return (
+      <div style={{ marginTop: '3rem', padding: '2rem', textAlign: 'center', borderRadius: '24px', background: passed ? 'rgba(209, 250, 229, 0.8)' : 'rgba(254, 226, 226, 0.8)', backdropFilter: 'blur(20px)', border: passed ? '3px solid rgba(16, 185, 129, 0.3)' : '3px solid rgba(239, 68, 68, 0.3)', boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)' }}>
+        <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>{passed ? '🎉' : '📚'}</div>
+        <h3 style={{ fontSize: '2rem', color: passed ? '#065F46' : '#991B1B', marginBottom: '1rem' }}>{passed ? 'Great Job!' : 'Keep Learning!'}</h3>
+        <p style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.5rem', color: '#1F2937' }}>You scored {score} out of {questions.length} ({percentage}%)</p>
+        <p style={{ color: '#4B5563', marginBottom: '2rem', fontSize: '1.1rem' }}>{passed ? 'You are ready for the next module.' : 'Review the content and try again.'}</p>
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1.5rem', flexWrap: 'wrap' }}>
+          <CWButton onClick={handleRestart} variant={passed ? "secondary" : "primary"} style={{ opacity: passed ? 0.9 : 1 }}>{passed ? '↺ Retake Quiz' : '↺ Try Again'}</CWButton>
+          {passed && onNext && <CWButton onClick={onNext} variant="primary">Next Module →</CWButton>}
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <>
-      <div className="mastery-section">
-        <h3>1) Customer Experience (CX) is what people feel after dealing with you</h3>
-        <p>
-          Customer experience isn't only "being nice." It's how easy it is to buy, how clear your communication is, how fast you solve problems, and whether customers feel safe paying you.
-        </p>
-
-        <div className="workbook-section" style={{ background: '#0b0f1a', color: '#fff', border: '1px solid rgba(255,255,255,.12)', padding: '1.25rem', borderRadius: '12px', marginTop: '1rem' }}>
-          <h4 style={{ margin: '0 0 .5rem 0' }}>CapeWeb's CX formula (simple)</h4>
-          <p style={{ margin: 0, color: 'rgba(255,255,255,.85)' }}>
-            <strong>Clarity</strong> (what happens next) + <strong>Speed</strong> (fast replies) + <strong>Trust</strong> (proof + policies) = customers who come back and tell their friends.
-          </p>
-        </div>
-
-        <figure style={{ margin: '1rem 0', padding: '1rem', border: '1px solid #E9ECEF', borderRadius: '10px', background: '#fff' }}>
-          <div style={{ fontWeight: 900, marginBottom: '.5rem' }}>Diagram: CX Flywheel</div>
-          <CXFlywheelDiagram />
-        </figure>
+    <div style={{ marginTop: '3rem', padding: '2rem 2rem', borderRadius: '32px', background: 'rgba(255, 255, 255, 0.85)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255, 255, 255, 0.6)', boxShadow: '0 20px 50px -10px rgba(31, 38, 135, 0.15)', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(120deg, rgba(34,211,238,0.15), rgba(244,114,182,0.15), rgba(253,224,71,0.15), rgba(34,211,238,0.15))', backgroundSize: '300% 300%', animation: 'gradientMove 15s ease infinite', zIndex: -1, pointerEvents: 'none' }} />
+      <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ background: '#E0F2FE', color: '#0284C7', padding: '0.3rem 0.8rem', borderRadius: '100px', fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Assessment</div>
+        <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#64748B' }}>Question {currentQ + 1} of {questions.length}</span>
       </div>
-
-      <div className="mastery-section">
-        <h3>2) Mini-lesson: "The customer is the hero" (StoryBrand principle)</h3>
-        <p>
-          <strong>Definition:</strong> In StoryBrand-style messaging, the customer is the hero and your business is the guide. People don't want to be "sold." They want to feel understood and guided to a clear result.
-        </p>
-
-        <div className="workbook-section" style={{ background: '#F8F9FA', border: '1px solid #E9ECEF', padding: '1.5rem', borderRadius: '10px' }}>
-          <h4>🎭 Example (support reply)</h4>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '.75rem' }}>
-            <div style={{ background: '#fff', border: '1px solid #DEE2E6', borderRadius: '10px', padding: '1rem' }}>
-              <div style={{ fontWeight: 900 }}>Not great (customer feels blamed)</div>
-              <p style={{ margin: '.5rem 0 0', color: '#6c757d' }}>"You didn't read the instructions. That's why it's not working."</p>
-            </div>
-
-            <div style={{ background: '#fff', border: '1px solid #DEE2E6', borderRadius: '10px', padding: '1rem' }}>
-              <div style={{ fontWeight: 900 }}>CapeWeb-style (guide energy)</div>
-              <p style={{ margin: '.5rem 0 0', color: '#6c757d' }}>"No stress — I'll help you. Send me a photo of the setup and I'll guide you step-by-step. We'll get it working in a few minutes."</p>
-            </div>
-          </div>
+      <h4 style={{ margin: '0 0 1.5rem 0', fontSize: '2rem', fontWeight: 900, color: '#0F172A', letterSpacing: '-0.02em', lineHeight: 1.1 }}>{title}</h4>
+      <div style={{ marginBottom: '2rem' }}>
+        <p style={{ fontSize: '1.2rem', fontWeight: 600, marginBottom: '1.5rem', color: '#1E293B', lineHeight: 1.5 }}>{question.question}</p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          {question.options.map((option, index) => (
+            <label key={index} style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem 1.25rem', borderRadius: '16px', border: '2px solid', borderColor: selected === index ? '#0EA5E9' : '#E2E8F0', background: selected === index ? '#F0F9FF' : '#FFFFFF', cursor: 'pointer', transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)', boxShadow: selected === index ? '0 4px 20px rgba(14, 165, 233, 0.15)' : '0 2px 4px rgba(0,0,0,0.02)' }} onClick={() => handleSelect(index)}>
+              <div style={{ width: '22px', height: '22px', borderRadius: '50%', border: selected === index ? '6px solid #0EA5E9' : '2px solid #CBD5E1', flexShrink: 0, transition: 'all 0.2s ease' }} />
+              <span style={{ flex: 1, fontSize: '1.05rem', color: selected === index ? '#0C4A6E' : '#334155', fontWeight: 500 }}>{option}</span>
+            </label>
+          ))}
         </div>
       </div>
-
-      <div className="mastery-section">
-        <h3>3) Map the customer journey (so you fix the right moments)</h3>
-        <p>Your customers interact with you in stages. If you improve one stage, sales and reviews improve too. CapeWeb uses a simple journey map for product + service businesses.</p>
-
-        <figure style={{ margin: '1rem 0', padding: '1rem', border: '1px solid #E9ECEF', borderRadius: '10px', background: '#fff' }}>
-          <div style={{ fontWeight: 900, marginBottom: '.5rem' }}>Diagram: Customer Journey (simple)</div>
-          <CustomerJourneyDiagram />
-        </figure>
-
-        <div className="workbook-section" style={{ background: '#F8F9FA', border: '1px solid #E9ECEF', padding: '1.5rem', borderRadius: '10px' }}>
-          <h4>🗺️ Activity 1: Fill your journey map (your business)</h4>
-          <p style={{ marginTop: '.25rem' }}>Write one sentence per stage. Keep it simple.</p>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0,1fr))', gap: '.75rem', marginTop: '1rem' }}>
-            <div style={{ background: '#fff', border: '1px solid #DEE2E6', borderRadius: '10px', padding: '1rem' }}>
-              <div style={{ fontWeight: 900 }}>Discover</div>
-              <textarea rows="3" style={{ width: '100%', marginTop: '.5rem', padding: '.65rem', border: '1px solid #CED4DA', borderRadius: '10px' }} placeholder="Example: they find us on Instagram Reels or Google search." />
-            </div>
-            <div style={{ background: '#fff', border: '1px solid #DEE2E6', borderRadius: '10px', padding: '1rem' }}>
-              <div style={{ fontWeight: 900 }}>Understand</div>
-              <textarea rows="3" style={{ width: '100%', marginTop: '.5rem', padding: '.65rem', border: '1px solid #CED4DA', borderRadius: '10px' }} placeholder="Example: they land on our offer page and see price + benefits." />
-            </div>
-            <div style={{ background: '#fff', border: '1px solid #DEE2E6', borderRadius: '10px', padding: '1rem' }}>
-              <div style={{ fontWeight: 900 }}>Buy / Book</div>
-              <textarea rows="3" style={{ width: '100%', marginTop: '.5rem', padding: '.65rem', border: '1px solid #CED4DA', borderRadius: '10px' }} placeholder="Example: they pay via link/checkout and get confirmation." />
-            </div>
-            <div style={{ background: '#fff', border: '1px solid #DEE2E6', borderRadius: '10px', padding: '1rem' }}>
-              <div style={{ fontWeight: 900 }}>Delivery</div>
-              <textarea rows="3" style={{ width: '100%', marginTop: '.5rem', padding: '.65rem', border: '1px solid #CED4DA', borderRadius: '10px' }} placeholder="Example: they receive delivery updates or a service reminder." />
-            </div>
-            <div style={{ background: '#fff', border: '1px solid #DEE2E6', borderRadius: '10px', padding: '1rem' }}>
-              <div style={{ fontWeight: 900 }}>Support</div>
-              <textarea rows="3" style={{ width: '100%', marginTop: '.5rem', padding: '.65rem', border: '1px solid #CED4DA', borderRadius: '10px' }} placeholder="Example: they message WhatsApp and we fix it fast." />
-            </div>
-            <div style={{ background: '#fff', border: '1px solid #DEE2E6', borderRadius: '10px', padding: '1rem' }}>
-              <div style={{ fontWeight: 900 }}>Review / Repeat</div>
-              <textarea rows="3" style={{ width: '100%', marginTop: '.5rem', padding: '.65rem', border: '1px solid #CED4DA', borderRadius: '10px' }} placeholder="Example: we ask for a review and offer a small bonus for next order." />
-            </div>
-          </div>
-
-          <div style={{ marginTop: '1rem', padding: '1rem', borderRadius: '10px', background: '#E7F1FF', border: '1px solid #CFE2FF' }}>
-            <strong>CapeWeb tie-in:</strong> this journey map becomes your improvement roadmap. We then fix bottlenecks using performance, SEO, messaging, and automation.
-          </div>
-        </div>
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <button onClick={handleNext} disabled={selected === null} style={{ padding: '0.75rem 2rem', background: '#0F172A', color: 'white', border: 'none', borderRadius: '100px', fontSize: '1rem', fontWeight: 700, cursor: selected === null ? 'not-allowed' : 'pointer', opacity: selected === null ? 0.5 : 1, transition: 'all 0.2s ease', boxShadow: '0 4px 12px rgba(15, 23, 42, 0.2)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          {isLast ? 'Finish Quiz' : 'Next Question'}<span>→</span>
+        </button>
       </div>
-
-      <div className="mastery-section">
-        <h3>4) Choose your support channels (don't open 10 inboxes)</h3>
-        <p>
-          With R0 budget, you need one rule: <strong>one main support channel</strong> and one backup. Otherwise you will miss messages and customers will get angry.
-        </p>
-
-        <div className="workbook-section" style={{ background: '#F8F9FA', border: '1px solid #E9ECEF', padding: '1.5rem', borderRadius: '10px' }}>
-          <h4>📬 Activity 2: Pick your "Support HQ"</h4>
-          <p style={{ marginTop: '.25rem' }}>Choose your main channel for the next 30 days.</p>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '.75rem', marginTop: '1rem' }}>
-            <label style={{ background: '#fff', border: '1px solid #DEE2E6', borderRadius: '10px', padding: '1rem', display: 'block' }}>
-              <input type="radio" name="p11-hq" value="whatsapp" checked={supportHQ === 'whatsapp'} onChange={(e) => setSupportHQ(e.target.value)} />
-              <div style={{ fontWeight: 900, marginTop: '.35rem' }}>WhatsApp Business</div>
-              <div style={{ color: '#6c757d', fontSize: '.92rem', marginTop: '.25rem' }}>Fast for Cape Town customers</div>
-            </label>
-
-            <label style={{ background: '#fff', border: '1px solid #DEE2E6', borderRadius: '10px', padding: '1rem', display: 'block' }}>
-              <input type="radio" name="p11-hq" value="email" checked={supportHQ === 'email'} onChange={(e) => setSupportHQ(e.target.value)} />
-              <div style={{ fontWeight: 900, marginTop: '.35rem' }}>Email</div>
-              <div style={{ color: '#6c757d', fontSize: '.92rem', marginTop: '.25rem' }}>Good for longer issues + receipts</div>
-            </label>
-
-            <label style={{ background: '#fff', border: '1px solid #DEE2E6', borderRadius: '10px', padding: '1rem', display: 'block' }}>
-              <input type="radio" name="p11-hq" value="meta" checked={supportHQ === 'meta'} onChange={(e) => setSupportHQ(e.target.value)} />
-              <div style={{ fontWeight: 900, marginTop: '.35rem' }}>Meta Inbox</div>
-              <div style={{ color: '#6c757d', fontSize: '.92rem', marginTop: '.25rem' }}>If most customers DM on IG</div>
-            </label>
-          </div>
-
-          <div style={{ marginTop: '1rem', background: '#fff', border: '1px dashed #ADB5BD', borderRadius: '10px', padding: '1rem' }}>
-            <div style={{ fontWeight: 900 }}>Write your "Support Promise" (copy/paste)</div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '.75rem', marginTop: '.75rem' }}>
-              <div>
-                <label style={{ fontWeight: 900, display: 'block' }}>Support hours</label>
-                <input type="text" placeholder="Mon–Fri 9:00–17:00" value={hours} onChange={(e) => setHours(e.target.value)} style={{ width: '100%', marginTop: '.5rem', padding: '.65rem', border: '1px solid #CED4DA', borderRadius: '10px' }} />
-              </div>
-              <div>
-                <label style={{ fontWeight: 900, display: 'block' }}>First reply time goal</label>
-                <input type="text" placeholder="Within 2 hours (during support hours)" value={frt} onChange={(e) => setFrt(e.target.value)} style={{ width: '100%', marginTop: '.5rem', padding: '.65rem', border: '1px solid #CED4DA', borderRadius: '10px' }} />
-              </div>
-            </div>
-
-            <label style={{ fontWeight: 900, display: 'block', marginTop: '.75rem' }}>Support promise text</label>
-            <textarea rows="4" value={promise} readOnly style={{ width: '100%', marginTop: '.5rem', padding: '.65rem', border: '1px solid #CED4DA', borderRadius: '10px' }} placeholder="Click 'Generate my promise' to create your support promise..." />
-
-            <div style={{ marginTop: '.75rem', display: 'flex', gap: '.75rem', flexWrap: 'wrap' }}>
-              <button type="button" onClick={generatePromise} style={{ padding: '.7rem 1rem', borderRadius: '10px', border: '1px solid #0B5ED7', background: '#0B5ED7', color: '#fff', fontWeight: 900, cursor: 'pointer' }}>
-                Generate my promise
-              </button>
-              <button type="button" onClick={copyPromise} style={{ padding: '.7rem 1rem', borderRadius: '10px', border: '1px solid #0b0f1a', background: '#0b0f1a', color: '#fff', fontWeight: 900, cursor: 'pointer' }}>
-                Copy promise
-              </button>
-              <span style={{ fontWeight: 900, color: '#198754' }}>{copyMessage}</span>
-            </div>
-          </div>
-
-          <div style={{ marginTop: '1rem', padding: '1rem', borderRadius: '10px', background: '#E6F4EA', border: '1px solid #C7E7D1' }}>
-            <strong>✅ CapeWeb automation:</strong> We can add auto-replies, FAQ suggestions, booking links, and follow-ups across chat, email, and WhatsApp so customers feel guided without you being online 24/7.
-          </div>
-        </div>
-      </div>
-
-      <div className="mastery-section">
-        <h3>5) Build a support SOP (so you don't "wing it")</h3>
-        <p>An SOP is a simple step-by-step process. When you're busy, an SOP protects your customer experience.</p>
-
-        <figure style={{ margin: '1rem 0', padding: '1rem', border: '1px solid #E9ECEF', borderRadius: '10px', background: '#fff' }}>
-          <div style={{ fontWeight: 900, marginBottom: '.5rem' }}>Diagram: Support triage decision tree</div>
-          <TriageDiagram />
-        </figure>
-
-        <div className="workbook-section" style={{ background: '#F8F9FA', border: '1px solid #E9ECEF', padding: '1.5rem', borderRadius: '10px' }}>
-          <h4>📋 Activity 3: Create your SOP + templates</h4>
-          <p style={{ marginTop: '.25rem' }}>Make 5 templates. You will use them every day. This saves time and keeps customers happy.</p>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '1rem' }}>
-            <div style={{ background: '#fff', border: '1px solid #DEE2E6', borderRadius: '10px', padding: '1rem' }}>
-              <div style={{ fontWeight: 900 }}>Template 1: First response</div>
-              <textarea rows="4" value={template1} onChange={(e) => setTemplate1(e.target.value)} style={{ width: '100%', marginTop: '.5rem', padding: '.65rem', border: '1px solid #CED4DA', borderRadius: '10px' }} placeholder="Example: Thanks for reaching out! I'm here to help. Can you share your order number (or a screenshot of the issue) so I can solve this fast?" />
-            </div>
-
-            <div style={{ background: '#fff', border: '1px solid #DEE2E6', borderRadius: '10px', padding: '1rem' }}>
-              <div style={{ fontWeight: 900 }}>Template 2: Delivery / service update</div>
-              <textarea rows="4" value={template2} onChange={(e) => setTemplate2(e.target.value)} style={{ width: '100%', marginTop: '.5rem', padding: '.65rem', border: '1px solid #CED4DA', borderRadius: '10px' }} placeholder="Example: Quick update: your order is confirmed. Delivery is scheduled for [date/time]. I'll message you when I'm on the way." />
-            </div>
-
-            <div style={{ background: '#fff', border: '1px solid #DEE2E6', borderRadius: '10px', padding: '1rem' }}>
-              <div style={{ fontWeight: 900 }}>Template 3: FAQ answer</div>
-              <textarea rows="4" value={template3} onChange={(e) => setTemplate3(e.target.value)} style={{ width: '100%', marginTop: '.5rem', padding: '.65rem', border: '1px solid #CED4DA', borderRadius: '10px' }} placeholder="Example: Great question! Here's how it works: (1) … (2) … (3) … If you want, I can help you choose the best option." />
-            </div>
-
-            <div style={{ background: '#fff', border: '1px solid #DEE2E6', borderRadius: '10px', padding: '1rem' }}>
-              <div style={{ fontWeight: 900 }}>Template 4: Refund/return path (calm + clear)</div>
-              <textarea rows="4" value={template4} onChange={(e) => setTemplate4(e.target.value)} style={{ width: '100%', marginTop: '.5rem', padding: '.65rem', border: '1px solid #CED4DA', borderRadius: '10px' }} placeholder="Example: I hear you. Let's fix this. Please send (1) your order number, (2) a photo of the issue, and (3) your preferred outcome (replacement or refund). I'll confirm the next steps today." />
-            </div>
-
-            <div style={{ background: '#fff', border: '1px solid #DEE2E6', borderRadius: '10px', padding: '1rem', gridColumn: 'span 2' }}>
-              <div style={{ fontWeight: 900 }}>Template 5: Review request (after success)</div>
-              <textarea rows="4" value={template5} onChange={(e) => setTemplate5(e.target.value)} style={{ width: '100%', marginTop: '.5rem', padding: '.65rem', border: '1px solid #CED4DA', borderRadius: '10px' }} placeholder="Example: Thanks again! If you loved the result, would you mind leaving a quick review? It helps a small Cape Town business grow. Here's the link: [review link]." />
-            </div>
-          </div>
-
-          <div style={{ marginTop: '1rem', display: 'flex', gap: '.75rem', flexWrap: 'wrap' }}>
-            <button type="button" onClick={exportTemplates} style={{ padding: '.7rem 1rem', borderRadius: '10px', border: '1px solid #0b0f1a', background: '#0b0f1a', color: '#fff', fontWeight: 900, cursor: 'pointer' }}>
-              Export templates (JSON)
-            </button>
-            <button type="button" onClick={copyTemplates} style={{ padding: '.7rem 1rem', borderRadius: '10px', border: '1px solid #0B5ED7', background: '#0B5ED7', color: '#fff', fontWeight: 900, cursor: 'pointer' }}>
-              Copy templates (text)
-            </button>
-            <span style={{ fontWeight: 900, color: '#198754' }}>{exportMessage}</span>
-          </div>
-
-          <div style={{ marginTop: '1rem', padding: '1rem', borderRadius: '10px', background: '#E7F1FF', border: '1px solid #CFE2FF' }}>
-            <strong>CapeWeb automation:</strong> we can connect these templates to chat + WhatsApp + email so you can reply in 5 seconds, with consistent quality.
-          </div>
-        </div>
-      </div>
-
-      <div className="mastery-section">
-        <h3>6) Build a simple FAQ (your support team that never sleeps)</h3>
-        <p>If you answer the same question 20 times, that question belongs in an FAQ. A good FAQ reduces support messages and increases trust.</p>
-
-        <div className="workbook-section" style={{ background: '#F8F9FA', border: '1px solid #E9ECEF', padding: '1.5rem', borderRadius: '10px' }}>
-          <h4>📚 Activity 4: Your FAQ outline (copy/paste)</h4>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '1rem' }}>
-            <div style={{ background: '#fff', border: '1px solid #DEE2E6', borderRadius: '10px', padding: '1rem' }}>
-              <div style={{ fontWeight: 900 }}>Top 10 FAQ questions</div>
-              <textarea
-                rows="10"
-                value={faqQuestions}
-                onChange={(e) => setFaqQuestions(e.target.value)}
-                style={{ width: '100%', marginTop: '.5rem', padding: '.65rem', border: '1px solid #CED4DA', borderRadius: '10px' }}
-                placeholder={`1) How long does delivery take?\n2) What areas do you deliver to in Cape Town?\n3) How do I book the service?\n4) What if I chose the wrong option?\n5) What payment methods do you accept?\n...`}
-              />
-            </div>
-
-            <div style={{ background: '#fff', border: '1px solid #DEE2E6', borderRadius: '10px', padding: '1rem' }}>
-              <div style={{ fontWeight: 900 }}>Answer style guide (CapeWeb-style)</div>
-              <ul style={{ margin: '.6rem 0 0 1.25rem', color: '#6c757d' }}>
-                <li>Answer in 2–5 short sentences.</li>
-                <li>Include "what happens next".</li>
-                <li>Link to the next step (pay/book/contact).</li>
-                <li>Use calm language (guide energy).</li>
-              </ul>
-
-              <div style={{ marginTop: '1rem', fontWeight: 900 }}>One sample answer</div>
-              <textarea rows="6" value={faqAnswer} onChange={(e) => setFaqAnswer(e.target.value)} style={{ width: '100%', marginTop: '.5rem', padding: '.65rem', border: '1px solid #CED4DA', borderRadius: '10px' }} placeholder="Example: Delivery in Cape Town is usually 1–2 business days after payment. If you need it urgently, message us on WhatsApp and we'll confirm the soonest time." />
-            </div>
-          </div>
-
-          <div style={{ marginTop: '1rem', display: 'flex', gap: '.75rem', flexWrap: 'wrap' }}>
-            <button type="button" onClick={exportFAQ} style={{ padding: '.7rem 1rem', borderRadius: '10px', border: '1px solid #0b0f1a', background: '#0b0f1a', color: '#fff', fontWeight: 900, cursor: 'pointer' }}>
-              Export FAQ (Markdown)
-            </button>
-            <span style={{ fontWeight: 900, color: '#198754' }}>{faqMessage}</span>
-          </div>
-
-          <div style={{ marginTop: '1rem', padding: '1rem', borderRadius: '10px', background: '#E6F4EA', border: '1px solid #C7E7D1' }}>
-            <strong>✅ CapeWeb offer:</strong> We can turn your FAQ into a real help page, optimize it for SEO, and connect it to chat so answers appear instantly.
-          </div>
-        </div>
-      </div>
-
-      <div className="mastery-section">
-        <h3>7) Service recovery: how to handle angry customers without losing the sale</h3>
-        <p>Mistakes happen. The difference between average and excellent businesses is how they recover. Great service recovery often creates stronger loyalty than "no problem ever."</p>
-
-        <div className="workbook-section" style={{ background: '#FFF3CD', border: '1px solid #FFECB5', padding: '1.5rem', borderRadius: '10px' }}>
-          <h4>🧯 CapeWeb's 4-step recovery script</h4>
-          <ol style={{ margin: '.5rem 0 0 1.25rem' }}>
-            <li>
-              <strong>Calm + listen:</strong> "I hear you."
-            </li>
-            <li>
-              <strong>Own the next step:</strong> "Here's what I will do now…"
-            </li>
-            <li>
-              <strong>Give options:</strong> replace / refund / fix / credit (choose what fits)
-            </li>
-            <li>
-              <strong>Close the loop:</strong> confirm resolution + ask if they're satisfied
-            </li>
-          </ol>
-
-          <div style={{ marginTop: '1rem', background: '#fff', border: '1px solid #DEE2E6', borderRadius: '10px', padding: '1rem' }}>
-            <div style={{ fontWeight: 900 }}>Roleplay (interactive)</div>
-            <p style={{ margin: '.5rem 0 0', color: '#6c757d' }}>Customer says: "This is terrible. I paid and it's not working. Waste of money."</p>
-
-            <div className="quiz-question" style={{ marginTop: '.75rem' }}>
-              <p style={{ margin: '0 0 .5rem 0' }}>
-                <strong>Pick the best reply:</strong>
-              </p>
-              <label style={{ display: 'block' }}>
-                <input type="radio" name="p11-recovery" /> "Not our fault. You must have done it wrong."
-              </label>
-              <label style={{ display: 'block' }}>
-                <input type="radio" name="p11-recovery" /> "I hear you — that's frustrating. Let's fix it now. Please send a photo/video and your order number. I'll guide you step-by-step and if we can't solve it today, I'll offer a replacement or refund."
-              </label>
-              <label style={{ display: 'block' }}>
-                <input type="radio" name="p11-recovery" /> "Okay."
-              </label>
-            </div>
-
-            <details style={{ marginTop: '.75rem' }}>
-              <summary style={{ cursor: 'pointer', fontWeight: 900, color: '#0B5ED7' }}>Why this works</summary>
-              <div style={{ marginTop: '.5rem', borderLeft: '3px solid #0B5ED7', paddingLeft: '1rem', color: '#6c757d' }}>
-                The customer wants two things: <strong>to be heard</strong> and <strong>to know what happens next</strong>. Calm, clear steps reduce anger immediately.
-              </div>
-            </details>
-          </div>
-        </div>
-      </div>
-
-      <div className="mastery-section">
-        <h3>8) CX metrics (simple) + feedback loop to improve the product/service</h3>
-        <p>You don't need a big corporate dashboard. You need a weekly check that tells you: are customers happy, and where are they getting stuck?</p>
-
-        <div className="workbook-section" style={{ background: '#F8F9FA', border: '1px solid #E9ECEF', padding: '1.5rem', borderRadius: '10px' }}>
-          <h4>📈 Activity 5: Choose your CX metrics</h4>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0,1fr))', gap: '.75rem', marginTop: '1rem' }}>
-            <label style={{ display: 'flex', gap: '.5rem', alignItems: 'flex-start' }}>
-              <input type="checkbox" />
-              <span>
-                <strong>First response time:</strong> how fast you reply
-              </span>
-            </label>
-            <label style={{ display: 'flex', gap: '.5rem', alignItems: 'flex-start' }}>
-              <input type="checkbox" />
-              <span>
-                <strong>Resolution time:</strong> how fast issues are solved
-              </span>
-            </label>
-            <label style={{ display: 'flex', gap: '.5rem', alignItems: 'flex-start' }}>
-              <input type="checkbox" />
-              <span>
-                <strong>CSAT:</strong> "How satisfied are you?" (1–5)
-              </span>
-            </label>
-            <label style={{ display: 'flex', gap: '.5rem', alignItems: 'flex-start' }}>
-              <input type="checkbox" />
-              <span>
-                <strong>Top 3 questions:</strong> repeated questions become FAQ items
-              </span>
-            </label>
-            <label style={{ display: 'flex', gap: '.5rem', alignItems: 'flex-start' }}>
-              <input type="checkbox" />
-              <span>
-                <strong>Refund rate:</strong> if high, fix clarity/quality
-              </span>
-            </label>
-            <label style={{ display: 'flex', gap: '.5rem', alignItems: 'flex-start' }}>
-              <input type="checkbox" />
-              <span>
-                <strong>Reviews per week:</strong> proof creates more sales
-              </span>
-            </label>
-          </div>
-
-          <div style={{ marginTop: '1rem', background: '#fff', border: '1px solid #DEE2E6', borderRadius: '10px', padding: '1rem' }}>
-            <div style={{ fontWeight: 900 }}>Weekly feedback loop (copy/paste checklist)</div>
-            <ol style={{ margin: '.6rem 0 0 1.25rem', color: '#6c757d' }}>
-              <li>List top 3 customer questions this week</li>
-              <li>Update FAQ or templates to answer them</li>
-              <li>Pick one improvement (page clarity, payment step, delivery updates)</li>
-              <li>Measure results next week (Pillar 10 analytics)</li>
-            </ol>
-          </div>
-
-          <div style={{ marginTop: '1rem', padding: '1rem', borderRadius: '10px', background: '#0b0f1a', color: '#fff' }}>
-            <strong>CapeWeb advantage:</strong> We connect CX → analytics → improvements. Support insights become better pages, better automation, faster checkout, and higher conversions. That's how growth compounds.
-          </div>
-        </div>
-      </div>
-    </>
+    </div>
   );
 }
 
-export function Pillar11Quiz({ quizResponses, onSelect, onScore, scoreMessage }) {
-  return (
-    <div className="workbook-section" style={{ background: '#0b0f1a', color: '#fff', border: '1px solid rgba(255,255,255,.12)', padding: '1.5rem', borderRadius: '12px', marginTop: '1.5rem' }}>
-      <h3 style={{ margin: '0 0 .75rem 0' }}>🏁 Pillar 11 Boss Battle: Can you run customer experience?</h3>
-      <p style={{ margin: 0, color: 'rgba(255,255,255,.85)' }}>
-        Score <strong>8/10</strong> to pass.
-      </p>
+// ==========================================
+// INTERACTIVE VISUALS
+// ==========================================
 
-      <div style={{ marginTop: '1rem', display: 'grid', gap: '1rem' }}>
-        {pillar11QuizQuestions.map((q, qIndex) => (
-          <div key={qIndex} className="quiz-question">
-            <p>
-              <strong>Q{qIndex + 1}:</strong> {q.question}
-            </p>
-            {q.options.map((option, oIndex) => (
-              <label key={oIndex} style={{ display: 'block' }}>
-                <input type="radio" name={`p11q${qIndex}`} checked={quizResponses[qIndex] === oIndex} onChange={() => onSelect(qIndex, oIndex)} /> {option}
-              </label>
-            ))}
+function NPSVisual() {
+  const [score, setScore] = useState(5);
+  const [label, setLabel] = useState('Detractor (Unhappy)');
+  const [color, setColor] = useState('#EF4444');
+
+  useEffect(() => {
+    if (score <= 6) { setLabel("Detractor (Risk of Churn)"); setColor("#EF4444"); }
+    else if (score <= 8) { setLabel("Passive (Meh)"); setColor("#F59E0B"); }
+    else { setLabel("Promoter (Loyal Gold)"); setColor("#10B981"); }
+  }, [score]);
+
+  return (
+    <div style={{ margin: '2rem 0', padding: '1.5rem', background: '#F8FAFC', borderRadius: '16px', textAlign: 'center' }}>
+      <div style={{ fontSize: '3rem', fontWeight: 900, color: color, marginBottom: '1rem' }}>{score}</div>
+      <input
+        type="range" min="0" max="10" value={score} onChange={(e) => setScore(e.target.value)}
+        style={{ width: '100%', maxWidth: '300px', marginBottom: '1rem' }}
+      />
+      <div style={{ fontWeight: 'bold', color: '#64748B' }}>{label}</div>
+    </div>
+  )
+}
+
+function KnowledgeBaseVisual() {
+  const [query, setQuery] = useState('');
+  const [result, setResult] = useState(null);
+
+  const handleSearch = () => {
+    if (query.toLowerCase().includes('refund')) setResult("Refund Policy: You can request a refund within 30 days via dashboard.");
+    else if (query.toLowerCase().includes('ship')) setResult("Shipping Info: We ship to all SA provinces within 3-5 days.");
+    else setResult("No article found. Contacting support...");
+  };
+
+  return (
+    <div style={{ margin: '2rem 0', padding: '2rem', background: '#fff', border: '1px solid #E2E8F0', borderRadius: '16px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
+      <h4 style={{ textAlign: 'center', marginBottom: '1rem' }}>Self-Service Demo</h4>
+      <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <input
+          type="text" placeholder="Type 'refund' or 'shipping'..."
+          value={query} onChange={(e) => setQuery(e.target.value)}
+          style={{ flex: 1, padding: '0.75rem', borderRadius: '8px', border: '1px solid #CBD5E1' }}
+        />
+        <button onClick={handleSearch} style={{ background: '#3B82F6', color: 'white', border: 'none', padding: '0 1.5rem', borderRadius: '8px', cursor: 'pointer' }}>Search</button>
+      </div>
+      {result && (
+        <div style={{ marginTop: '1rem', padding: '1rem', background: '#F0F9FF', borderRadius: '8px', borderLeft: '4px solid #0EA5E9' }}>
+          {result}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function ChatWidgetVisual() {
+  const [messages, setMessages] = useState([]);
+
+  const startChat = () => {
+    setMessages([{ from: 'user', text: 'Do you ship to Durban?' }]);
+    setTimeout(() => {
+      setMessages(prev => [...prev, { from: 'bot', text: 'Yes! We ship to Durban via The Courier Guy (1-3 days).' }]);
+    }, 1000);
+  };
+
+  return (
+    <div style={{ margin: '2rem auto', width: '280px', height: '350px', background: '#fff', border: '1px solid #CBD5E1', borderRadius: '16px', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
+      <div style={{ background: '#0F172A', color: 'white', padding: '1rem', fontWeight: 'bold' }}>Live Support</div>
+      <div style={{ flex: 1, padding: '1rem', background: '#F8FAFC', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        {messages.length === 0 && <div style={{ textAlign: 'center', color: '#94A3B8', marginTop: '2rem' }}>Start a chat...</div>}
+        {messages.map((m, i) => (
+          <div key={i} style={{
+            alignSelf: m.from === 'user' ? 'flex-end' : 'flex-start',
+            background: m.from === 'user' ? '#3B82F6' : '#E2E8F0',
+            color: m.from === 'user' ? 'white' : '#1E293B',
+            padding: '0.5rem 0.8rem', borderRadius: '8px', maxWidth: '80%', fontSize: '0.9rem'
+          }}>
+            {m.text}
           </div>
         ))}
       </div>
-
-      <button type="button" onClick={onScore} style={{ marginTop: '1rem', padding: '.75rem .95rem', borderRadius: '10px', border: '1px solid rgba(255,255,255,.2)', background: '#ffffff', color: '#0b0f1a', fontWeight: 900, cursor: 'pointer' }}>
-        Score my Boss Battle
-      </button>
-
-      <div style={{ marginTop: '.75rem', fontWeight: 900 }}>{scoreMessage}</div>
-
-      <div style={{ marginTop: '1rem', padding: '1rem', borderRadius: '12px', background: 'rgba(255,255,255,.06)', border: '1px solid rgba(255,255,255,.12)' }}>
-        <strong>Finish line:</strong> If you pass this, your course journey is complete — you now have a full "start to finish" system. Your next move is execution: weekly improvements + CapeWeb care plans for compounding growth.
+      <div style={{ padding: '0.5rem', borderTop: '1px solid #E2E8F0' }}>
+        <button onClick={startChat} style={{ width: '100%', padding: '0.5rem', background: '#10B981', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>Ask Question</button>
       </div>
     </div>
+  )
+}
+
+function ScenarioToggle({ oldTitle, oldContent, newTitle, newContent }) {
+  const [view, setView] = useState('old');
+  return (
+    <div style={{ margin: '3rem 0' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem', background: '#F1F5F9', padding: '0.5rem', borderRadius: '100px', width: 'fit-content', margin: '0 auto 2rem' }}>
+        <button onClick={() => setView('old')} style={{ padding: '0.6rem 1.5rem', borderRadius: '100px', border: 'none', background: view === 'old' ? '#fff' : 'transparent', color: view === 'old' ? '#EF4444' : '#64748B', fontWeight: 800, boxShadow: view === 'old' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>{oldTitle}</button>
+        <button onClick={() => setView('new')} style={{ padding: '0.6rem 1.5rem', borderRadius: '100px', border: 'none', background: view === 'new' ? '#fff' : 'transparent', color: view === 'new' ? '#10B981' : '#64748B', fontWeight: 800, boxShadow: view === 'new' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>{newTitle}</button>
+      </div>
+      {view === 'old' ? (
+        <div style={{ padding: '1.5rem', background: '#FEF2F2', borderRadius: '24px', border: '2px solid #FECACA', animation: 'fadeIn 0.5s' }}>
+          {oldContent}
+        </div>
+      ) : (
+        <div style={{ padding: '1.5rem', background: '#ECFDF5', borderRadius: '24px', border: '2px solid #A7F3D0', animation: 'fadeIn 0.5s' }}>
+          {newContent}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ==========================================
+// PILLAR 11 MODULES A-G
+// ==========================================
+
+// Module A: CX Strategy
+export function Pillar11ModuleA({ onNext }) {
+  return (
+    <InteractiveLayout title="Module A: Service is Marketing" subtitle="Zappos philosophy.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          Tony Hsieh (Zappos) believed that Great Service = Free Marketing.
+          If you wow a customer, they tell 10 friends. If you annoy them, they tell 100.
+        </p>
+
+        <ScenarioToggle
+          oldTitle="Bad Service"
+          oldContent="Customer wants refund. You quote 'Policy 4.2' and refuse. Customer posts angry Tweet. You lose 50 future sales."
+          newTitle="Great Service"
+          newContent="Customer wants refund. You say 'Done! Keep the shoes.' Customer is shocked, tweets praise. You gain 10 new sales."
+        />
+
+        <BookInsight title="Delivering Happiness" author="Tony Hsieh" book="Delivering Happiness" color="#3B82F6">
+          <p>"We are a service company that happens to sell shoes."</p>
+        </BookInsight>
+
+        <MiniQuiz
+          questions={[
+            { question: "Why treat Customer Service as Marketing?", options: ["It is cheaper", "Because happy customers tell their friends (Word of Mouth), which drives growth", "It is legally required"], correctIndex: 1 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  );
+}
+
+// Module B: Foundations
+export function Pillar11ModuleB({ onNext }) {
+  return (
+    <InteractiveLayout title="Module B: The 3 Pillars" subtitle="Speed, Accuracy, Tone.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          Great support stands on three legs:
+          <br /><strong>1. Speed:</strong> Reply in minutes.
+          <br /><strong>2. Accuracy:</strong> Don't guess.
+          <br /><strong>3. Tone:</strong> Be human, not a lawyer.
+        </p>
+
+        <CWAlert type="warning" title="The Robotic Apology">
+          Bad: "We apologize for the inconvenience." (Cold).
+          <br />Good: "I am so sorry about that! That sounds absolutely frustrating. I'd be annoyed too. Let me fix it right now." (Human).
+        </CWAlert>
+
+        <MiniQuiz
+          questions={[
+            { question: "What are the three pillars of support?", options: ["Speed, Accuracy, Human Tone", "Money, Time, Effort", "Yes, No, Maybe"], correctIndex: 0 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  );
+}
+
+// Module C: Help Desk
+export function Pillar11ModuleC({ onNext }) {
+  return (
+    <InteractiveLayout title="Module C: Help Desk Software" subtitle="Stop using Gmail.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          If you run support from a personal Gmail, emails will slip through the cracks.
+          Use <strong>Intercom, Zendesk, or HelpScout</strong>.
+        </p>
+        <MiniQuiz
+          questions={[
+            { question: "Why switch from Gmail to a Help Desk tool?", options: ["Gmail is ugly", "To track tickets, prevent lost emails, and collaborate with teams", "To spend money"], correctIndex: 1 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  );
+}
+
+// Module D: Knowledge Base
+export function Pillar11ModuleD({ onNext }) {
+  return (
+    <InteractiveLayout title="Module D: Self-Service" subtitle="The best support is no support.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          60% of customers prefer to solve the issue themselves without talking to you.
+          Give them a searchable <strong>Knowledge Base</strong>.
+        </p>
+
+        <KnowledgeBaseVisual />
+
+        <MiniQuiz
+          questions={[
+            { question: "What is the benefit of a Knowledge Base?", options: ["It reduces support volume and satisfies customers who prefer self-service", "It makes the website look full", "It is required"], correctIndex: 0 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  )
+}
+
+// Module E: Chat
+export function Pillar11ModuleE({ onNext }) {
+  return (
+    <InteractiveLayout title="Module E: Live Chat" subtitle="Where the sale happens.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          Customers have last-minute doubts at checkout. "Will this arrive by Friday?"
+          If you aren't there to answer, they abandon the cart.
+        </p>
+
+        <ChatWidgetVisual />
+
+        <MiniQuiz
+          questions={[
+            { question: "Where is the highest-value place to put a Live Chat widget?", options: ["The About page", "The Checkout Page (to resolve last-minute objections)", "The Terms of Service"], correctIndex: 1 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  )
+}
+
+// Module F: Feedback
+export function Pillar11ModuleF({ onNext }) {
+  return (
+    <InteractiveLayout title="Module F: NPS & Feedback" subtitle="Listen to them.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          <strong>NPS (Net Promoter Score):</strong> The gold standard for measuring loyalty.
+          "On a scale of 0-10, how likely are you to recommend us?"
+        </p>
+
+        <NPSVisual />
+
+        <MiniQuiz
+          questions={[
+            { question: "What defines a 'Detractor' in NPS?", options: ["A score of 0-6 (Unhappy, likely to badmouth)", "A score of 10", "A tractor driver"], correctIndex: 0 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  )
+}
+
+// Module G: Retention
+export function Pillar11ModuleG({ onNext }) {
+  return (
+    <InteractiveLayout title="Module G: Retention" subtitle="Churn kills.">
+      <div className="cw-prose">
+        <p className="cw-text-body">
+          Acquiring a new customer costs 5x more than keeping an old one.
+          <br /><strong>Service Recovery Paradox:</strong> If you fix a mistake <em>brilliantly</em>, the customer trusts you MORE than if nothing ever went wrong.
+        </p>
+        <MiniQuiz
+          questions={[
+            { question: "What is the 'Service Recovery Paradox'?", options: ["Fixing a problem excellently can create higher loyalty than never having a problem", "Service is impossible to recover", "Mistakes always lead to churn"], correctIndex: 0 }
+          ]}
+          onNext={onNext}
+        />
+      </div>
+    </InteractiveLayout>
+  )
+}
+
+// ==========================================
+// FINAL QUIZ COMPONENT
+// ==========================================
+
+export function Pillar11Quiz({ quizResponses, onSelect, onScore, scoreMessage, onFinish }) {
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [isPassed, setIsPassed] = useState(false);
+
+  // Local state handling if props missing
+  const [localResponses, setLocalResponses] = useState({});
+  const activeResponses = quizResponses || localResponses;
+  const activeSetResponse = onSelect || ((qMvc, optIdx) => setLocalResponses(prev => ({ ...prev, [qMvc]: optIdx })));
+
+  const questions = pillar11QuizQuestions;
+  const isLastQuestion = currentQuestionIndex === questions.length - 1;
+  const hasAnsweredCurrent = activeResponses[currentQuestionIndex] !== undefined;
+
+  const handleNext = () => {
+    if (currentQuestionIndex < questions.length - 1) setCurrentQuestionIndex(c => c + 1);
+  };
+  const handlePrev = () => {
+    if (currentQuestionIndex > 0) setCurrentQuestionIndex(c => c - 1);
+  };
+  const handleScore = () => {
+    if (onScore) {
+      onScore();
+    } else {
+      let correct = 0;
+      questions.forEach((q, i) => { if (activeResponses[i] === q.correctIndex) correct++; });
+      if (correct >= 8) setIsPassed(true);
+    }
+    if (onFinish) onFinish();
+  };
+
+  if (scoreMessage && scoreMessage.includes('Pass')) {
+    return (
+      <CWCard>
+        <div style={{ textAlign: 'center', padding: '2rem' }}>
+          <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🎉</div>
+          <CWHeading level={3}>Service Hero</CWHeading>
+          <p style={{ fontSize: '1.2rem', marginBottom: '2rem' }}>{scoreMessage}</p>
+          <CWButton onClick={onFinish}>Continue to Certificate →</CWButton>
+        </div>
+      </CWCard>
+    );
+  }
+
+  return (
+    <QuizLayout title="Final Exam: CX Mastery" currentStep={currentQuestionIndex + 1} totalSteps={questions.length}>
+      <div style={{ padding: '0 1rem' }}>
+        <h3 style={{ fontSize: '1.5rem', marginBottom: '2rem', minHeight: '60px' }}>
+          {questions[currentQuestionIndex].question}
+        </h3>
+        <div style={{ display: 'grid', gap: '1rem', marginBottom: '2rem' }}>
+          {questions[currentQuestionIndex].options.map((option, idx) => (
+            <button
+              key={idx}
+              onClick={() => activeSetResponse(currentQuestionIndex, idx)}
+              style={{
+                padding: '1.25rem',
+                borderRadius: '12px',
+                border: activeResponses[currentQuestionIndex] === idx ? '2px solid #0b0f1a' : '1px solid #E5E7EB',
+                background: activeResponses[currentQuestionIndex] === idx ? '#F8FAFC' : '#fff',
+                textAlign: 'left',
+                fontSize: '1.1rem',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1rem',
+                boxShadow: activeResponses[currentQuestionIndex] === idx ? '0 4px 12px rgba(0,0,0,0.05)' : 'none'
+              }}
+            >
+              <div style={{ width: '24px', height: '24px', borderRadius: '50%', border: '2px solid #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', background: activeResponses[currentQuestionIndex] === idx ? '#0b0f1a' : 'transparent', borderColor: activeResponses[currentQuestionIndex] === idx ? '#0b0f1a' : '#CBD5E1' }}>
+                {activeResponses[currentQuestionIndex] === idx && <div style={{ width: '10px', height: '10px', background: '#fff', borderRadius: '50%' }} />}
+              </div>
+              {option}
+            </button>
+          ))}
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem' }}>
+          <CWButton variant="ghost" onClick={handlePrev} disabled={currentQuestionIndex === 0} style={{ opacity: currentQuestionIndex === 0 ? 0 : 1 }}>← Previous</CWButton>
+          {isLastQuestion ? (
+            <CWButton variant="primary" onClick={handleScore} disabled={!hasAnsweredCurrent}>Submit Exam 🏁</CWButton>
+          ) : (
+            <CWButton variant="primary" onClick={handleNext} disabled={!hasAnsweredCurrent}>Next Question →</CWButton>
+          )}
+        </div>
+        {scoreMessage && !scoreMessage.includes('Pass') && (
+          <div style={{ marginTop: '2rem', padding: '1rem', background: '#FEF2F2', color: '#991B1B', borderRadius: '8px', textAlign: 'center' }}>{scoreMessage}</div>
+        )}
+      </div>
+    </QuizLayout>
   );
 }
 
 export function Pillar11Completion() {
   return (
-    <div className="completion-box" style={{ textAlign: 'center', marginTop: '2.5rem', paddingTop: '2rem', borderTop: '2px dashed #CED4DA' }}>
-      <h3>🎉 Pillar 11 Complete</h3>
-      <p style={{ maxWidth: '860px', margin: '.5rem auto 0 auto' }}>
-        You now have a customer journey map, a support promise, templates, an FAQ outline, a recovery script, and a weekly CX feedback loop. This is how a CapeWeb business becomes "well run" and trusted — even with R0 budget.
+    <div style={{ textAlign: 'center', padding: '4rem 2rem' }}>
+      <h1>🤝</h1>
+      <CWHeading level={2}>CX Champion</CWHeading>
+      <p style={{ fontSize: '1.2rem', color: '#64748B', maxWidth: '600px', margin: '1rem auto' }}>
+        You have completed the entire CapeWeb University curriculum. A new world awaits.
       </p>
     </div>
-  );
-}
-
-function CXFlywheelDiagram() {
-  return (
-    <svg viewBox="0 0 1200 280" width="100%" height="auto" role="img" aria-label="CX flywheel diagram">
-      <defs>
-        <style>
-          {`
-          .bx{fill:#fff;stroke:#0b0f1a;stroke-width:2;rx:18;}
-          .tx{font: 16px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#0b0f1a; font-weight:900;}
-          .sm{font: 12px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#6c757d;}
-          .ln{stroke:#0b0f1a;stroke-width:3;opacity:.75;}
-          `}
-        </style>
-        <marker id="p11arr" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
-          <polygon points="0 0, 10 3.5, 0 7" fill="#0b0f1a" />
-        </marker>
-      </defs>
-
-      <rect className="bx" x="60" y="80" width="250" height="90" />
-      <text className="tx" x="185" y="118" textAnchor="middle">
-        Support
-      </text>
-      <text className="sm" x="185" y="142" textAnchor="middle">
-        fast + helpful
-      </text>
-
-      <rect className="bx" x="360" y="80" width="250" height="90" />
-      <text className="tx" x="485" y="118" textAnchor="middle">
-        Trust
-      </text>
-      <text className="sm" x="485" y="142" textAnchor="middle">
-        policies + proof
-      </text>
-
-      <rect className="bx" x="660" y="80" width="250" height="90" />
-      <text className="tx" x="785" y="118" textAnchor="middle">
-        Reviews
-      </text>
-      <text className="sm" x="785" y="142" textAnchor="middle">
-        social proof
-      </text>
-
-      <rect className="bx" x="960" y="80" width="180" height="90" />
-      <text className="tx" x="1050" y="118" textAnchor="middle">
-        More sales
-      </text>
-      <text className="sm" x="1050" y="142" textAnchor="middle">
-        easier growth
-      </text>
-
-      <line className="ln" x1="310" y1="125" x2="360" y2="125" markerEnd="url(#p11arr)" />
-      <line className="ln" x1="610" y1="125" x2="660" y2="125" markerEnd="url(#p11arr)" />
-      <line className="ln" x1="910" y1="125" x2="960" y2="125" markerEnd="url(#p11arr)" />
-
-      <path d="M 1050 170 C 1020 240, 240 240, 185 170" fill="none" className="ln" markerEnd="url(#p11arr)" />
-    </svg>
-  );
-}
-
-function CustomerJourneyDiagram() {
-  return (
-    <svg viewBox="0 0 1200 260" width="100%" height="auto" role="img" aria-label="Customer journey map diagram">
-      <defs>
-        <style>
-          {`
-          .bx{fill:#fff;stroke:#0b0f1a;stroke-width:2;rx:16;}
-          .tx{font: 14px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#0b0f1a; font-weight:900;}
-          .sm{font: 12px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#6c757d;}
-          .ln{stroke:#0b0f1a;stroke-width:3;opacity:.7;}
-          `}
-        </style>
-        <marker id="p11arr2" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
-          <polygon points="0 0, 10 3.5, 0 7" fill="#0b0f1a" />
-        </marker>
-      </defs>
-
-      <rect className="bx" x="30" y="80" width="170" height="90" />
-      <text className="tx" x="115" y="118" textAnchor="middle">
-        Discover
-      </text>
-      <text className="sm" x="115" y="142" textAnchor="middle">
-        IG / Google
-      </text>
-
-      <rect className="bx" x="230" y="80" width="170" height="90" />
-      <text className="tx" x="315" y="118" textAnchor="middle">
-        Understand
-      </text>
-      <text className="sm" x="315" y="142" textAnchor="middle">
-        Offer page
-      </text>
-
-      <rect className="bx" x="430" y="80" width="170" height="90" />
-      <text className="tx" x="515" y="118" textAnchor="middle">
-        Buy / Book
-      </text>
-      <text className="sm" x="515" y="142" textAnchor="middle">
-        Checkout
-      </text>
-
-      <rect className="bx" x="630" y="80" width="170" height="90" />
-      <text className="tx" x="715" y="118" textAnchor="middle">
-        Delivery
-      </text>
-      <text className="sm" x="715" y="142" textAnchor="middle">
-        Updates
-      </text>
-
-      <rect className="bx" x="830" y="80" width="170" height="90" />
-      <text className="tx" x="915" y="118" textAnchor="middle">
-        Support
-      </text>
-      <text className="sm" x="915" y="142" textAnchor="middle">
-        Fix issues
-      </text>
-
-      <rect className="bx" x="1030" y="80" width="140" height="90" />
-      <text className="tx" x="1100" y="118" textAnchor="middle">
-        Review
-      </text>
-      <text className="sm" x="1100" y="142" textAnchor="middle">
-        Repeat
-      </text>
-
-      <line className="ln" x1="200" y1="125" x2="230" y2="125" markerEnd="url(#p11arr2)" />
-      <line className="ln" x1="400" y1="125" x2="430" y2="125" markerEnd="url(#p11arr2)" />
-      <line className="ln" x1="600" y1="125" x2="630" y2="125" markerEnd="url(#p11arr2)" />
-      <line className="ln" x1="800" y1="125" x2="830" y2="125" markerEnd="url(#p11arr2)" />
-      <line className="ln" x1="1000" y1="125" x2="1030" y2="125" markerEnd="url(#p11arr2)" />
-    </svg>
-  );
-}
-
-function TriageDiagram() {
-  return (
-    <svg viewBox="0 0 1200 320" width="100%" height="auto" role="img" aria-label="Support triage decision tree diagram">
-      <defs>
-        <style>
-          {`
-          .bx{fill:#fff;stroke:#0b0f1a;stroke-width:2;rx:16;}
-          .tx{font: 14px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#0b0f1a; font-weight:900;}
-          .sm{font: 12px system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#6c757d;}
-          .ln{stroke:#0b0f1a;stroke-width:3;opacity:.75;}
-          `}
-        </style>
-        <marker id="p11arr3" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
-          <polygon points="0 0, 10 3.5, 0 7" fill="#0b0f1a" />
-        </marker>
-      </defs>
-
-      <rect className="bx" x="490" y="30" width="220" height="70" />
-      <text className="tx" x="600" y="60" textAnchor="middle">
-        New message
-      </text>
-      <text className="sm" x="600" y="82" textAnchor="middle">
-        DM / WhatsApp / Email
-      </text>
-
-      <rect className="bx" x="140" y="140" width="260" height="80" />
-      <text className="tx" x="270" y="170" textAnchor="middle">
-        Is it urgent?
-      </text>
-      <text className="sm" x="270" y="195" textAnchor="middle">
-        Safety / payment / access
-      </text>
-
-      <rect className="bx" x="470" y="140" width="260" height="80" />
-      <text className="tx" x="600" y="170" textAnchor="middle">
-        Question?
-      </text>
-      <text className="sm" x="600" y="195" textAnchor="middle">
-        FAQ / how-to
-      </text>
-
-      <rect className="bx" x="800" y="140" width="260" height="80" />
-      <text className="tx" x="930" y="170" textAnchor="middle">
-        Complaint?
-      </text>
-      <text className="sm" x="930" y="195" textAnchor="middle">
-        Angry / unhappy
-      </text>
-
-      <rect className="bx" x="140" y="250" width="260" height="60" />
-      <text className="tx" x="270" y="285" textAnchor="middle">
-        Respond now
-      </text>
-
-      <rect className="bx" x="470" y="250" width="260" height="60" />
-      <text className="tx" x="600" y="285" textAnchor="middle">
-        Use template
-      </text>
-
-      <rect className="bx" x="800" y="250" width="260" height="60" />
-      <text className="tx" x="930" y="285" textAnchor="middle">
-        Service recovery
-      </text>
-
-      <line className="ln" x1="600" y1="100" x2="270" y2="140" markerEnd="url(#p11arr3)" />
-      <line className="ln" x1="600" y1="100" x2="600" y2="140" markerEnd="url(#p11arr3)" />
-      <line className="ln" x1="600" y1="100" x2="930" y2="140" markerEnd="url(#p11arr3)" />
-
-      <line className="ln" x1="270" y1="220" x2="270" y2="250" markerEnd="url(#p11arr3)" />
-      <line className="ln" x1="600" y1="220" x2="600" y2="250" markerEnd="url(#p11arr3)" />
-      <line className="ln" x1="930" y1="220" x2="930" y2="250" markerEnd="url(#p11arr3)" />
-    </svg>
   );
 }
