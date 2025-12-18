@@ -4,6 +4,184 @@ import { gsap } from 'gsap';
 import { InteractiveLayout, QuizLayout, ReadingLayout } from './CapeWebLayouts';
 import { CWButton, CWHeading, CWCard, CWInput, CWBadge, CWAlert, BookInsight } from './CapeWebUI';
 
+const SECTOR_COMPLIANCE_GUIDES = {
+  health: {
+    summary: 'Health, wellness, and clinic operators need HPCSA/SAPC approvals, Department of Health facility licences, and strict POPIA consent logs.',
+    links: [
+      { label: 'HPCSA', url: 'https://www.hpcsa.co.za/', description: 'Register practitioners, check ethical rules, and download complaint forms.' },
+      { label: 'Department of Health: Licencing', url: 'https://www.health.gov.za/certification-and-licensing/', description: 'Facility licences, inspections, and compliance criteria.' },
+      { label: 'Information Regulator (POPIA)', url: 'https://inforegulator.org.za/', description: 'Appoint an Information Officer and file breach reports.' },
+    ],
+  },
+  township: {
+    summary: 'Township retailers and services rely on municipal permits, informal trading licences, fire safety certificates, and proof of address for banks.',
+    links: [
+      { label: 'Informal Trading Permits', url: 'https://www.capetown.gov.za/City-Connect/Register/Business-and-trade/Licences-and-permits/Apply-for-a-business-trade-permit', description: 'City of Cape Town example pack with downloadable forms.' },
+      { label: 'NYDA Grant Programme', url: 'https://www.nyda.gov.za/Products-Services/NYDA-Grant-Programme.html', description: 'Micro-grants that require CIPC/SARS/CSD evidence up front.' },
+      { label: 'SEDA Branch Locator', url: 'https://www.seda.org.za/our-offices/', description: 'Book compliance coaching and municipal liaison support.' },
+    ],
+  },
+  agriculture: {
+    summary: 'Agri and food businesses need DALRRD certifications, health inspections, and cold-chain records in addition to standard CIPC/SARS steps.',
+    links: [
+      { label: 'DALRRD', url: 'https://www.dalrrd.gov.za/', description: 'Food safety, veterinary public health, and agricultural permits.' },
+      { label: 'Department of Health: Environmental Health', url: 'https://www.westerncape.gov.za/dept/health', description: 'Food premises inspections and compliance notes.' },
+      { label: 'Land Bank / Agri Finance', url: 'https://landbank.co.za/', description: 'Blended finance that expects tax and compliance records.' },
+    ],
+  },
+  ngo: {
+    summary: 'NPOs/NPCs must align DSD registration, CIPC filings, Section 18A certificates, and donor POPIA requirements.',
+    links: [
+      { label: 'Department of Social Development NPO Register', url: 'https://www.dsd.gov.za/npo/', description: 'Register an NPO and submit annual narrative + financial reports.' },
+      { label: 'SARS Section 18A Guide', url: 'https://www.sars.gov.za/businesses-and-employers/tax-exempt-institutions/', description: 'Approval process for issuing tax-deductible receipts.' },
+      { label: 'NPO Act Resources', url: 'https://www.gov.za/documents/nonprofit-organisations-act', description: 'Governance expectations and compliance dates.' },
+    ],
+  },
+  technology: {
+    summary: 'Software/SaaS founders juggle CIPC, IP, data privacy, and in some cases ICASA registrations for communications services.',
+    links: [
+      { label: 'CIPC IP Online', url: 'https://iponline.cipc.co.za/', description: 'Trade marks and patents to secure core IP once traction appears.' },
+      { label: 'ICASA Licensing', url: 'https://www.icasa.org.za/pages/licensing', description: 'Needed if you provide telecom or spectrum-reliant services.' },
+      { label: 'POPIA Guidance', url: 'https://inforegulator.org.za/wp-content/uploads/2021/07/Guidance-Note-on-Information-Officers.pdf', description: 'Assign an Information Officer across your product stack.' },
+    ],
+  },
+  tourism: {
+    summary: 'Tourism and hospitality operators navigate liquor licences, tourism grading, fire safety, and municipal zoning approvals.',
+    links: [
+      { label: 'Tourism Grading Council', url: 'https://www.tourismgrading.co.za/', description: 'Quality assurance needed for tour operators/accommodation.' },
+      { label: 'Liquor Authority (province-specific)', url: 'https://www.westerncape.gov.za/dept/economic-development-and-tourism', description: 'Check your province’s liquor board for licensing steps.' },
+      { label: 'Fire Safety & Occupancy Certificates', url: 'https://www.capetown.gov.za/City-Connect/Apply/Municipal-services/Fire-safety/Apply-for-a-fire-safety-certificate', description: 'Example requirements for venues and guesthouses.' },
+    ],
+  },
+};
+
+const MUNICIPAL_PACKS = [
+  {
+    matcher: /(cape town|stellenbosch|paarl|western cape)/i,
+    label: 'City of Cape Town',
+    links: [
+      { label: 'Business Hub', url: 'https://www.capetown.gov.za/work%20and%20business/see-all-business-facilities/business-hub/business-hub', description: 'Book advisory sessions for licencing and tenders.' },
+      { label: 'Licences & Permits', url: 'https://www.capetown.gov.za/City-Connect/Register/Business-and-trade/Licences-and-permits', description: 'Download food, event, and informal trading forms.' },
+      { label: 'Supply Chain Management', url: 'https://www.capetown.gov.za/Work%20and%20business/Doing-business-with-the-City/Procurement', description: 'Local procurement info, RFQs, and supplier registration.' },
+    ],
+  },
+  {
+    matcher: /(johannesburg|gauteng|tshwane|ekurhuleni|soweto|pretoria)/i,
+    label: 'Gauteng Metros',
+    links: [
+      { label: 'City of Johannesburg Licences', url: 'https://www.joburg.org.za/services_/Pages/Services/Business-Licences/Business-Licences.aspx', description: 'Health, food, and general trade licences.' },
+      { label: 'Gauteng Investment Centre', url: 'https://ggda.co.za/', description: 'One-stop shop for permits, incentives, and export help.' },
+      { label: 'Tshwane Informal Trading', url: 'https://www.tshwane.gov.za/sites/Departments/Economic-Development/Pages/Informal-Trading.aspx', description: 'Permits + policy for markets and street trading.' },
+    ],
+  },
+  {
+    matcher: /(durban|ethekwini|kwazulu|kzn|umhlanga)/i,
+    label: 'eThekwini / KZN',
+    links: [
+      { label: 'eThekwini Business Licensing', url: 'https://www.durban.gov.za/online-tools/business-licensing/', description: 'Food sales, accommodation, and event licence pack.' },
+      { label: 'SmartXchange', url: 'https://www.smartxchange.co.za/', description: 'ICT + creative incubator (permits, grants, compliance).' },
+      { label: 'KZN EDTEA', url: 'https://www.kznded.gov.za/', description: 'Provincial incentives and sector desks.' },
+    ],
+  },
+  {
+    matcher: /(limpopo|mpumalanga|eastern cape|northern cape|north west|free state|rural)/i,
+    label: 'Rural & District Municipalities',
+    links: [
+      { label: 'SEDA District Offices', url: 'https://www.seda.org.za/our-offices/', description: 'Get help with permits, compliance, and supplier packs.' },
+      { label: 'Co-operative Incentive Scheme', url: 'https://www.dsbd.gov.za/programmes/cooperative-incentive-scheme/', description: 'Grant support for rural/co-op formations.' },
+      { label: 'Land Bank', url: 'https://landbank.co.za/', description: 'Agri finance that expects compliance documents ready.' },
+    ],
+  },
+];
+
+const LEGAL_STRUCTURE_LINKS = [
+  {
+    label: 'Sole Proprietor / Informal Trader',
+    fit: 'Fastest start, use tax number + municipal permits + business bank account.',
+    compliance: 'Register for tax (SARS), keep sales records, apply for municipal trading licences.',
+    linkLabel: 'SARS Small Business Hub',
+    link: 'https://www.sars.gov.za/businesses-and-employers/small-businesses-taxpayers/',
+  },
+  {
+    label: 'Private Company (Pty) Ltd',
+    fit: 'Needed for tenders, investors, or when you hire staff / sign leases.',
+    compliance: 'Register at CIPC, appoint directors, file annual returns, keep share register.',
+    linkLabel: 'BizPortal (CIPC)',
+    link: 'https://bizportal.gov.za/',
+  },
+  {
+    label: 'Non-Profit Company / NPO / Trust',
+    fit: 'Impact ventures, NGOs with grants/donations.',
+    compliance: 'Register at CIPC + DSD NPO directorate, apply for SARS tax exemption & Section 18A.',
+    linkLabel: 'DSD NPO Portal',
+    link: 'https://www.dsd.gov.za/npo/',
+  },
+  {
+    label: 'Co-operative',
+    fit: 'Farmer collectives, shared manufacturing, township buying groups.',
+    compliance: 'Register via CIPC Co-op unit, adopt constitution, submit annual returns to CIPC + DSBD programme.',
+    linkLabel: 'CIPC Co-operatives',
+    link: 'https://www.cipc.co.za/?page_id=19773',
+  },
+];
+
+const EMPLOYER_LINKS = [
+  { label: 'UIF & uFiling', url: 'https://www.ufiling.co.za/uif/', description: 'Register employees for UIF via the Department of Employment and Labour.' },
+  { label: 'Compensation Fund (COIDA)', url: 'https://www.labour.gov.za/workers-compensation', description: 'Cover staff for workplace injuries; submit ROE annually.' },
+  { label: 'SARS PAYE & SDL', url: 'https://www.sars.gov.za/businesses-and-employers/paye/', description: 'Register for PAYE/SDL once payroll crosses thresholds.' },
+  { label: 'SETA Skills Plans', url: 'https://www.etdpseta.org.za/education-sector/wsp-atp/', description: 'Workplace skills plans + mandatory grants per sector.' },
+];
+
+const DIGITAL_COMPLIANCE_LINKS = [
+  { label: 'Consumer Protection Act (CPA)', url: 'https://www.gov.za/documents/consumer-protection-act', description: 'Fair marketing, refunds, disclosure obligations.' },
+  { label: 'Electronic Communications & Transactions Act (ECTA)', url: 'https://www.gov.za/documents/electronic-communications-and-transactions-act', description: 'Online contract validity, data retention, cooling-off rules.' },
+  { label: 'POPIA Essentials', url: 'https://inforegulator.org.za/wp-content/uploads/2021/09/POPIA-Guidelines.pdf', description: 'Consent, privacy notices, Information Officer duties.' },
+  { label: 'PAIA Manuals', url: 'https://www.justice.gov.za/inforeg/docs/InfoRegSA-PAIA-Guidelines.pdf', description: 'Guide your public-facing access to information manual.' },
+];
+
+const FUNDING_STACK_LINKS = [
+  { label: 'CSD Registration', url: 'https://secure.csd.gov.za/', description: 'Mandatory supplier master list for national/provincial tenders.' },
+  { label: 'eTenders Portal', url: 'https://www.etenders.gov.za/', description: 'Monitor government tenders and download documents.' },
+  { label: 'SEFA / SEDA Joint Portal', url: 'https://sefa.finfind.co.za/', description: 'Funding finder with compliance checklist uploads.' },
+  { label: 'IDC / NEF Opportunity Roadmap', url: 'https://www.idc.co.za/how-to-apply/', description: 'Industrial funding requirements + downloadable forms.' },
+];
+
+const getSectorCompliancePack = (context = {}) => {
+  const sector = (context.sector || '').toLowerCase();
+  if (sector.includes('health')) return SECTOR_COMPLIANCE_GUIDES.health;
+  if (sector.includes('township')) return SECTOR_COMPLIANCE_GUIDES.township;
+  if (sector.includes('agri') || sector.includes('food')) return SECTOR_COMPLIANCE_GUIDES.agriculture;
+  if (sector.includes('ngo') || sector.includes('npo')) return SECTOR_COMPLIANCE_GUIDES.ngo;
+  if (sector.includes('tech') || sector.includes('saas') || sector.includes('digital')) return SECTOR_COMPLIANCE_GUIDES.technology;
+  if (sector.includes('tourism') || sector.includes('travel')) return SECTOR_COMPLIANCE_GUIDES.tourism;
+  return {
+    summary: 'Start with CIPC/BizPortal, SARS, municipal permits, and B-BBEE/beneficial ownership records so funding and tenders open up later.',
+    links: [
+      { label: 'BizPortal', url: 'https://bizportal.gov.za/', description: 'Company registration, bank accounts, B-BBEE affidavits.' },
+      { label: 'SARS eFiling', url: 'https://www.sarsefiling.co.za/', description: 'Register for income tax, VAT, PAYE, and submit returns.' },
+      { label: 'B-BBEE Commission', url: 'https://www.bbbeecommission.co.za/', description: 'Affidavit templates and reporting rules.' },
+    ],
+  };
+};
+
+const getMunicipalPack = (geography = '') => {
+  if (!geography) return null;
+  return MUNICIPAL_PACKS.find((pack) => pack.matcher.test(geography)) || null;
+};
+
+const getLanguageNote = (language = 'English') =>
+  language && language !== 'English'
+    ? `Prepare bilingual policies (English + ${language}) for POPIA notices, support scripts, and municipal forms.`
+    : null;
+
+const buildPersonaContext = (context = {}) => ({
+  sectorLabel: context.sector || 'South African SME',
+  geographyLabel: context.geography || 'South Africa',
+  stageLabel: context.revenueStage || 'early-stage',
+  fundingLabel: context.fundingTarget || 'self-funded / mixed capital',
+  regulationLabel: context.regulationFocus || 'general compliance',
+});
+
 export const pillar2QuizQuestions = [
   {
     question: 'CIPC is mainly used for:',
