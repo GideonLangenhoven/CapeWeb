@@ -21,7 +21,7 @@ function WeeklyLoopInfinity() {
             id: 1,
             label: 'LEARN',
             badge: 'STEP 1: THE HYPOTHESIS',
-            color: '#fde047', // Yellow
+            color: '#d97706', // Amber 600
             text: 'Stop guessing. Start asking.',
             desc: 'You have an idea? Great. Treat it like a science experiment, not a fact.',
             action: 'Write down: "I believe [Customer] has [Problem] and will pay for [Solution]."'
@@ -30,7 +30,7 @@ function WeeklyLoopInfinity() {
             id: 2,
             label: 'DO',
             badge: 'STEP 2: THE EXPERIMENT',
-            color: '#22d3ee', // Cyan
+            color: '#0891b2', // Cyan 600
             text: 'Build the smallest thing possible.',
             desc: 'Do not build the app. Do not rent the shop. Do the manual version first.',
             action: 'Example: Instead of building a laundromat, offer to wash neighbors\' clothes in your own machine for R50.'
@@ -39,7 +39,7 @@ function WeeklyLoopInfinity() {
             id: 3,
             label: 'PROOF',
             badge: 'STEP 3: THE DATA',
-            color: '#f472b6', // Pink
+            color: '#db2777', // Pink 600
             text: 'The market never lies.',
             desc: 'Did they pay you? If yes, great. If no, why? "Nice job" is not proof. Money is proof.',
             action: 'Count the sales. 0 sales = 0 proof. Do not make excuses.'
@@ -48,7 +48,7 @@ function WeeklyLoopInfinity() {
             id: 4,
             label: 'IMPROVE',
             badge: 'STEP 4: THE PIVOT',
-            color: '#4ade80', // Green
+            color: '#16a34a', // Green 600
             text: 'Change the plan.',
             desc: 'Take what you learned and change the offer. Then start the loop again immediately.',
             action: 'If nobody bought, change the Price, the Customer, or the Promise. Try again tomorrow.'
@@ -89,7 +89,7 @@ function WeeklyLoopInfinity() {
     const path4 = "M 200 320 C 50 320, 50 80, 200 80";    // Improve -> Learn (Left Arc)
 
     const pathStyle = (index) => ({
-        stroke: steps[index] ? steps[index].color : '#4ade80', // Path 4 uses Green from Step 3 (Improve) or default
+        stroke: steps[index] ? steps[index].color : '#16a34a', // Path 4 uses Green from Step 3 (Improve) or default
         strokeWidth: 10,
         fill: 'none',
         strokeLinecap: 'round',
@@ -99,12 +99,6 @@ function WeeklyLoopInfinity() {
         transition: 'stroke-dashoffset 1s ease-in-out, opacity 0.5s ease'
     });
 
-    // Fix color reference for Path 4 (It connects Improve (Green) -> Learn)
-    // Actually Steps array only has 0,1,2,3. Path 4 needs a color.
-    // Path 0 (Learn->Do) = Yellow. Path 1 (Do->Proof) = Cyan. Path 2 (Proof->Improve) = Pink. Path 3 (Improve->Learn) = Green.
-    // My previous mapping was steps[index].color. 
-    // index 0 -> Yellow (Correct). index 1 -> Cyan (Correct). index 2 -> Pink (Correct). index 3 -> Green (Correct).
-
     const nodeStyle = (index, x, y) => ({
         cx: x,
         cy: y,
@@ -113,31 +107,55 @@ function WeeklyLoopInfinity() {
         stroke: '#0b0f1a',
         strokeWidth: 4,
         transition: 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-        filter: (activeStep === index) || (activeStep === 4 && index === 0) ? 'drop-shadow(0 0 25px ' + steps[index].color + ')' : 'none',
+        filter: (activeStep === index) || (activeStep === 4 && index === 0) ? 'drop-shadow(0 0 10px ' + steps[index].color + ')' : 'none',
         cursor: 'pointer'
     });
 
     const current = activeStep === 4 ? steps[3] : (steps[activeStep] || steps[0]); // Show Improve text while closing loop
 
     return (
-        <div id="cw-infinity-loop-container" style={{ background: '#0b0f1a', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 20px 50px -10px rgba(0,0,0,0.5)', margin: '3rem 0', position: 'relative', minHeight: '600px', display: 'flex', flexDirection: 'column' }}>
+        <div id="cw-infinity-loop-container" style={{
+            position: 'relative',
+            borderRadius: '24px',
+            overflow: 'hidden',
+            boxShadow: '0 20px 50px -10px rgba(0,0,0,0.1)',
+            margin: '3rem 0',
+            minHeight: '600px',
+            display: 'flex',
+            flexDirection: 'column',
+            background: '#FDE047', // Yellow
+            color: '#0F172A'
+        }}>
+            {/* Moving Gradient Background */}
+            <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                background: 'linear-gradient(120deg, rgba(34,211,238,0.15), rgba(244,114,182,0.15), rgba(253,224,71,0.15), rgba(34,211,238,0.15))',
+                backgroundSize: '300% 300%',
+                animation: 'gradientMove 15s ease infinite',
+                zIndex: 0,
+                pointerEvents: 'none'
+            }} />
 
             {/* Header / Controls */}
             <div style={{ padding: '1.5rem', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', position: 'absolute', width: '100%', zIndex: 10, pointerEvents: 'none' }}>
                 <div style={{ pointerEvents: 'auto', display: 'flex', gap: '0.5rem' }}>
-                    <button onClick={handlePrev} disabled={activeStep === 0} style={{ opacity: activeStep === 0 ? 0.3 : 1, background: '#fff', border: 'none', width: '32px', height: '32px', borderRadius: '50%', cursor: 'pointer', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>←</button>
-                    <button onClick={handleNext} disabled={activeStep === 4} style={{ opacity: activeStep === 4 ? 0.3 : 1, background: '#fff', border: 'none', width: '32px', height: '32px', borderRadius: '50%', cursor: 'pointer', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 15px #F59E0B' }}>→</button>
+                    <button onClick={handlePrev} disabled={activeStep === 0} style={{ opacity: activeStep === 0 ? 0.3 : 1, background: '#0b0f1a', color: '#fff', border: 'none', width: '32px', height: '32px', borderRadius: '50%', cursor: 'pointer', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>←</button>
+                    <button onClick={handleNext} disabled={activeStep === 4} style={{ opacity: activeStep === 4 ? 0.3 : 1, background: '#0b0f1a', color: '#fff', border: 'none', width: '32px', height: '32px', borderRadius: '50%', cursor: 'pointer', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>→</button>
                 </div>
             </div>
 
             {/* SVG Layer */}
-            <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '20px' }}>
+            <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '20px', position: 'relative', zIndex: 1 }}>
                 <svg width="100%" height="100%" viewBox="0 0 800 400" style={{ maxWidth: '800px', overflow: 'visible' }}>
                     {/* Ghost Paths */}
-                    <path d={path1} stroke="#1f2937" strokeWidth="10" fill="none" strokeLinecap="round" />
-                    <path d={path2} stroke="#1f2937" strokeWidth="10" fill="none" strokeLinecap="round" />
-                    <path d={path3} stroke="#1f2937" strokeWidth="10" fill="none" strokeLinecap="round" />
-                    <path d={path4} stroke="#1f2937" strokeWidth="10" fill="none" strokeLinecap="round" />
+                    <path d={path1} stroke="#e2e8f0" strokeWidth="10" fill="none" strokeLinecap="round" />
+                    <path d={path2} stroke="#e2e8f0" strokeWidth="10" fill="none" strokeLinecap="round" />
+                    <path d={path3} stroke="#e2e8f0" strokeWidth="10" fill="none" strokeLinecap="round" />
+                    <path d={path4} stroke="#e2e8f0" strokeWidth="10" fill="none" strokeLinecap="round" />
 
                     {/* Active Paths - CONNECTS TO NEXT STEP */}
                     <path d={path1} style={{ ...pathStyle(0), opacity: activeStep >= 1 ? 1 : 0.1, strokeDashoffset: activeStep >= 1 ? 0 : 1200 }} />
@@ -149,19 +167,19 @@ function WeeklyLoopInfinity() {
                     {/* Nodes & Labels */}
                     <g onClick={() => setActiveStep(0)} style={{ cursor: 'pointer', opacity: 1 }}>
                         <circle {...nodeStyle(0, 200, 80)} />
-                        <text x="200" y="40" textAnchor="middle" fill="#fff" fontSize="16" fontWeight="800" style={{ textShadow: '0 2px 10px #000' }}>LEARN</text>
+                        <text x="200" y="40" textAnchor="middle" fill="#0f172a" fontSize="16" fontWeight="800">LEARN</text>
                     </g>
                     <g onClick={() => setActiveStep(1)} style={{ cursor: 'pointer', opacity: activeStep >= 1 ? 1 : 0.3, transition: 'opacity 0.5s' }}>
                         <circle {...nodeStyle(1, 600, 320)} />
-                        <text x="600" y="370" textAnchor="middle" fill="#fff" fontSize="16" fontWeight="800" style={{ textShadow: '0 2px 10px #000' }}>DO</text>
+                        <text x="600" y="370" textAnchor="middle" fill="#0f172a" fontSize="16" fontWeight="800">DO</text>
                     </g>
                     <g onClick={() => setActiveStep(2)} style={{ cursor: 'pointer', opacity: activeStep >= 2 ? 1 : 0.3, transition: 'opacity 0.5s' }}>
                         <circle {...nodeStyle(2, 600, 80)} />
-                        <text x="600" y="40" textAnchor="middle" fill="#fff" fontSize="16" fontWeight="800" style={{ textShadow: '0 2px 10px #000' }}>PROOF</text>
+                        <text x="600" y="40" textAnchor="middle" fill="#0f172a" fontSize="16" fontWeight="800">PROOF</text>
                     </g>
                     <g onClick={() => setActiveStep(3)} style={{ cursor: 'pointer', opacity: activeStep >= 3 ? 1 : 0.3, transition: 'opacity 0.5s' }}>
                         <circle {...nodeStyle(3, 200, 320)} />
-                        <text x="200" y="370" textAnchor="middle" fill="#fff" fontSize="16" fontWeight="800" style={{ textShadow: '0 2px 10px #000' }}>IMPROVE</text>
+                        <text x="200" y="370" textAnchor="middle" fill="#0f172a" fontSize="16" fontWeight="800">IMPROVE</text>
                     </g>
                 </svg>
             </div>
@@ -169,7 +187,7 @@ function WeeklyLoopInfinity() {
             {/* Teaching Pop-up (Inside the loop feel) */}
             <div style={{
                 minHeight: '240px', /* Allow growth */
-                background: 'rgba(0,0,0,0.6)', /* Darker, more contrast */
+                background: 'rgba(255,255,255,0.7)', /* Lighter */
                 backdropFilter: 'blur(20px)',
                 padding: '2rem',
                 display: 'flex',
@@ -177,23 +195,29 @@ function WeeklyLoopInfinity() {
                 justifyContent: 'center',
                 transition: 'all 0.5s ease',
                 textAlign: 'center',
-                borderRadius: '0 0 24px 24px' /* FIX: Round the bottom corners */
+                borderRadius: '0 0 24px 24px',
+                position: 'relative',
+                zIndex: 1,
+                borderTop: '1px solid rgba(255,255,255,0.5)'
             }}>
                 <div style={{ animation: 'fadeIn 0.5s ease' }} key={activeStep}>
                     <div style={{ color: current.color, fontWeight: 800, letterSpacing: '0.1em', fontSize: '0.9rem', marginBottom: '0.5rem' }}>{current.badge}</div>
 
-                    <h3 style={{ fontSize: '2.5rem', margin: '0 0 1rem', color: '#FFFFFF', textShadow: '0 2px 4px rgba(0, 0, 0, 0.8)' }}>{current.text}</h3>
-                    <p style={{ fontSize: '1.25rem', maxWidth: '700px', margin: '0 auto 1.5rem', lineHeight: 1.5, color: '#FFFFFF', textShadow: '0 2px 4px rgba(0, 0, 0, 0.8)' }}>{current.desc}</p>
+                    <h3 style={{ fontSize: '2.5rem', margin: '0 0 1rem', color: '#0f172a' }}>{current.text}</h3>
+                    <p style={{ fontSize: '1.25rem', maxWidth: '700px', margin: '0 auto 1.5rem', lineHeight: 1.5, color: '#334155' }}>{current.desc}</p>
 
                     <div style={{
                         borderLeft: '4px solid ' + current.color,
                         paddingLeft: '1rem',
                         textAlign: 'left',
                         display: 'inline-block',
-                        maxWidth: '600px'
+                        maxWidth: '600px',
+                        background: 'rgba(255,255,255,0.5)',
+                        padding: '1rem',
+                        borderRadius: '0 12px 12px 0'
                     }}>
-                        <span style={{ fontWeight: 800, textTransform: 'uppercase', marginRight: '0.5rem', color: '#FFFFFF', textShadow: '0 2px 4px rgba(0, 0, 0, 0.8)' }}>🔥 ACTION:</span>
-                        <span style={{ fontSize: '1.1rem', color: '#FFFFFF', textShadow: '0 2px 4px rgba(0, 0, 0, 0.8)' }}>{current.action}</span>
+                        <span style={{ fontWeight: 800, textTransform: 'uppercase', marginRight: '0.5rem', color: '#0f172a' }}>🔥 ACTION:</span>
+                        <span style={{ fontSize: '1.1rem', color: '#1e293b' }}>{current.action}</span>
                     </div>
                 </div>
             </div>
@@ -208,7 +232,7 @@ function CoffeeScenarioInteractive() {
         {
             id: 1,
             label: 'LEARN',
-            color: '#fde047',
+            color: '#d97706',
             icon: '💡',
             text: 'Thabo guesses: "I think people on Albert Road want coffee at 7am."',
             detail: 'Start with a hypothesis, not a business plan'
@@ -216,7 +240,7 @@ function CoffeeScenarioInteractive() {
         {
             id: 2,
             label: 'DO',
-            color: '#22d3ee',
+            color: '#0891b2',
             icon: '☕',
             text: 'He buys 4 flasks of good coffee and stands on the corner at 7am with a sign: "Hot Coffee R20"',
             detail: 'Cost: R200 (not R500,000!)'
@@ -224,7 +248,7 @@ function CoffeeScenarioInteractive() {
         {
             id: 3,
             label: 'PROOF',
-            color: '#f472b6',
+            color: '#db2777',
             icon: '📊',
             text: 'By 8am, 30 people asked for Cappuccinos, but he only had filter coffee. He sold 5 cups.',
             detail: 'The market told him what they really want'
@@ -232,7 +256,7 @@ function CoffeeScenarioInteractive() {
         {
             id: 4,
             label: 'IMPROVE',
-            color: '#4ade80',
+            color: '#16a34a',
             icon: '🚀',
             text: 'Insight! There IS traffic, but they want Cappuccinos, not Black coffee.',
             detail: 'Change the offer and try again tomorrow'
@@ -240,224 +264,250 @@ function CoffeeScenarioInteractive() {
     ];
 
     return (
-        <div style={{ margin: '3rem 0' }}>
-            <h3 style={{ marginBottom: '1.5rem', textAlign: 'center' }}>Scenario: The "Coffee on Wheels" Test</h3>
-
-            {/* Character Introduction */}
+        <div style={{
+            margin: '3rem 0',
+            padding: '2rem',
+            borderRadius: '24px',
+            position: 'relative',
+            overflow: 'hidden',
+            boxShadow: '0 20px 50px -10px rgba(0,0,0,0.1)',
+            background: '#22D3EE', // Orange
+            color: '#0F172A'
+        }}>
+            {/* Moving Gradient Background */}
             <div style={{
-                background: '#B2F7EF',
-                borderRadius: '16px',
-                padding: '2rem',
-                marginBottom: '2rem',
-                textAlign: 'center'
-            }}>
-                <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>👨🏾‍💼</div>
-                <h4 style={{ color: '#0b0f1a', margin: '0 0 0.5rem' }}>Meet Thabo</h4>
-                <p style={{ color: '#1F2937', margin: 0 }}>Thabo wants to open a coffee shop in Woodstock. He needs R500,000 for rent and machines.</p>
-            </div>
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                background: 'linear-gradient(120deg, rgba(34,211,238,0.15), rgba(244,114,182,0.15), rgba(253,224,71,0.15), rgba(34,211,238,0.15))',
+                backgroundSize: '300% 300%',
+                animation: 'gradientMove 15s ease infinite',
+                zIndex: 0,
+                pointerEvents: 'none'
+            }} />
 
-            {/* Toggle Buttons */}
-            <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', justifyContent: 'center' }}>
-                <button
-                    onClick={() => setShowOldWay(true)}
-                    style={{
-                        padding: '0.75rem 1.5rem',
-                        borderRadius: '50px',
-                        border: showOldWay ? '2px solid #EF4444' : '2px solid #E5E7EB',
-                        background: showOldWay ? '#FEE2E2' : '#fff',
-                        color: showOldWay ? '#991B1B' : '#6B7280',
-                        fontWeight: 700,
-                        cursor: 'pointer',
-                        transition: 'all 0.3s ease',
-                        transform: showOldWay ? 'scale(1.05)' : 'scale(1)',
-                        boxShadow: showOldWay ? '0 4px 12px rgba(239, 68, 68, 0.3)' : 'none'
-                    }}
-                >
-                    ❌ The Old Way
-                </button>
-                <button
-                    onClick={() => setShowOldWay(false)}
-                    style={{
-                        padding: '0.75rem 1.5rem',
-                        borderRadius: '50px',
-                        border: !showOldWay ? '2px solid #10B981' : '2px solid #E5E7EB',
-                        background: !showOldWay ? '#D1FAE5' : '#fff',
-                        color: !showOldWay ? '#065F46' : '#6B7280',
-                        fontWeight: 700,
-                        cursor: 'pointer',
-                        transition: 'all 0.3s ease',
-                        transform: !showOldWay ? 'scale(1.05)' : 'scale(1)',
-                        boxShadow: !showOldWay ? '0 4px 12px rgba(16, 185, 129, 0.3)' : 'none'
-                    }}
-                >
-                    ✅ The CapeWeb Loop Way
-                </button>
-            </div>
+            <div style={{ position: 'relative', zIndex: 1 }}>
+                <h3 style={{ marginBottom: '1.5rem', textAlign: 'center' }}>Scenario: The "Coffee on Wheels" Test</h3>
 
-            {/* Content Area */}
-            <div style={{ position: 'relative', minHeight: '400px' }}>
-                {/* Old Way */}
-                {/* Old Way */}
-                {showOldWay && (
-                    <div style={{
-                        animation: 'fadeIn 0.5s ease',
-                        background: '#FEF2F2',
-                        borderRadius: '16px',
-                        border: '2px solid #FCA5A5',
-                        padding: '1.5rem'
-                    }}>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                            <div style={{
-                                background: '#fff',
-                                padding: '1rem',
-                                borderRadius: '12px',
-                                borderLeft: '4px solid #EF4444',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '1rem'
-                            }}>
-                                <div style={{ fontSize: '1.5rem', lineHeight: 1 }}>💰</div>
-                                <div style={{ fontSize: '0.95rem' }}><strong>Year 1-5:</strong> Thabo saves every cent for 5 years</div>
-                            </div>
+                {/* Character Introduction */}
+                <div style={{
+                    background: 'rgba(178, 247, 239, 0.7)', // Slightly transparent cyan
+                    borderRadius: '16px',
+                    padding: '2rem',
+                    marginBottom: '2rem',
+                    textAlign: 'center',
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(178, 247, 239, 0.5)'
+                }}>
+                    <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>👨🏾‍💼</div>
+                    <h4 style={{ color: '#0b0f1a', margin: '0 0 0.5rem' }}>Meet Thabo</h4>
+                    <p style={{ color: '#1F2937', margin: 0 }}>Thabo wants to open a coffee shop in Woodstock. He needs R500,000 for rent and machines.</p>
+                </div>
 
-                            <div style={{
-                                background: '#fff',
-                                padding: '1rem',
-                                borderRadius: '12px',
-                                borderLeft: '4px solid #EF4444',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '1rem'
-                            }}>
-                                <div style={{ fontSize: '1.5rem', lineHeight: 1 }}>🏪</div>
-                                <div style={{ fontSize: '0.95rem' }}><strong>Year 6:</strong> Opens the shop with R500,000</div>
-                            </div>
+                {/* Toggle Buttons */}
+                <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', justifyContent: 'center' }}>
+                    <button
+                        onClick={() => setShowOldWay(true)}
+                        style={{
+                            padding: '0.75rem 1.5rem',
+                            borderRadius: '50px',
+                            border: showOldWay ? '2px solid #EF4444' : '2px solid #cbd5e1',
+                            background: showOldWay ? '#FEE2E2' : 'rgba(255,255,255,0.7)',
+                            color: showOldWay ? '#991B1B' : '#64748b',
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                            transition: 'all 0.3s ease',
+                            transform: showOldWay ? 'scale(1.05)' : 'scale(1)',
+                            boxShadow: showOldWay ? '0 4px 12px rgba(239, 68, 68, 0.3)' : 'none'
+                        }}
+                    >
+                        ❌ The Old Way
+                    </button>
+                    <button
+                        onClick={() => setShowOldWay(false)}
+                        style={{
+                            padding: '0.75rem 1.5rem',
+                            borderRadius: '50px',
+                            border: !showOldWay ? '2px solid #10B981' : '2px solid #cbd5e1',
+                            background: !showOldWay ? '#D1FAE5' : 'rgba(255,255,255,0.7)',
+                            color: !showOldWay ? '#065F46' : '#64748b',
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                            transition: 'all 0.3s ease',
+                            transform: !showOldWay ? 'scale(1.05)' : 'scale(1)',
+                            boxShadow: !showOldWay ? '0 4px 12px rgba(16, 185, 129, 0.3)' : 'none'
+                        }}
+                    >
+                        ✅ The CapeWeb Loop Way
+                    </button>
+                </div>
 
-                            <div style={{
-                                background: '#fff',
-                                padding: '1rem',
-                                borderRadius: '12px',
-                                borderLeft: '4px solid #EF4444',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '1rem'
-                            }}>
-                                <div style={{ fontSize: '1.5rem', lineHeight: 1 }}>😰</div>
-                                <div style={{ fontSize: '0.95rem' }}><strong>Reality:</strong> The street is empty at 7am. Nobody comes.</div>
-                            </div>
+                {/* Content Area */}
+                <div style={{ position: 'relative', minHeight: '400px' }}>
+                    {/* Old Way */}
+                    {showOldWay && (
+                        <div style={{
+                            animation: 'fadeIn 0.5s ease',
+                            background: 'rgba(254, 242, 242, 0.9)',
+                            borderRadius: '16px',
+                            border: '2px solid #FCA5A5',
+                            padding: '1.5rem'
+                        }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                                <div style={{
+                                    background: '#fff',
+                                    padding: '1rem',
+                                    borderRadius: '12px',
+                                    borderLeft: '4px solid #EF4444',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '1rem'
+                                }}>
+                                    <div style={{ fontSize: '1.5rem', lineHeight: 1 }}>💰</div>
+                                    <div style={{ fontSize: '0.95rem', color: '#334155' }}><strong>Year 1-5:</strong> Thabo saves every cent for 5 years</div>
+                                </div>
 
-                            <div style={{
-                                background: '#7F1D1D',
-                                color: '#fff',
-                                padding: '1rem',
-                                borderRadius: '12px',
-                                textAlign: 'center',
-                                fontWeight: 700,
-                                fontSize: '1.1rem'
-                            }}>
-                                💔 Result: Thabo loses everything
+                                <div style={{
+                                    background: '#fff',
+                                    padding: '1rem',
+                                    borderRadius: '12px',
+                                    borderLeft: '4px solid #EF4444',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '1rem'
+                                }}>
+                                    <div style={{ fontSize: '1.5rem', lineHeight: 1 }}>🏪</div>
+                                    <div style={{ fontSize: '0.95rem', color: '#334155' }}><strong>Year 6:</strong> Opens the shop with R500,000</div>
+                                </div>
+
+                                <div style={{
+                                    background: '#fff',
+                                    padding: '1rem',
+                                    borderRadius: '12px',
+                                    borderLeft: '4px solid #EF4444',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '1rem'
+                                }}>
+                                    <div style={{ fontSize: '1.5rem', lineHeight: 1 }}>😰</div>
+                                    <div style={{ fontSize: '0.95rem', color: '#334155' }}><strong>Reality:</strong> The street is empty at 7am. Nobody comes.</div>
+                                </div>
+
+                                <div style={{
+                                    background: '#7F1D1D',
+                                    color: '#fff',
+                                    padding: '1rem',
+                                    borderRadius: '12px',
+                                    textAlign: 'center',
+                                    fontWeight: 700,
+                                    fontSize: '1.1rem'
+                                }}>
+                                    💔 Result: Thabo loses everything
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
+                    )}
 
-                {/* CapeWeb Loop Way */}
-                {!showOldWay && (
-                    <div style={{ animation: 'fadeIn 0.5s ease' }}>
-                        <div style={{ display: 'grid', gap: '0.75rem', marginBottom: '1.5rem' }}>
-                            {loopSteps.map((step, index) => (
-                                <div
-                                    key={step.id}
-                                    style={{
-                                        background: '#fff',
-                                        borderRadius: '12px',
-                                        padding: '1rem',
-                                        borderLeft: '4px solid ' + step.color,
-                                        transform: 'translateX(0) scale(1)',
-                                        boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
-                                    }}
-                                >
-                                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
-                                        <div style={{
-                                            fontSize: '1.5rem',
-                                            transform: 'scale(1) rotate(0deg)',
-                                            lineHeight: 1
-                                        }}>
-                                            {step.icon}
-                                        </div>
-                                        <div style={{ flex: 1 }}>
+                    {/* CapeWeb Loop Way */}
+                    {!showOldWay && (
+                        <div style={{ animation: 'fadeIn 0.5s ease' }}>
+                            <div style={{ display: 'grid', gap: '0.75rem', marginBottom: '1.5rem' }}>
+                                {loopSteps.map((step, index) => (
+                                    <div
+                                        key={step.id}
+                                        style={{
+                                            background: '#fff',
+                                            borderRadius: '12px',
+                                            padding: '1rem',
+                                            borderLeft: '4px solid ' + step.color,
+                                            transform: 'translateX(0) scale(1)',
+                                            boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
+                                        }}
+                                    >
+                                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
                                             <div style={{
-                                                display: 'inline-block',
-                                                background: step.color,
-                                                color: '#0b0f1a',
-                                                padding: '0.15rem 0.6rem',
-                                                borderRadius: '20px',
-                                                fontSize: '0.7rem',
-                                                fontWeight: 800,
-                                                marginBottom: '0.4rem',
-                                                letterSpacing: '0.05em'
+                                                fontSize: '1.5rem',
+                                                transform: 'scale(1) rotate(0deg)',
+                                                lineHeight: 1
                                             }}>
-                                                {step.label}
+                                                {step.icon}
                                             </div>
-                                            <p style={{
-                                                margin: '0 0 0.25rem',
-                                                fontSize: '0.95rem',
-                                                lineHeight: 1.4,
-                                                color: '#1F2937'
-                                            }}>
-                                                {step.text}
-                                            </p>
-                                            <p style={{
-                                                margin: 0,
-                                                fontSize: '0.85rem',
-                                                color: '#6B7280',
-                                                fontStyle: 'italic',
-                                                opacity: 0.8
-                                            }}>
-                                                💡 {step.detail}
-                                            </p>
+                                            <div style={{ flex: 1 }}>
+                                                <div style={{
+                                                    display: 'inline-block',
+                                                    background: step.color,
+                                                    color: '#fff',
+                                                    padding: '0.15rem 0.6rem',
+                                                    borderRadius: '20px',
+                                                    fontSize: '0.7rem',
+                                                    fontWeight: 800,
+                                                    marginBottom: '0.4rem',
+                                                    letterSpacing: '0.05em'
+                                                }}>
+                                                    {step.label}
+                                                </div>
+                                                <p style={{
+                                                    margin: '0 0 0.25rem',
+                                                    fontSize: '0.95rem',
+                                                    lineHeight: 1.4,
+                                                    color: '#1F2937'
+                                                }}>
+                                                    {step.text}
+                                                </p>
+                                                <p style={{
+                                                    margin: 0,
+                                                    fontSize: '0.85rem',
+                                                    color: '#6B7280',
+                                                    fontStyle: 'italic',
+                                                    opacity: 0.8
+                                                }}>
+                                                    💡 {step.detail}
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* Success Result */}
-                        <div style={{
-                            background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-                            color: '#fff',
-                            padding: '1.25rem',
-                            borderRadius: '16px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            gap: '1rem',
-                            animation: 'pulseGlow 2s infinite'
-                        }}>
-                            <div style={{ textAlign: 'left' }}>
-                                <div style={{ fontSize: '1.1rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-                                    <span style={{ fontSize: '1.5rem' }}>🎉</span> Smart Loop Result:
-                                </div>
-                                <p style={{ color: '#D1FAE5', margin: 0, fontSize: '0.9rem', lineHeight: 1.3 }}>
-                                    Saved R500k. Learned he needs an Espresso Cart.
-                                </p>
+                                ))}
                             </div>
 
+                            {/* Success Result */}
                             <div style={{
-                                padding: '0.5rem 1rem',
-                                background: 'rgba(255,255,255,0.2)',
-                                borderRadius: '50px',
-                                backdropFilter: 'blur(4px)',
-                                fontSize: '0.85rem',
-                                fontWeight: 700,
-                                whiteSpace: 'nowrap',
-                                flexShrink: 0
+                                background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                                color: '#fff',
+                                padding: '1.25rem',
+                                borderRadius: '16px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                gap: '1rem',
+                                animation: 'pulseGlow 2s infinite'
                             }}>
-                                Cost: R200 ⚡ Learning: Priceless
+                                <div style={{ textAlign: 'left' }}>
+                                    <div style={{ fontSize: '1.1rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+                                        <span style={{ fontSize: '1.5rem' }}>🎉</span> Smart Loop Result:
+                                    </div>
+                                    <p style={{ color: '#D1FAE5', margin: 0, fontSize: '0.9rem', lineHeight: 1.3 }}>
+                                        Saved R500k. Learned he needs an Espresso Cart.
+                                    </p>
+                                </div>
+
+                                <div style={{
+                                    padding: '0.5rem 1rem',
+                                    background: 'rgba(255,255,255,0.2)',
+                                    borderRadius: '50px',
+                                    backdropFilter: 'blur(4px)',
+                                    fontSize: '0.85rem',
+                                    fontWeight: 700,
+                                    whiteSpace: 'nowrap',
+                                    flexShrink: 0
+                                }}>
+                                    Cost: R200 ⚡ Learning: Priceless
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
         </div>
     );
@@ -750,54 +800,54 @@ export const moduleEQuizQuestions = [
 // Final Pillar 1 Quiz (comprehensive review) - 10 questions
 export const pillar1QuizQuestions = [
     {
-        question: 'The CapeWeb weekly loop is:',
-        options: ['Learn → Do → Proof → Improve', 'Learn → Logo → Website → Rich', 'Plan → Panic → Quit → Repeat'],
-        correctIndex: 0,
-    },
-    {
-        question: 'In the "Coffee on Wheels" scenario, what did Thabo learn from his R200 experiment?',
-        options: ['Nobody wants coffee at 7am', 'People want Cappuccinos, not filter coffee', 'He should quit and get a job'],
+        question: 'Sipho believes people in his hood need a premium sneaker cleaning service. Instead of buying R50k equipment immediately, what is his best "Lean" first step?',
+        options: ['Apply for a business loan', 'Clean 5 pairs of neighbors\' shoes by hand to see if they pay', 'Rent a shop at the mall'],
         correctIndex: 1,
     },
     {
-        question: 'Why is a Founder Routine important?',
-        options: ['It looks professional', 'You cannot build a company on "when I have time"', 'It impresses investors'],
+        question: 'Sarah works 18 hours on Saturday on her business but does nothing during the week. Lerato works 45 minutes every morning before her job. Who is more likely to succeed?',
+        options: ['Sarah, because she grinds harder', 'Lerato, because compounding consistency beats intensity', 'Neither, you need full-time focus'],
         correctIndex: 1,
     },
     {
-        question: 'Validation means:',
-        options: ['Designing a logo and printing flyers', 'Getting proof from real customers before building', 'Waiting until everything is perfect'],
+        question: 'Your new tutoring app offers great lessons, but requires parents to print, sign, scan, and email a form to sign up. Sales are low. Why?',
+        options: ['The lessons are bad', 'The Friction (effort) is too high compared to the Value', 'You need a better logo'],
         correctIndex: 1,
     },
     {
-        question: 'A strong business statement uses:',
-        options: ['WHO + PAIN + RESULT', 'Logo + Colours + Slogan', 'Hope + Motivation + Luck'],
-        correctIndex: 0,
-    },
-    {
-        question: 'In the Value vs Friction formula, how do you increase sales?',
-        options: ['Only lower the price', 'Increase Value OR decrease Friction (price, effort, risk)', 'Make the logo bigger'],
+        question: 'You want to open a gourmet burger joint next to a petrol station that sells cheap pies. Are they a competitor?',
+        options: ['No, they sell pies, not burgers', 'Yes, they solve the same problem (hunger) for the same customer (drivers)', 'No, their quality is too low'],
         correctIndex: 1,
     },
     {
-        question: 'Why do we analyze competitors?',
-        options: ['To copy everything they do', 'To find their weaknesses and your opportunity', 'To steal their logo'],
-        correctIndex: 1,
-    },
-    {
-        question: 'A "Service" business model is:',
-        options: ['Selling a physical item like shoes', 'Selling your time/skill (e.g. repairs, design)', 'Doing nothing'],
-        correctIndex: 1,
-    },
-    {
-        question: 'What is the goal of Pillar 1?',
-        options: ['Build a perfect website', 'Validation - prove people want what you have', 'Register your company'],
-        correctIndex: 1,
-    },
-    {
-        question: 'The biggest competitor is often:',
-        options: ['Direct competitors selling the same thing', 'Indirect competitors with different solutions', 'Inertia - customers doing nothing because change is hard'],
+        question: 'Thabo sells coffee at the taxi rank. Commuters keep asking for amagwinya (vetkoek), but Thabo refuses and buys more expensive coffee beans instead. Which step of the Loop is he failing?',
+        options: ['LEARN', 'DO', 'IMPROVE (He is ignoring customer feedback)'],
         correctIndex: 2,
+    },
+    {
+        question: 'You want to teach people to code. Instead of tutoring them one-on-one (Service), you record videos and charge R200/month for access. What business model is this?',
+        options: ['Service Provider', 'Digital Product / Subscription', 'Retailing'],
+        correctIndex: 1,
+    },
+    {
+        question: 'Which of these is the strongest Problem Statement for a garden service?',
+        options: ['We cut grass and trim hedges.', 'For busy homeowners (WHO) who hate weekend chores (PAIN), we offer silent, electric mowing while you sleep (RESULT).', 'Best Garden Service in Cape Town established 2024.'],
+        correctIndex: 1,
+    },
+    {
+        question: 'You launch a bank with zero fees. Yet, most people stay with their expensive old bank because "it is too much hassle to switch". What is your real competitor here?',
+        options: ['The other bank', 'Inertia (Laziness/Fear of change)', 'Your marketing budget'],
+        correctIndex: 1,
+    },
+    {
+        question: 'You have an idea for a "Dog Walking App". What is the "DO" step (MVP)?',
+        options: ['Hire an app developer for R100k', 'Walk 3 neighbors\' dogs yourself and manage it on WhatsApp', 'Buy a billboard'],
+        correctIndex: 1,
+    },
+    {
+        question: 'You posted your idea on Facebook and got 500 likes. You have 0 pre-orders. Do you have "Proof"?',
+        options: ['Yes, 500 people like it', 'No, "Likes" are vanity. Cash/Commitment is proof.', 'Maybe, boost the post'],
+        correctIndex: 1,
     },
 ];
 
@@ -999,7 +1049,8 @@ function MiniQuiz({ questions, title = "Knowledge Check", onNext }) {
             marginTop: '3rem',
             padding: '2rem 2rem', // Reduced padding
             borderRadius: '32px', // More rounded
-            background: 'rgba(255, 255, 255, 0.85)',
+            background: '#FDE047',
+            color: '#0F172A',
             backdropFilter: 'blur(24px)',
             border: '1px solid rgba(255, 255, 255, 0.6)',
             boxShadow: '0 20px 50px -10px rgba(31, 38, 135, 0.15)',
@@ -1172,101 +1223,130 @@ function RoutineCompoundGraph() {
     const [mode, setMode] = useState('consistent'); // 'consistent' or 'intensity'
 
     return (
-        <div style={{ margin: '2rem 0', padding: '1.5rem', background: '#F8FAFC', borderRadius: '24px', textAlign: 'center' }}>
-            <h4 style={{ marginBottom: '1.5rem', fontWeight: 800, fontSize: '1.2rem' }}>Which curve are you on?</h4>
+        <div style={{
+            margin: '2rem 0',
+            padding: '1.5rem',
+            borderRadius: '24px',
+            textAlign: 'center',
+            position: 'relative',
+            overflow: 'hidden',
+            boxShadow: '0 20px 50px -10px rgba(0,0,0,0.1)',
+            background: '#F472B6',
+            color: '#0F172A'
+        }}>
+            {/* Moving Gradient Background */}
+            <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                background: 'linear-gradient(120deg, rgba(34,211,238,0.15), rgba(244,114,182,0.15), rgba(253,224,71,0.15), rgba(34,211,238,0.15))',
+                backgroundSize: '300% 300%',
+                animation: 'gradientMove 15s ease infinite',
+                zIndex: 0,
+                pointerEvents: 'none'
+            }} />
 
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '2rem' }}>
-                <button
-                    onClick={() => setMode('intensity')}
-                    style={{
-                        padding: '0.5rem 1.5rem',
-                        borderRadius: '100px',
-                        border: 'none',
-                        background: mode === 'intensity' ? '#EF4444' : '#E2E8F0',
-                        color: mode === 'intensity' ? '#fff' : '#64748B',
-                        fontWeight: 700,
-                        cursor: 'pointer',
-                        transition: 'all 0.3s'
-                    }}
-                >
-                    🔥 Hero Mode
-                </button>
-                <button
-                    onClick={() => setMode('consistent')}
-                    style={{
-                        padding: '0.5rem 1.5rem',
-                        borderRadius: '100px',
-                        border: 'none',
-                        background: mode === 'consistent' ? '#10B981' : '#E2E8F0',
-                        color: mode === 'consistent' ? '#fff' : '#64748B',
-                        fontWeight: 700,
-                        cursor: 'pointer',
-                        transition: 'all 0.3s',
-                        boxShadow: mode === 'consistent' ? '0 4px 12px rgba(16, 185, 129, 0.3)' : 'none'
-                    }}
-                >
-                    🌱 Habit Mode
-                </button>
-            </div>
+            <div style={{ position: 'relative', zIndex: 1 }}>
+                <h4 style={{ marginBottom: '1.5rem', fontWeight: 800, fontSize: '1.2rem', color: '#0f172a' }}>Which curve are you on?</h4>
 
-            <div style={{ height: '200px', position: 'relative', overflow: 'hidden' }}>
-                <svg viewBox="0 0 400 200" style={{ width: '100%', height: '100%', overflow: 'visible' }}>
-                    {/* Grid */}
-                    <line x1="0" y1="180" x2="400" y2="180" stroke="#CBD5E1" strokeWidth="2" />
-                    <line x1="20" y1="0" x2="20" y2="180" stroke="#CBD5E1" strokeWidth="2" />
-                    <text x="380" y="195" fontSize="10" fill="#94A3B8" fontWeight="600">TIME</text>
-                    <text x="0" y="10" fontSize="10" fill="#94A3B8" fontWeight="600">RESULTS</text>
-
-                    {/* INTENSITY CURVE (Spiky, burnout) */}
-                    <path
-                        d="M 20 180 L 50 20 L 80 180 L 150 180 L 180 50 L 210 180 L 400 180"
-                        fill="none"
-                        stroke="#EF4444"
-                        strokeWidth="4"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '2rem' }}>
+                    <button
+                        onClick={() => setMode('intensity')}
                         style={{
-                            opacity: mode === 'intensity' ? 1 : 0.1,
-                            transition: 'opacity 0.5s',
-                            strokeDasharray: 1000,
-                            strokeDashoffset: mode === 'intensity' ? 0 : 1000,
-                            transition: 'stroke-dashoffset 2s ease, opacity 0.5s'
+                            padding: '0.5rem 1.5rem',
+                            borderRadius: '100px',
+                            border: 'none',
+                            background: mode === 'intensity' ? '#EF4444' : 'rgba(255,255,255,0.7)',
+                            color: mode === 'intensity' ? '#fff' : '#64748B',
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                            transition: 'all 0.3s',
+                            boxShadow: mode === 'intensity' ? '0 4px 12px rgba(239, 68, 68, 0.3)' : 'none',
+                            border: mode === 'intensity' ? 'none' : '1px solid #e2e8f0'
                         }}
-                    />
-                    {mode === 'intensity' && (
-                        <g>
-                            <circle cx="50" cy="20" r="6" fill="#EF4444" />
-                            <text x="60" y="20" fontSize="12" fill="#EF4444" fontWeight="bold">BIG DAY</text>
-                            <circle cx="210" cy="180" r="6" fill="#EF4444" />
-                            <text x="220" y="170" fontSize="12" fill="#EF4444" fontWeight="bold">BURNOUT</text>
-                        </g>
-                    )}
-
-                    {/* HABIT CURVE (Exponential) */}
-                    <path
-                        d="M 20 180 Q 200 170 400 20"
-                        fill="none"
-                        stroke="#10B981"
-                        strokeWidth="6"
-                        strokeLinecap="round"
+                    >
+                        🔥 Hero Mode
+                    </button>
+                    <button
+                        onClick={() => setMode('consistent')}
                         style={{
-                            opacity: mode === 'consistent' ? 1 : 0.1,
-                            strokeDasharray: 1000,
-                            strokeDashoffset: mode === 'consistent' ? 0 : 1000,
-                            transition: 'stroke-dashoffset 2s ease, opacity 0.5s'
+                            padding: '0.5rem 1.5rem',
+                            borderRadius: '100px',
+                            border: 'none',
+                            background: mode === 'consistent' ? '#10B981' : 'rgba(255,255,255,0.7)',
+                            color: mode === 'consistent' ? '#fff' : '#64748B',
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                            transition: 'all 0.3s',
+                            boxShadow: mode === 'consistent' ? '0 4px 12px rgba(16, 185, 129, 0.3)' : 'none',
+                            border: mode === 'consistent' ? 'none' : '1px solid #e2e8f0'
                         }}
-                    />
-                    {mode === 'consistent' && (
-                        <g>
-                            <circle cx="400" cy="20" r="8" fill="#10B981" />
-                            <text x="320" y="40" fontSize="14" fill="#10B981" fontWeight="bold">SUCCESS</text>
-                        </g>
-                    )}
-                </svg>
+                    >
+                        🌱 Habit Mode
+                    </button>
+                </div>
+
+                <div style={{ height: '200px', position: 'relative', overflow: 'hidden' }}>
+                    <svg viewBox="0 0 400 200" style={{ width: '100%', height: '100%', overflow: 'visible' }}>
+                        {/* Grid */}
+                        <line x1="0" y1="180" x2="400" y2="180" stroke="#94a3b8" strokeWidth="2" />
+                        <line x1="20" y1="0" x2="20" y2="180" stroke="#94a3b8" strokeWidth="2" />
+                        <text x="380" y="195" fontSize="10" fill="#64748b" fontWeight="600">TIME</text>
+                        <text x="0" y="10" fontSize="10" fill="#64748b" fontWeight="600">RESULTS</text>
+
+                        {/* INTENSITY CURVE (Spiky, burnout) */}
+                        <path
+                            d="M 20 180 L 50 20 L 80 180 L 150 180 L 180 50 L 210 180 L 400 180"
+                            fill="none"
+                            stroke="#EF4444"
+                            strokeWidth="4"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            style={{
+                                opacity: mode === 'intensity' ? 1 : 0.1,
+                                transition: 'opacity 0.5s',
+                                strokeDasharray: 1000,
+                                strokeDashoffset: mode === 'intensity' ? 0 : 1000,
+                                transition: 'stroke-dashoffset 2s ease, opacity 0.5s'
+                            }}
+                        />
+                        {mode === 'intensity' && (
+                            <g>
+                                <circle cx="50" cy="20" r="6" fill="#EF4444" />
+                                <text x="60" y="20" fontSize="12" fill="#EF4444" fontWeight="bold">BIG DAY</text>
+                                <circle cx="210" cy="180" r="6" fill="#EF4444" />
+                                <text x="220" y="170" fontSize="12" fill="#EF4444" fontWeight="bold">BURNOUT</text>
+                            </g>
+                        )}
+
+                        {/* HABIT CURVE (Exponential) */}
+                        <path
+                            d="M 20 180 Q 200 170 400 20"
+                            fill="none"
+                            stroke="#10B981"
+                            strokeWidth="6"
+                            strokeLinecap="round"
+                            style={{
+                                opacity: mode === 'consistent' ? 1 : 0.1,
+                                strokeDasharray: 1000,
+                                strokeDashoffset: mode === 'consistent' ? 0 : 1000,
+                                transition: 'stroke-dashoffset 2s ease, opacity 0.5s'
+                            }}
+                        />
+                        {mode === 'consistent' && (
+                            <g>
+                                <circle cx="400" cy="20" r="8" fill="#10B981" />
+                                <text x="320" y="40" fontSize="14" fill="#10B981" fontWeight="bold">SUCCESS</text>
+                            </g>
+                        )}
+                    </svg>
+                </div>
+                <p style={{ marginTop: '1rem', color: '#475569', fontSize: '0.9rem', fontStyle: 'italic' }}>
+                    {mode === 'intensity' ? 'Hero Mode: Work 12 hours once. Get tired. Quit.' : 'Habit Mode: Work 30 mins daily. Compound growth.'}
+                </p>
             </div>
-            <p style={{ marginTop: '1rem', color: '#64748B', fontSize: '0.9rem', fontStyle: 'italic' }}>
-                {mode === 'intensity' ? 'Hero Mode: Work 12 hours once. Get tired. Quit.' : 'Habit Mode: Work 30 mins daily. Compound growth.'}
-            </p>
         </div>
     );
 }
@@ -1275,78 +1355,103 @@ function RoutineScenarioInteractive() {
     const [view, setView] = useState('old');
 
     return (
-        <div style={{ margin: '3rem 0' }}>
-            <h4 style={{ textAlign: 'center', fontSize: '1.5rem', marginBottom: '1.5rem' }}>Scenario: Finding Time</h4>
+        <div style={{
+            margin: '3rem 0',
+            padding: '2rem',
+            borderRadius: '24px',
+            position: 'relative',
+            overflow: 'hidden',
+            boxShadow: '0 20px 50px -10px rgba(0,0,0,0.1)',
+            background: '#FB923C',
+            color: '#0F172A'
+        }}>
+            {/* Moving Gradient Background */}
+            <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                background: 'linear-gradient(120deg, rgba(34,211,238,0.15), rgba(244,114,182,0.15), rgba(253,224,71,0.15), rgba(34,211,238,0.15))',
+                backgroundSize: '300% 300%',
+                animation: 'gradientMove 15s ease infinite',
+                zIndex: 0,
+                pointerEvents: 'none'
+            }} />
 
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem', background: '#F1F5F9', padding: '0.5rem', borderRadius: '100px', width: 'fit-content', margin: '0 auto 2rem' }}>
-                <button onClick={() => setView('old')} style={{ padding: '0.6rem 1.5rem', borderRadius: '100px', border: 'none', background: view === 'old' ? '#fff' : 'transparent', color: view === 'old' ? '#EF4444' : '#64748B', fontWeight: 800, boxShadow: view === 'old' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>The Weekend Warrior</button>
-                <button onClick={() => setView('new')} style={{ padding: '0.6rem 1.5rem', borderRadius: '100px', border: 'none', background: view === 'new' ? '#fff' : 'transparent', color: view === 'new' ? '#10B981' : '#64748B', fontWeight: 800, boxShadow: view === 'new' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>The 30-Min Founder</button>
+            <div style={{ position: 'relative', zIndex: 1 }}>
+                <h4 style={{ textAlign: 'center', fontSize: '1.5rem', marginBottom: '1.5rem', color: '#0f172a' }}>Scenario: Finding Time</h4>
+
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem', background: 'rgba(241, 245, 249, 0.8)', padding: '0.5rem', borderRadius: '100px', width: 'fit-content', margin: '0 auto 2rem' }}>
+                    <button onClick={() => setView('old')} style={{ padding: '0.6rem 1.5rem', borderRadius: '100px', border: 'none', background: view === 'old' ? '#fff' : 'transparent', color: view === 'old' ? '#EF4444' : '#64748B', fontWeight: 800, boxShadow: view === 'old' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>The Weekend Warrior</button>
+                    <button onClick={() => setView('new')} style={{ padding: '0.6rem 1.5rem', borderRadius: '100px', border: 'none', background: view === 'new' ? '#fff' : 'transparent', color: view === 'new' ? '#10B981' : '#64748B', fontWeight: 800, boxShadow: view === 'new' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>The 30-Min Founder</button>
+                </div>
+
+                {view === 'old' ? (
+                    <div style={{ animation: 'fadeIn 0.5s', padding: '1rem', background: 'rgba(254, 242, 242, 0.9)', borderRadius: '24px', border: '2px solid #FECACA' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                            <div style={{ background: '#fff', padding: '1rem', borderRadius: '16px', display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                <div style={{ fontSize: '1.5rem' }}>📅</div>
+                                <div>
+                                    <strong style={{ color: '#EF4444', textTransform: 'uppercase', fontSize: '0.8rem' }}>Monday - Friday</strong>
+                                    <p style={{ margin: 0, color: '#475569' }}>"I'm too tired after work. I'll do it on Saturday."</p>
+                                </div>
+                            </div>
+                            <div style={{ background: '#fff', padding: '1rem', borderRadius: '16px', display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                <div style={{ fontSize: '1.5rem' }}>🔥</div>
+                                <div>
+                                    <strong style={{ color: '#EF4444', textTransform: 'uppercase', fontSize: '0.8rem' }}>Saturday</strong>
+                                    <p style={{ margin: 0, color: '#475569' }}>Works for 10 hours straight. Skips family time.</p>
+                                </div>
+                            </div>
+                            <div style={{ background: '#fff', padding: '1rem', borderRadius: '16px', display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                <div style={{ fontSize: '1.5rem' }}>💀</div>
+                                <div>
+                                    <strong style={{ color: '#EF4444', textTransform: 'uppercase', fontSize: '0.8rem' }}>Week 2</strong>
+                                    <p style={{ margin: 0, color: '#475569' }}>Burnout. Does nothing for 3 weeks.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div style={{ animation: 'fadeIn 0.5s', padding: '1rem', background: '#ECFDF5', borderRadius: '24px', border: '2px solid #A7F3D0' }}>
+                        <div style={{ display: 'grid', gap: '0.75rem', marginBottom: '1.5rem' }}>
+                            {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map(day => (
+                                <div key={day} style={{ background: '#fff', padding: '0.8rem 1rem', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '1rem', borderLeft: '4px solid #10B981' }}>
+                                    <div style={{ fontSize: '1.2rem' }}>✅</div>
+                                    <div style={{ flex: 1, fontWeight: 700, color: '#064E3B' }}>{day}</div>
+                                    <div style={{ fontSize: '0.9rem', color: '#64748B' }}>30 mins before kids wake up</div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div style={{
+                            background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                            color: '#fff',
+                            padding: '1.25rem',
+                            borderRadius: '16px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            gap: '1rem',
+                            animation: 'pulseGlow 2s infinite',
+                            boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
+                        }}>
+                            <div style={{ textAlign: 'left' }}>
+                                <div style={{ fontSize: '1.1rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+                                    <span style={{ fontSize: '1.5rem' }}>📈</span> Result:
+                                </div>
+                                <p style={{ color: '#D1FAE5', margin: 0, fontSize: '0.9rem', lineHeight: 1.3 }}>
+                                    Consistent momentum. No burnout.
+                                </p>
+                            </div>
+                            <div style={{ padding: '0.5rem 1rem', background: 'rgba(255,255,255,0.2)', borderRadius: '50px', backdropFilter: 'blur(4px)', fontSize: '0.85rem', fontWeight: 700 }}>
+                                Total: 150 mins/week
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
-
-            {view === 'old' ? (
-                <div style={{ animation: 'fadeIn 0.5s', padding: '1rem', background: '#FEF2F2', borderRadius: '24px', border: '2px solid #FECACA' }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                        <div style={{ background: '#fff', padding: '1rem', borderRadius: '16px', display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                            <div style={{ fontSize: '1.5rem' }}>📅</div>
-                            <div>
-                                <strong style={{ color: '#EF4444', textTransform: 'uppercase', fontSize: '0.8rem' }}>Monday - Friday</strong>
-                                <p style={{ margin: 0, color: '#475569' }}>"I'm too tired after work. I'll do it on Saturday."</p>
-                            </div>
-                        </div>
-                        <div style={{ background: '#fff', padding: '1rem', borderRadius: '16px', display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                            <div style={{ fontSize: '1.5rem' }}>🔥</div>
-                            <div>
-                                <strong style={{ color: '#EF4444', textTransform: 'uppercase', fontSize: '0.8rem' }}>Saturday</strong>
-                                <p style={{ margin: 0, color: '#475569' }}>Works for 10 hours straight. Skips family time.</p>
-                            </div>
-                        </div>
-                        <div style={{ background: '#fff', padding: '1rem', borderRadius: '16px', display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                            <div style={{ fontSize: '1.5rem' }}>💀</div>
-                            <div>
-                                <strong style={{ color: '#EF4444', textTransform: 'uppercase', fontSize: '0.8rem' }}>Week 2</strong>
-                                <p style={{ margin: 0, color: '#475569' }}>Burnout. Does nothing for 3 weeks.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            ) : (
-                <div style={{ animation: 'fadeIn 0.5s', padding: '1rem', background: '#ECFDF5', borderRadius: '24px', border: '2px solid #A7F3D0' }}>
-                    <div style={{ display: 'grid', gap: '0.75rem', marginBottom: '1.5rem' }}>
-                        {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map(day => (
-                            <div key={day} style={{ background: '#fff', padding: '0.8rem 1rem', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '1rem', borderLeft: '4px solid #10B981' }}>
-                                <div style={{ fontSize: '1.2rem' }}>✅</div>
-                                <div style={{ flex: 1, fontWeight: 700, color: '#064E3B' }}>{day}</div>
-                                <div style={{ fontSize: '0.9rem', color: '#64748B' }}>30 mins before kids wake up</div>
-                            </div>
-                        ))}
-                    </div>
-
-                    <div style={{
-                        background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-                        color: '#fff',
-                        padding: '1.25rem',
-                        borderRadius: '16px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        gap: '1rem',
-                        animation: 'pulseGlow 2s infinite',
-                        boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
-                    }}>
-                        <div style={{ textAlign: 'left' }}>
-                            <div style={{ fontSize: '1.1rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-                                <span style={{ fontSize: '1.5rem' }}>📈</span> Result:
-                            </div>
-                            <p style={{ color: '#D1FAE5', margin: 0, fontSize: '0.9rem', lineHeight: 1.3 }}>
-                                Consistent momentum. No burnout.
-                            </p>
-                        </div>
-                        <div style={{ padding: '0.5rem 1rem', background: 'rgba(255,255,255,0.2)', borderRadius: '50px', backdropFilter: 'blur(4px)', fontSize: '0.85rem', fontWeight: 700 }}>
-                            Total: 150 mins/week
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
     )
 }
@@ -1443,62 +1548,88 @@ function TargetingVisual() {
     const [mode, setMode] = useState('niche'); // 'broad' or 'niche'
 
     return (
-        <div style={{ margin: '2rem 0', padding: '1.5rem', background: '#F8FAFC', borderRadius: '24px', textAlign: 'center' }}>
-            <h4 style={{ marginBottom: '1.5rem', fontWeight: 800 }}>The "Sniper" Principle</h4>
+        <div style={{
+            margin: '2rem 0',
+            padding: '1.5rem',
+            borderRadius: '24px',
+            textAlign: 'center',
+            position: 'relative',
+            overflow: 'hidden',
+            boxShadow: '0 20px 50px -10px rgba(0,0,0,0.1)',
+            background: '#4ADE80',
+            color: '#0F172A'
+        }}>
+            {/* Moving Gradient Background */}
+            <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                background: 'linear-gradient(120deg, rgba(34,211,238,0.15), rgba(244,114,182,0.15), rgba(253,224,71,0.15), rgba(34,211,238,0.15))',
+                backgroundSize: '300% 300%',
+                animation: 'gradientMove 15s ease infinite',
+                zIndex: 0,
+                pointerEvents: 'none'
+            }} />
 
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '2rem' }}>
-                <button onClick={() => setMode('broad')} style={{ padding: '0.5rem 1.5rem', borderRadius: '100px', border: 'none', background: mode === 'broad' ? '#EF4444' : '#E2E8F0', color: mode === 'broad' ? '#fff' : '#64748B', fontWeight: 700, cursor: 'pointer', transition: 'all 0.3s' }}>📢 Shotgun (Broad)</button>
-                <button onClick={() => setMode('niche')} style={{ padding: '0.5rem 1.5rem', borderRadius: '100px', border: 'none', background: mode === 'niche' ? '#10B981' : '#E2E8F0', color: mode === 'niche' ? '#fff' : '#64748B', fontWeight: 700, cursor: 'pointer', transition: 'all 0.3s', boxShadow: mode === 'niche' ? '0 4px 12px rgba(16, 185, 129, 0.3)' : 'none' }}>🎯 Sniper (Niche)</button>
+            <div style={{ position: 'relative', zIndex: 1 }}>
+                <h4 style={{ marginBottom: '1.5rem', fontWeight: 800, color: '#0f172a' }}>The "Sniper" Principle</h4>
+
+                <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '2rem' }}>
+                    <button onClick={() => setMode('broad')} style={{ padding: '0.5rem 1.5rem', borderRadius: '100px', border: 'none', background: mode === 'broad' ? '#EF4444' : 'rgba(255,255,255,0.7)', color: mode === 'broad' ? '#fff' : '#64748B', fontWeight: 700, cursor: 'pointer', transition: 'all 0.3s', border: mode === 'broad' ? 'none' : '1px solid #e2e8f0' }}>📢 Shotgun (Broad)</button>
+                    <button onClick={() => setMode('niche')} style={{ padding: '0.5rem 1.5rem', borderRadius: '100px', border: 'none', background: mode === 'niche' ? '#10B981' : 'rgba(255,255,255,0.7)', color: mode === 'niche' ? '#fff' : '#64748B', fontWeight: 700, cursor: 'pointer', transition: 'all 0.3s', boxShadow: mode === 'niche' ? '0 4px 12px rgba(16, 185, 129, 0.3)' : 'none', border: mode === 'niche' ? 'none' : '1px solid #e2e8f0' }}>🎯 Sniper (Niche)</button>
+                </div>
+
+                <div style={{ height: '220px', position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <svg width="300" height="200" viewBox="0 0 300 200">
+                        {/* Customer Crowd */}
+                        {Array.from({ length: 40 }).map((_, i) => {
+                            // Random positions standard
+                            const randX = (i * 137) % 280 + 10;
+                            const randY = (i * 73) % 180 + 10;
+                            // Niche positions (clustered in center)
+                            const nicheX = 150 + Math.cos(i) * 30;
+                            const nicheY = 100 + Math.sin(i) * 30;
+
+                            const x = mode === 'broad' ? randX : nicheX;
+                            const y = mode === 'broad' ? randY : nicheY;
+                            const isTarget = i < 10; // Only 10 are actual buyers
+
+                            return (
+                                <circle
+                                    key={i}
+                                    cx={x}
+                                    cy={y}
+                                    r={isTarget ? 6 : 4}
+                                    fill={isTarget ? '#10B981' : '#94a3b8'}
+                                    style={{ transition: 'all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275)' }}
+                                />
+                            );
+                        })}
+
+                        {/* Scope Overlay */}
+                        <g style={{
+                            opacity: mode === 'niche' ? 1 : 0,
+                            transform: mode === 'niche' ? 'scale(1)' : 'scale(2)',
+                            transformOrigin: 'center',
+                            transition: 'all 0.8s ease'
+                        }}>
+                            <circle cx="150" cy="100" r="50" fill="none" stroke="#EF4444" strokeWidth="2" strokeDasharray="10,5" />
+                            <line x1="150" y1="50" x2="150" y2="150" stroke="#EF4444" strokeWidth="1" />
+                            <line x1="100" y1="100" x2="200" y2="100" stroke="#EF4444" strokeWidth="1" />
+                        </g>
+
+                        {/* Message bubble */}
+                        {mode === 'broad' && (
+                            <text x="150" y="100" textAnchor="middle" fill="#EF4444" fontSize="14" fontWeight="bold" style={{ textShadow: '0 2px 4px white' }}>"I HELP EVERYONE!"</text>
+                        )}
+                    </svg>
+                </div>
+                <p style={{ marginTop: '1rem', color: '#475569', fontSize: '0.9rem' }}>
+                    {mode === 'broad' ? 'Broad: You try to talk to everyone. No one listens. (Low Sales)' : 'Niche: You talk to specific people. They feel understood. (High Sales)'}
+                </p>
             </div>
-
-            <div style={{ height: '220px', position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <svg width="300" height="200" viewBox="0 0 300 200">
-                    {/* Customer Crowd */}
-                    {Array.from({ length: 40 }).map((_, i) => {
-                        // Random positions standard
-                        const randX = (i * 137) % 280 + 10;
-                        const randY = (i * 73) % 180 + 10;
-                        // Niche positions (clustered in center)
-                        const nicheX = 150 + Math.cos(i) * 30;
-                        const nicheY = 100 + Math.sin(i) * 30;
-
-                        const x = mode === 'broad' ? randX : nicheX;
-                        const y = mode === 'broad' ? randY : nicheY;
-                        const isTarget = i < 10; // Only 10 are actual buyers
-
-                        return (
-                            <circle
-                                key={i}
-                                cx={x}
-                                cy={y}
-                                r={isTarget ? 6 : 4}
-                                fill={isTarget ? '#10B981' : '#CBD5E1'}
-                                style={{ transition: 'all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275)' }}
-                            />
-                        );
-                    })}
-
-                    {/* Scope Overlay */}
-                    <g style={{
-                        opacity: mode === 'niche' ? 1 : 0,
-                        transform: mode === 'niche' ? 'scale(1)' : 'scale(2)',
-                        transformOrigin: 'center',
-                        transition: 'all 0.8s ease'
-                    }}>
-                        <circle cx="150" cy="100" r="50" fill="none" stroke="#EF4444" strokeWidth="2" strokeDasharray="10,5" />
-                        <line x1="150" y1="50" x2="150" y2="150" stroke="#EF4444" strokeWidth="1" />
-                        <line x1="100" y1="100" x2="200" y2="100" stroke="#EF4444" strokeWidth="1" />
-                    </g>
-
-                    {/* Message bubble */}
-                    {mode === 'broad' && (
-                        <text x="150" y="100" textAnchor="middle" fill="#EF4444" fontSize="14" fontWeight="bold" style={{ textShadow: '0 2px 4px white' }}>"I HELP EVERYONE!"</text>
-                    )}
-                </svg>
-            </div>
-            <p style={{ marginTop: '1rem', color: '#64748B', fontSize: '0.9rem' }}>
-                {mode === 'broad' ? 'Broad: You try to talk to everyone. No one listens. (Low Sales)' : 'Niche: You talk to specific people. They feel understood. (High Sales)'}
-            </p>
         </div>
     );
 }
@@ -1506,29 +1637,54 @@ function TargetingVisual() {
 function TargetingScenario() {
     const [view, setView] = useState('old');
     return (
-        <div style={{ margin: '3rem 0' }}>
-            <h4 style={{ textAlign: 'center', fontSize: '1.5rem', marginBottom: '1.5rem' }}>Scenario: The Catering Company</h4>
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem', background: '#F1F5F9', padding: '0.5rem', borderRadius: '100px', width: 'fit-content', margin: '0 auto 2rem' }}>
-                <button onClick={() => setView('old')} style={{ padding: '0.6rem 1.5rem', borderRadius: '100px', border: 'none', background: view === 'old' ? '#fff' : 'transparent', color: view === 'old' ? '#EF4444' : '#64748B', fontWeight: 800, boxShadow: view === 'old' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>The "Safe" Way</button>
-                <button onClick={() => setView('new')} style={{ padding: '0.6rem 1.5rem', borderRadius: '100px', border: 'none', background: view === 'new' ? '#fff' : 'transparent', color: view === 'new' ? '#10B981' : '#64748B', fontWeight: 800, boxShadow: view === 'new' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>The Smart Way</button>
+        <div style={{
+            margin: '3rem 0',
+            padding: '2rem',
+            borderRadius: '24px',
+            position: 'relative',
+            overflow: 'hidden',
+            boxShadow: '0 20px 50px -10px rgba(0,0,0,0.1)',
+            background: '#FDE047',
+            color: '#0F172A'
+        }}>
+            {/* Moving Gradient Background */}
+            <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                background: 'linear-gradient(120deg, rgba(34,211,238,0.15), rgba(244,114,182,0.15), rgba(253,224,71,0.15), rgba(34,211,238,0.15))',
+                backgroundSize: '300% 300%',
+                animation: 'gradientMove 15s ease infinite',
+                zIndex: 0,
+                pointerEvents: 'none'
+            }} />
+
+            <div style={{ position: 'relative', zIndex: 1 }}>
+                <h4 style={{ textAlign: 'center', fontSize: '1.5rem', marginBottom: '1.5rem', color: '#0f172a' }}>Scenario: The Catering Company</h4>
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem', background: 'rgba(241, 245, 249, 0.8)', padding: '0.5rem', borderRadius: '100px', width: 'fit-content', margin: '0 auto 2rem' }}>
+                    <button onClick={() => setView('old')} style={{ padding: '0.6rem 1.5rem', borderRadius: '100px', border: 'none', background: view === 'old' ? '#fff' : 'transparent', color: view === 'old' ? '#EF4444' : '#64748B', fontWeight: 800, boxShadow: view === 'old' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>The "Safe" Way</button>
+                    <button onClick={() => setView('new')} style={{ padding: '0.6rem 1.5rem', borderRadius: '100px', border: 'none', background: view === 'new' ? '#fff' : 'transparent', color: view === 'new' ? '#10B981' : '#64748B', fontWeight: 800, boxShadow: view === 'new' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>The Smart Way</button>
+                </div>
+                {view === 'old' ? (
+                    <div style={{ padding: '1.5rem', background: 'rgba(254, 242, 242, 0.9)', borderRadius: '24px', border: '2px solid #FECACA', animation: 'fadeIn 0.5s' }}>
+                        <strong>Offer:</strong> "We do catering for weddings, parties, funerals, and corporate."
+                        <br /><br />
+                        <strong>Result:</strong> Confused customers. "Are they cheap? Expensive? Good?"
+                        <br /><br />
+                        <span style={{ color: '#EF4444', fontWeight: 800 }}>Outcome: 2 Gigs/Month. Struggling.</span>
+                    </div>
+                ) : (
+                    <div style={{ padding: '1.5rem', background: '#ECFDF5', borderRadius: '24px', border: '2px solid #A7F3D0', animation: 'fadeIn 0.5s' }}>
+                        <strong>Offer:</strong> "Health-focused catering for Tech Startup lunches in Cape Town."
+                        <br /><br />
+                        <strong>Result:</strong> Clear value. "Perfect for our office!"
+                        <br /><br />
+                        <span style={{ color: '#10B981', fontWeight: 800 }}>Outcome: Fully Booked (Recurring Recurring Revenue).</span>
+                    </div>
+                )}
             </div>
-            {view === 'old' ? (
-                <div style={{ padding: '1.5rem', background: '#FEF2F2', borderRadius: '24px', border: '2px solid #FECACA', animation: 'fadeIn 0.5s' }}>
-                    <strong>Offer:</strong> "We do catering for weddings, parties, funerals, and corporate."
-                    <br /><br />
-                    <strong>Result:</strong> Confused customers. "Are they cheap? Expensive? Good?"
-                    <br /><br />
-                    <span style={{ color: '#EF4444', fontWeight: 800 }}>Outcome: 2 Gigs/Month. Struggling.</span>
-                </div>
-            ) : (
-                <div style={{ padding: '1.5rem', background: '#ECFDF5', borderRadius: '24px', border: '2px solid #A7F3D0', animation: 'fadeIn 0.5s' }}>
-                    <strong>Offer:</strong> "Health-focused catering for Tech Startup lunches in Cape Town."
-                    <br /><br />
-                    <strong>Result:</strong> Clear value. "Perfect for our office!"
-                    <br /><br />
-                    <span style={{ color: '#10B981', fontWeight: 800 }}>Outcome: Fully Booked (Recurring Recurring Revenue).</span>
-                </div>
-            )}
         </div>
     )
 }
@@ -1730,7 +1886,7 @@ export function Pillar1ModuleC({ onNext }) {
                     Make the value discrepancy so large that checking out is a no-brainer."
                 </BookInsight>
 
-                <ValueEquationVisual />
+
 
                 <h3 style={{ marginTop: '2rem' }}>Hormozi's 4 Value Variables</h3>
                 <p>
@@ -1756,14 +1912,20 @@ export function Pillar1ModuleC({ onNext }) {
 
                 <h3>Value vs Friction</h3>
                 <p>
-                    People buy when the <strong>Value</strong> (what they get) is higher than the <strong>Friction</strong> (price + effort + risk).
-                    <br />
-                    If you want more sales, you can either:
+                    Think of your offer as a scale. To make a sale, the <strong style={{ color: '#10B981' }}>Value</strong> must outweigh the <strong style={{ color: '#EF4444' }}>Friction</strong>.
                 </p>
-                <ul>
-                    <li>Increase the Value (Make it better, faster, tastier)</li>
-                    <li>Decrease the Friction (Make it cheaper, easier to buy, guaranteed)</li>
-                </ul>
+
+                <p style={{ marginBottom: '1rem' }}>
+                    <strong>1. Value (The Pull)</strong><br />
+                    This is the <em>benefit</em> side. It combines the <strong>Dream Outcome</strong> (what the customer craves) with the <strong>Perceived Likelihood of Achievement</strong> (their confidence that you can actually deliver). To increase value, you must make the result feel big, meaningful, and guaranteed.
+                </p>
+
+                <p style={{ marginBottom: '1rem' }}>
+                    <strong>2. Friction (The Resistance)</strong><br />
+                    In a purchasing context, friction is anything that adds effort, delay, uncertainty, or inconvenience in the buying journey, which reduces a customer’s willingness to purchase (or makes them more likely to abandon). To decrease friction, you must minimize the time delay and the physical/mental effort required.
+                </p>
+
+                <ValueEquationVisual />
 
                 <OfferScenario />
 
@@ -2083,6 +2245,66 @@ export function Pillar1ModuleE({ onNext }) {
 }
 
 // ==========================================
+// MODULE F: RESOURCES
+// ==========================================
+export function Pillar1Resources({ onNext }) {
+    return (
+        <InteractiveLayout title="Module F: Resources" subtitle="Tools & Reading for the Journey">
+            <div className="cw-prose">
+                <p className="cw-text-body">
+                    You don't need to invent everything yourself. Stand on the shoulders of giants.
+                    Here are the essential books and tools for Pillar 1.
+                </p>
+
+                <h3>📚 Recommended Reading</h3>
+                <ul style={{ listStyle: 'none', padding: 0, display: 'grid', gap: '1rem' }}>
+                    <li>
+                        <a href="https://www.amazon.com/Lean-Startup-Entrepreneurs-Continuous-Innovation/dp/0307887898" target="_blank" rel="noopener noreferrer" style={{ fontWeight: 'bold', color: '#8B5CF6', textDecoration: 'none' }}>The Lean Startup by Eric Ries_↗</a>
+                        <p style={{ margin: '0.2rem 0 0', fontSize: '0.9rem', color: '#475569' }}>The scientific approach to creating and managing startups.</p>
+                    </li>
+                    <li>
+                        <a href="https://www.amazon.com/Myth-Revisited-Small-Businesses-About/dp/0887307280" target="_blank" rel="noopener noreferrer" style={{ fontWeight: 'bold', color: '#8B5CF6', textDecoration: 'none' }}>The E-Myth Revisited by Michael Gerber ↗</a>
+                        <p style={{ margin: '0.2rem 0 0', fontSize: '0.9rem', color: '#475569' }}>Why most small businesses don't work and what to do about it.</p>
+                    </li>
+                    <li>
+                        <a href="https://www.amazon.com/Zero-One-Notes-Startups-Future/dp/0804139296" target="_blank" rel="noopener noreferrer" style={{ fontWeight: 'bold', color: '#8B5CF6', textDecoration: 'none' }}>Zero to One by Peter Thiel ↗</a>
+                        <p style={{ margin: '0.2rem 0 0', fontSize: '0.9rem', color: '#475569' }}>Notes on startups, or how to build the future.</p>
+                    </li>
+                    <li>
+                        <a href="https://www.amazon.com/Testing-Business-Ideas-Field-Experimentation/dp/1119551447" target="_blank" rel="noopener noreferrer" style={{ fontWeight: 'bold', color: '#8B5CF6', textDecoration: 'none' }}>Testing Business Ideas by David J. Bland ↗</a>
+                        <p style={{ margin: '0.2rem 0 0', fontSize: '0.9rem', color: '#475569' }}>A field guide for rapid experimentation.</p>
+                    </li>
+                </ul>
+
+                <h3 style={{ marginTop: '2rem' }}>🛠️ The Founder Stack</h3>
+                <ul style={{ listStyle: 'none', padding: 0, display: 'grid', gap: '1rem' }}>
+                    <li>
+                        <a href="https://leanstack.com/lean-canvas" target="_blank" rel="noopener noreferrer" style={{ fontWeight: 'bold', color: '#10B981', textDecoration: 'none' }}>Lean Canvas ↗</a>
+                        <p style={{ margin: '0 0 0', fontSize: '0.9rem', color: '#475569' }}>A 1-page business plan template that replaces 20-page documents.</p>
+                    </li>
+                    <li>
+                        <a href="https://trends.google.com/" target="_blank" rel="noopener noreferrer" style={{ fontWeight: 'bold', color: '#10B981', textDecoration: 'none' }}>Google Trends ↗</a>
+                        <p style={{ margin: '0 0 0', fontSize: '0.9rem', color: '#475569' }}>To see what people are searching for right now.</p>
+                    </li>
+                    <li>
+                        <a href="https://answerthepublic.com/" target="_blank" rel="noopener noreferrer" style={{ fontWeight: 'bold', color: '#10B981', textDecoration: 'none' }}>AnswerThePublic ↗</a>
+                        <p style={{ margin: '0 0 0', fontSize: '0.9rem', color: '#475569' }}>To find out what exact questions people are asking about your topic.</p>
+                    </li>
+                    <li>
+                        <a href="https://www.typeform.com/" target="_blank" rel="noopener noreferrer" style={{ fontWeight: 'bold', color: '#10B981', textDecoration: 'none' }}>Typeform / Google Forms ↗</a>
+                        <p style={{ margin: '0 0 0', fontSize: '0.9rem', color: '#475569' }}>The fastest way to get customer feedback.</p>
+                    </li>
+                </ul>
+
+                <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'flex-end' }}>
+                    <CWButton onClick={onNext} variant="primary">Take the Pivot Quiz →</CWButton>
+                </div>
+            </div>
+        </InteractiveLayout>
+    );
+}
+
+// ==========================================
 // QUIZ (WIZARD STYLE - One Question at a Time)
 // ==========================================
 
@@ -2273,8 +2495,8 @@ export function Pillar1Completion() {
             '',
             'YOUR NEXT STEP:',
             '---------------',
-            'Pillar 2: Legal & Compliance.',
-            'Now that you have a plan, let\'s make it legitimate.',
+            'Pillar 2: Web Development & Architecture.',
+            'Now that you have a plan, let\'s build your Digital HQ.',
             '',
             'CapeWeb University © ' + new Date().getFullYear()
         ].join('\n');
@@ -2298,7 +2520,7 @@ export function Pillar1Completion() {
                     <p style={{ color: 'var(--cw-text-secondary)', margin: '1rem 0' }}>
                         Your summary has been downloaded. Welcome to the alumni network, {form.firstName}.
                     </p>
-                    <CWButton variant="primary" onClick={() => window.location.reload()}>Next Pillar (Coming Soon)</CWButton>
+                    <CWButton variant="primary" onClick={() => window.location.reload()}>Start Pillar 2</CWButton>
                 </CWCard>
             </ReadingLayout>
         );

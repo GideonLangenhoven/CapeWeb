@@ -184,69 +184,53 @@ const buildPersonaContext = (context = {}) => ({
 
 export const pillar2QuizQuestions = [
   {
-    question: 'CIPC is mainly used for:',
-    options: ['Company registration and intellectual property', 'UIF monthly declarations', 'Roadworthy certificates'],
-    correctIndex: 0,
+    question: 'Thabo runs his delivery business as a Sole Proprietor. His driver crashes into a luxury car causing R200k damages. Who is liable to pay?',
+    options: ['The driver only', 'The business insurance only', 'Thabo personally (Unlimited Liability)'],
+    correctIndex: 2,
   },
   {
-    question: 'POPIA is enforced/overseen by:',
-    options: ['The Information Regulator', 'The traffic department', 'The weather service'],
-    correctIndex: 0,
-  },
-  {
-    question: 'If you hire employees, you must learn about:',
-    options: ['Only Instagram marketing', 'PAYE/UIF/Compensation Fund (as applicable)', 'Nothing changes legally'],
+    question: 'You registered your company 2 years ago but never traded. You ignored the CIPC Annual Return emails. What happens now?',
+    options: ['Nothing, you didn\'t trade', 'Your company is in "Deregistration Process" and your bank account may freeze', 'SARS pays you a refund'],
     correctIndex: 1,
   },
   {
-    question: 'The Consumer Protection Act is about:',
-    options: ['Fair marketplace rules and consumer rights', 'Football rules', 'Airline schedules'],
-    correctIndex: 0,
-  },
-  {
-    question: 'ECTA is important because:',
-    options: [
-      'It regulates electronic communications and transactions (e-commerce basics)',
-      'It tells you what to post on TikTok',
-      "It's a banking app",
-    ],
-    correctIndex: 0,
-  },
-  {
-    question: '"Compliance Passport" in CapeWeb means:',
-    options: [
-      'A checklist you complete to be "legal enough to sell" and grow safely',
-      'A passport for international travel',
-      'A logo file',
-    ],
-    correctIndex: 0,
-  },
-  {
-    question: 'If you trade in certain categories in Cape Town, you might need:',
-    options: ['Nothing, ever', 'City permits/licences depending on your activity', "A driver's licence renewal"],
+    question: 'You hire a gardener to work at your office every Tuesday. You pay cash on the day. After 1 year, you tell him "We don\'t need you anymore." What is the risk?',
+    options: ['None, he was casual', 'He can take you to the CCMA for unfair dismissal (he is a part-time employee)', 'He just finds another job'],
     correctIndex: 1,
   },
   {
-    question: 'A smart founder approach is:',
-    options: [
-      'Start safe, keep records, and tighten compliance as you grow',
-      'Ignore compliance until you have problems',
-      'Wait forever before selling',
-    ],
-    correctIndex: 0,
+    question: 'Your new IT startup made R500k revenue this year. A corporate client asks for your B-BBEE Certificate. What do you provide?',
+    options: ['You must hire an auditor for R20k', 'A Sworn Affidavit (Free police stamp) stating you are an EME', 'You tell them you are too small'],
+    correctIndex: 1,
   },
   {
-    question: 'If you want to be tender-ready, you start with:',
-    options: ['CSD registration, then eTenders', 'Buying followers', 'Only printing business cards'],
-    correctIndex: 0,
+    question: 'Your bakery sales hit R200k this year. Do you NEED to register for VAT?',
+    options: ['Yes, immediately', 'No, it is voluntary under R1 million turnover', 'Only if you sell bread'],
+    correctIndex: 1,
   },
   {
-    question: 'A trade mark is:',
-    options: [
-      'Required before your first sale',
-      'A way to protect a valuable brand name (usually later)',
-      'A delivery service',
-    ],
+    question: 'You send a newsletter to 500 clients but accidentally put all their email addresses in the "CC" field instead of "BCC". Is this a legal issue?',
+    options: ['No, it was a mistake', 'Yes, it is a Data Breach under POPIA (unlawful disclosure)', 'Only if someone complains'],
+    correctIndex: 1,
+  },
+  {
+    question: 'A client agrees to your R50k quote via WhatsApp message "Go ahead". You do the work. They refuse to pay. Do you have a contract?',
+    options: ['No, contracts must be signed PDF documents', 'Yes, a contract exists (offer + acceptance), but it might be harder to prove specific terms', 'No, WhatsApps are not legal'],
+    correctIndex: 1,
+  },
+  {
+    question: 'Using the "Profit First" system: You receive R10,000 from a client. What is the very first thing you do?',
+    options: ['Pay your rent and bills', 'Transfer your Profit % to a separate account', 'Buy new equipment'],
+    correctIndex: 1,
+  },
+  {
+    question: 'You want to sell your homemade hot sauce at a local Spar. What document will the store manager definitely ask for?',
+    options: ['Your matric certificate', 'Certificate of Acceptability (Health/Food Safety)', 'A TV licence'],
+    correctIndex: 1,
+  },
+  {
+    question: 'You want to bid for a government tender. You have the skills and the price. What is the ONE database you absolutely must be registered on to get paid?',
+    options: ['Facebook Marketplace', 'CSD (Central Supplier Database)', 'LinkedIn'],
     correctIndex: 1,
   },
 ];
@@ -259,133 +243,163 @@ function LiabilityShieldInteractive() {
   const [mode, setMode] = useState('sole'); // 'sole' | 'pty'
 
   return (
-    <div style={{ margin: '3rem 0', fontFamily: 'Inter, sans-serif' }}>
-      <h3 style={{ marginBottom: '1.5rem', textAlign: 'center' }}>Scenario: The "Delivery Accident"</h3>
-
-      {/* Story Context */}
+    <div style={{
+      margin: '3rem 0',
+      padding: '2rem',
+      borderRadius: '24px',
+      position: 'relative',
+      overflow: 'hidden',
+      boxShadow: '0 20px 50px -10px rgba(0,0,0,0.1)',
+      background: '#22D3EE',
+      color: '#0F172A',
+      fontFamily: 'Inter, sans-serif'
+    }}>
+      {/* Moving Gradient Background */}
       <div style={{
-        background: '#FEF3C7',
-        border: '1px solid #F59E0B',
-        borderRadius: '12px',
-        padding: '1.5rem',
-        marginBottom: '2rem',
-        textAlign: 'center'
-      }}>
-        <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🚚💥</div>
-        <p style={{ margin: 0, color: '#92400E', fontSize: '1.1rem' }}>
-          You run a delivery business. Your driver accidentally crashes into a luxury car.
-          <br /><strong>The Damage Claim: R500,000.</strong> Your business only has R50,000 in the bank.
-        </p>
-      </div>
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        background: 'linear-gradient(120deg, rgba(34,211,238,0.15), rgba(244,114,182,0.15), rgba(253,224,71,0.15), rgba(34,211,238,0.15))',
+        backgroundSize: '300% 300%',
+        animation: 'gradientMove 15s ease infinite',
+        zIndex: 0,
+        pointerEvents: 'none'
+      }} />
 
-      {/* Toggle */}
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '2rem' }}>
-        <button
-          onClick={() => setMode('sole')}
-          style={{
-            padding: '0.75rem 1.5rem',
-            borderRadius: '50px',
-            border: mode === 'sole' ? '2px solid #EF4444' : '1px solid #E5E7EB',
-            background: mode === 'sole' ? '#FEF2F2' : '#fff',
-            color: mode === 'sole' ? '#991B1B' : '#6B7280',
-            fontWeight: 700,
-            cursor: 'pointer',
-            transition: 'all 0.3s'
-          }}
-        >
-          Sole Proprietor
-        </button>
-        <button
-          onClick={() => setMode('pty')}
-          style={{
-            padding: '0.75rem 1.5rem',
-            borderRadius: '50px',
-            border: mode === 'pty' ? '2px solid #10B981' : '1px solid #E5E7EB',
-            background: mode === 'pty' ? '#D1FAE5' : '#fff',
-            color: mode === 'pty' ? '#065F46' : '#6B7280',
-            fontWeight: 700,
-            cursor: 'pointer',
-            transition: 'all 0.3s'
-          }}
-        >
-          Pty (Ltd) Company
-        </button>
-      </div>
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <h3 style={{ marginBottom: '1.5rem', textAlign: 'center', color: '#0f172a', fontSize: '1.5rem' }}>Scenario: The "Delivery Accident"</h3>
 
-      {/* Visualization */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', alignItems: 'start' }}>
-        {/* Business Assets */}
+        {/* Story Context */}
         <div style={{
-          background: '#fff',
-          border: '2px solid #E5E7EB',
-          borderRadius: '16px',
+          background: 'rgba(254, 243, 199, 0.9)',
+          border: '1px solid #F59E0B',
+          borderRadius: '12px',
           padding: '1.5rem',
-          opacity: 0.8
+          marginBottom: '2rem',
+          textAlign: 'center',
+          backdropFilter: 'blur(8px)'
         }}>
-          <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            🏢 The Business
-          </h4>
-          <div style={{ padding: '0.5rem', background: '#F3F4F6', borderRadius: '8px', marginBottom: '0.5rem', display: 'flex', justifyContent: 'space-between' }}>
-            <span>Bank Account:</span>
-            <span style={{ fontWeight: 700, color: '#DC2626' }}>Took R50,000</span>
-          </div>
-          <div style={{ padding: '0.5rem', background: '#F3F4F6', borderRadius: '8px', display: 'flex', justifyContent: 'space-between' }}>
-            <span>Remaining Dept:</span>
-            <span style={{ fontWeight: 700, color: '#DC2626' }}>R450,000</span>
-          </div>
+          <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🚚💥</div>
+          <p style={{ margin: 0, color: '#92400E', fontSize: '1.1rem' }}>
+            You run a delivery business. Your driver accidentally crashes into a luxury car.
+            <br /><strong>The Damage Claim: R500,000.</strong> Your business only has R50,000 in the bank.
+          </p>
         </div>
 
-        {/* Personal Assets */}
-        <div style={{
-          background: mode === 'sole' ? '#FEF2F2' : '#ECFDF5',
-          border: mode === 'sole' ? '2px solid #EF4444' : '2px solid #10B981',
-          borderRadius: '16px',
-          padding: '1.5rem',
-          position: 'relative',
-          transition: 'all 0.5s'
-        }}>
-          <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            🏠 Personal Life
-          </h4>
+        {/* Toggle */}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '2rem' }}>
+          <button
+            onClick={() => setMode('sole')}
+            style={{
+              padding: '0.75rem 1.5rem',
+              borderRadius: '50px',
+              border: 'none',
+              background: mode === 'sole' ? '#EF4444' : 'rgba(255,255,255,0.7)',
+              color: mode === 'sole' ? '#fff' : '#64748B',
+              fontWeight: 700,
+              cursor: 'pointer',
+              transition: 'all 0.3s',
+              boxShadow: mode === 'sole' ? '0 4px 12px rgba(239, 68, 68, 0.3)' : 'none'
+            }}
+          >
+            Sole Proprietor
+          </button>
+          <button
+            onClick={() => setMode('pty')}
+            style={{
+              padding: '0.75rem 1.5rem',
+              borderRadius: '50px',
+              border: 'none',
+              background: mode === 'pty' ? '#10B981' : 'rgba(255,255,255,0.7)',
+              color: mode === 'pty' ? '#fff' : '#64748B',
+              fontWeight: 700,
+              cursor: 'pointer',
+              transition: 'all 0.3s',
+              boxShadow: mode === 'pty' ? '0 4px 12px rgba(16, 185, 129, 0.3)' : 'none'
+            }}
+          >
+            Pty (Ltd) Company
+          </button>
+        </div>
 
-          {mode === 'sole' ? (
-            <div style={{ animation: 'shake 0.5s' }}>
-              <div style={{ padding: '0.5rem', background: '#FEE2E2', borderRadius: '8px', marginBottom: '0.5rem', color: '#991B1B' }}>
-                ⚠️ <strong>House:</strong> SEIZED to pay debt
-              </div>
-              <div style={{ padding: '0.5rem', background: '#FEE2E2', borderRadius: '8px', marginBottom: '0.5rem', color: '#991B1B' }}>
-                ⚠️ <strong>Car:</strong> SEIZED to pay debt
-              </div>
-              <div style={{ marginTop: '1rem', fontWeight: 700, color: '#DC2626' }}>
-                Result: You lose eveything.
-              </div>
+        {/* Visualization */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', alignItems: 'start' }}>
+          {/* Business Assets */}
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.9)',
+            border: '2px solid #E5E7EB',
+            borderRadius: '16px',
+            padding: '1.5rem',
+            boxShadow: '0 4px 6px rgba(0,0,0,0.05)'
+          }}>
+            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#111827' }}>
+              🏢 The Business
+            </h4>
+            <div style={{ padding: '0.5rem', background: '#F3F4F6', borderRadius: '8px', marginBottom: '0.5rem', display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ color: '#374151' }}>Bank Account:</span>
+              <span style={{ fontWeight: 700, color: '#DC2626' }}>Took R50,000</span>
             </div>
-          ) : (
-            <div style={{ animation: 'fadeIn 0.5s' }}>
-              <div style={{ padding: '0.5rem', background: '#fff', borderRadius: '8px', marginBottom: '0.5rem' }}>
-                ✅ <strong>House:</strong> SAFE
-              </div>
-              <div style={{ padding: '0.5rem', background: '#fff', borderRadius: '8px', marginBottom: '0.5rem' }}>
-                ✅ <strong>Car:</strong> SAFE
-              </div>
-              <div style={{ marginTop: '1rem', fontWeight: 700, color: '#059669' }}>
-                Result: Only the company fails. You are safe.
-              </div>
+            <div style={{ padding: '0.5rem', background: '#F3F4F6', borderRadius: '8px', display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ color: '#374151' }}>Remaining Debt:</span>
+              <span style={{ fontWeight: 700, color: '#DC2626' }}>R450,000</span>
             </div>
-          )}
+          </div>
 
-          {/* Shield Icon Overlay for Pty Ltd */}
-          {mode === 'pty' && (
-            <div style={{
-              position: 'absolute', top: '-15px', right: '-15px',
-              background: '#10B981', color: '#fff',
-              width: '50px', height: '50px', borderRadius: '50%',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem',
-              boxShadow: '0 5px 15px rgba(16, 185, 129, 0.4)'
-            }}>
-              🛡️
-            </div>
-          )}
+          {/* Personal Assets */}
+          <div style={{
+            background: mode === 'sole' ? 'rgba(254, 242, 242, 0.95)' : 'rgba(236, 253, 245, 0.95)',
+            border: mode === 'sole' ? '2px solid #EF4444' : '2px solid #10B981',
+            borderRadius: '16px',
+            padding: '1.5rem',
+            position: 'relative',
+            transition: 'all 0.5s',
+            boxShadow: mode === 'sole' ? '0 10px 30px rgba(239, 68, 68, 0.15)' : '0 10px 30px rgba(16, 185, 129, 0.15)'
+          }}>
+            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#111827' }}>
+              🏠 Personal Life
+            </h4>
+
+            {mode === 'sole' ? (
+              <div style={{ animation: 'shake 0.5s' }}>
+                <div style={{ padding: '0.5rem', background: '#FEE2E2', borderRadius: '8px', marginBottom: '0.5rem', color: '#991B1B' }}>
+                  ⚠️ <strong>House:</strong> SEIZED to pay debt
+                </div>
+                <div style={{ padding: '0.5rem', background: '#FEE2E2', borderRadius: '8px', marginBottom: '0.5rem', color: '#991B1B' }}>
+                  ⚠️ <strong>Car:</strong> SEIZED to pay debt
+                </div>
+                <div style={{ marginTop: '1rem', fontWeight: 700, color: '#DC2626' }}>
+                  Result: You lose everything.
+                </div>
+              </div>
+            ) : (
+              <div style={{ animation: 'fadeIn 0.5s' }}>
+                <div style={{ padding: '0.5rem', background: '#fff', borderRadius: '8px', marginBottom: '0.5rem', color: '#065F46' }}>
+                  ✅ <strong>House:</strong> SAFE
+                </div>
+                <div style={{ padding: '0.5rem', background: '#fff', borderRadius: '8px', marginBottom: '0.5rem', color: '#065F46' }}>
+                  ✅ <strong>Car:</strong> SAFE
+                </div>
+                <div style={{ marginTop: '1rem', fontWeight: 700, color: '#059669' }}>
+                  Result: Only the company fails. You are safe.
+                </div>
+              </div>
+            )}
+
+            {/* Shield Icon Overlay for Pty Ltd */}
+            {mode === 'pty' && (
+              <div style={{
+                position: 'absolute', top: '-15px', right: '-15px',
+                background: '#10B981', color: '#fff',
+                width: '50px', height: '50px', borderRadius: '50%',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem',
+                boxShadow: '0 5px 15px rgba(16, 185, 129, 0.4)'
+              }}>
+                🛡️
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -431,55 +445,82 @@ function ComplianceRoadmapInteractive() {
   ];
 
   return (
-    <div style={{ margin: '3rem 0' }}>
-      <h3 style={{ textAlign: 'center', marginBottom: '2rem' }}>The "make it official" Timeline</h3>
-
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2rem' }}>
-        {steps.map((step, i) => (
-          <React.Fragment key={step.id}>
-            {/* Node */}
-            <div
-              onClick={() => setActiveStep(i)}
-              style={{
-                width: '60px', height: '60px', borderRadius: '50%',
-                background: activeStep === i ? '#0b0f1a' : (i < activeStep ? '#10B981' : '#E5E7EB'),
-                color: activeStep === i ? '#fff' : (i < activeStep ? '#fff' : '#6B7280'),
-                display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.8rem',
-                cursor: 'pointer', transition: 'all 0.3s',
-                boxShadow: activeStep === i ? '0 0 0 4px #bae6fd' : 'none',
-                zIndex: 2
-              }}
-            >
-              {i < activeStep ? '✓' : step.label}
-            </div>
-
-            {/* Connector */}
-            {i < steps.length - 1 && (
-              <div style={{
-                height: '4px', width: '60px',
-                background: i < activeStep ? '#10B981' : '#E5E7EB',
-                transition: 'background 0.5s ease'
-              }} />
-            )}
-          </React.Fragment>
-        ))}
-      </div>
-
-      {/* Detail Card */}
+    <div style={{
+      margin: '3rem 0',
+      padding: '2rem',
+      borderRadius: '24px',
+      position: 'relative',
+      overflow: 'hidden',
+      boxShadow: '0 20px 50px -10px rgba(0,0,0,0.1)',
+      background: '#F472B6',
+      color: '#0F172A'
+    }}>
+      {/* Moving Gradient Background */}
       <div style={{
-        background: '#fff', border: '1px solid #E5E7EB', borderRadius: '16px', padding: '2rem',
-        textAlign: 'center', animation: 'fadeIn 0.3s ease',
-        boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)'
-      }} key={activeStep}>
-        <CWBadge status="neutral" style={{ marginBottom: '1rem' }}>Step {activeStep + 1}: {steps[activeStep].label}</CWBadge>
-        <h4 style={{ fontSize: '1.5rem', margin: '0 0 1rem' }}>{steps[activeStep].title}</h4>
-        <p style={{ fontSize: '1.1rem', color: '#4B5563', maxWidth: '500px', margin: '0 auto 1.5rem' }}>
-          {steps[activeStep].desc}
-        </p>
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        background: 'linear-gradient(120deg, rgba(34,211,238,0.15), rgba(244,114,182,0.15), rgba(253,224,71,0.15), rgba(34,211,238,0.15))',
+        backgroundSize: '300% 300%',
+        animation: 'gradientMove 15s ease infinite',
+        zIndex: 0,
+        pointerEvents: 'none'
+      }} />
 
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', fontSize: '0.9rem', color: '#6B7280' }}>
-          <div>💰 Cost: <strong style={{ color: '#0b0f1a' }}>{steps[activeStep].cost}</strong></div>
-          <div>⏱️ Time: <strong style={{ color: '#0b0f1a' }}>{steps[activeStep].time}</strong></div>
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <h3 style={{ textAlign: 'center', marginBottom: '2rem', color: '#0f172a', fontWeight: 800, fontSize: '1.5rem' }}>The "make it official" Timeline</h3>
+
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2rem' }}>
+          {steps.map((step, i) => (
+            <React.Fragment key={step.id}>
+              {/* Node */}
+              <div
+                onClick={() => setActiveStep(i)}
+                style={{
+                  width: '60px', height: '60px', borderRadius: '50%',
+                  background: activeStep === i ? '#0b0f1a' : (i < activeStep ? '#10B981' : 'rgba(255,255,255,0.8)'),
+                  color: activeStep === i ? '#fff' : (i < activeStep ? '#fff' : '#64748B'),
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.8rem',
+                  cursor: 'pointer', transition: 'all 0.3s',
+                  boxShadow: activeStep === i ? '0 0 0 4px #bae6fd' : '0 4px 6px rgba(0,0,0,0.05)',
+                  zIndex: 2,
+                  border: i >= activeStep ? '2px solid #E2E8F0' : 'none'
+                }}
+              >
+                {i < activeStep ? '✓' : step.label}
+              </div>
+
+              {/* Connector */}
+              {i < steps.length - 1 && (
+                <div style={{
+                  height: '4px', width: '60px',
+                  background: i < activeStep ? '#10B981' : '#E2E8F0',
+                  transition: 'background 0.5s ease'
+                }} />
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+
+        {/* Detail Card */}
+        <div style={{
+          background: 'rgba(255, 255, 255, 0.9)', border: '1px solid #E5E7EB', borderRadius: '16px', padding: '2rem',
+          textAlign: 'center', animation: 'fadeIn 0.3s ease',
+          boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)',
+          backdropFilter: 'blur(4px)'
+        }} key={activeStep}>
+          <CWBadge status="neutral" style={{ marginBottom: '1rem', background: '#F1F5F9', color: '#475569' }}>Step {activeStep + 1}: {steps[activeStep].label}</CWBadge>
+          <h4 style={{ fontSize: '1.5rem', margin: '0 0 1rem', color: '#111827' }}>{steps[activeStep].title}</h4>
+          <p style={{ fontSize: '1.1rem', color: '#4B5563', maxWidth: '500px', margin: '0 auto 1.5rem', lineHeight: 1.6 }}>
+            {steps[activeStep].desc}
+          </p>
+
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', fontSize: '1rem', color: '#64748B' }}>
+            <div style={{ background: '#F0FDF4', padding: '0.5rem 1rem', borderRadius: '8px', color: '#166534' }}>💰 Cost: <strong style={{ color: '#15803D' }}>{steps[activeStep].cost}</strong></div>
+            <div style={{ background: '#EFF6FF', padding: '0.5rem 1rem', borderRadius: '8px', color: '#1E40AF' }}>⏱️ Time: <strong style={{ color: '#1D4ED8' }}>{steps[activeStep].time}</strong></div>
+          </div>
         </div>
       </div>
     </div>
@@ -673,7 +714,8 @@ function MiniQuiz({ questions, title = "Knowledge Check", onNext }) {
       marginTop: '3rem',
       padding: '2rem 2rem',
       borderRadius: '32px',
-      background: 'rgba(255, 255, 255, 0.85)',
+      background: '#4ADE80',
+      color: '#0F172A',
       backdropFilter: 'blur(24px)',
       border: '1px solid rgba(255, 255, 255, 0.6)',
       boxShadow: '0 20px 50px -10px rgba(31, 38, 135, 0.15)',
@@ -803,6 +845,16 @@ const moduleAQuestions = [
     question: "Why might you choose a Sole Proprietor setup first?",
     options: ["It has zero setup cost and allows immediate trading", "It protects you from liability", "It makes you look big"],
     correctIndex: 0
+  },
+  {
+    question: "What is the biggest risk of a Sole Proprietorship?",
+    options: ["Too much paperwork", "Personal assets (house/car) are at risk if sued", "You cannot hire staff"],
+    correctIndex: 1
+  },
+  {
+    question: "What does 'Limited Liability' (Pty Ltd) mean?",
+    options: ["You have limited ability to make money", "The company is a separate legal person; you are not personally liable for its debts", "You pay less tax"],
+    correctIndex: 1
   }
 ];
 
@@ -836,11 +888,11 @@ export function Pillar2ModuleA({ onNext }) {
           </ul>
         </div>
 
-        <div style={{ padding: '1.5rem', background: '#0b0f1a', color: '#fff', borderRadius: '16px', boxShadow: '0 10px 30px -10px rgba(0,0,0,0.3)' }}>
+        <div style={{ padding: '1.5rem', background: 'linear-gradient(145deg, #0F172A, #1E293B)', color: '#F8FAFC', borderRadius: '16px', boxShadow: '0 10px 30px -10px rgba(0,0,0,0.5)', border: '1px solid #334155' }}>
           <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🏢</div>
-          <h4 style={{ margin: '0 0 0.5rem', color: '#fff' }}>Pty (Ltd) Company</h4>
-          <p style={{ fontSize: '0.9rem', color: '#9CA3AF' }}>A separate legal person.</p>
-          <ul style={{ fontSize: '0.9rem', lineHeight: '1.6', color: '#D1D5DB' }}>
+          <h4 style={{ margin: '0 0 0.5rem', color: '#F8FAFC', fontSize: '1.2rem', fontWeight: 'bold' }}>Pty (Ltd) Company</h4>
+          <p style={{ fontSize: '0.9rem', color: '#CBD5E1', marginBottom: '1rem' }}>A separate legal person.</p>
+          <ul style={{ fontSize: '0.9rem', lineHeight: '1.6', color: '#E2E8F0', paddingLeft: '1.2rem' }}>
             <li>✅ <strong>Safe:</strong> Limited liability protection</li>
             <li>✅ Professional image</li>
             <li>✅ Required for funding & tenders</li>
@@ -925,6 +977,16 @@ const moduleBQuestions = [
   {
     question: "When should you open a business bank account?",
     options: ["Never", "After registering with CIPC (using your MoI)", "Before you have a business name"],
+    correctIndex: 1
+  },
+  {
+    question: "The 'Profit First' principle suggests:",
+    options: ["Spending all your money on stock", "Taking 1% of sales as profit into a separate account immediately", "Waiting until year-end to see if there is profit"],
+    correctIndex: 1
+  },
+  {
+    question: "Why avoid mixing personal and business expenses?",
+    options: ["It confuses the bank", "It pierces the 'Corporate Veil' (making you liable) and breaks accounting automation", "It looks messy"],
     correctIndex: 1
   }
 ];
@@ -1068,6 +1130,16 @@ const moduleCQuestions = [
   {
     question: "If selling online (ECTA), you must:",
     options: ["Start a podcast", "Provide clear contact details, terms, and refund policies on your site", "Ask for a photo ID"],
+    correctIndex: 1
+  },
+  {
+    question: "Under the Consumer Protection Act (CPA), can you say 'No Refunds'?",
+    options: ["Yes, always", "No, it is illegal; customers have imply warranties on quality", "Only on Fridays"],
+    correctIndex: 1
+  },
+  {
+    question: "Why do ad platforms (Google/Meta) require a Privacy Policy?",
+    options: ["To ban you", "To ensure you handle user data legally before running lead forms", "To make your site slower"],
     correctIndex: 1
   }
 ];
@@ -1384,6 +1456,21 @@ export function Pillar2ModuleD({ onNext }) {
             question: "When must a company file Annual Returns with CIPC?",
             options: ["Every month", "Only when making profit", "Every year on the anniversary of registration"],
             correctIndex: 2
+          },
+          {
+            question: "What happens if you ignore Annual Returns?",
+            options: ["Nothing", "CIPC deregisters your company and banks freeze your accounts", "You get a warning"],
+            correctIndex: 1
+          },
+          {
+            question: "When is Provisional Tax due?",
+            options: ["Monthly", "Twice a year (August & February)", "Only at year end"],
+            correctIndex: 1
+          },
+          {
+            question: "Why is 'Good Standing' important?",
+            options: ["It looks nice", "It is required for loans, contracts, and tenders", "It prevents load shedding"],
+            correctIndex: 1
           }
         ]}
         title="Roadmap Knowledge Check"
@@ -1399,12 +1486,22 @@ export function Pillar2ModuleD({ onNext }) {
 const moduleBonusQuestions = [
   {
     question: "Which business needs a Certificate of Acceptability (COA)?",
-    options: ["Web Design Agency", "Food Truck", "Clothing Store"],
+    options: ["Web Design Agency", "Food Truck or Catering", "Clothing Store"],
     correctIndex: 1
   },
   {
-    question: "What happens if you ignore CIPC Annual Returns?",
-    options: ["Deregsitration (Company Closed)", "R50 Fine", "Nothing"],
+    question: "What is the CSD used for?",
+    options: ["Finding staff", "Applying for Government Tenders & Contracts", "Paying Taxes"],
+    correctIndex: 1
+  },
+  {
+    question: "Who needs an Informal Trading Permit?",
+    options: ["Online Stores", "Street Vendors & Market Stalls", "Shopping Malls"],
+    correctIndex: 1
+  },
+  {
+    question: "Why comply with local bylaws?",
+    options: ["To avoid fines and equipment confiscation", "Because it is fun", "To pay more fees"],
     correctIndex: 0
   }
 ];
@@ -1519,6 +1616,87 @@ export function Pillar2ModuleBonus({ onNext }) {
         onNext={onNext}
       />
     </InteractiveLayout >
+  );
+}
+
+// Module: Resources
+export function Pillar2Resources({ onNext }) {
+  const openLink = (url) => window.open(url, '_blank');
+
+  const ResourceCard = ({ title, category, description, link }) => (
+    <div onClick={() => openLink(link)} style={{
+      padding: '1.5rem', background: 'white', borderRadius: '16px',
+      border: '1px solid #E2E8F0', cursor: 'pointer', transition: 'all 0.2s',
+      boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)',
+      display: 'flex', flexDirection: 'column', gap: '0.5rem'
+    }}
+      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.borderColor = '#94A3B8'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0,0,0,0.1)'; }}
+      onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = '#E2E8F0'; e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0,0,0,0.05)'; }}
+    >
+      <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em', background: '#F1F5F9', padding: '0.25rem 0.5rem', borderRadius: '4px', alignSelf: 'flex-start' }}>
+        {category}
+      </div>
+      <h4 style={{ margin: '0.5rem 0 0', fontSize: '1.1rem', color: '#0F172A' }}>{title} ↗</h4>
+      <p style={{ margin: 0, fontSize: '0.9rem', color: '#4B5563', lineHeight: '1.5' }}>{description}</p>
+    </div>
+  );
+
+  return (
+    <InteractiveLayout title="Module J: Resources" subtitle="The Legal Library">
+      <div className="cw-prose">
+        <p>Compliance is checking boxes. Use these official portals to tick them off quickly so you can get back to business.</p>
+
+        <h3 style={{ marginTop: '2rem' }}>🏛️ Official Portals (SA)</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
+          <ResourceCard
+            category="Registration"
+            title="CIPC BizPortal"
+            description="Register your company, get your B-BBEE certificate, and register for UIF/CF in one go."
+            link="https://bizportal.gov.za"
+          />
+          <ResourceCard
+            category="Tax"
+            title="SARS eFiling"
+            description="The world-class tax portal. Submit IT14 (Company Tax) and VAT returns here."
+            link="https://sarsefiling.co.za"
+          />
+          <ResourceCard
+            category="Employees"
+            title="uFiling"
+            description="Register employees for UIF and declare monthly contributions. Mandatory if you employ anyone."
+            link="https://ufiling.co.za"
+          />
+          <ResourceCard
+            category="Safety"
+            title="Dept of Labour (COIDA)"
+            description="Workmen's Compensation. Protects you if staff get injured on duty."
+            link="https://cfonline.labour.gov.za"
+          />
+        </div>
+
+        <h3 style={{ marginTop: '3rem' }}>📚 Recommended Reading</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
+          <ResourceCard
+            category="Financial Basics"
+            title="Manage Your Money..."
+            description="By Sam Beckbessinger. The best SA-specific guide to money (personal & business)."
+            link="https://www.manageyourmoney.co.za/"
+          />
+          <ResourceCard
+            category="Strategy"
+            title="Start With Why"
+            description="By Simon Sinek. Before you worry about the 'What' (legal form), figure out the 'Why'."
+            link="https://simonsinek.com/books/start-with-why/"
+          />
+        </div>
+
+        <div style={{ marginTop: '3rem', padding: '2rem', background: '#F8FAFC', borderRadius: '16px', textAlign: 'center', border: '1px solid #E2E8F0' }}>
+          <h4>Ready for the First Big Exam?</h4>
+          <p style={{ marginBottom: '1.5rem', color: '#64748B' }}>You know the rules. Now prove you can lead.</p>
+          <CWButton onClick={onNext} variant="primary" style={{ padding: '1rem 2rem', fontSize: '1.1rem' }}>Take Final Exam 🏁</CWButton>
+        </div>
+      </div>
+    </InteractiveLayout>
   );
 }
 
@@ -1665,7 +1843,7 @@ export function Pillar2Quiz({ onFinish }) {
               style={{ marginTop: '1.5rem', minWidth: '200px', justifyContent: 'center', fontSize: '1.1rem', padding: '1rem 2rem' }}
               onClick={onFinish}
             >
-              Finish Pillar 2 →
+              Finish Pillar 10 →
             </CWButton>
           )}
         </div>
@@ -1695,7 +1873,7 @@ export function Pillar2Completion() {
 Generated for: ${form.firstName} ${form.lastName}
 Date: ${new Date().toLocaleDateString()}
 
-Congratulations on completing Pillar 2: Structure & Compliance!
+Congratulations on completing Pillar 10: Structure & Compliance!
 
 KEY CONCEPTS MASTERED:
 ----------------------
@@ -1714,8 +1892,8 @@ RECOMMENDED READING LIST:
 
 YOUR NEXT STEP:
 ---------------
-Pillar 3: Digital HQ (The Build).
-Now that you are legal, let's build the machine that sells.
+Pillar 11: Mobile Application Development.
+Now that you are legal, let's build your Store-Ready MVP.
 
 CapeWeb University © ${new Date().getFullYear()}
         `;
@@ -1732,21 +1910,21 @@ CapeWeb University © ${new Date().getFullYear()}
 
   if (status === 'success') {
     return (
-      <ReadingLayout title="Pillar 2 Complete!">
+      <ReadingLayout title="Pillar 10 Complete!">
         <CWCard style={{ textAlign: 'center', padding: '3rem' }}>
           <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🎓</div>
           <h2 className="cw-heading-md">Passport Issued!</h2>
           <p style={{ color: 'var(--cw-text-secondary)', margin: '1rem 0' }}>
             Your summary has been downloaded. You are now "Business Ready".
           </p>
-          <CWButton variant="primary" onClick={() => window.location.reload()}>Proceed to Pillar 3 (Coming Soon)</CWButton>
+          <CWButton variant="primary" onClick={() => window.location.reload()}>Proceed to Pillar 11</CWButton>
         </CWCard>
       </ReadingLayout>
     );
   }
 
   return (
-    <ReadingLayout title="Pillar 2 Complete!">
+    <ReadingLayout title="Pillar 10 Complete!">
       <CWCard style={{ maxWidth: '600px', margin: '0 auto', padding: '2rem' }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>🎉</div>
@@ -1775,7 +1953,7 @@ CapeWeb University © ${new Date().getFullYear()}
           <div style={{ background: '#F0F9FF', padding: '1rem', borderRadius: '8px', fontSize: '0.9rem', color: '#0369A1', border: '1px solid #BAE6FD' }}>
             <strong>🎁 Includes:</strong>
             <ul style={{ margin: '0.5rem 0 0 1.2rem' }}>
-              <li>Full Pillar 2 Checklist (Text version)</li>
+              <li>Full Pillar 10 Checklist (Text version)</li>
               <li>Legal/Finance Book List</li>
               <li>CapeWeb University "Sophomore" Status</li>
             </ul>
@@ -1964,6 +2142,21 @@ export function Pillar2ModuleE({ onNext }) {
             question: "Which contribution is shared 50/50 between employer and employee?",
             options: ["PAYE", "UIF (Unemployment Insurance)", "COIDA"],
             correctIndex: 1
+          },
+          {
+            question: "What is PAYE (Pay As You Earn)?",
+            options: ["A bonus for the boss", "Income tax deducted from the employee's salary and paid to SARS", "A voluntary donation"],
+            correctIndex: 1
+          },
+          {
+            question: "What does COIDA cover?",
+            options: ["Workplace injuries and diseases", "Unemployment", "Maternity leave"],
+            correctIndex: 0
+          },
+          {
+            question: "The 'Golden Rule' of hiring is:",
+            options: ["Hire fast, fire fast", "Hire slow, fire rare (and use a contract)", "Hire friends only"],
+            correctIndex: 1
           }
         ]}
         title="Roadmap Knowledge Check"
@@ -2050,8 +2243,23 @@ function BBBEEStatusInteractive() {
 const moduleFQuestions = [
   {
     question: "If your revenue is under R10m, what B-BBEE proof do you need?",
-    options: ["An expensive audit", "A Sworn Affidavit", "Nothing"],
+    options: ["An expensive audit", "A Sworn Affidavit (Free)", "Nothing"],
     correctIndex: 1
+  },
+  {
+    question: "What is 'Supplier Development'?",
+    options: ["Suppliers developing new products", "Corporates spending money to train/fund small businesses for BEE points", "Government grants"],
+    correctIndex: 1
+  },
+  {
+    question: "To win most Government Tenders, you need:",
+    options: ["Just a low price", "Price points (80/90) AND B-BBEE points (10/20)", "Connections only"],
+    correctIndex: 1
+  },
+  {
+    question: "What is an EME?",
+    options: ["Exempt Micro Enterprise (<R10m Turnover)", "Extra Mega Enterprise", "Early Morning Employee"],
+    correctIndex: 0
   }
 ];
 

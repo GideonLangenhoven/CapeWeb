@@ -9,53 +9,53 @@ import { CWButton, CWHeading, CWCard, CWInput, CWBadge, CWAlert, BookInsight } f
 // ==========================================
 export const pillar7QuizQuestions = [
   {
-    question: 'How does a Large Language Model (LLM) like GPT work fundamentally?',
-    options: ['It Googles the answer', 'It predicts the next word (token) based on probability', 'It calls a human expert'],
+    question: 'You ask ChatGPT for a biography of a local CEO. It confidently tells you he won a Nobel Prize in 1999 (which is false). What is this error called?',
+    options: ['A Glitch', 'A Hallucination', 'A Lie'],
     correctIndex: 1,
   },
   {
-    question: 'What is "Prompt Engineering"?',
-    options: ['Designing physical machines', 'The skill of crafting inputs to guide AI to the best output', 'Fixing computer bugs'],
+    question: 'You want to automatically save every Gmail attachment labeled "Invoice" directly to a Dropbox folder, but you don\'t know how to code. What tool solves this?',
+    options: ['Photoshop', 'Zapier / Make.com', 'Microsoft Word'],
     correctIndex: 1,
   },
   {
-    question: 'in "Life 3.0", Max Tegmark defines Life 3.0 as beings who can redesign their own:',
-    options: ['Software and Hardware', 'Clothing', 'Houses'],
+    question: 'You ask AI to "Write a email". It gives you a boring template. You change the input to "Act as a negotiation expert, keep it under 50 words, tone is strict". The result is perfect. What skill did you use?',
+    options: ['Prompt Engineering (Persona & Constraints)', 'Coding', 'Hacking'],
     correctIndex: 0,
   },
   {
-    question: 'What is a "Hallucination" in AI terms?',
-    options: ['When the AI sees ghosts', 'When the AI confidently states a fact that is completely false', 'When the server crashes'],
+    question: 'You paste a sensitive, confidential company client list into the free public version of ChatGPT to "format it nicely". What is the risk?',
+    options: ['None', 'Data Leakage (Your data might be used to train the public model)', 'The internet breaks'],
     correctIndex: 1,
   },
   {
-    question: 'Which tool is best suited for visual automation (connecting apps like LEGO)?',
-    options: ['MS Paint', 'Zapier or Make.com', 'Notepad'],
+    question: 'You give an AI a goal: "Plan a holiday". It autonomously searches flights, books a hotel, and adds it to your calendar without you clicking anything else. What is this capability called?',
+    options: ['A Chatbot', 'An AI Agent', 'A Virus'],
     correctIndex: 1,
   },
   {
-    question: 'What is "Code Interpreter" (or Advanced Data Analysis)?',
-    options: ['An AI that speaks code', 'A feature allowing AI to write and execute Python code to analyze data/Excel files', 'A translation service'],
-    correctIndex: 1,
-  },
-  {
-    question: 'In AI image generation (Midjourney), what is an "Aspect Ratio" parameter?',
-    options: ['--ar 16:9', '--high-quality', '--make-pretty'],
+    question: 'You need a unique photo of a "Cyberpunk Ostrich" for a presentation. You don\'t have a camera or a costume. You type "/imagine" into Midjourney. What are you using?',
+    options: ['Generative AI (Text-to-Image)', 'Stock Photography', 'Photoshop'],
     correctIndex: 0,
   },
   {
-    question: 'What is the "Centaur" model of work?',
-    options: ['Half man, half horse', 'A human enhanced by AI tools specifically to outperform unenhanced humans', 'A chess opening'],
+    question: 'You upload a messy Excel file with 10,000 rows of sales data. You ask the AI to "Find the top 3 products and make a chart". It writes code and gives you the graph. What feature is this?',
+    options: ['Magic Switch', 'Code Interpreter / Advanced Data Analysis', 'Spell Check'],
     correctIndex: 1,
   },
   {
-    question: 'Why should you generally NOT use AI for final fact-checking?',
-    options: ['It is too expensive', 'It can hallucinate dates and events', 'It is too slow'],
+    question: 'Designer A creates one logo manually in 4 hours. Designer B uses AI to generate 50 concepts in 10 minutes, then manually refines the best one. Designer B wins. What model is this?',
+    options: ['Cheating', 'The Centaur / Cyborg Model (Human + AI)', 'Lazy Design'],
     correctIndex: 1,
   },
   {
-    question: 'What is an "AI Agent"?',
-    options: ['A spy', 'An AI system that can plan and execute multiple steps to achieve a goal autonomously', 'A support ticket'],
+    question: 'You paste a 500-page PDF legal contract into a basic AI model and ask for a summary of the last page. It answers incorrectly because it "forgot" the beginning. What limit did you hit?',
+    options: ['The Context Window', 'The RAM limit', 'The Battery'],
+    correctIndex: 0,
+  },
+  {
+    question: 'Your boss fires the entire support team because "AI is free". Two months later, customers are furious because the bot can\'t solve complex emotional problems. What lesson was missed?',
+    options: ['AI is smarter than humans', 'AI should be a Co-pilot (Augmentation), not always an Auto-pilot (Replacement)', 'Robots are evil'],
     correctIndex: 1,
   },
 ];
@@ -166,7 +166,7 @@ function MiniQuiz({ questions, title = "Knowledge Check", onNext }) {
     <div style={{ marginTop: '3rem', padding: '2rem 2rem', borderRadius: '32px', background: 'rgba(255, 255, 255, 0.85)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255, 255, 255, 0.6)', boxShadow: '0 20px 50px -10px rgba(31, 38, 135, 0.15)', position: 'relative', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(120deg, rgba(34,211,238,0.15), rgba(244,114,182,0.15), rgba(253,224,71,0.15), rgba(34,211,238,0.15))', backgroundSize: '300% 300%', animation: 'gradientMove 15s ease infinite', zIndex: -1, pointerEvents: 'none' }} />
       <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ background: '#E0F2FE', color: '#0284C7', padding: '0.3rem 0.8rem', borderRadius: '100px', fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Assessment</div>
+        <div style={{ background: '#E0F2FE', color: '#0284C7', padding: '0.3rem 0.8rem', borderRadius: '100px', fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Knowledge Check</div>
         <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#64748B' }}>Question {currentQ + 1} of {questions.length}</span>
       </div>
       <h4 style={{ margin: '0 0 1.5rem 0', fontSize: '2rem', fontWeight: 900, color: '#0F172A', letterSpacing: '-0.02em', lineHeight: 1.1 }}>{title}</h4>
@@ -194,394 +194,230 @@ function MiniQuiz({ questions, title = "Knowledge Check", onNext }) {
 // INTERACTIVE VISUALS
 // ==========================================
 
-// Interactive: The Centaur Lever
-function CentaurLever() {
-  const [leverage, setLeverage] = useState(50);
+// ==========================================
+// PREMIUM INTERACTIVE VISUALS (9/10 QUALITY)
+// ==========================================
 
-  const output = Math.pow(leverage / 10, 2).toFixed(1);
-  const cost = (100 - leverage).toFixed(0);
-
-  return (
-    <div style={{ margin: '3rem 0', padding: '2rem', background: '#0F172A', borderRadius: '24px', color: 'white', textAlign: 'center' }}>
-      <h3 style={{ marginBottom: '1.5rem' }}>Interactive: The Leverage Gap</h3>
-      <div style={{ marginBottom: '2rem' }}>
-        <input
-          type="range"
-          min="1" max="100"
-          value={leverage}
-          onChange={(e) => setLeverage(parseInt(e.target.value))}
-          style={{ width: '100%', accentColor: '#3B82F6' }}
-        />
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: '#64748B', marginTop: '0.5rem' }}>
-          <span>PURE HUMAN</span>
-          <span>THE CENTAUR</span>
-          <span>PURE AI</span>
-        </div>
-      </div>
-
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-        <div style={{ padding: '1.5rem', background: '#1E293B', borderRadius: '16px' }}>
-          <div style={{ fontSize: '0.75rem', color: '#94A3B8', textTransform: 'uppercase' }}>Weekly Output</div>
-          <div style={{ fontSize: '2.5rem', fontWeight: 900, color: '#3B82F6' }}>{output}x</div>
-        </div>
-        <div style={{ padding: '1.5rem', background: '#1E293B', borderRadius: '16px' }}>
-          <div style={{ fontSize: '0.75rem', color: '#94A3B8', textTransform: 'uppercase' }}>Friction / Effort</div>
-          <div style={{ fontSize: '2.5rem', fontWeight: 900, color: '#F59E0B' }}>{cost}%</div>
-        </div>
-      </div>
-      <p style={{ marginTop: '1.5rem', fontSize: '0.9rem', color: '#94A3B8' }}>
-        {leverage < 30 && "Low output, high burnout risk. You are a manual laborer."}
-        {leverage >= 30 && leverage <= 70 && "Optimal. You use AI to multiply your human soul."}
-        {leverage > 70 && "High output, but low soul. Content sounds robotic."}
-      </p>
-    </div>
-  );
-}
-
-// Interactive: Token Predictor Game
-function TokenPredictorGame() {
-  const [step, setStep] = useState(0);
-  const [showProb, setShowProb] = useState(false);
-
-  const sentences = [
-    { start: "The CEO decided to ", end: "automate", probs: ["automate (85%)", "quit (5%)", "dance (10%)"] },
-    { start: "Our best strategy is to ", end: "scale", probs: ["scale (92%)", "panic (3%)", "sleep (5%)"] }
-  ];
+function CentaurModelVisual() {
+  const [mode, setMode] = useState('human');
 
   return (
-    <div style={{ margin: '3rem 0', padding: '2.5rem', background: '#F8FAFC', borderRadius: '24px', border: '1px solid #E2E8F0', color: '#0F172A', textAlign: 'center' }}>
-      <h3 style={{ marginBottom: '1rem' }}>The Probability Engine</h3>
-      <p style={{ color: '#64748B', fontSize: '0.9rem', marginBottom: '2rem' }}>AI doesn't "think"—it guesses the next word based on percentage chance.</p>
-
-      <div style={{ fontSize: '1.5rem', fontFamily: 'monospace', padding: '2rem', background: 'white', borderRadius: '16px', border: '2px dashed #CBD5E1', marginBottom: '2rem' }}>
-        <span>{sentences[step].start}</span>
-        <span style={{ color: '#3B82F6', fontWeight: 800, borderBottom: '2px solid #3B82F6' }}>
-          {showProb ? sentences[step].end : '______'}
-        </span>
-      </div>
-
-      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-        <button
-          onClick={() => setShowProb(true)}
-          style={{ padding: '0.8rem 2rem', borderRadius: '100px', background: '#3B82F6', color: 'white', border: 'none', fontWeight: 800, cursor: 'pointer' }}
-        >
-          PREDICT NEXT TOKEN
-        </button>
-        {showProb && (
-          <button
-            onClick={() => { setStep((step + 1) % sentences.length); setShowProb(false); }}
-            style={{ padding: '0.8rem 2rem', borderRadius: '100px', background: '#F1F5F9', color: '#0F172A', border: '1px solid #E2E8F0', fontWeight: 800, cursor: 'pointer' }}
-          >
-            NEXT SENTENCE
+    <div style={{ padding: '2rem', background: '#F8FAFC', borderRadius: '24px', margin: '2rem 0', border: '1px solid #E2E8F0', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '2rem' }}>
+        {['human', 'ai', 'centaur'].map(m => (
+          <button key={m} onClick={() => setMode(m)} style={{ padding: '0.8rem 1.5rem', borderRadius: '100px', border: 'none', background: mode === m ? '#0F172A' : 'white', color: mode === m ? 'white' : '#64748B', cursor: 'pointer', fontWeight: 800, transition: 'all 0.3s', boxShadow: mode === m ? '0 10px 20px -5px rgba(0,0,0,0.3)' : '0 2px 4px rgba(0,0,0,0.05)' }}>
+            {m === 'human' ? '👨‍💼 Human Only' : m === 'ai' ? '🤖 AI Only' : '🦄 Centaur Team'}
           </button>
-        )}
+        ))}
       </div>
 
-      {showProb && (
-        <div style={{ marginTop: '2rem', animation: 'fadeIn 0.3s' }}>
-          <div style={{ fontSize: '0.75rem', color: '#64748B', marginBottom: '1rem' }}>TOP PROBABILITIES:</div>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem' }}>
-            {sentences[step].probs.map(p => (
-              <span key={p} style={{ padding: '0.5rem 1rem', background: '#DBEAFE', color: '#1E40AF', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 600 }}>{p}</span>
-            ))}
-          </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+        <div style={{ flex: 1, textAlign: 'center', opacity: mode === 'ai' ? 0.3 : 1, filter: mode === 'ai' ? 'grayscale(100%)' : 'none', transition: 'all 0.5s' }}>
+          <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>👨‍🎨</div>
+          <div style={{ fontWeight: 800, color: '#334155' }}>Creativity</div>
+          <div style={{ fontSize: '0.9rem', color: '#64748B' }}>Strategy & Soul</div>
         </div>
-      )}
-    </div>
-  );
-}
 
-// Interactive: Prompt Refiner
-function PromptRefiner() {
-  const [tone, setTone] = useState('Professional');
-  const [context, setContext] = useState(false);
+        <div style={{ fontSize: '2rem', color: '#94A3B8' }}>{mode === 'centaur' ? '+' : 'vs'}</div>
 
-  return (
-    <div style={{ margin: '3rem 0', padding: '2rem', background: '#0F172A', borderRadius: '24px', color: 'white' }}>
-      <h3 style={{ marginBottom: '1.5rem', textAlign: 'center' }}>Interactive: Prompt Engineering</h3>
-
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '2rem' }}>
-        <div>
-          <label style={{ display: 'block', fontSize: '0.7rem', color: '#94A3B8', marginBottom: '1rem' }}>SET TONE</label>
-          <div style={{ display: 'grid', gap: '0.5rem' }}>
-            {['Professional', 'Funny', 'Aggressive', 'Scientific'].map(t => (
-              <button
-                key={t}
-                onClick={() => setTone(t)}
-                style={{
-                  padding: '0.8rem',
-                  background: tone === t ? '#3B82F6' : '#1E293B',
-                  border: 'none',
-                  borderRadius: '10px',
-                  color: 'white',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  fontSize: '0.85rem'
-                }}
-              >
-                {t}
-              </button>
-            ))}
-          </div>
-        </div>
-        <div>
-          <label style={{ display: 'block', fontSize: '0.7rem', color: '#94A3B8', marginBottom: '1rem' }}>ADD CONTEXT?</label>
-          <button
-            onClick={() => setContext(!context)}
-            style={{
-              width: '100%',
-              padding: '1.5rem',
-              background: context ? '#10B981' : '#1E293B',
-              border: `2px ${context ? 'solid' : 'dashed'} ${context ? '#34D399' : '#475569'}`,
-              borderRadius: '16px',
-              color: 'white',
-              cursor: 'pointer',
-              transition: 'all 0.3s'
-            }}
-          >
-            {context ? '✅ CONTEXT ENABLED' : '❌ NO CONTEXT'}
-          </button>
-          <p style={{ marginTop: '1rem', fontSize: '0.7rem', color: '#64748B' }}>
-            Context includes: Goal, Target Audience, Constraints, and Examples.
-          </p>
+        <div style={{ flex: 1, textAlign: 'center', opacity: mode === 'human' ? 0.3 : 1, filter: mode === 'human' ? 'grayscale(100%)' : 'none', transition: 'all 0.5s' }}>
+          <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>⚡</div>
+          <div style={{ fontWeight: 800, color: '#334155' }}>Speed</div>
+          <div style={{ fontSize: '0.9rem', color: '#64748B' }}>Scale & Grunt Work</div>
         </div>
       </div>
 
-      <div style={{ padding: '1.5rem', background: '#1E293B', borderRadius: '16px', border: '1px solid #334155' }}>
-        <div style={{ fontSize: '0.7rem', color: '#64748B', marginBottom: '0.5rem' }}>AI OUTPUT (SIMULATED):</div>
-        <div style={{ fontSize: '0.9rem', lineHeight: 1.6, color: context ? '#F8FAFC' : '#94A3B8' }}>
-          {context ? (
-            tone === 'Professional' ? "Based on our market analysis of busy professionals, here are three strategic initiatives to optimize your workflow..." :
-              tone === 'Funny' ? "Look, your calendar is a dumpster fire. We're here to throw water on it. Here's the plan..." :
-                tone === 'Aggressive' ? "STOP WASTING TIME. Every second you spend manual tasking is cash burning. Get the tool now." :
-                  "The initial data set indicates a 40% variance in chronological efficiency when utilizing automated protocols..."
-          ) : (
-            "Here is a generic response that sounds like every other robot on the internet. I don't know who you are or what you want."
-          )}
-        </div>
+      <div style={{ marginTop: '2rem', padding: '1.5rem', background: mode === 'centaur' ? '#F0F9FF' : '#F1F5F9', borderRadius: '16px', textAlign: 'center', border: mode === 'centaur' ? '2px solid #38BDF8' : '2px solid transparent', transition: 'all 0.3s' }}>
+        <h4 style={{ margin: '0 0 0.5rem', color: mode === 'centaur' ? '#0369A1' : '#475569' }}>
+          {mode === 'human' ? 'Outcome: Slow, but soulful.' : mode === 'ai' ? 'Outcome: Fast, but generic.' : 'Outcome: The best of both worlds. 10x Speed, 100% Soul.'}
+        </h4>
       </div>
-    </div>
-  );
-}
-
-function TokenPredictionVisual() {
-  const [word, setWord] = useState('');
-  const sentence = "The cat sat on the ";
-
-  useEffect(() => {
-    const words = ["mat (80%)", "hat (10%)", "floor (5%)"];
-    let i = 0;
-    const interval = setInterval(() => {
-      setWord(words[i]);
-      i = (i + 1) % words.length;
-    }, 1500);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div style={{ margin: '2rem 0', padding: '2rem', background: '#F8FAFC', borderRadius: '16px', fontSize: '1.2rem', fontFamily: 'monospace', textAlign: 'center' }}>
-      <span>{sentence}</span>
-      <span style={{ color: '#3B82F6', fontWeight: 'bold' }}>{word}</span>
-      <p style={{ fontSize: '0.8rem', color: '#64748B', marginTop: '1rem' }}>
-        The AI does not know what a "cat" is. It just calculates what word comes next mathematically.
-      </p>
     </div>
   )
 }
 
-// Interactive: Support Triage Sim
-function SupportTriageSim() {
-  const [automation, setAutomation] = useState(0);
-
-  return (
-    <div style={{ margin: '3rem 0', padding: '2rem', background: '#0F172A', borderRadius: '24px', color: 'white' }}>
-      <h3 style={{ marginBottom: '1.5rem', textAlign: 'center' }}>Interactive: The Support Triage</h3>
-
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '2rem' }}>
-        <div style={{ padding: '1.5rem', background: '#1E293B', borderRadius: '16px', textAlign: 'center' }}>
-          <div style={{ fontSize: '0.75rem', color: '#94A3B8', marginBottom: '0.5rem' }}>HUMAN LOAD</div>
-          <div style={{ fontSize: '2rem', fontWeight: 800, color: automation > 70 ? '#10B981' : '#EF4444' }}>
-            {100 - automation}%
-          </div>
-        </div>
-        <div style={{ padding: '1.5rem', background: '#1E293B', borderRadius: '16px', textAlign: 'center' }}>
-          <div style={{ fontSize: '0.75rem', color: '#94A3B8', marginBottom: '0.5rem' }}>AI DEFLECTION</div>
-          <div style={{ fontSize: '2rem', fontWeight: 800, color: '#3B82F6' }}>
-            {automation}%
-          </div>
-        </div>
-      </div>
-
-      <input
-        type="range"
-        min="0" max="95"
-        value={automation}
-        onChange={(e) => setAutomation(parseInt(e.target.value))}
-        style={{ width: '100%', accentColor: '#3B82F6', marginBottom: '1.5rem' }}
-      />
-
-      <p style={{ textAlign: 'center', fontSize: '0.9rem', color: '#94A3B8' }}>
-        {automation < 20 && "Humans are drowning in 'Where is my order?' tickets."}
-        {automation >= 20 && automation <= 70 && "AI handles basic FAQs. Humans handle complex complaints."}
-        {automation > 70 && "Maximum efficiency. Humans only step in for VIP exceptions."}
-      </p>
-    </div>
-  );
-}
-
-// Interactive: Data Cruncher Visual
-function DataCruncherVisual() {
-  const [analyzing, setAnalyzing] = useState(false);
-  const [done, setDone] = useState(false);
-
-  const startAnalysis = () => {
-    setAnalyzing(true);
-    setDone(false);
-    setTimeout(() => {
-      setAnalyzing(false);
-      setDone(true);
-    }, 2000);
-  };
-
-  return (
-    <div style={{ margin: '3rem 0', padding: '2rem', background: '#F8FAFC', borderRadius: '24px', border: '1px solid #E2E8F0', color: '#0F172A', textAlign: 'center' }}>
-      <h3 style={{ marginBottom: '1rem' }}>The Python Bridge</h3>
-      <p style={{ color: '#64748B', fontSize: '0.85rem', marginBottom: '2rem' }}>AI can write code to analyze massive spreadsheets in seconds.</p>
-
-      <div style={{ height: '120px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', marginBottom: '2rem' }}>
-        <div style={{ padding: '1rem', background: 'white', border: '1px solid #E2E8F0', borderRadius: '8px', fontSize: '1.5rem' }}>📄 CSV</div>
-        <div style={{ fontSize: '1.5rem', color: analyzing ? '#3B82F6' : '#CBD5E1', animation: analyzing ? 'pulse 1s infinite' : 'none' }}>➜</div>
-        <div style={{ padding: '1.2rem', background: '#0F172A', color: '#10B981', borderRadius: '12px', fontFamily: 'monospace', fontSize: '0.8rem' }}>
-          {analyzing ? "import pandas as pd..." : "df.describe()"}
-        </div>
-        <div style={{ fontSize: '1.5rem', color: done ? '#10B981' : '#CBD5E1' }}>➜</div>
-        <div style={{ padding: '1rem', background: 'white', border: '2px solid #10B981', borderRadius: '8px', fontSize: '1.5rem', opacity: done ? 1 : 0.3 }}>📊 CHART</div>
-      </div>
-
-      <button
-        onClick={startAnalysis}
-        disabled={analyzing}
-        style={{ padding: '0.8rem 2rem', borderRadius: '100px', background: analyzing ? '#94A3B8' : '#0F172A', color: 'white', border: 'none', fontWeight: 800, cursor: 'pointer' }}
-      >
-        {analyzing ? 'CRUNCHING DATA...' : 'REVEAL PROFIT TRENDS'}
-      </button>
-
-      {done && (
-        <div style={{ marginTop: '1.5rem', color: '#166534', fontSize: '0.9rem', fontWeight: 600 }}>
-          Insight Found: Products in the "Home" category have 40% higher ROI.
-        </div>
-      )}
-    </div>
-  );
-}
-
-// Interactive: Agent Task Chain
-function AgentTaskChain() {
-  const [step, setStep] = useState(-1);
-  const steps = [
-    { label: "RESEARCH", icon: "🔍", text: "Finding lead info..." },
-    { label: "ANALYZE", icon: "🧠", text: "Filtering for relevance..." },
-    { label: "DRAFT", icon: "✍️", text: "Writing personalized intro..." },
-    { label: "EXECUTE", icon: "🚀", text: "Sending outreach email..." }
-  ];
+function TokenPredictionVisual() {
+  const [step, setStep] = useState(0);
+  const words = ["The", "cat", "sat", "on", "the", "mat"];
 
   useEffect(() => {
-    if (step >= 0 && step < steps.length) {
-      const timer = setTimeout(() => setStep(step + 1), 1500);
-      return () => clearTimeout(timer);
-    }
-  }, [step]);
+    const i = setInterval(() => setStep(s => (s + 1) % (words.length + 1)), 1500);
+    return () => clearInterval(i);
+  }, []);
 
   return (
-    <div style={{ margin: '3rem 0', padding: '2rem', background: '#0F172A', borderRadius: '24px', color: 'white' }}>
-      <h3 style={{ marginBottom: '2rem', textAlign: 'center' }}>The Autonomous Workflow</h3>
-
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem', marginBottom: '2rem' }}>
-        {steps.map((s, idx) => (
-          <div key={idx} style={{ textAlign: 'center', opacity: step >= idx ? 1 : 0.2, transition: 'all 0.4s' }}>
-            <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>{s.icon}</div>
-            <div style={{ fontSize: '0.6rem', fontWeight: 900, color: step === idx ? '#3B82F6' : '#94A3B8' }}>{s.label}</div>
-            <div style={{ height: '4px', background: step >= idx ? '#3B82F6' : '#334155', borderRadius: '10px', marginTop: '0.5rem' }} />
-          </div>
+    <div style={{ padding: '2rem', background: '#1E293B', borderRadius: '24px', margin: '2rem 0', boxShadow: '0 20px 40px -10px rgba(0,0,0,0.5)', color: 'white' }}>
+      <h4 style={{ textAlign: 'center', color: '#94A3B8', marginBottom: '2rem' }}>LLM Brain Simulation</h4>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'center', minHeight: '60px' }}>
+        {words.slice(0, step).map((w, i) => (
+          <span key={i} style={{ padding: '0.5rem 1rem', background: '#334155', borderRadius: '8px', animation: 'popIn 0.3s' }}>{w}</span>
         ))}
-      </div>
-
-      <div style={{ height: '60px', textAlign: 'center' }}>
-        {step >= 0 && step < steps.length ? (
-          <p style={{ color: '#3B82F6', fontWeight: 600, animation: 'fadeIn 0.3s' }}>{steps[step].text}</p>
-        ) : step === steps.length ? (
-          <p style={{ color: '#10B981', fontWeight: 800 }}>✅ TASK COMPLETED AUTOMATICALLY</p>
-        ) : (
-          <button
-            onClick={() => setStep(0)}
-            style={{ padding: '0.6rem 1.5rem', borderRadius: '100px', background: '#3B82F6', color: 'white', border: 'none', fontWeight: 800, cursor: 'pointer' }}
-          >
-            DEPLOY AGENT
-          </button>
+        {step < words.length && (
+          <span style={{ padding: '0.5rem 1rem', border: '2px dashed #64748B', borderRadius: '8px', color: '#64748B', opacity: 0.5 }}>
+            {words[step]}?
+            <div style={{ position: 'absolute', top: '-20px', fontSize: '0.7rem', color: '#22D3EE' }}>98% prob</div>
+          </span>
         )}
       </div>
+      <style>{`@keyframes popIn { from { transform: scale(0); opacity:0; } to { transform: scale(1); opacity:1; } }`}</style>
     </div>
-  );
+  )
 }
 
-// Interactive: Meeting Time Recovered
-function MeetingTimeRecovered() {
-  const [meetings, setMeetings] = useState(5);
-  const timeSaved = (meetings * 15) / 60;
-
+function PromptEngineeringVisual() {
+  const [level, setLevel] = useState(1);
   return (
-    <div style={{ margin: '3rem 0', padding: '2rem', background: '#F8FAFC', borderRadius: '24px', border: '1px solid #E2E8F0', textAlign: 'center' }}>
-      <h3 style={{ marginBottom: '1.5rem', color: '#0F172A' }}>The Focus Calculator</h3>
-      <p style={{ color: '#64748B', marginBottom: '2rem' }}>How much brain-power are you wasting on transcription?</p>
+    <div style={{ padding: '2rem', background: '#FDF4FF', borderRadius: '24px', margin: '2rem 0', border: '1px solid #F0ABFC' }}>
+      <h4 style={{ textAlign: 'center', color: '#86198F', marginBottom: '2rem' }}>Prompt Quality Slider</h4>
+      <input type="range" min="1" max="3" value={level} onChange={e => setLevel(Number(e.target.value))} style={{ width: '100%', marginBottom: '2rem', accentColor: '#D946EF' }} />
 
-      <div style={{ maxWidth: '400px', margin: '0 auto 2rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', fontWeight: 800, color: '#64748B', marginBottom: '0.5rem' }}>
-          <span>Meetings Per Week</span>
-          <span>{meetings}</span>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+        <div>
+          <div style={{ fontWeight: 800, color: '#86198F', marginBottom: '0.5rem' }}>Input (You)</div>
+          <div style={{ background: 'white', padding: '1rem', borderRadius: '12px', border: '1px solid #E879F9', minHeight: '120px', fontSize: '0.9rem' }}>
+            {level === 1 && '"Write an email."'}
+            {level === 2 && '"Write a sales email for coffee."'}
+            {level === 3 && '"Act as a Copywriter. Write a witty, 50-word sales email for \'RocketFuel\' coffee targeting sleepy developers."'}
+          </div>
         </div>
-        <input
-          type="range"
-          min="1" max="25"
-          value={meetings}
-          onChange={(e) => setMeetings(parseInt(e.target.value))}
-          style={{ width: '100%', accentColor: '#3B82F6' }}
-        />
-      </div>
-
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-        <div style={{ padding: '2rem', background: 'white', borderRadius: '16px', border: '1px solid #E2E8F0' }}>
-          <div style={{ fontSize: '0.75rem', color: '#64748B', textTransform: 'uppercase' }}>Time Saved / Week</div>
-          <div style={{ fontSize: '2.5rem', fontWeight: 900, color: '#10B981' }}>{timeSaved.toFixed(1)}h</div>
-        </div>
-        <div style={{ padding: '2rem', background: 'white', borderRadius: '16px', border: '1px solid #E2E8F0' }}>
-          <div style={{ fontSize: '0.75rem', color: '#64748B', textTransform: 'uppercase' }}>Notes Quality</div>
-          <div style={{ fontSize: '2.5rem', fontWeight: 900, color: '#3B82F6' }}>100%</div>
+        <div>
+          <div style={{ fontWeight: 800, color: '#86198F', marginBottom: '0.5rem' }}>Output (AI)</div>
+          <div style={{ background: 'white', padding: '1rem', borderRadius: '12px', border: '1px solid #E879F9', minHeight: '120px', fontSize: '0.9rem', fontStyle: 'italic', color: '#4B5563' }}>
+            {level === 1 && '"Subject: Hello. Here is an email about things..." (Boring 😴)'}
+            {level === 2 && '"Buy our coffee. It is good and hot. Drink it today." (Generic 😐)'}
+            {level === 3 && '"Subject: 404 Sleep Not Found. ☕ Code broken? Brain foggy? RocketFuel compiles your energy instantly. Deploy to production now." (Gold 🏆)'}
+          </div>
         </div>
       </div>
-
-      <p style={{ marginTop: '1.5rem', fontSize: '0.9rem', color: '#64748B' }}>
-        By automating notes, you gain back half a day of deep work every month.
-      </p>
     </div>
-  );
+  )
+}
+
+function MidjourneyVisual() {
+  return (
+    <div style={{ padding: '2rem', background: '#111827', borderRadius: '24px', margin: '2rem 0', color: 'white', textAlign: 'center', overflow: 'hidden', position: 'relative' }}>
+      <div style={{ display: 'inline-block', padding: '0.5rem 1rem', background: '#22D3EE', color: 'black', borderRadius: '100px', fontWeight: 800, fontSize: '0.8rem', marginBottom: '1.5rem' }}>TEXT-TO-IMAGE ENGINE</div>
+      <div style={{ fontSize: '1.2rem', fontFamily: 'monospace', color: '#E2E8F0', marginBottom: '1.5rem', background: '#374151', padding: '1rem', borderRadius: '12px' }}>
+        /imagine prompt: <span style={{ color: '#F472B6' }}>cyberpunk neon city</span>, <span style={{ color: '#38BDF8' }}>cinematic lighting</span>
+      </div>
+      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+        {[1, 2, 3].map(i => (
+          <div key={i} style={{ width: '80px', height: '80px', background: `linear-gradient(${i * 45}deg, #3B82F6, #EC4899)`, borderRadius: '12px', opacity: 0.8 }} />
+        ))}
+      </div>
+      <p style={{ marginTop: '1.5rem', color: '#94A3B8', fontSize: '0.9rem' }}>Infinite assets. Zero copyright fees.</p>
+    </div>
+  )
 }
 
 function ZapierFlowVisual() {
+  const [running, setRunning] = useState(false);
+
   return (
-    <div style={{ margin: '2rem 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-      <div style={{ padding: '1rem', background: '#F59E0B', color: 'white', borderRadius: '12px', width: '200px', textAlign: 'center', position: 'relative' }}>
-        <strong>⚡ Trigger</strong>
-        <div>New Lead (FB Ads)</div>
+    <div style={{ padding: '2rem', background: '#FFF7ED', borderRadius: '24px', margin: '2rem 0', border: '1px solid #FFEDD5' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem' }}>
+        <h4 style={{ margin: 0, color: '#9A3412' }}>Automation Pipeline</h4>
+        <button onClick={() => setRunning(true)} style={{ padding: '0.5rem 1.5rem', background: '#EA580C', color: 'white', border: 'none', borderRadius: '100px', cursor: 'pointer', fontWeight: 800 }}>
+          {running ? 'Running...' : '▶ Run Trigger'}
+        </button>
       </div>
-      <div style={{ fontSize: '1.5rem' }}>⬇️</div>
-      <div style={{ padding: '1rem', background: '#3B82F6', color: 'white', borderRadius: '12px', width: '200px', textAlign: 'center' }}>
-        <strong>Action 1</strong>
-        <div>Add to Google Sheet</div>
+
+      <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', position: 'relative' }}>
+        <div style={{ flex: 1, padding: '1.5rem', background: 'white', borderRadius: '16px', border: '2px solid #FDCA92', textAlign: 'center', zIndex: 2 }}>
+          <div style={{ fontSize: '2rem' }}>📧</div>
+          <div style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#9A3412' }}>New Lead</div>
+        </div>
+
+        <div style={{ width: '50px', height: '4px', background: '#FED7AA', position: 'relative' }}>
+          {running && <div style={{ width: '10px', height: '10px', background: '#EA580C', borderRadius: '50%', position: 'absolute', top: '-3px', animation: 'flow 1s linear forwards' }} />}
+        </div>
+
+        <div style={{ flex: 1, padding: '1.5rem', background: 'white', borderRadius: '16px', border: '2px solid #FDCA92', textAlign: 'center', zIndex: 2 }}>
+          <div style={{ fontSize: '2rem' }}>📊</div>
+          <div style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#9A3412' }}>Add to CRM</div>
+        </div>
+
+        <div style={{ width: '50px', height: '4px', background: '#FED7AA', position: 'relative' }}>
+          {running && <div style={{ width: '10px', height: '10px', background: '#EA580C', borderRadius: '50%', position: 'absolute', top: '-3px', animation: 'flow 1s linear 1s forwards' }} />}
+        </div>
+
+        <div style={{ flex: 1, padding: '1.5rem', background: 'white', borderRadius: '16px', border: '2px solid #FDCA92', textAlign: 'center', zIndex: 2 }}>
+          <div style={{ fontSize: '2rem' }}>💬</div>
+          <div style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#9A3412' }}>Slack Team</div>
+        </div>
       </div>
-      <div style={{ fontSize: '1.5rem' }}>⬇️</div>
-      <div style={{ padding: '1rem', background: '#EF4444', color: 'white', borderRadius: '12px', width: '200px', textAlign: 'center' }}>
-        <strong>Action 2</strong>
-        <div>Slack Team "New Deal!"</div>
+      <style>{`@keyframes flow { from { left:0; } to { left:100%; } }`}</style>
+    </div>
+  )
+}
+
+function ChatbotTrainingVisual() {
+  return (
+    <div style={{ padding: '2rem', background: '#F0FDFA', borderRadius: '24px', margin: '2rem 0', border: '1px solid #CCFBF1' }}>
+      <h4 style={{ textAlign: 'center', color: '#0F766E', marginBottom: '1.5rem' }}>How Custom Chatbots Work</h4>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <div style={{ flex: 1, padding: '1rem', background: 'white', border: '1px solid #99F6E4', borderRadius: '12px', textAlign: 'center' }}>
+          <div style={{ fontSize: '2rem' }}>📄</div>
+          <div style={{ fontSize: '0.8rem', color: '#115E59' }}>Your PDFs</div>
+        </div>
+        <div style={{ fontSize: '1.5rem', color: '#14B8A6' }}>➜</div>
+        <div style={{ flex: 1, padding: '1rem', background: '#0D9488', color: 'white', borderRadius: '12px', textAlign: 'center' }}>
+          <div style={{ fontSize: '2rem' }}>🧠</div>
+          <div style={{ fontSize: '0.8rem' }}>Vector DB</div>
+        </div>
+        <div style={{ fontSize: '1.5rem', color: '#14B8A6' }}>➜</div>
+        <div style={{ flex: 1, padding: '1rem', background: 'white', border: '1px solid #99F6E4', borderRadius: '12px', textAlign: 'center' }}>
+          <div style={{ fontSize: '2rem' }}>🤖</div>
+          <div style={{ fontSize: '0.8rem', color: '#115E59' }}>Smart Answer</div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function AnalysisVisual() {
+  return (
+    <div style={{ padding: '2rem', background: '#F3F4F6', borderRadius: '24px', margin: '2rem 0', border: '1px solid #E5E7EB', display: 'flex', gap: '2rem', alignItems: 'center' }}>
+      <div style={{ flex: 1 }}>
+        <div style={{ padding: '0.5rem', background: 'white', borderRadius: '8px', fontSize: '0.8rem', fontFamily: 'monospace', marginBottom: '0.5rem', border: '1px solid #D1D5DB' }}>sales_data.csv loaded...</div>
+        <div style={{ padding: '0.5rem', background: 'white', borderRadius: '8px', fontSize: '0.8rem', fontFamily: 'monospace', marginBottom: '0.5rem', border: '1px solid #D1D5DB' }}>running python analysis...</div>
+        <div style={{ padding: '0.5rem', background: '#DCFCE7', color: '#166534', borderRadius: '8px', fontSize: '0.8rem', fontFamily: 'monospace', border: '1px solid #86EFAC' }}>Done.</div>
+      </div>
+      <div style={{ flex: 1, height: '100px', display: 'flex', alignItems: 'flex-end', gap: '4px' }}>
+        {[40, 70, 50, 90, 60, 80].map((h, i) => (
+          <div key={i} style={{ flex: 1, height: h + '%', background: '#3B82F6', borderRadius: '4px 4px 0 0' }} />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function AgentLoopVisual() {
+  return (
+    <div style={{ padding: '2rem', background: '#312E81', borderRadius: '24px', margin: '2rem 0', color: 'white' }}>
+      <h4 style={{ textAlign: 'center', color: '#A5B4FC', margin: '0 0 1.5rem' }}>Autonomous Agent Loop</h4>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem' }}>
+        {['Plan', 'Execute', 'Critique', 'Refine'].map((step, i) => (
+          <div key={step} style={{ width: '80px', height: '80px', borderRadius: '50%', border: '2px dashed #6366F1', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: 'bold', background: i === 1 ? '#4338CA' : 'transparent', boxShadow: i === 1 ? '0 0 20px #4338CA' : 'none' }}>
+            {step}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function MeetingVisual() {
+  return (
+    <div style={{ padding: '2rem', background: '#FDF2F8', borderRadius: '24px', margin: '2rem 0', border: '1px solid #FBCFE8', textAlign: 'center' }}>
+      <h4 style={{ color: '#DB2777', margin: '0 0 1rem' }}>The AI Scribe</h4>
+      <div style={{ display: 'inline-block', padding: '1rem 2rem', background: 'white', borderRadius: '12px', border: '1px solid #F9A8D4', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
+        <div style={{ fontWeight: 800, color: '#831843' }}>Summary:</div>
+        <ul style={{ textAlign: 'left', fontSize: '0.9rem', color: '#9D174D', paddingLeft: '1.2rem', marginTop: '0.5rem' }}>
+          <li>Action: John to email client.</li>
+          <li>Decision: Budget approved.</li>
+          <li>Next Step: Meet on Friday.</li>
+        </ul>
       </div>
     </div>
   )
@@ -590,20 +426,45 @@ function ZapierFlowVisual() {
 function ScenarioToggle({ oldTitle, oldContent, newTitle, newContent }) {
   const [view, setView] = useState('old');
   return (
-    <div style={{ margin: '3rem 0' }}>
-      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem', background: '#F1F5F9', padding: '0.5rem', borderRadius: '100px', width: 'fit-content', margin: '0 auto 2rem' }}>
-        <button onClick={() => setView('old')} style={{ padding: '0.6rem 1.5rem', borderRadius: '100px', border: 'none', background: view === 'old' ? '#fff' : 'transparent', color: view === 'old' ? '#EF4444' : '#64748B', fontWeight: 800, boxShadow: view === 'old' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>{oldTitle}</button>
-        <button onClick={() => setView('new')} style={{ padding: '0.6rem 1.5rem', borderRadius: '100px', border: 'none', background: view === 'new' ? '#fff' : 'transparent', color: view === 'new' ? '#10B981' : '#64748B', fontWeight: 800, boxShadow: view === 'new' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>{newTitle}</button>
+    <div style={{
+      margin: '3rem 0',
+      padding: '2rem',
+      borderRadius: '24px',
+      position: 'relative',
+      overflow: 'hidden',
+      boxShadow: '0 20px 50px -10px rgba(0,0,0,0.1)',
+      background: '#22D3EE',
+      color: '#0F172A'
+    }}>
+      {/* Moving Gradient Background */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        background: 'linear-gradient(120deg, rgba(34,211,238,0.15), rgba(244,114,182,0.15), rgba(253,224,71,0.15), rgba(34,211,238,0.15))',
+        backgroundSize: '300% 300%',
+        animation: 'gradientMove 15s ease infinite',
+        zIndex: 0,
+        pointerEvents: 'none'
+      }} />
+
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem', background: 'rgba(241, 245, 249, 0.8)', padding: '0.5rem', borderRadius: '100px', width: 'fit-content', margin: '0 auto 2rem' }}>
+          <button onClick={() => setView('old')} style={{ padding: '0.6rem 1.5rem', borderRadius: '100px', border: 'none', background: view === 'old' ? '#fff' : 'transparent', color: view === 'old' ? '#EF4444' : '#64748B', fontWeight: 800, boxShadow: view === 'old' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>{oldTitle}</button>
+          <button onClick={() => setView('new')} style={{ padding: '0.6rem 1.5rem', borderRadius: '100px', border: 'none', background: view === 'new' ? '#fff' : 'transparent', color: view === 'new' ? '#10B981' : '#64748B', fontWeight: 800, boxShadow: view === 'new' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>{newTitle}</button>
+        </div>
+        {view === 'old' ? (
+          <div style={{ padding: '1.5rem', background: 'rgba(254, 242, 242, 0.9)', borderRadius: '24px', border: '2px solid #FECACA', animation: 'fadeIn 0.5s' }}>
+            {oldContent}
+          </div>
+        ) : (
+          <div style={{ padding: '1.5rem', background: 'rgba(236, 253, 245, 0.9)', borderRadius: '24px', border: '2px solid #A7F3D0', animation: 'fadeIn 0.5s' }}>
+            {newContent}
+          </div>
+        )}
       </div>
-      {view === 'old' ? (
-        <div style={{ padding: '1.5rem', background: '#FEF2F2', borderRadius: '24px', border: '2px solid #FECACA', animation: 'fadeIn 0.5s' }}>
-          {oldContent}
-        </div>
-      ) : (
-        <div style={{ padding: '1.5rem', background: '#ECFDF5', borderRadius: '24px', border: '2px solid #A7F3D0', animation: 'fadeIn 0.5s' }}>
-          {newContent}
-        </div>
-      )}
     </div>
   );
 }
@@ -615,47 +476,51 @@ function ScenarioToggle({ oldTitle, oldContent, newTitle, newContent }) {
 // Module A: AI Strategy
 export function Pillar7ModuleA({ onNext }) {
   return (
-    <InteractiveLayout title="Module A: The Centaur Model" subtitle="Human + AI &gt; AI.">
+    <InteractiveLayout title="Module A: The Centaur Model" subtitle="Human + AI > AI.">
       <div className="cw-prose">
         <p className="cw-text-body">
-          The future belongs to the **Centaur**. In chess, a Centaur is a team of a Human + AI. This combination consistently outperforms both pure AI and pure Humans. Your goal is to use AI for the "Heavy Lifting" (Automation) while you focus on the "Heart" (Strategy & Soul).
+          In chess, a "Centaur" is a team of a Human + AI. This team consistently beats pure AI and pure Humans.
+          Your goal is to use AI to handle the boring 80%, so you can focus on the creative 20%.
         </p>
 
-        <CentaurLever />
-
-        <ScenarioToggle
-          oldTitle="The Purist 👴"
-          oldContent="'I don't use AI. It is cheating.' (Writes 1 email per hour, laboriously researching every fact manually)."
-          newTitle="The Centaur 🤖"
-          newContent="'I use AI to draft, and I edit for soul.' (Writes 10 emails per hour, using AI to synthesize research in seconds)."
-        />
+        <CentaurModelVisual />
 
         <BookInsight title="The Future of Intelligence" author="Max Tegmark" book="Life 3.0" color="#3B82F6">
           <p>"Life 3.0 designs its own software." We are entering an era where you can build tools without coding perfectly.</p>
         </BookInsight>
 
-        {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
-        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%)', borderRadius: '24px', border: '1px solid #BFDBFE' }}>
-          <CWHeading level={3} style={{ color: '#1E40AF', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        {/* NEW SECTION: Why It Matters */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%)', borderRadius: '24px', border: '1px solid #BAE6FD' }}>
+          <CWHeading level={3} style={{ color: '#0369A1', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
           </CWHeading>
 
-          <p style={{ fontSize: '1.1rem', color: '#1E3A8A', lineHeight: '1.7', marginBottom: '1.5rem' }}>
-            <strong>Algorithmic Advantage.</strong> Your competitors are already using AI to lower their costs. If you don't adopt the Centaur model, your margins will slowly be eaten by more efficient operators. AI doesn't replace you; a human using AI replaces a human who doesn't.
+          <p style={{ fontSize: '1.1rem', color: '#0C4A6E', lineHeight: '1.7', marginBottom: '1.5rem', fontWeight: 'bold' }}>
+            You don't need to be a coder to build software anymore. You just need to be a good "Project Manager."
           </p>
 
-          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #BFDBFE', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
-            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
-              🚀 How CapeWeb Helps You Scale
-            </h4>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
-              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
-                <span style={{ color: '#3B82F6', marginTop: '2px' }}>➜</span>
-                <span>
-                  <a href="/services?service=ai-agents-sales-team" style={{ color: '#3B82F6', textDecoration: 'underline' }}>AI Sales Team</a>: We build custom GPT-powered sales reps that act as Centaurs for your business—handling the volume of "Qualified" leads while your human sales team focuses on closing high-ticket deals.
-                </span>
-              </li>
-            </ul>
+          <div style={{ display: 'grid', gap: '1rem', marginBottom: '2rem' }}>
+            <div style={{ background: 'rgba(255,255,255,0.6)', padding: '1rem', borderRadius: '12px', border: '1px solid #BAE6FD' }}>
+              <div style={{ fontWeight: 800, color: '#0369A1', marginBottom: '0.2rem' }}>1. Massive Cost Savings</div>
+              <div style={{ fontSize: '0.95rem', color: '#0C4A6E' }}>Tasks that used to require a R50,000 consultant (coding a script, writing SEO blogs) can now be drafted by AI for R0.</div>
+            </div>
+            <div style={{ background: 'rgba(255,255,255,0.6)', padding: '1rem', borderRadius: '12px', border: '1px solid #BAE6FD' }}>
+              <div style={{ fontWeight: 800, color: '#0369A1', marginBottom: '0.2rem' }}>2. Speed to Market</div>
+              <div style={{ fontSize: '0.95rem', color: '#0C4A6E' }}>The business that uses AI moves 10x faster. While your competitor is brainstorming, you are launching.</div>
+            </div>
+          </div>
+
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #BAE6FD', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', color: '#0369A1', fontSize: '1.1rem' }}>🚀 How CapeWeb Helps You</h4>
+            <p style={{ fontSize: '0.95rem', color: '#4B5563', marginBottom: '1rem' }}>
+              We don't just build sites; we build AI-ready infrastructure.
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+              <div style={{ display: 'flex', gap: '0.5rem', fontSize: '0.95rem', color: '#374151' }}>
+                <span>➜</span>
+                <span><strong>AI Strategy Consulting:</strong> We help you identify which boring parts of your business can be automated safely.</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -676,37 +541,35 @@ export function Pillar7ModuleB({ onNext }) {
     <InteractiveLayout title="Module B: How LLMs Work" subtitle="The stochastic parrot.">
       <div className="cw-prose">
         <p className="cw-text-body">
-          ChatGPT does not "know" anything in the human sense. It is a mathematical model trained on human language to predict the **Next Token (Word)**. It is essentially a "Stochastic Parrot"—highly sophisticated autocomplete.
+          ChatGPT does not "know" anything. It is a mathematical model predicting the <strong>Next Token (Word)</strong>.
+          It is a very fancy autocomplete.
         </p>
 
-        <TokenPredictorGame />
+        <TokenPredictionVisual />
 
-        <CWAlert type="warning" title="The Hallucination Risk">
-          Because LLMs are probabilistic, they can lie confidently. They will invent court cases, citations, and names just to complete a pattern that looks "correct" to the algorithm.
+        <CWAlert type="warning" title="Hallucinations">
+          Because it is probabilistic, it can lie confidently. It will invent court cases, citations, and facts just to complete the pattern.
         </CWAlert>
 
-        {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
-        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)', borderRadius: '24px', border: '1px solid #FDE68A' }}>
-          <CWHeading level={3} style={{ color: '#92400E', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        {/* NEW SECTION: Why It Matters */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%)', borderRadius: '24px', border: '1px solid #BAE6FD' }}>
+          <CWHeading level={3} style={{ color: '#0369A1', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
           </CWHeading>
 
-          <p style={{ fontSize: '1.1rem', color: '#78350F', lineHeight: '1.7', marginBottom: '1.5rem' }}>
-            <strong>Risk Management.</strong> If you use AI for legal contracts or historical fact-checking without critical oversight, you are playing Russian Roulette with your brand's credibility. Understanding "how the engine works" allows you to use it for brainstorming and structure, while keeping humans responsible for accuracy.
+          <p style={{ fontSize: '1.1rem', color: '#0C4A6E', lineHeight: '1.7', marginBottom: '1.5rem', fontWeight: 'bold' }}>
+            If you trust AI blindly, you will get burned. It is a "Reasoning Engine," not a "Fact Database."
           </p>
 
-          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #FDE68A', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
-            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
-              🚀 How CapeWeb Helps You Scale
-            </h4>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
-              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
-                <span style={{ color: '#D97706', marginTop: '2px' }}>➜</span>
-                <span>
-                  <a href="/services?service=brand-wikis-knowledge-bases" style={{ color: '#D97706', textDecoration: 'underline' }}>Brand Wikis</a>: We use <strong>Retrieval-Augmented Generation (RAG)</strong> to ground your AI in your own company's verified documents, effectively killing hallucinations and ensuring your AI "knows" your facts.
-                </span>
-              </li>
-            </ul>
+          <div style={{ display: 'grid', gap: '1rem', marginBottom: '2rem' }}>
+            <div style={{ background: 'rgba(255,255,255,0.6)', padding: '1rem', borderRadius: '12px', border: '1px solid #BAE6FD' }}>
+              <div style={{ fontWeight: 800, color: '#0369A1', marginBottom: '0.2rem' }}>1. The Liability Risk</div>
+              <div style={{ fontSize: '0.95rem', color: '#0C4A6E' }}>Lawyers have been disbarred for citing fake cases invented by ChatGPT. Always verify the output.</div>
+            </div>
+            <div style={{ background: 'rgba(255,255,255,0.6)', padding: '1rem', borderRadius: '12px', border: '1px solid #BAE6FD' }}>
+              <div style={{ fontWeight: 800, color: '#0369A1', marginBottom: '0.2rem' }}>2. Data Privacy</div>
+              <div style={{ fontSize: '0.95rem', color: '#0C4A6E' }}>Never paste client data into the free version of ChatGPT. It trains on your inputs.</div>
+            </div>
           </div>
         </div>
 
@@ -727,40 +590,32 @@ export function Pillar7ModuleC({ onNext }) {
     <InteractiveLayout title="Module C: Prompt Engineering" subtitle="Garbage In, Garbage Out.">
       <div className="cw-prose">
         <p className="cw-text-body">
-          The difference between a robot-sounding email and a conversion-focused masterpiece is the quality of the <strong>Context</strong> you provide. Prompt engineering is the art of giving the AI a "Role," a "Goal," and "Constraints."
+          To get great writing, you need <strong>Context</strong>.
         </p>
 
-        <PromptRefiner />
+        <PromptEngineeringVisual />
 
-        <ScenarioToggle
-          oldTitle="Lazy Prompt"
-          oldContent="'Write an email about coffee.' Result: 'I am writing to tell you about our coffee. It is good. Buy now.' (Robotic and generic)."
-          newTitle="Context Prompt"
-          newContent="'Act as a world-class copywriter. Write a 100-word email for a new cold brew. Target audience: tired parents with zero time. Tone: Funny and empathetic.' Result: 'We know you haven't slept since 2019. Here's a cold-processed hug in a bottle...'"
-        />
-
-        {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
-        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FDF2F8 0%, #FCE7F3 100%)', borderRadius: '24px', border: '1px solid #FBCFE8' }}>
-          <CWHeading level={3} style={{ color: '#9D174D', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        {/* NEW SECTION: Why It Matters */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%)', borderRadius: '24px', border: '1px solid #BAE6FD' }}>
+          <CWHeading level={3} style={{ color: '#0369A1', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
           </CWHeading>
 
-          <p style={{ fontSize: '1.1rem', color: '#831843', lineHeight: '1.7', marginBottom: '1.5rem' }}>
-            <strong>Operational Velocity.</strong> Masterful prompting allows your marketing team to produce a week's worth of content in an hour. By creating a "Prompt Library" for your brand, you ensure that every AI output sounds like your best copywriter, regardless of who is typing the request.
+          <p style={{ fontSize: '1.1rem', color: '#0C4A6E', lineHeight: '1.7', marginBottom: '1.5rem', fontWeight: 'bold' }}>
+            AI is a mirror. It reflects the quality of your instructions. If your emails are generic, it's because your prompts are generic.
           </p>
 
-          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #FBCFE8', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
-            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
-              🚀 How CapeWeb Helps You Scale
-            </h4>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
-              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
-                <span style={{ color: '#DB2777', marginTop: '2px' }}>➜</span>
-                <span>
-                  <a href="/services?service=content-that-converts" style={{ color: '#DB2777', textDecoration: 'underline' }}>Content that Converts</a>: We don't just write copy; we build "Prompt Engines" for your brand so your team can generate high-quality, high-soul content at scale without us.
-                </span>
-              </li>
-            </ul>
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #BAE6FD', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', color: '#0369A1', fontSize: '1.1rem' }}>🚀 How CapeWeb Helps You</h4>
+            <p style={{ fontSize: '0.95rem', color: '#4B5563', marginBottom: '1rem' }}>
+              We engineer the prompts into your dashboard.
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+              <div style={{ display: 'flex', gap: '0.5rem', fontSize: '0.95rem', color: '#374151' }}>
+                <span>➜</span>
+                <span><strong>Content Wizards:</strong> Our CMS comes with pre-built AI fields. You just type "New Coffee" and we generate the SEO title, description, and social posts using expert prompts hidden in the code.</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -781,36 +636,30 @@ export function Pillar7ModuleD({ onNext }) {
     <InteractiveLayout title="Module D: Generative Art" subtitle="Imagine anything.">
       <div className="cw-prose">
         <p className="cw-text-body">
-          Tools like **Midjourney** and **DALL-E 3** allow you to create high-end brand assets, product mockups, and website visuals in seconds. You are no longer limited by your ability to draw or your budget for stock photos.
+          Tools like <strong>Midjourney</strong> can create photorealistic assets for your website. No need to pay for stock photos.
         </p>
 
-        <CWCard style={{ background: '#0F172A', color: '#fff', padding: '2rem', border: '1px solid #334155' }}>
-          <div style={{ fontSize: '0.7rem', color: '#64748B', marginBottom: '1rem' }}>MIDJOURNEY PROMPT EXAMPLE:</div>
-          <code style={{ fontSize: '1rem', color: '#3B82F6' }}>/imagine prompt: a minimalist logo for a SaaS company, vector art, flat design, white background, high resolution --ar 16:9 --v 6.0</code>
-        </CWCard>
+        <MidjourneyVisual />
 
-        {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
-        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%)', borderRadius: '24px', border: '1px solid #DDD6FE' }}>
-          <CWHeading level={3} style={{ color: '#5B21B6', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '1.5rem' }}>🎨</span> Why This Matters for Business Owners
+        {/* NEW SECTION: Why It Matters */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%)', borderRadius: '24px', border: '1px solid #BAE6FD' }}>
+          <CWHeading level={3} style={{ color: '#0369A1', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
           </CWHeading>
 
-          <p style={{ fontSize: '1.1rem', color: '#4C1D95', lineHeight: '1.7', marginBottom: '1.5rem' }}>
-            <strong>Brand Velocity.</strong> High-quality visuals are the "Entry Fee" for modern trust. Generative AI allows you to test 10 different visual directions for a landing page in the time it used to take to brief a designer. It de-risks the creative process and explodes your output of high-performing ad creative.
+          <p style={{ fontSize: '1.1rem', color: '#0C4A6E', lineHeight: '1.7', marginBottom: '1.5rem', fontWeight: 'bold' }}>
+            Visuals sell. But professional photography is expensive and stock photos look fake.
           </p>
 
-          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #DDD6FE', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
-            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
-              🚀 How CapeWeb Helps You Scale
-            </h4>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
-              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
-                <span style={{ color: '#8B5CF6', marginTop: '2px' }}>➜</span>
-                <span>
-                  <a href="/services?service=branding-team" style={{ color: '#8B5CF6', textDecoration: 'underline' }}>Branding Team</a>: We use advanced generative workflows to create unique, high-conversion visual assets that make your brand look like a billion-dollar company at a fraction of the cost.
-                </span>
-              </li>
-            </ul>
+          <div style={{ display: 'grid', gap: '1rem', marginBottom: '2rem' }}>
+            <div style={{ background: 'rgba(255,255,255,0.6)', padding: '1rem', borderRadius: '12px', border: '1px solid #BAE6FD' }}>
+              <div style={{ fontWeight: 800, color: '#0369A1', marginBottom: '0.2rem' }}>1. Infinite Inventory</div>
+              <div style={{ fontSize: '0.95rem', color: '#0C4A6E' }}>Need a photo of a "purple cow on the moon" for a campaign? It takes 60 seconds and costs $0.</div>
+            </div>
+            <div style={{ background: 'rgba(255,255,255,0.6)', padding: '1rem', borderRadius: '12px', border: '1px solid #BAE6FD' }}>
+              <div style={{ fontWeight: 800, color: '#0369A1', marginBottom: '0.2rem' }}>2. Licensing Safety</div>
+              <div style={{ fontSize: '0.95rem', color: '#0C4A6E' }}>Most AI art generation (like Midjourney paid plan) gives you full commercial rights. No more Getty Images lawsuits.</div>
+            </div>
           </div>
         </div>
 
@@ -831,33 +680,44 @@ export function Pillar7ModuleE({ onNext }) {
     <InteractiveLayout title="Module E: Automation Pipelines" subtitle="Connecting the LEGO bricks.">
       <div className="cw-prose">
         <p className="cw-text-body">
-          Automation is the "Digital Glue" of your business. Tools like **Zapier** and **Make** allow you to connect different apps—making data flow between your website, CRM, and communication tools without any human intervention.
+          <strong>Zapier</strong> allows you to clone yourself. You can build a "Sales Team" that runs 24/7 for $20/month.
+          Trigger &rarr; Action &rarr; Action.
         </p>
 
         <ZapierFlowVisual />
 
-        {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
-        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%)', borderRadius: '24px', border: '1px solid #FED7AA' }}>
-          <CWHeading level={3} style={{ color: '#9A3412', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '1.5rem' }}>⚡</span> Why This Matters for Business Owners
+        {/* NEW SECTION: Why It Matters */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%)', borderRadius: '24px', border: '1px solid #BAE6FD' }}>
+          <CWHeading level={3} style={{ color: '#0369A1', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
           </CWHeading>
 
-          <p style={{ fontSize: '1.1rem', color: '#7C2D12', lineHeight: '1.7', marginBottom: '1.5rem' }}>
-            <strong>Scale without Headcount.</strong> Most businesses hire humans to move data between spreadsheets and apps. Automation allows you to handle 10x the volume with 0x the additional staff. It ensures that <strong>no lead is ever forgotten</strong> and no customer falls through the cracks.
+          <p style={{ fontSize: '1.1rem', color: '#0C4A6E', lineHeight: '1.7', marginBottom: '1.5rem', fontWeight: 'bold' }}>
+            The richest businesses are the ones that disconnect "Revenue" from "Hours Worked".
           </p>
 
-          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #FED7AA', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
-            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
-              🚀 How CapeWeb Helps You Scale
-            </h4>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
-              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
-                <span style={{ color: '#EA580C', marginTop: '2px' }}>➜</span>
-                <span>
-                  <a href="/services?service=automation-systems" style={{ color: '#EA580C', textDecoration: 'underline' }}>Automation Systems</a>: We map your entire customer journey and build the automated "Pipes" that handle everything from lead-capture to invoice-generation, freeing you to work <strong>on</strong> the business instead of <strong>in</strong> it.
-                </span>
-              </li>
-            </ul>
+          <div style={{ display: 'grid', gap: '1rem', marginBottom: '2rem' }}>
+            <div style={{ background: 'rgba(255,255,255,0.6)', padding: '1rem', borderRadius: '12px', border: '1px solid #BAE6FD' }}>
+              <div style={{ fontWeight: 800, color: '#0369A1', marginBottom: '0.2rem' }}>1. Zero Lead Leakage</div>
+              <div style={{ fontSize: '0.95rem', color: '#0C4A6E' }}>Humans forget to copy-paste leads. Automations don't. Every lead gets a text message within 5 seconds.</div>
+            </div>
+            <div style={{ background: 'rgba(255,255,255,0.6)', padding: '1rem', borderRadius: '12px', border: '1px solid #BAE6FD' }}>
+              <div style={{ fontWeight: 800, color: '#0369A1', marginBottom: '0.2rem' }}>2. Scalability</div>
+              <div style={{ fontSize: '0.95rem', color: '#0C4A6E' }}>An automation handles 1 lead or 10,000 leads for the same price. A human team needs to hire 5 more people.</div>
+            </div>
+          </div>
+
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #BAE6FD', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', color: '#0369A1', fontSize: '1.1rem' }}>🚀 How CapeWeb Helps You</h4>
+            <p style={{ fontSize: '0.95rem', color: '#4B5563', marginBottom: '1rem' }}>
+              We are Zapier Experts.
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+              <div style={{ display: 'flex', gap: '0.5rem', fontSize: '0.95rem', color: '#374151' }}>
+                <span>➜</span>
+                <span><strong>Integration Standard:</strong> Every form we build pushes data to a webhook. We can connect your website to your CRM, Slack, or Google Sheets instantly.</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -877,41 +737,31 @@ export function Pillar7ModuleF({ onNext }) {
   return (
     <InteractiveLayout title="Module F: AI Support" subtitle="Instant answers.">
       <div className="cw-prose">
-        <p className="cw-text-body">
-          Modern customers expect answers in seconds, not hours. AI Chatbots, when properly integrated with your company's knowledge base, can handle 80% of routine queries with 100% accuracy, 24/7.
-        </p>
+        <p>Customers hate waiting. AI Chatbots (trained on your own PDF documents) can answer "What is your refund policy?" instantly.</p>
 
-        <SupportTriageSim />
+        <ChatbotTrainingVisual />
 
-        <ScenarioToggle
-          oldTitle="Human Support"
-          oldContent="Reply time: 24 hours. Cost: High. Consistency: Variable based on agent's mood. Leads lost: 40% due to slow response."
-          newTitle="AI Support"
-          newContent="Reply time: 1.5 seconds. Cost: Low. Consistency: Perfect alignment with brand voice. Leads lost: 0%."
-        />
-
-        {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
-        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%)', borderRadius: '24px', border: '1px solid #A7F3D0' }}>
-          <CWHeading level={3} style={{ color: '#065F46', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '1.5rem' }}>💬</span> Why This Matters for Business Owners
+        {/* NEW SECTION: Why It Matters */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%)', borderRadius: '24px', border: '1px solid #BAE6FD' }}>
+          <CWHeading level={3} style={{ color: '#0369A1', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
           </CWHeading>
 
-          <p style={{ fontSize: '1.1rem', color: '#064E3B', lineHeight: '1.7', marginBottom: '1.5rem' }}>
-            <strong>The Trust Gap.</strong> Every minute a potential customer waits for a reply is a minute they spend looking at your competitor. AI support isn't about "replacing humans"; it's about being <strong>present</strong> when your customer is ready to buy—whether that's at 2 PM or 2 AM.
+          <p style={{ fontSize: '1.1rem', color: '#0C4A6E', lineHeight: '1.7', marginBottom: '1.5rem', fontWeight: 'bold' }}>
+            Modern customers expect instant gratification. If you don't answer at 2 AM, they buy from the competitor who does.
           </p>
 
-          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #A7F3D0', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
-            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
-              🚀 How CapeWeb Helps You Scale
-            </h4>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
-              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
-                <span style={{ color: '#10B981', marginTop: '2px' }}>➜</span>
-                <span>
-                  <a href="/services?service=ai-agents-sales-team" style={{ color: '#10B981', textDecoration: 'underline' }}>AI Sales Team</a>: We build "Intelligent Concierges" that don't just answer questions—they book appointments, qualify leads, and close sales directly inside your website or WhatsApp.
-                </span>
-              </li>
-            </ul>
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #BAE6FD', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', color: '#0369A1', fontSize: '1.1rem' }}>🚀 How CapeWeb Helps You</h4>
+            <p style={{ fontSize: '0.95rem', color: '#4B5563', marginBottom: '1rem' }}>
+              Our care plans include support for AI Chatbots.
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+              <div style={{ display: 'flex', gap: '0.5rem', fontSize: '0.95rem', color: '#374151' }}>
+                <span>➜</span>
+                <span><strong>Knowledge Base Sync:</strong> We can train a bot on your specific PDFs and Policy pages, so it answers accurately about YOUR business, not general knowledge.</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -931,34 +781,29 @@ export function Pillar7ModuleG({ onNext }) {
   return (
     <InteractiveLayout title="Module G: Data Analysis" subtitle="Your personal Data Scientist.">
       <div className="cw-prose">
-        <p className="cw-text-body">
-          Modern AI tools (like ChatGPT's Advanced Data Analysis) can write and execute Python code to crunch massive datasets. You can upload your sales spreadsheets and ask: "Which marketing channel has the highest ROI?" or "Predict our cash flow for next month."
-        </p>
+        <p>You can upload an Excel file to ChatGPT (Code Interpreter) and say: "Analyze this sales data. Tell me which product has the highest profit margin."</p>
+        <p>It writes Python code, runs it, and gives you charts. It is like having a Harvard graduate in your pocket.</p>
 
-        <DataCruncherVisual />
+        <AnalysisVisual />
 
-        {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
+        {/* NEW SECTION: Why It Matters */}
         <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%)', borderRadius: '24px', border: '1px solid #BAE6FD' }}>
           <CWHeading level={3} style={{ color: '#0369A1', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '1.5rem' }}>📊</span> Why This Matters for Business Owners
+            <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
           </CWHeading>
 
-          <p style={{ fontSize: '1.1rem', color: '#075985', lineHeight: '1.7', marginBottom: '1.5rem' }}>
-            <strong>Precision Decision Making.</strong> Most businesses run on "Gut Feel." AI-driven data analysis allows you to find the 20% of your products or customers that generate 80% of your profit. It's like having a Harvard-educated data scientist sitting in your pocket, ready to audit your business 24/7.
+          <p style={{ fontSize: '1.1rem', color: '#0C4A6E', lineHeight: '1.7', marginBottom: '1.5rem', fontWeight: 'bold' }}>
+            Data is useless if you can't read it. AI turns "Excel files" into "Business Strategy."
           </p>
 
-          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #BAE6FD', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
-            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
-              🚀 How CapeWeb Helps You Scale
-            </h4>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
-              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
-                <span style={{ color: '#0EA5E9', marginTop: '2px' }}>➜</span>
-                <span>
-                  <a href="/services?service=performance-monitoring" style={{ color: '#0EA5E9', textDecoration: 'underline' }}>Performance Monitoring</a>: We set up automated data pipelines that feed your sales data into AI analyzers, giving you a live "Profit Dashboard" that tells you exactly where to invest your next Marketing Rand.
-                </span>
-              </li>
-            </ul>
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #BAE6FD', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
+            <h4 style={{ margin: '0 0 1rem', color: '#0369A1', fontSize: '1.1rem' }}>🚀 How CapeWeb Helps You</h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+              <div style={{ display: 'flex', gap: '0.5rem', fontSize: '0.95rem', color: '#374151' }}>
+                <span>➜</span>
+                <span><strong>Dashboard Metrics:</strong> We build custom analytics dashboards that simplify your site data (Sales, Visits, Conversions) so you don't need to ask an AI to explain it. It's clear from day one.</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -978,34 +823,22 @@ export function Pillar7ModuleH({ onNext }) {
   return (
     <InteractiveLayout title="Module H: Autonomous Agents" subtitle="Goal-directed AI.">
       <div className="cw-prose">
-        <p className="cw-text-body">
-          While a chatbot *replies* to you, an <strong>Agent</strong> executes for you. Agents are AI systems that can plan, use tools (like a browser or an email client), and perform multi-step tasks autonomously to reach a goal.
-        </p>
+        <p>Chatbots reply. <strong>Agents</strong> do.</p>
+        <AgentLoopVisual />
 
-        <AgentTaskChain />
-
-        {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
-        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F1F5F9 0%, #E2E8F0 100%)', borderRadius: '24px', border: '1px solid #CBD5E1' }}>
-          <CWHeading level={3} style={{ color: '#334155', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '1.5rem' }}>🤖</span> Why This Matters for Business Owners
+        {/* NEW SECTION: Why It Matters */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%)', borderRadius: '24px', border: '1px solid #BAE6FD' }}>
+          <CWHeading level={3} style={{ color: '#0369A1', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
           </CWHeading>
 
-          <p style={{ fontSize: '1.1rem', color: '#1E293B', lineHeight: '1.7', marginBottom: '1.5rem' }}>
-            <strong>The Future of Labor.</strong> We are moving from "Human-in-the-loop" (you tell AI to do one thing) to "Human-on-the-loop" (you tell an Agent a goal, and it performs 10 tasks to get there). Autonomous Agents allow you to run entire departments—like lead research or content distribution—with minimal oversight.
+          <p style={{ fontSize: '1.1rem', color: '#0C4A6E', lineHeight: '1.7', marginBottom: '1.5rem', fontWeight: 'bold' }}>
+            The future of work is not "Man vs Machine." It is "Manager of Machines."
           </p>
 
-          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #CBD5E1', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
-            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
-              🚀 How CapeWeb Helps You Scale
-            </h4>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
-              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
-                <span style={{ color: '#475569', marginTop: '2px' }}>➜</span>
-                <span>
-                  <a href="/services?service=ai-agents" style={{ color: '#475569', textDecoration: 'underline' }}>AI Agents</a>: We build custom agents that live on your servers and perform repetitive business tasks—from scraping competitor pricing to personalized outreach—so your team can focus on relationships.
-                </span>
-              </li>
-            </ul>
+          <div style={{ background: 'rgba(255,255,255,0.6)', padding: '1rem', borderRadius: '12px', border: '1px solid #BAE6FD' }}>
+            <div style={{ fontWeight: 800, color: '#0369A1', marginBottom: '0.2rem' }}>Digital Employees</div>
+            <div style={{ fontSize: '0.95rem', color: '#0C4A6E' }}>Soon, you will not hire a "Social Media Intern." You will spin up a "Social Media Agent" that knows your brand voice and posts 24/7 without needing sleep.</div>
           </div>
         </div>
 
@@ -1025,34 +858,23 @@ export function Pillar7ModuleI({ onNext }) {
   return (
     <InteractiveLayout title="Module I: Meeting Intelligence" subtitle="Never take notes again.">
       <div className="cw-prose">
-        <p className="cw-text-body">
-          The average founder spends 10+ hours a week in meetings. By using AI "Recorders" (like Otter or Fireflies), you can automate transcription, indexing, and action-item summaries—freeing your brain to actually *participate* in the conversation.
-        </p>
+        <p>Tools like <strong>Otter.ai</strong> join your Zoom calls, transcribe everything, and email you a summary. This saves 15 minutes per meeting.</p>
 
-        <MeetingTimeRecovered />
+        <MeetingVisual />
 
-        {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
-        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%)', borderRadius: '24px', border: '1px solid #E2E8F0' }}>
-          <CWHeading level={3} style={{ color: '#334155', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '1.5rem' }}>🎙️</span> Why This Matters for Business Owners
+        {/* NEW SECTION: Why It Matters */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%)', borderRadius: '24px', border: '1px solid #BAE6FD' }}>
+          <CWHeading level={3} style={{ color: '#0369A1', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
           </CWHeading>
 
-          <p style={{ fontSize: '1.1rem', color: '#475569', lineHeight: '1.7', marginBottom: '1.5rem' }}>
-            <strong>Bandwidth Recovery.</strong> As a founder, your most valuable asset is your "Deep Work" time. Meeting automation doesn't just save you from taking notes; it creates a searchable "Corporate Brain" where you can recall exactly what was promised to a client 6 months ago in 2 seconds.
+          <p style={{ fontSize: '1.1rem', color: '#0C4A6E', lineHeight: '1.7', marginBottom: '1.5rem', fontWeight: 'bold' }}>
+            Memory is fallible. Transcripts are forever.
           </p>
 
-          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #E2E8F0', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
-            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
-              🚀 How CapeWeb Helps You Scale
-            </h4>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
-              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
-                <span style={{ color: '#475569', marginTop: '2px' }}>➜</span>
-                <span>
-                  <a href="/services?service=care-plans" style={{ color: '#475569', textDecoration: 'underline' }}>Care Plans</a>: We manage the complexity of your AI stack. From ensuring your meeting recorders are synced to your CRM to training your team on prompt libraries, we handle the tech so you can focus on the growth.
-                </span>
-              </li>
-            </ul>
+          <div style={{ background: 'rgba(255,255,255,0.6)', padding: '1rem', borderRadius: '12px', border: '1px solid #BAE6FD' }}>
+            <div style={{ fontWeight: 800, color: '#0369A1', marginBottom: '0.2rem' }}>Accountability</div>
+            <div style={{ fontSize: '0.95rem', color: '#0C4A6E' }}>"I never said that" becomes impossible when you have a searchable, word-for-word record of every meeting.</div>
           </div>
         </div>
 
@@ -1065,6 +887,101 @@ export function Pillar7ModuleI({ onNext }) {
       </div>
     </InteractiveLayout>
   )
+}
+
+// ==========================================
+// MODULE J: RESOURCES
+// ==========================================
+export function Pillar7Resources({ onNext }) {
+  const openLink = (url) => window.open(url, '_blank');
+
+  const ResourceCard = ({ title, category, description, link }) => (
+    <div onClick={() => openLink(link)} style={{
+      padding: '1.5rem', background: 'white', borderRadius: '16px',
+      border: '1px solid #E2E8F0', cursor: 'pointer', transition: 'all 0.2s',
+      boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)',
+      display: 'flex', flexDirection: 'column', gap: '0.5rem'
+    }}
+      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.borderColor = '#94A3B8'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0,0,0,0.1)'; }}
+      onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = '#E2E8F0'; e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0,0,0,0.05)'; }}
+    >
+      <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em', background: '#F1F5F9', padding: '0.25rem 0.5rem', borderRadius: '4px', alignSelf: 'flex-start' }}>
+        {category}
+      </div>
+      <h4 style={{ margin: '0.5rem 0 0', fontSize: '1.1rem', color: '#0F172A' }}>{title} ↗</h4>
+      <p style={{ margin: 0, fontSize: '0.9rem', color: '#4B5563', lineHeight: '1.5' }}>{description}</p>
+    </div>
+  );
+
+  return (
+    <InteractiveLayout title="Module J: Resources" subtitle="AI Architect Toolkit">
+      <div className="cw-prose">
+        <p>The AI landscape changes weekly. These are the tools that are staying. Master these, and you master the future.</p>
+
+        <h3 style={{ marginTop: '2rem' }}>🛠️ The AI Stack</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
+          <ResourceCard
+            category="LLM"
+            title="ChatGPT Plus"
+            description="The Swiss Army Knife. Use it for writing, coding, data analysis, and brainstorming."
+            link="https://chat.openai.com/"
+          />
+          <ResourceCard
+            category="Reasoning"
+            title="Claude 3"
+            description="Anthropic's model. Often better at coding and creative writing than GPT-4. Large context window."
+            link="https://claude.ai/"
+          />
+          <ResourceCard
+            category="Images"
+            title="Midjourney"
+            description="The best image generator in the world. Runs on Discord. Creates photorealistic assets."
+            link="https://www.midjourney.com/"
+          />
+          <ResourceCard
+            category="Automation"
+            title="Zapier"
+            description="The glue that connects your apps. Start simple automations here."
+            link="https://zapier.com/"
+          />
+          <ResourceCard
+            category="Advanced Automation"
+            title="Make.com"
+            description="Visual workflow builder for complex, multi-step AI agents. More powerful than Zapier."
+            link="https://www.make.com/"
+          />
+        </div>
+
+        <h3 style={{ marginTop: '3rem' }}>📚 Recommended Reading</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
+          <ResourceCard
+            category="Society"
+            title="Life 3.0"
+            description="By Max Tegmark. A deep dive into being human in the age of Artificial Intelligence."
+            link="https://tegmark.org/books/life-3-0/"
+          />
+          <ResourceCard
+            category="Practical"
+            title="Co-Intelligence"
+            description="By Ethan Mollick. The most practical guide available on how to actually work with AI today."
+            link="https://www.penguinrandomhouse.com/books/741761/co-intelligence-by-ethan-mollick/"
+          />
+          <ResourceCard
+            category="Future"
+            title="Scary Smart"
+            description="By Mo Gawdat. An optimistic yet cautious look at how we must raise AI like a child."
+            link="https://www.mogawdat.com/scary-smart"
+          />
+        </div>
+
+        <div style={{ marginTop: '3rem', padding: '2rem', background: '#F8FAFC', borderRadius: '16px', textAlign: 'center', border: '1px solid #E2E8F0' }}>
+          <h4>Ready for the Final Exam?</h4>
+          <p style={{ marginBottom: '1.5rem', color: '#64748B' }}>You have the tools. Now prove you can use them responsibly.</p>
+          <CWButton onClick={onNext} variant="primary" style={{ padding: '1rem 2rem', fontSize: '1.1rem' }}>Take Final Exam 🏁</CWButton>
+        </div>
+      </div>
+    </InteractiveLayout>
+  );
 }
 
 // ==========================================

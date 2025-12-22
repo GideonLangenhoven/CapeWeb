@@ -9,53 +9,53 @@ import { CWButton, CWHeading, CWCard, CWInput, CWBadge, CWAlert, BookInsight } f
 // ==========================================
 export const pillar11QuizQuestions = [
   {
-    question: 'According to "Delivering Happiness" (Zappos), what is customer service?',
-    options: ['A cost center', 'The new marketing', 'A department for complaints'],
+    question: 'A customer gets a broken product (0/10 experience). You instantly refund them AND send a free replacement with a hand-written note. They become your most loyal fan. What is this phenomenon?',
+    options: ['Bribery', 'The Service Recovery Paradox', 'Bad business'],
     correctIndex: 1,
   },
   {
-    question: 'What is "NPS" (Net Promoter Score)?',
-    options: ['No Problem Sir', 'A metric measuring customer loyalty ("How likely are you to recommend us?")', 'New Product Strategy'],
-    correctIndex: 1,
-  },
-  {
-    question: 'What is the "Service Recovery Paradox"?',
-    options: ['Customers are angrier when you fix problems', 'A customer whose problem is resolved quickly and excellently is often MORE loyal than one who never had a problem', 'Service is impossible'],
-    correctIndex: 1,
-  },
-  {
-    question: 'What is "Churn"?',
-    options: ['Making butter', 'The percentage of customers who cancel your service', 'A type of engine'],
-    correctIndex: 1,
-  },
-  {
-    question: 'Why is a Knowledge Base (Help Center) critical?',
-    options: ['It is fun to write', 'It allows customers to help themselves instanty (Self-Service) without waiting for a human', 'It improves SEO only'],
-    correctIndex: 1,
-  },
-  {
-    question: 'What is the primary goal of "The Effortless Experience"?',
-    options: ['To delight customers with gifts', 'To reduce the effort/friction required for a customer to get their problem solved', 'To ignore customers'],
-    correctIndex: 1,
-  },
-  {
-    question: 'What is an SLA (Service Level Agreement)?',
-    options: ['A guarantee to respond/fix issues within a certain time', 'Slow Life Act', 'Standard Legal Advice'],
+    question: 'You sign up 50 new clients this month. But 60 old clients cancel. You celebrate "Record Sales". What metric are you ignoring?',
+    options: ['Churn (You are leaking customers faster than you fill the bucket)', 'Revenue', 'Profit'],
     correctIndex: 0,
   },
   {
-    question: 'What is the most expensive type of customer?',
-    options: ['An angry one', 'A new one (Acquisition cost is 5-25x higher than retention cost)', 'A loyal one'],
+    question: '100 customers ask "How do I reset my password?" every single day. Your support team is drowning. What asset should you build specifically to unsolved this?',
+    options: ['A toll-free phone number', 'A Self-Service Knowledge Base (Help Center)', 'A Facebook page'],
     correctIndex: 1,
   },
   {
-    question: 'What is "Omnichannel" support?',
-    options: ['Supporting only one channel', 'Providing a seamless experience across Email, Chat, Phone, and Social', 'Omnipotent support'],
+    question: 'A corporate client offers you a contract: "If your server is down for more than 1 hour, you must pay us a R10,000 penalty." What is this clause called?',
+    options: ['An NDA', 'An SLA (Service Level Agreement)', 'An Invoice'],
     correctIndex: 1,
   },
   {
-    question: 'What is "Customer Success" vs "Customer Support"?',
-    options: ['Success is proactive (helping them grow); Support is reactive (fixing breaks)', 'They are the same', 'Success is for VIPs'],
+    question: 'Company A sends customers free chocolates but takes 3 days to fix issues. Company B sends no gifts but fixes issues in 5 minutes. According to "The Effortless Experience", who wins loyalty?',
+    options: ['Company A', 'Company B (Reducing Customer Effort is the biggest driver of loyalty)', 'Neither'],
+    correctIndex: 1,
+  },
+  {
+    question: 'You ask customers "On a scale of 0-10, how likely are you to recommend us?". You calculate the score by subtracting the Detractors (0-6) from the Promoters (9-10). What is this?',
+    options: ['NPS (Net Promoter Score)', 'IQ Test', 'Customer Satisfaction Score'],
+    correctIndex: 0,
+  },
+  {
+    question: 'Only ONE person in your team knows how the billing server works. If they quit (or get hit by a bus), the company dies. What is this risk?',
+    options: ['The Bus Factor', 'Staff Turnover', 'Bad luck'],
+    correctIndex: 0,
+  },
+  {
+    question: 'Support waits for a ticket saying "It broke". Customer Success calls the client saying "I see you haven\'t logged in, let me help you". What is the difference?',
+    options: ['None', 'Support is Reactive; Success is Proactive', 'Success is cheaper'],
+    correctIndex: 1,
+  },
+  {
+    question: 'You hire a new intern. Instead of training them for 5 days, you hand them a step-by-step document with screenshots. They do the job perfectly on Day 1. What is this document?',
+    options: ['A Diploma', 'An SOP (Standard Operating Procedure) / Playbook', 'A contract'],
+    correctIndex: 1,
+  },
+  {
+    question: 'You spend R1,000 to get a new customer. It costs you R50 to keep an existing customer happy. Both spend the same amount. Where is the better ROI?',
+    options: ['Retention (Keeping existing customers is 5-25x cheaper than Acquisition)', 'Acquisition', 'Neither'],
     correctIndex: 0,
   },
 ];
@@ -166,7 +166,7 @@ function MiniQuiz({ questions, title = "Knowledge Check", onNext }) {
     <div style={{ marginTop: '3rem', padding: '2rem 2rem', borderRadius: '32px', background: 'rgba(255, 255, 255, 0.85)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255, 255, 255, 0.6)', boxShadow: '0 20px 50px -10px rgba(31, 38, 135, 0.15)', position: 'relative', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(120deg, rgba(34,211,238,0.15), rgba(244,114,182,0.15), rgba(253,224,71,0.15), rgba(34,211,238,0.15))', backgroundSize: '300% 300%', animation: 'gradientMove 15s ease infinite', zIndex: -1, pointerEvents: 'none' }} />
       <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ background: '#E0F2FE', color: '#0284C7', padding: '0.3rem 0.8rem', borderRadius: '100px', fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Assessment</div>
+        <div style={{ background: '#E0F2FE', color: '#0284C7', padding: '0.3rem 0.8rem', borderRadius: '100px', fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Knowledge Check</div>
         <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#64748B' }}>Question {currentQ + 1} of {questions.length}</span>
       </div>
       <h4 style={{ margin: '0 0 1.5rem 0', fontSize: '2rem', fontWeight: 900, color: '#0F172A', letterSpacing: '-0.02em', lineHeight: 1.1 }}>{title}</h4>
@@ -206,13 +206,38 @@ function NPSVisual() {
   }, [score]);
 
   return (
-    <div style={{ margin: '2rem 0', padding: '1.5rem', background: '#F8FAFC', borderRadius: '16px', textAlign: 'center' }}>
-      <div style={{ fontSize: '3rem', fontWeight: 900, color: color, marginBottom: '1rem' }}>{score}</div>
-      <input
-        type="range" min="0" max="10" value={score} onChange={(e) => setScore(e.target.value)}
-        style={{ width: '100%', maxWidth: '300px', marginBottom: '1rem' }}
-      />
-      <div style={{ fontWeight: 'bold', color: '#64748B' }}>{label}</div>
+    <div style={{
+      margin: '2rem 0',
+      padding: '2rem',
+      borderRadius: '24px',
+      position: 'relative',
+      overflow: 'hidden',
+      boxShadow: '0 20px 50px -10px rgba(0,0,0,0.1)',
+      background: '#FB923C',
+      color: '#0F172A'
+    }}>
+      {/* Moving Gradient Background */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        background: 'linear-gradient(120deg, rgba(34,211,238,0.15), rgba(244,114,182,0.15), rgba(253,224,71,0.15), rgba(34,211,238,0.15))',
+        backgroundSize: '300% 300%',
+        animation: 'gradientMove 15s ease infinite',
+        zIndex: 0,
+        pointerEvents: 'none'
+      }} />
+
+      <div style={{ position: 'relative', zIndex: 1, background: 'rgba(255,255,255,0.6)', padding: '2rem', borderRadius: '16px', borderRadius: '16px', backdropFilter: 'blur(4px)', textAlign: 'center' }}>
+        <div style={{ fontSize: '4rem', fontWeight: 900, color: color, marginBottom: '0.5rem', lineHeight: 1 }}>{score}</div>
+        <input
+          type="range" min="0" max="10" value={score} onChange={(e) => setScore(e.target.value)}
+          style={{ width: '100%', maxWidth: '350px', marginBottom: '1.5rem', cursor: 'pointer' }}
+        />
+        <div style={{ fontWeight: 800, color: '#334155', fontSize: '1.2rem', padding: '0.5rem 1rem', background: 'rgba(255,255,255,0.8)', borderRadius: '100px', display: 'inline-block' }}>{label}</div>
+      </div>
     </div>
   )
 }
@@ -228,21 +253,46 @@ function KnowledgeBaseVisual() {
   };
 
   return (
-    <div style={{ margin: '2rem 0', padding: '2rem', background: '#fff', border: '1px solid #E2E8F0', borderRadius: '16px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
-      <h4 style={{ textAlign: 'center', marginBottom: '1rem' }}>Self-Service Demo</h4>
-      <div style={{ display: 'flex', gap: '0.5rem' }}>
-        <input
-          type="text" placeholder="Type 'refund' or 'shipping'..."
-          value={query} onChange={(e) => setQuery(e.target.value)}
-          style={{ flex: 1, padding: '0.75rem', borderRadius: '8px', border: '1px solid #CBD5E1' }}
-        />
-        <button onClick={handleSearch} style={{ background: '#3B82F6', color: 'white', border: 'none', padding: '0 1.5rem', borderRadius: '8px', cursor: 'pointer' }}>Search</button>
-      </div>
-      {result && (
-        <div style={{ marginTop: '1rem', padding: '1rem', background: '#F0F9FF', borderRadius: '8px', borderLeft: '4px solid #0EA5E9' }}>
-          {result}
+    <div style={{
+      margin: '2rem 0',
+      padding: '2rem',
+      borderRadius: '24px',
+      position: 'relative',
+      overflow: 'hidden',
+      boxShadow: '0 20px 50px -10px rgba(0,0,0,0.1)',
+      background: '#4ADE80',
+      color: '#0F172A'
+    }}>
+      {/* Moving Gradient Background */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        background: 'linear-gradient(120deg, rgba(34,211,238,0.15), rgba(244,114,182,0.15), rgba(253,224,71,0.15), rgba(34,211,238,0.15))',
+        backgroundSize: '300% 300%',
+        animation: 'gradientMove 15s ease infinite',
+        zIndex: 0,
+        pointerEvents: 'none'
+      }} />
+
+      <div style={{ position: 'relative', zIndex: 1, background: 'rgba(255,255,255,0.9)', border: '1px solid #E2E8F0', borderRadius: '16px', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)', padding: '2rem' }}>
+        <h4 style={{ textAlign: 'center', marginBottom: '1.5rem', fontSize: '1.3rem', color: '#1E293B' }}>Self-Service Demo</h4>
+        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+          <input
+            type="text" placeholder="Type 'refund' or 'shipping'..."
+            value={query} onChange={(e) => setQuery(e.target.value)}
+            style={{ flex: 1, padding: '0.8rem', borderRadius: '12px', border: '1px solid #CBD5E1', fontSize: '1rem' }}
+          />
+          <button onClick={handleSearch} style={{ background: '#3B82F6', color: 'white', border: 'none', padding: '0 1.5rem', borderRadius: '12px', cursor: 'pointer', fontWeight: 600 }}>Search</button>
         </div>
-      )}
+        {result && (
+          <div style={{ marginTop: '1rem', padding: '1rem', background: '#F0F9FF', borderRadius: '12px', borderLeft: '4px solid #0EA5E9', color: '#0369A1', fontSize: '0.95rem' }}>
+            {result}
+          </div>
+        )}
+      </div>
     </div>
   )
 }
@@ -258,23 +308,43 @@ function ChatWidgetVisual() {
   };
 
   return (
-    <div style={{ margin: '2rem auto', width: '280px', height: '350px', background: '#fff', border: '1px solid #CBD5E1', borderRadius: '16px', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
-      <div style={{ background: '#0F172A', color: 'white', padding: '1rem', fontWeight: 'bold' }}>Live Support</div>
-      <div style={{ flex: 1, padding: '1rem', background: '#F8FAFC', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-        {messages.length === 0 && <div style={{ textAlign: 'center', color: '#94A3B8', marginTop: '2rem' }}>Start a chat...</div>}
+    <div style={{
+      margin: '2rem auto',
+      width: '320px',
+      height: '400px',
+      borderRadius: '20px',
+      position: 'relative',
+      overflow: 'hidden',
+      boxShadow: '0 20px 50px -10px rgba(0,0,0,0.2)',
+      background: 'white',
+      display: 'flex',
+      flexDirection: 'column'
+    }}>
+      <div style={{ background: '#0F172A', color: 'white', padding: '1.2rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <div style={{ width: '10px', height: '10px', background: '#10B981', borderRadius: '50%' }}></div>
+        Live Support
+      </div>
+      <div style={{ flex: 1, padding: '1.5rem', background: '#F8FAFC', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        {messages.length === 0 && <div style={{ textAlign: 'center', color: '#94A3B8', marginTop: '2rem', fontStyle: 'italic' }}>Start a chat...</div>}
         {messages.map((m, i) => (
           <div key={i} style={{
             alignSelf: m.from === 'user' ? 'flex-end' : 'flex-start',
-            background: m.from === 'user' ? '#3B82F6' : '#E2E8F0',
+            background: m.from === 'user' ? '#3B82F6' : '#fff',
             color: m.from === 'user' ? 'white' : '#1E293B',
-            padding: '0.5rem 0.8rem', borderRadius: '8px', maxWidth: '80%', fontSize: '0.9rem'
+            padding: '0.8rem 1.2rem',
+            borderRadius: '12px',
+            borderBottomRightRadius: m.from === 'user' ? '0' : '12px',
+            borderBottomLeftRadius: m.from === 'user' ? '12px' : '0',
+            maxWidth: '80%',
+            fontSize: '0.95rem',
+            boxShadow: '0 2px 5px rgba(0,0,0,0.05)'
           }}>
             {m.text}
           </div>
         ))}
       </div>
-      <div style={{ padding: '0.5rem', borderTop: '1px solid #E2E8F0' }}>
-        <button onClick={startChat} style={{ width: '100%', padding: '0.5rem', background: '#10B981', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>Ask Question</button>
+      <div style={{ padding: '1rem', borderTop: '1px solid #E2E8F0', background: 'white' }}>
+        <button onClick={startChat} style={{ width: '100%', padding: '0.8rem', background: '#10B981', color: 'white', border: 'none', borderRadius: '12px', cursor: 'pointer', fontWeight: 600, transition: 'background 0.2s' }}>Ask Question</button>
       </div>
     </div>
   )
@@ -283,20 +353,45 @@ function ChatWidgetVisual() {
 function ScenarioToggle({ oldTitle, oldContent, newTitle, newContent }) {
   const [view, setView] = useState('old');
   return (
-    <div style={{ margin: '3rem 0' }}>
-      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem', background: '#F1F5F9', padding: '0.5rem', borderRadius: '100px', width: 'fit-content', margin: '0 auto 2rem' }}>
-        <button onClick={() => setView('old')} style={{ padding: '0.6rem 1.5rem', borderRadius: '100px', border: 'none', background: view === 'old' ? '#fff' : 'transparent', color: view === 'old' ? '#EF4444' : '#64748B', fontWeight: 800, boxShadow: view === 'old' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>{oldTitle}</button>
-        <button onClick={() => setView('new')} style={{ padding: '0.6rem 1.5rem', borderRadius: '100px', border: 'none', background: view === 'new' ? '#fff' : 'transparent', color: view === 'new' ? '#10B981' : '#64748B', fontWeight: 800, boxShadow: view === 'new' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>{newTitle}</button>
+    <div style={{
+      margin: '3rem 0',
+      padding: '2rem',
+      borderRadius: '24px',
+      position: 'relative',
+      overflow: 'hidden',
+      boxShadow: '0 20px 50px -10px rgba(0,0,0,0.1)',
+      background: '#FDE047',
+      color: '#0F172A'
+    }}>
+      {/* Moving Gradient Background */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        background: 'linear-gradient(120deg, rgba(34,211,238,0.15), rgba(244,114,182,0.15), rgba(253,224,71,0.15), rgba(34,211,238,0.15))',
+        backgroundSize: '300% 300%',
+        animation: 'gradientMove 15s ease infinite',
+        zIndex: 0,
+        pointerEvents: 'none'
+      }} />
+
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem', background: 'rgba(241, 245, 249, 0.8)', padding: '0.5rem', borderRadius: '100px', width: 'fit-content', margin: '0 auto 2rem' }}>
+          <button onClick={() => setView('old')} style={{ padding: '0.6rem 1.5rem', borderRadius: '100px', border: 'none', background: view === 'old' ? '#fff' : 'transparent', color: view === 'old' ? '#EF4444' : '#64748B', fontWeight: 800, boxShadow: view === 'old' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>{oldTitle}</button>
+          <button onClick={() => setView('new')} style={{ padding: '0.6rem 1.5rem', borderRadius: '100px', border: 'none', background: view === 'new' ? '#fff' : 'transparent', color: view === 'new' ? '#10B981' : '#64748B', fontWeight: 800, boxShadow: view === 'new' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>{newTitle}</button>
+        </div>
+        {view === 'old' ? (
+          <div style={{ padding: '1.5rem', background: 'rgba(254, 242, 242, 0.9)', borderRadius: '24px', border: '2px solid #FECACA', animation: 'fadeIn 0.5s' }}>
+            {oldContent}
+          </div>
+        ) : (
+          <div style={{ padding: '1.5rem', background: 'rgba(236, 253, 245, 0.9)', borderRadius: '24px', border: '2px solid #A7F3D0', animation: 'fadeIn 0.5s' }}>
+            {newContent}
+          </div>
+        )}
       </div>
-      {view === 'old' ? (
-        <div style={{ padding: '1.5rem', background: '#FEF2F2', borderRadius: '24px', border: '2px solid #FECACA', animation: 'fadeIn 0.5s' }}>
-          {oldContent}
-        </div>
-      ) : (
-        <div style={{ padding: '1.5rem', background: '#ECFDF5', borderRadius: '24px', border: '2px solid #A7F3D0', animation: 'fadeIn 0.5s' }}>
-          {newContent}
-        </div>
-      )}
     </div>
   );
 }
@@ -472,6 +567,89 @@ export function Pillar11ModuleG({ onNext }) {
       </div>
     </InteractiveLayout>
   )
+}
+
+// ==========================================
+// MODULE H: RESOURCES
+// ==========================================
+export function Pillar11Resources({ onNext }) {
+  const openLink = (url) => window.open(url, '_blank');
+
+  const ResourceCard = ({ title, category, description, link }) => (
+    <div onClick={() => openLink(link)} style={{
+      padding: '1.5rem', background: 'white', borderRadius: '16px',
+      border: '1px solid #E2E8F0', cursor: 'pointer', transition: 'all 0.2s',
+      boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)',
+      display: 'flex', flexDirection: 'column', gap: '0.5rem'
+    }}
+      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.borderColor = '#94A3B8'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0,0,0,0.1)'; }}
+      onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = '#E2E8F0'; e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0,0,0,0.05)'; }}
+    >
+      <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em', background: '#F1F5F9', padding: '0.25rem 0.5rem', borderRadius: '4px', alignSelf: 'flex-start' }}>
+        {category}
+      </div>
+      <h4 style={{ margin: '0.5rem 0 0', fontSize: '1.1rem', color: '#0F172A' }}>{title} ↗</h4>
+      <p style={{ margin: 0, fontSize: '0.9rem', color: '#4B5563', lineHeight: '1.5' }}>{description}</p>
+    </div>
+  );
+
+  return (
+    <InteractiveLayout title="Module H: Resources" subtitle="CX Toolkit">
+      <div className="cw-prose">
+        <p>Your brand is what people say about you when you are not in the room. Give them something good to say.</p>
+
+        <h3 style={{ marginTop: '2rem' }}>🛠️ The CX Stack</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
+          <ResourceCard
+            category="Live Chat"
+            title="Intercom / Zendesk"
+            description="Integrated help desk and live chat. Don't make customers wait for email."
+            link="https://www.intercom.com/"
+          />
+          <ResourceCard
+            category="Messaging"
+            title="WhatsApp Business API"
+            description="Meet your customers where they are. 2 billion people use WhatsApp."
+            link="https://business.whatsapp.com/"
+          />
+          <ResourceCard
+            category="Feedback"
+            title="Typeform / Tally"
+            description="Beautiful surveys that people actually enjoy filling out. Use for NPS."
+            link="https://www.typeform.com/"
+          />
+          <ResourceCard
+            category="Trust"
+            title="Trustpilot"
+            description="Collecting reviews builds social proof. 90% of people read reviews before buying."
+            link="https://www.trustpilot.com/"
+          />
+        </div>
+
+        <h3 style={{ marginTop: '3rem' }}>📚 Recommended Reading</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
+          <ResourceCard
+            category="Culture"
+            title="Delivering Happiness"
+            description="By Tony Hsieh. How Zappos built a billion-dollar business by obsessing over customer service."
+            link="https://www.deliveringhappiness.com/book"
+          />
+          <ResourceCard
+            category="Strategy"
+            title="The Effortless Experience"
+            description="By Matthew Dixon. Stop trying to 'delight' customers. Just make it easy for them."
+            link="https://www.amazon.com/Effortless-Experience-Conquering-Battleground-Customer/dp/1591845815"
+          />
+        </div>
+
+        <div style={{ marginTop: '3rem', padding: '2rem', background: '#F8FAFC', borderRadius: '16px', textAlign: 'center', border: '1px solid #E2E8F0' }}>
+          <h4>Ready for the Final Exam?</h4>
+          <p style={{ marginBottom: '1.5rem', color: '#64748B' }}>Service is an attitude, not a department. Let's see if you have it.</p>
+          <CWButton onClick={onNext} variant="primary" style={{ padding: '1rem 2rem', fontSize: '1.1rem' }}>Take Final Exam 🏁</CWButton>
+        </div>
+      </div>
+    </InteractiveLayout>
+  );
 }
 
 // ==========================================

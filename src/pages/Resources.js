@@ -771,11 +771,12 @@ function Resources() {
 
   useEffect(() => {
     const scrollerEl = scrollRef?.current;
-    if (!scrollerEl) return undefined;
+    if (!scrollerEl || !locomotiveScroll?.current) return undefined;
 
-    // Wait for DOM to be ready
+    let ctx;
+    // Wait for DOM and Locomotive Scroll to be ready
     const timer = setTimeout(() => {
-      const ctx = gsap.context(() => {
+      ctx = gsap.context(() => {
         const reveals = document.querySelectorAll('.reveal-text');
         reveals.forEach((el) => {
           gsap.fromTo(el,
@@ -797,12 +798,13 @@ function Resources() {
         // Refresh ScrollTrigger after animations are set up
         ScrollTrigger.refresh();
       }, containerRef);
+    }, 500); // Increased delay to ensure layout is stable
 
-      return () => ctx.revert();
-    }, 200);
-
-    return () => clearTimeout(timer);
-  }, [scrollRef]);
+    return () => {
+      clearTimeout(timer);
+      if (ctx) ctx.revert();
+    };
+  }, [scrollRef, locomotiveScroll]);
 
   return (
     <div className="expand-page" data-scroll-container ref={scrollRef}>

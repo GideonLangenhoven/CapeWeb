@@ -9,53 +9,53 @@ import { CWButton, CWHeading, CWCard, CWInput, CWBadge, CWAlert, BookInsight } f
 // ==========================================
 export const pillar9QuizQuestions = [
   {
-    question: 'In "Profit First", what is the core equation change?',
-    options: ['Sales - Expenses = Profit', 'Sales - Profit = Expenses', 'Sales + Sales = Rich'],
+    question: 'You make R10,000 revenue. Your expenses are R12,000. Traditional accounting says you made a loss. What does the "Profit First" formula force you to do?',
+    options: ['Borrow money', 'Take Profit FIRST (e.g. 5%), then force expenses to fit the remainder', 'Close the business'],
     correctIndex: 1,
   },
   {
-    question: 'What is "Value-Based Pricing"?',
-    options: ['Charing based on your hourly rate', 'Charging based on the value/outcome you provide to the client', 'Charging the lowest price possible'],
+    question: 'It takes you 1 hour to fix a critical server bug that saves a client R5 million. You charge R1,000 (your hourly rate). They would have happily paid R50,000. What mistake did you make?',
+    options: ['You were too fast', 'You used Cost-Plus Pricing instead of Value-Based Pricing', 'You should have worked slower'],
     correctIndex: 1,
   },
   {
-    question: 'Which of these is a popular South African payment gateway?',
-    options: ['Stripe', 'PayFast', 'Alipay'],
+    question: 'You get faster at your work. A job that took 10 hours now takes 2. If you charge by the hour, you now make LESS money. What is this trap called?',
+    options: ['The Efficiency Penalty (Why hourly billing fails experts)', 'Inflation', 'Market forces'],
+    correctIndex: 0,
+  },
+  {
+    question: 'You record R1 million in sales in March (Great!). But the clients only pay in June. In April, you can\'t pay your staff and go bust. What killed you?',
+    options: ['Not enough sales', 'Cash Flow / Liquidity Crisis (Profit ≠ Cash)', 'Bad luck'],
     correctIndex: 1,
   },
   {
-    question: 'Why should you generally avoid "Cost-Plus" pricing?',
-    options: ['It is illegal', 'It punishes you for being efficient (faster work = less money)', 'It is too hard to calculate'],
+    question: 'Client A pays R50,000 once. Client B pays R5,000 every month for 3 years (R180k total). Which client increases the valuation of your company?',
+    options: ['Client A (Big cash)', 'Client B (Recurring Revenue / MRR)', 'Neither'],
     correctIndex: 1,
   },
   {
-    question: 'What is "Bootstrapping"?',
-    options: ['Selling boots', 'Funding your business yourself using operating revenue, without external investors', 'Getting a bank loan'],
+    question: 'A customer wants your R150 product, but Door-to-Door courier costs R120. They abandon the cart. What cheaper SA logicstics option could save this sale?',
+    options: ['PUDO / Paxi (Locker-to-Locker)', 'Drone delivery', 'Flying it yourself'],
+    correctIndex: 0,
+  },
+  {
+    question: 'You want to accept credit cards on your website by tomorrow morning. Do you go to a bank branch or use a Payment Gateway?',
+    options: ['Bank Branch (3 week application)', 'Payment Gateway (PayFast/Yoco/Stripe) - Instant setup', 'Cash only'],
     correctIndex: 1,
   },
   {
-    question: 'What is a "Retainer" model?',
-    options: ['A dental device', 'A model where clients pay a fixed monthly fee for ongoing services', 'A one-off project'],
+    question: 'A client asks for "just one small change". Then another. Then another. You end up working 20 hours for free. What is this?',
+    options: ['Good service', 'Scope Creep', 'Agile development'],
     correctIndex: 1,
   },
   {
-    question: 'In eCommerce logistics (SA), what is a "PUDO" locker?',
-    options: ['A type of dog', 'Pick Up Drop Off locker (providing cheaper delivery options)', 'A tracking number'],
-    correctIndex: 1,
+    question: 'You start your business using only your own savings and customer revenue. You have zero debt and zero outside investors. What is this strategy?',
+    options: ['Bootstrapping', 'Venture Capital', 'IPO'],
+    correctIndex: 0,
   },
   {
-    question: 'What happens if you run out of Cash Flow, even if you are "Profitable" on paper?',
-    options: ['Nothing', 'You go bankrupt (Insolvency)', 'You get a medal'],
-    correctIndex: 1,
-  },
-  {
-    question: 'What is "Charm Pricing"?',
-    options: ['Being nice', 'Pricing at R99 instead of R100', 'Pricing significantly higher than competitors'],
-    correctIndex: 1,
-  },
-  {
-    question: 'Why is a Contract important before starting work?',
-    options: ['To look professional', 'To clearly define scope, payment terms, and prevent "Scope Creep"', 'It is not important'],
+    question: 'You send an invoice marked "Due on Receipt". The client ignores it for 4 months. What clause should you have had in your contract?',
+    options: ['A polite request', 'Late Payment Penalties / Interest on overdue accounts', 'A discount'],
     correctIndex: 1,
   },
 ];
@@ -166,7 +166,7 @@ function MiniQuiz({ questions, title = "Knowledge Check", onNext }) {
     <div style={{ marginTop: '3rem', padding: '2rem 2rem', borderRadius: '32px', background: 'rgba(255, 255, 255, 0.85)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255, 255, 255, 0.6)', boxShadow: '0 20px 50px -10px rgba(31, 38, 135, 0.15)', position: 'relative', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(120deg, rgba(34,211,238,0.15), rgba(244,114,182,0.15), rgba(253,224,71,0.15), rgba(34,211,238,0.15))', backgroundSize: '300% 300%', animation: 'gradientMove 15s ease infinite', zIndex: -1, pointerEvents: 'none' }} />
       <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ background: '#E0F2FE', color: '#0284C7', padding: '0.3rem 0.8rem', borderRadius: '100px', fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Assessment</div>
+        <div style={{ background: '#E0F2FE', color: '#0284C7', padding: '0.3rem 0.8rem', borderRadius: '100px', fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Knowledge Check</div>
         <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#64748B' }}>Question {currentQ + 1} of {questions.length}</span>
       </div>
       <h4 style={{ margin: '0 0 1.5rem 0', fontSize: '2rem', fontWeight: 900, color: '#0F172A', letterSpacing: '-0.02em', lineHeight: 1.1 }}>{title}</h4>
@@ -194,175 +194,165 @@ function MiniQuiz({ questions, title = "Knowledge Check", onNext }) {
 // INTERACTIVE VISUALS
 // ==========================================
 
-function UnitEconomicsCalculator() {
-  const [price, setPrice] = useState(1000);
-  const [cogs, setCogs] = useState(200);
-  const [cac, setCac] = useState(300);
-
-  const margin = price - cogs;
-  const ltvCac = (margin / cac).toFixed(1);
-
+function ProfitEquationVisual() {
+  const [mode, setMode] = useState('old');
   return (
-    <div style={{ margin: '2rem 0', padding: '2rem', background: '#F8FAFC', borderRadius: '24px', border: '1px solid #E2E8F0' }}>
-      <h4 style={{ color: '#0F172A', marginBottom: '1.5rem' }}>Unit Economics Calculator 📈</h4>
+    <div style={{
+      margin: '2rem 0',
+      padding: '2rem',
+      borderRadius: '24px',
+      position: 'relative',
+      overflow: 'hidden',
+      boxShadow: '0 20px 50px -10px rgba(0,0,0,0.1)',
+      background: '#22D3EE', color: '#0F172A'
+    }}>
+      {/* Moving Gradient Background */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        background: 'linear-gradient(120deg, rgba(34,211,238,0.15), rgba(244,114,182,0.15), rgba(253,224,71,0.15), rgba(34,211,238,0.15))',
+        backgroundSize: '300% 300%',
+        animation: 'gradientMove 15s ease infinite',
+        zIndex: 0,
+        pointerEvents: 'none'
+      }} />
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem', marginBottom: '2rem' }}>
-        <div>
-          <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#64748B', marginBottom: '0.5rem', textTransform: 'uppercase' }}>Price (R)</label>
-          <input type="number" value={price} onChange={(e) => setPrice(Number(e.target.value))} style={{ width: '100%', padding: '0.75rem', borderRadius: '12px', border: '1px solid #CBD5E1', fontSize: '1rem' }} />
+      <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem' }}>
+        <div style={{ display: 'flex', gap: '1rem', background: 'rgba(255,255,255,0.5)', padding: '0.5rem', borderRadius: '12px' }}>
+          <button onClick={() => setMode('old')} style={{ padding: '0.6rem 1.2rem', borderRadius: '8px', border: 'none', background: mode === 'old' ? '#EF4444' : 'transparent', color: mode === 'old' ? '#fff' : '#64748B', cursor: 'pointer', fontWeight: 700, transition: 'all 0.3s' }}>Old Way</button>
+          <button onClick={() => setMode('new')} style={{ padding: '0.6rem 1.2rem', borderRadius: '8px', border: 'none', background: mode === 'new' ? '#10B981' : 'transparent', color: mode === 'new' ? '#fff' : '#64748B', cursor: 'pointer', fontWeight: 700, transition: 'all 0.3s' }}>New Way</button>
         </div>
-        <div>
-          <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#64748B', marginBottom: '0.5rem', textTransform: 'uppercase' }}>Cost to Fulfill (R)</label>
-          <input type="number" value={cogs} onChange={(e) => setCogs(Number(e.target.value))} style={{ width: '100%', padding: '0.75rem', borderRadius: '12px', border: '1px solid #CBD5E1', fontSize: '1rem' }} />
-        </div>
-        <div>
-          <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#64748B', marginBottom: '0.5rem', textTransform: 'uppercase' }}>Cost to Acquire (CAC) (R)</label>
-          <input type="number" value={cac} onChange={(e) => setCac(Number(e.target.value))} style={{ width: '100%', padding: '0.75rem', borderRadius: '12px', border: '1px solid #CBD5E1', fontSize: '1rem' }} />
-        </div>
-      </div>
 
-      <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-        <div style={{ flex: 1, minWidth: '150px', background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #E2E8F0' }}>
-          <div style={{ fontSize: '0.7rem', color: '#64748B', fontWeight: 800, textTransform: 'uppercase' }}>Gross Margin</div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 900, color: margin > 0 ? '#10B981' : '#EF4444' }}>R{margin}</div>
+        <div style={{ fontSize: '1.5rem', fontWeight: 900, background: 'rgba(255,255,255,0.9)', padding: '2rem', borderRadius: '20px', display: 'flex', gap: '0.8rem', alignItems: 'center', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)', flexWrap: 'wrap', justifyContent: 'center' }}>
+          {mode === 'old' ? (
+            <>
+              <span>Sales</span>
+              <span>-</span>
+              <span>Expenses</span>
+              <span>=</span>
+              <span style={{ color: '#64748B' }}>Profit (Leftovers)</span>
+            </>
+          ) : (
+            <>
+              <span>Sales</span>
+              <span>-</span>
+              <span style={{ color: '#10B981' }}>Profit (First)</span>
+              <span>=</span>
+              <span>Expenses</span>
+            </>
+          )}
         </div>
-        <div style={{ flex: 1, minWidth: '150px', background: ltvCac >= 3 ? '#ECFDF5' : '#FEF2F2', padding: '1.5rem', borderRadius: '16px', border: '1px solid', borderColor: ltvCac >= 3 ? '#A7F3D0' : '#FECACA' }}>
-          <div style={{ fontSize: '0.7rem', color: ltvCac >= 3 ? '#065F46' : '#991B1B', fontWeight: 800, textTransform: 'uppercase' }}>LTV / CAC Ratio</div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 900, color: ltvCac >= 3 ? '#059669' : '#DC2626' }}>{ltvCac}x</div>
-          <small style={{ color: '#444' }}>{ltvCac >= 3 ? 'Healthy (Scale)' : 'Danger (Inefficient)'}</small>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function CashflowForecaster() {
-  const [cash, setCash] = useState(50000);
-  const [revenue, setRevenue] = useState(20000);
-  const [burn, setBurn] = useState(15000);
-
-  const profit = revenue - burn;
-  const runway = profit >= 0 ? 'Infinity' : Math.abs(cash / profit).toFixed(1);
-
-  return (
-    <div style={{ margin: '2rem 0', padding: '2rem', background: '#0F172A', color: '#fff', borderRadius: '24px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }}>
-      <h4 style={{ color: '#38BDF8', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-        <span>🛢️</span> Cash Runway Forecaster
-      </h4>
-
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
-        <div>
-          <label style={{ fontSize: '0.7rem', color: '#94A3B8', fontWeight: 800, textTransform: 'uppercase' }}>Cash in Bank</label>
-          <input type="range" min="10000" max="500000" step="5000" value={cash} onChange={(e) => setCash(Number(e.target.value))} style={{ width: '100%', accentColor: '#38BDF8' }} />
-          <div style={{ fontSize: '1.2rem', fontWeight: 700 }}>R{cash.toLocaleString()}</div>
-        </div>
-        <div>
-          <label style={{ fontSize: '0.7rem', color: '#94A3B8', fontWeight: 800, textTransform: 'uppercase' }}>Monthly Burn</label>
-          <input type="range" min="5000" max="100000" step="1000" value={burn} onChange={(e) => setBurn(Number(e.target.value))} style={{ width: '100%', accentColor: '#F87171' }} />
-          <div style={{ fontSize: '1.2rem', fontWeight: 700 }}>R{burn.toLocaleString()}</div>
-        </div>
-      </div>
-
-      <div style={{ background: 'rgba(255,255,255,0.05)', padding: '2rem', borderRadius: '16px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.1)' }}>
-        <div style={{ fontSize: '0.8rem', color: '#94A3B8', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Runway (Months)</div>
-        <div style={{ fontSize: '4rem', fontWeight: 900, color: runway === 'Infinity' ? '#10B981' : burn > cash ? '#EF4444' : '#FBBF24', transition: 'all 0.3s' }}>
-          {runway} {runway !== 'Infinity' && 'Mo'}
-        </div>
-        <p style={{ color: '#94A3B8', marginTop: '1rem', fontSize: '0.9rem' }}>
-          {runway === 'Infinity' ? 'You are profitable! Your cash is growing.' : `At this rate, your business expires in ${runway} months.`}
+        <p style={{ textAlign: 'center', color: '#475569', maxWidth: '450px', lineHeight: 1.6, fontWeight: 500 }}>
+          {mode === 'old'
+            ? "In the old way, you pay everyone else first. You only keep what's accidentally left over (which is usually zero)."
+            : "In Profit First, you take your profit immediately. Then you force the business to survive on the remainder."
+          }
         </p>
       </div>
     </div>
-  );
+  )
+}
+
+function PricingSliderVisual() {
+  const [hours, setHours] = useState(1);
+  const hourlyRate = 500;
+  const valuePrice = 50000;
+
+  return (
+    <div style={{
+      margin: '2rem 0',
+      padding: '2rem',
+      borderRadius: '24px',
+      position: 'relative',
+      overflow: 'hidden',
+      boxShadow: '0 20px 50px -10px rgba(0,0,0,0.1)',
+      background: '#F472B6', color: '#0F172A'
+    }}>
+      {/* Moving Gradient Background */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        background: 'linear-gradient(120deg, rgba(34,211,238,0.15), rgba(244,114,182,0.15), rgba(253,224,71,0.15), rgba(34,211,238,0.15))',
+        backgroundSize: '300% 300%',
+        animation: 'gradientMove 15s ease infinite',
+        zIndex: 0,
+        pointerEvents: 'none'
+      }} />
+
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <div style={{ marginBottom: '1.5rem', background: 'rgba(255,255,255,0.6)', padding: '1rem', borderRadius: '12px' }}>
+          <label style={{ marginRight: '1rem', fontWeight: 'bold', color: '#334155' }}>Hours Spent:</label>
+          <input type="range" min="1" max="10" value={hours} onChange={(e) => setHours(e.target.value)} style={{ marginRight: '1rem' }} />
+          <span style={{ fontWeight: 700, color: '#0F172A' }}>{hours} hours</span>
+        </div>
+
+        <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
+          <div style={{ flex: 1, padding: '1.5rem', border: '2px solid #CBD5E1', borderRadius: '16px', background: 'rgba(255,255,255,0.9)', minWidth: '200px' }}>
+            <strong style={{ color: '#64748B' }}>Hourly Billing</strong>
+            <div style={{ fontSize: '2rem', color: '#EF4444', fontWeight: 900, margin: '0.5rem 0' }}>R{hours * hourlyRate}</div>
+            <small style={{ color: '#94A3B8' }}>Punishes speed.</small>
+          </div>
+          <div style={{ flex: 1, padding: '1.5rem', border: '2px solid #10B981', borderRadius: '16px', background: '#ECFDF5', boxShadow: '0 10px 25px -5px rgba(16, 185, 129, 0.2)', minWidth: '200px' }}>
+            <strong style={{ color: '#065F46' }}>Value Billing</strong>
+            <div style={{ fontSize: '2rem', color: '#10B981', fontWeight: 900, margin: '0.5rem 0' }}>R{valuePrice}</div>
+            <small style={{ color: '#064E3B' }}>Rewards results.</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 function ScenarioToggle({ oldTitle, oldContent, newTitle, newContent }) {
   const [view, setView] = useState('old');
   return (
-    <div style={{ margin: '3rem 0' }}>
-      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem', background: 'rgba(241, 245, 249, 0.7)', padding: '0.5rem', borderRadius: '100px', width: 'fit-content', margin: '0 auto 2rem', backdropFilter: 'blur(10px)', border: '1px solid rgba(0,0,0,0.05)' }}>
-        <button onClick={() => setView('old')} style={{ padding: '0.6rem 1.8rem', borderRadius: '100px', border: 'none', background: view === 'old' ? '#fff' : 'transparent', color: view === 'old' ? '#EF4444' : '#64748B', fontWeight: 800, boxShadow: view === 'old' ? '0 10px 15px -3px rgba(0, 0, 0, 0.1)' : 'none', cursor: 'pointer', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)' }}>{oldTitle}</button>
-        <button onClick={() => setView('new')} style={{ padding: '0.6rem 1.8rem', borderRadius: '100px', border: 'none', background: view === 'new' ? '#fff' : 'transparent', color: view === 'new' ? '#10B981' : '#64748B', fontWeight: 800, boxShadow: view === 'new' ? '0 10px 15px -3px rgba(0, 0, 0, 0.1)' : 'none', cursor: 'pointer', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)' }}>{newTitle}</button>
-      </div>
+    <div style={{
+      margin: '3rem 0',
+      padding: '2rem',
+      borderRadius: '24px',
+      position: 'relative',
+      overflow: 'hidden',
+      boxShadow: '0 20px 50px -10px rgba(0,0,0,0.1)',
+      background: '#FB923C', color: '#0F172A'
+    }}>
+      {/* Moving Gradient Background */}
       <div style={{
-        padding: '2rem',
-        borderRadius: '32px',
-        border: '1px solid',
-        borderColor: view === 'old' ? '#FECACA' : '#A7F3D0',
-        background: view === 'old' ? 'linear-gradient(135deg, #FEF2F2 0%, #FFF1F2 100%)' : 'linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 100%)',
-        boxShadow: '0 20px 25px -5px rgba(0,0,0,0.05)',
-        minHeight: '150px',
-        transition: 'all 0.5s ease',
-        position: 'relative',
-        overflow: 'hidden'
-      }}>
-        <div style={{ position: 'absolute', top: '-20px', right: '-20px', fontSize: '8rem', opacity: 0.05, pointerEvents: 'none' }}>
-          {view === 'old' ? '📉' : '🚀'}
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        background: 'linear-gradient(120deg, rgba(34,211,238,0.15), rgba(244,114,182,0.15), rgba(253,224,71,0.15), rgba(34,211,238,0.15))',
+        backgroundSize: '300% 300%',
+        animation: 'gradientMove 15s ease infinite',
+        zIndex: 0,
+        pointerEvents: 'none'
+      }} />
+
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem', background: 'rgba(241, 245, 249, 0.8)', padding: '0.5rem', borderRadius: '100px', width: 'fit-content', margin: '0 auto 2rem' }}>
+          <button onClick={() => setView('old')} style={{ padding: '0.6rem 1.5rem', borderRadius: '100px', border: 'none', background: view === 'old' ? '#fff' : 'transparent', color: view === 'old' ? '#EF4444' : '#64748B', fontWeight: 800, boxShadow: view === 'old' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>{oldTitle}</button>
+          <button onClick={() => setView('new')} style={{ padding: '0.6rem 1.5rem', borderRadius: '100px', border: 'none', background: view === 'new' ? '#fff' : 'transparent', color: view === 'new' ? '#10B981' : '#64748B', fontWeight: 800, boxShadow: view === 'new' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>{newTitle}</button>
         </div>
-        <div style={{ position: 'relative', zIndex: 1 }}>
-          <h4 style={{ margin: '0 0 1rem 0', color: view === 'old' ? '#991B1B' : '#065F46', fontSize: '1.2rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            {view === 'old' ? 'Warning' : 'Strategy'}
-          </h4>
-          <div style={{ fontSize: '1.1rem', color: view === 'old' ? '#7F1D1D' : '#064E3B', lineHeight: '1.6' }}>
-            {view === 'old' ? oldContent : newContent}
+        {view === 'old' ? (
+          <div style={{ padding: '1.5rem', background: 'rgba(254, 242, 242, 0.9)', borderRadius: '24px', border: '2px solid #FECACA', animation: 'fadeIn 0.5s' }}>
+            {oldContent}
           </div>
-        </div>
+        ) : (
+          <div style={{ padding: '1.5rem', background: 'rgba(236, 253, 245, 0.9)', borderRadius: '24px', border: '2px solid #A7F3D0', animation: 'fadeIn 0.5s' }}>
+            {newContent}
+          </div>
+        )}
       </div>
     </div>
   );
 }
-
-function ProfitEquationVisual() {
-  const [mode, setMode] = useState('old');
-  return (
-    <div style={{ margin: '3rem 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem' }}>
-      <div style={{ display: 'flex', gap: '1rem', background: '#F1F5F9', padding: '0.5rem', borderRadius: '100px' }}>
-        <button onClick={() => setMode('old')} style={{ padding: '0.5rem 1.5rem', borderRadius: '100px', border: 'none', background: mode === 'old' ? '#EF4444' : 'transparent', color: mode === 'old' ? '#fff' : '#64748B', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}>The Gap Way</button>
-        <button onClick={() => setMode('new')} style={{ padding: '0.5rem 1.5rem', borderRadius: '100px', border: 'none', background: mode === 'new' ? '#10B981' : 'transparent', color: mode === 'new' ? '#fff' : '#64748B', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}>Profit First</button>
-      </div>
-
-      <div style={{
-        fontSize: '1.8rem',
-        fontWeight: 900,
-        background: '#fff',
-        padding: '2.5rem',
-        borderRadius: '32px',
-        display: 'flex',
-        gap: '0.75rem',
-        alignItems: 'center',
-        boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
-        border: '1px solid #E2E8F0',
-        flexWrap: 'wrap',
-        justifyContent: 'center'
-      }}>
-        {mode === 'old' ? (
-          <>
-            <span style={{ color: '#0F172A' }}>Sales</span>
-            <span style={{ color: '#94A3B8' }}>-</span>
-            <span style={{ color: '#0F172A' }}>Expenses</span>
-            <span style={{ color: '#94A3B8' }}>=</span>
-            <span style={{ color: '#EF4444', textDecoration: 'line-through' }}>Profit</span>
-          </>
-        ) : (
-          <>
-            <span style={{ color: '#0F172A' }}>Sales</span>
-            <span style={{ color: '#94A3B8' }}>-</span>
-            <span style={{ color: '#10B981', background: '#ECFDF5', padding: '0.2rem 0.8rem', borderRadius: '8px' }}>Profit</span>
-            <span style={{ color: '#94A3B8' }}>=</span>
-            <span style={{ color: '#0F172A' }}>Expenses</span>
-          </>
-        )}
-      </div>
-      <p style={{ textAlign: 'center', color: '#64748B', maxWidth: '500px', fontSize: '1.1rem', lineHeight: '1.6' }}>
-        {mode === 'old'
-          ? "Most businesses pay everyone else first. They are left with 'accidental profit', which is usually zero or negative."
-          : "Flipping the formula ensures you get paid first. This forces your company to be innovative and frugal with the remainder."
-        }
-      </p>
-    </div>
-  )
-}
-
 
 // ==========================================
 // PILLAR 9 MODULES A-F
@@ -374,39 +364,60 @@ export function Pillar9ModuleA({ onNext }) {
     <InteractiveLayout title="Module A: Profit First" subtitle="Don't eat the seed corn.">
       <div className="cw-prose">
         <p className="cw-text-body">
-          Parkinson's Law states: <strong>"Expenses rise to meet income"</strong>.
-          If you have R10,000 in your account, you will find a way to spend R10,000. To build wealth, you must change the formula.
+          Parkinson's Law states: "Expenses rise to meet income".
+          If you have R10,000 in the bank, you will find a way to spend R10,000.
         </p>
 
         <ProfitEquationVisual />
 
-        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%)', borderRadius: '24px', border: '1px solid #A7F3D0' }}>
-          <CWHeading level={3} style={{ color: '#065F46', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '1.5rem' }}>💰</span> Why This Matters for Business Owners
+        <BookInsight title="Profit First" author="Mike Michalowicz" book="Profit First" color="#3B82F6">
+          <p>"When you take your profit first, you flip the script. You are forced to innovate because you have less money to operate."</p>
+        </BookInsight>
+
+        {/* NEW SECTION: Why It Matters */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FDF2F8 0%, #FCE7F3 100%)', borderRadius: '24px', border: '1px solid #FBCFE8' }}>
+          <CWHeading level={3} style={{ color: '#BE185D', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
           </CWHeading>
 
-          <p style={{ fontSize: '1.1rem', color: '#064E3B', lineHeight: '1.7', marginBottom: '1.5rem' }}>
-            <strong>Operational Efficiency.</strong> Most businesses run on "accidental profit"—whatever is left over after everyone else gets paid. By taking your profit first, you force your business to innovate and operate within a smaller budget, creating a lean, high-margin machine.
+          <p style={{ fontSize: '1.1rem', color: '#9D174D', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            Cash flow kills more businesses than lack of profit. If getting paid is hard for your client, you will go broke waiting for the cheque.
           </p>
 
-          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #A7F3D0', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+            <div>
+              <h4 style={{ color: '#DB2777', marginBottom: '0.5rem' }}>1. Speed of Money</h4>
+              <p style={{ fontSize: '0.95rem', color: '#831843', lineHeight: '1.6' }}>
+                The faster you get paid, the faster you can reinvest. Invoice automation is non-negotiable for scaling.
+              </p>
+            </div>
+            <div>
+              <h4 style={{ color: '#DB2777', marginBottom: '0.5rem' }}>2. Frictionless Checkout</h4>
+              <p style={{ fontSize: '0.95rem', color: '#831843', lineHeight: '1.6' }}>
+                Every extra field in a checkout form drops conversion by 10%. We make paying you the easiest part of the transaction.
+              </p>
+            </div>
+          </div>
+
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #FBCFE8', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
             <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
               🚀 How CapeWeb Helps You Scale
             </h4>
+            <p style={{ fontSize: '0.95rem', color: '#4B5563', marginBottom: '1rem' }}>
+              We build your financial infrastructure.
+            </p>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
               <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
-                <span style={{ color: '#3B82F6', marginTop: '2px' }}>➜</span>
-                <span>
-                  <a href="/services?service=performance-monitoring" style={{ color: '#3B82F6', textDecoration: 'underline' }}>Financial Dashboards</a>: We build custom dashboards that pull your real-time bank data and automate the "Profit First" allocation percentages, so you always know where your money is.
-                </span>
+                <span style={{ color: '#EC4899', marginTop: '2px' }}>➜</span>
+                <span><strong>Seamless Payments:</strong> We integrate PayFast, Yoco, and Stripe tailored to your audience.</span>
+              </li>
+              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                <span style={{ color: '#EC4899', marginTop: '2px' }}>➜</span>
+                <span><strong>Automated Invoicing:</strong> We link your site to Xero so invoices send automatically when orders are placed.</span>
               </li>
             </ul>
           </div>
         </div>
-
-        <BookInsight title="Profit First" author="Mike Michalowicz" book="Profit First" color="#3B82F6">
-          <p>"When you take your profit first, you flip the script. You are forced to innovate because you have less money to operate."</p>
-        </BookInsight>
 
         <MiniQuiz
           questions={[
@@ -419,7 +430,6 @@ export function Pillar9ModuleA({ onNext }) {
   );
 }
 
-
 // Module B: Pricing
 export function Pillar9ModuleB({ onNext }) {
   return (
@@ -430,31 +440,7 @@ export function Pillar9ModuleB({ onNext }) {
           You pay him R1000 because he stopped your house from flooding. That is <strong>Value-Based Pricing</strong>.
         </p>
 
-        <UnitEconomicsCalculator />
-
-        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%)', borderRadius: '24px', border: '1px solid #93C5FD' }}>
-          <CWHeading level={3} style={{ color: '#1E3A8A', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '1.5rem' }}>🏷️</span> Why This Matters for Business Owners
-          </CWHeading>
-
-          <p style={{ fontSize: '1.1rem', color: '#1E3A8A', lineHeight: '1.7', marginBottom: '1.5rem' }}>
-            <strong>Scalable Margins.</strong> If you bill by the hour, you are selling your life. There are only 24 hours in a day. To scale, you must bill for the <em>result</em> you produce. This allows you to disconnect your income from your time.
-          </p>
-
-          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #93C5FD', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
-            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
-              🚀 How CapeWeb Helps You Scale
-            </h4>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
-              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
-                <span style={{ color: '#3B82F6', marginTop: '2px' }}>➜</span>
-                <span>
-                  <a href="/services?service=ecommerce" style={{ color: '#3B82F6', textDecoration: 'underline' }}>Dynamic Pricing AI</a>: We can implement machine learning models into your eCommerce store that adjust prices based on supply, demand, and competitor pricing (High-Frequency Trading for your shop).
-                </span>
-              </li>
-            </ul>
-          </div>
-        </div>
+        <PricingSliderVisual />
 
         <CWAlert type="info" title="Charm Pricing">
           Humans read left-to-right.
@@ -474,46 +460,21 @@ export function Pillar9ModuleB({ onNext }) {
   );
 }
 
-
 // Module C: Payments
 export function Pillar9ModuleC({ onNext }) {
   return (
     <InteractiveLayout title="Module C: Getting Paid" subtitle="Frictionless Revenue.">
       <div className="cw-prose">
         <p className="cw-text-body">
-          If you make it hard to pay, people won't pay. Any friction in the checkout process—extra fields, slow loading, lack of payment options—is directly lost revenue.
+          If you make it hard to pay, people won't pay.
         </p>
 
         <ScenarioToggle
-          oldTitle="The 1990s Way 📠"
-          oldContent="Sending a PDF attached to an email. 'Please EFT to this account and fax proof of payment to us before we start work'."
-          newTitle="The Modern Way ⚡"
-          newContent="Sending a 'Pay Now' link via SMS or WhatsApp (PayFast/Yoco/Stripe). Client punches in card details or uses Apple/Google Pay. Paid in 15 seconds."
+          oldTitle="The 1990s Way"
+          oldContent="Sending a PDF attached to an email. 'Please EFT to this account and fax proof'."
+          newTitle="The Modern Way"
+          newContent="Sending a 'Pay Now' link (PayFast/Yoco). Client punches in card details. Done."
         />
-
-        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)', borderRadius: '24px', border: '1px solid #FCD34D' }}>
-          <CWHeading level={3} style={{ color: '#92400E', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '1.5rem' }}>💳</span> Why This Matters for Business Owners
-          </CWHeading>
-
-          <p style={{ fontSize: '1.1rem', color: '#78350F', lineHeight: '1.7', marginBottom: '1.5rem' }}>
-            <strong>Cash Conversion Cycle.</strong> The faster you get paid, the faster you can reinvest that money into growth. Waiting 30 days for an EFT kills small businesses. Getting paid instantly via cards or digital wallets is the fuel for scaling.
-          </p>
-
-          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #FCD34D', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
-            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
-              🚀 How CapeWeb Helps You Scale
-            </h4>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
-              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
-                <span style={{ color: '#3B82F6', marginTop: '2px' }}>➜</span>
-                <span>
-                  <a href="/services?service=ecommerce" style={{ color: '#3B82F6', textDecoration: 'underline' }}>Payment Gateway Integration</a>: We integrate SA's top gateways (PayFast, Yoco, Paystack) into your site, enabling Apple Pay, Google Pay, and instant EFT for maximum conversion.
-                </span>
-              </li>
-            </ul>
-          </div>
-        </div>
 
         <MiniQuiz
           questions={[
@@ -526,7 +487,6 @@ export function Pillar9ModuleC({ onNext }) {
   );
 }
 
-
 // Module D: Invoicing
 export function Pillar9ModuleD({ onNext }) {
   return (
@@ -534,41 +494,15 @@ export function Pillar9ModuleD({ onNext }) {
       <div className="cw-prose">
         <p className="cw-text-body">
           Mike Monteiro's famous rule: <strong>"F*ck you, pay me."</strong>
-          Never start physical work, or even deep strategy, without a signed contract and a deposit.
+          Never start work without a contract and a deposit.
         </p>
 
         <CWCard>
-          <h4 style={{ color: '#0F172A' }}>Scope Creep: The Silent Killer 🥷</h4>
-          <p><strong>Client:</strong> "Oh, while you are there, can you just add this one small thing? It should only take 5 minutes."</p>
-          <p><strong>You (Without Contract):</strong> "Okay..." (Then you work for 3 hours for free).</p>
-          <p style={{ marginTop: '1rem', padding: '1rem', background: '#ECFDF5', borderRadius: '12px', borderLeft: '4px solid #10B981' }}>
-            <strong>You (With Contract):</strong> "I can definitely add that! Since it is outside the original agreed scope, I will send a change-request quote for the addition. Which card should I bill?"
-          </p>
+          <h4>Scope Creep</h4>
+          <p><strong>Client:</strong> "Oh, just add this one small thing."</p>
+          <p><strong>You (Without Contract):</strong> "Okay..." (Works for free).</p>
+          <p><strong>You (With Contract):</strong> "Sure! That is outside the original scope. I will send a quote for the addition."</p>
         </CWCard>
-
-        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F1F5F9 0%, #E2E8F0 100%)', borderRadius: '24px', border: '1px solid #CBD5E1' }}>
-          <CWHeading level={3} style={{ color: '#334155', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '1.5rem' }}>⚖️</span> Why This Matters for Business Owners
-          </CWHeading>
-
-          <p style={{ fontSize: '1.1rem', color: '#1E293B', lineHeight: '1.7', marginBottom: '1.5rem' }}>
-            <strong>Risk Mitigation.</strong> A contract isn't just about getting paid; it's about defining the boundaries of your liability. Without it, you are exposed to endless revisions, payment delays, and legal misunderstandings that can drain your resources.
-          </p>
-
-          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #CBD5E1', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
-            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
-              🚀 How CapeWeb Helps You Scale
-            </h4>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
-              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
-                <span style={{ color: '#3B82F6', marginTop: '2px' }}>➜</span>
-                <span>
-                  <a href="/services?service=ai-agents-sales-team" style={{ color: '#3B82F6', textDecoration: 'underline' }}>Automated Onboarding</a>: We build AI workflows that automatically generate contracts, send them for e-signature via HelloSign/DocuSign, and trigger the deposit invoice the moment the client says "Yes."
-                </span>
-              </li>
-            </ul>
-          </div>
-        </div>
 
         <MiniQuiz
           questions={[
@@ -578,7 +512,7 @@ export function Pillar9ModuleD({ onNext }) {
         />
       </div>
     </InteractiveLayout>
-  );
+  )
 }
 
 // Module E: Logistics
@@ -587,39 +521,16 @@ export function Pillar9ModuleE({ onNext }) {
     <InteractiveLayout title="Module E: Logistics" subtitle="Moving atoms.">
       <div className="cw-prose">
         <p className="cw-text-body">
-          In South Africa, delivery is the "Final Boss" of eCommerce. "Door-to-Door" courier can be expensive (R100+), often costing more than the product itself.
+          In SA, "Door-to-Door" courier can be expensive (R100+).
         </p>
 
-        <ScenarioToggle
-          oldTitle="Traditional Courier 🚚"
-          oldContent="R100 shipping fee. Customer must be home between 8am and 5pm. High failure rate if they step out for milk."
-          newTitle="PUDO/Paxi 📦"
-          newContent="R60 shipping fee. Customer picks up from a locker or shop at their own convenience. Zero failed deliveries. Cheaper for you and them."
-        />
-
-        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FDF2F8 0%, #FCE7F3 100%)', borderRadius: '24px', border: '1px solid #FBCFE8' }}>
-          <CWHeading level={3} style={{ color: '#9D174D', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '1.5rem' }}>📍</span> Why This Matters for Business Owners
-          </CWHeading>
-
-          <p style={{ fontSize: '1.1rem', color: '#831843', lineHeight: '1.7', marginBottom: '1.5rem' }}>
-            <strong>Customer Satisfaction.</strong> Shipping costs are the #1 reason for cart abandonment. By offering cheaper, locker-based alternatives, you lower the barrier to entry and make your products accessible to a wider demographic who may not have a reliable home delivery address.
-          </p>
-
-          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #FBCFE8', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
-            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
-              🚀 How CapeWeb Helps You Scale
-            </h4>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
-              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
-                <span style={{ color: '#3B82F6', marginTop: '2px' }}>➜</span>
-                <span>
-                  <a href="/services?service=ecommerce" style={{ color: '#3B82F6', textDecoration: 'underline' }}>Logistics Integration</a>: We integrate PUDO and Paxi plugins directly into your WooCommerce or Shopify store, so your customers can choose their nearest locker on a map during checkout.
-                </span>
-              </li>
-            </ul>
-          </div>
-        </div>
+        <CWCard>
+          <h4>Alternative Options</h4>
+          <ul>
+            <li><strong>PUDO (The Courier Guy):</strong> Lockers at petrol stations. Cost ~R60.</li>
+            <li><strong>Paxi (Pep):</strong> Store-to-Store. Cost ~R60.</li>
+          </ul>
+        </CWCard>
 
         <MiniQuiz
           questions={[
@@ -629,44 +540,19 @@ export function Pillar9ModuleE({ onNext }) {
         />
       </div>
     </InteractiveLayout>
-  );
+  )
 }
 
 // Module F: Funding
 export function Pillar9ModuleF({ onNext }) {
   return (
-    <InteractiveLayout title="Module F: Funding & Cashflow" subtitle="Fuel for the fire.">
+    <InteractiveLayout title="Module F: Funding Ecosystem" subtitle="Show me the money.">
       <div className="cw-prose">
         <p className="cw-text-body">
-          Profit is a theory. Cash is a fact. You can be "Profitable" on paper but still go bankrupt if your cash is tied up in unpaid invoices or inventory.
+          <strong>Bootstrapping:</strong> You funding it yourself. (Best: You keep 100% equity).
+          <br /><strong>Government:</strong> MNYDA, SEFA. (Hard paperwork).
+          <br /><strong>VC (Venture Capital):</strong> They give you money, but expect 100x growth and own your soul.
         </p>
-
-        <CashflowForecaster />
-
-        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #ECFEFF 0%, #CFFAFE 100%)', borderRadius: '24px', border: '1px solid #A5F3FC' }}>
-          <CWHeading level={3} style={{ color: '#083344', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '1.5rem' }}>🚀</span> Why This Matters for Business Owners
-          </CWHeading>
-
-          <p style={{ fontSize: '1.1rem', color: '#164E63', lineHeight: '1.7', marginBottom: '1.5rem' }}>
-            <strong>Strategic Runway.</strong> Knowing exactly how many months you have before the lights go out allows you to make calm, calculated decisions instead of desperate ones. If you know you have 6 months of runway, you can focus on building long-term value instead of chasing "panic revenue."
-          </p>
-
-          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #A5F3FC', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
-            <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
-              🚀 How CapeWeb Helps You Scale
-            </h4>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
-              <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
-                <span style={{ color: '#3B82F6', marginTop: '2px' }}>➜</span>
-                <span>
-                  <a href="/services?service=custom-web-apps" style={{ color: '#3B82F6', textDecoration: 'underline' }}>Reporting Automation</a>: We build automated financial reports that send a weekly "Runway Alert" to your phone, so you never have to guess if you can afford that next big hire.
-                </span>
-              </li>
-            </ul>
-          </div>
-        </div>
-
         <MiniQuiz
           questions={[
             { question: "What is the main advantage of Bootstrapping?", options: ["It is easy", "You retain 100% control and equity", "You get free money"], correctIndex: 1 }
@@ -675,9 +561,97 @@ export function Pillar9ModuleF({ onNext }) {
         />
       </div>
     </InteractiveLayout>
-  );
+  )
 }
 
+// ==========================================
+// MODULE J: RESOURCES
+// ==========================================
+export function Pillar9Resources({ onNext }) {
+  const openLink = (url) => window.open(url, '_blank');
+
+  const ResourceCard = ({ title, category, description, link }) => (
+    <div onClick={() => openLink(link)} style={{
+      padding: '1.5rem', background: 'white', borderRadius: '16px',
+      border: '1px solid #E2E8F0', cursor: 'pointer', transition: 'all 0.2s',
+      boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)',
+      display: 'flex', flexDirection: 'column', gap: '0.5rem'
+    }}
+      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.borderColor = '#94A3B8'; e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0,0,0,0.1)'; }}
+      onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = '#E2E8F0'; e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0,0,0,0.05)'; }}
+    >
+      <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em', background: '#F1F5F9', padding: '0.25rem 0.5rem', borderRadius: '4px', alignSelf: 'flex-start' }}>
+        {category}
+      </div>
+      <h4 style={{ margin: '0.5rem 0 0', fontSize: '1.1rem', color: '#0F172A' }}>{title} ↗</h4>
+      <p style={{ margin: 0, fontSize: '0.9rem', color: '#4B5563', lineHeight: '1.5' }}>{description}</p>
+    </div>
+  );
+
+  return (
+    <InteractiveLayout title="Module J: Resources" subtitle="Finance Toolkit">
+      <div className="cw-prose">
+        <p>Your finance stack determines your speed. Automate accounting, payments, and invoicing so you can focus on sales.</p>
+
+        <h3 style={{ marginTop: '2rem' }}>🛠️ The Finance Stack</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
+          <ResourceCard
+            category="Accounting"
+            title="Xero"
+            description="The gold standard for cloud accounting. Automates bank feeds and invoicing."
+            link="https://www.xero.com/"
+          />
+          <ResourceCard
+            category="Payments (Global)"
+            title="Stripe"
+            description="The best developer experience for accepting cards online. Works in SA now."
+            link="https://stripe.com/"
+          />
+          <ResourceCard
+            category="Payments (Local)"
+            title="PayFast"
+            description="SA's leading payment gateway. Essential for accepting EFT/Scan-to-Pay."
+            link="https://payfast.io/"
+          />
+          <ResourceCard
+            category="POS"
+            title="Yoco"
+            description="Accept card payments in person. Great for markets and retail."
+            link="https://www.yoco.com/"
+          />
+          <ResourceCard
+            category="Logistics"
+            title="Pudo (Courier Guy)"
+            description="Locker-to-Locker delivery. The cheapest way to ship small e-commerce parcels in SA."
+            link="https://www.pudo.co.za/"
+          />
+        </div>
+
+        <h3 style={{ marginTop: '3rem' }}>📚 Recommended Reading</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
+          <ResourceCard
+            category="System"
+            title="Profit First"
+            description="By Mike Michalowicz. Take your profit first, run your business on what's left."
+            link="https://mikemichalowicz.com/profit-first/"
+          />
+          <ResourceCard
+            category="Mindset"
+            title="The Millionaire Fastlane"
+            description="By MJ DeMarco. Why wealth is created by business systems, not saving lattes."
+            link="https://www.themillionairefastlane.com/"
+          />
+        </div>
+
+        <div style={{ marginTop: '3rem', padding: '2rem', background: '#F8FAFC', borderRadius: '16px', textAlign: 'center', border: '1px solid #E2E8F0' }}>
+          <h4>Ready to Get Paid?</h4>
+          <p style={{ marginBottom: '1.5rem', color: '#64748B' }}>Money is the lifeblood of business. You now know how to manage it.</p>
+          <CWButton onClick={onNext} variant="primary" style={{ padding: '1rem 2rem', fontSize: '1.1rem' }}>Take Final Exam 🏁</CWButton>
+        </div>
+      </div>
+    </InteractiveLayout>
+  );
+}
 
 // ==========================================
 // FINAL QUIZ COMPONENT
