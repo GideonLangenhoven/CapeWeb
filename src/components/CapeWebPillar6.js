@@ -653,6 +653,18 @@ export function Pillar6Resources({ onNext }) {
         <h3 style={{ marginTop: '2rem' }}>🛠️ The Toolbelt</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
           <ResourceCard
+            category="Retail Ads"
+            title="TikTok for Business"
+            description="The most underpriced attention in SA right now. Essential for retail brands."
+            link="https://www.tiktok.com/business/"
+          />
+          <ResourceCard
+            category="Influencers"
+            title="Webfluential"
+            description="Connect with South African influencers to promote your brand authentically."
+            link="https://webfluential.com/"
+          />
+          <ResourceCard
             category="Ads"
             title="Meta Ads Manager"
             description="The cockpit for Facebook & Instagram ads. Where the money is made."

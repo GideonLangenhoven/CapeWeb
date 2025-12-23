@@ -711,6 +711,12 @@ export function Pillar5Resources({ onNext }) {
         <h3 style={{ marginTop: '2rem' }}>🛠️ The SEO Stack</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
           <ResourceCard
+            category="Inspiration"
+            title="SA SEO Case Studies"
+            description="Real examples of South African businesses growing traffic. See what works locally."
+            link="https://www.bizcommunity.com/Search/SEO"
+          />
+          <ResourceCard
             category="The Source of Truth"
             title="Google Search Console"
             description="If you only use one tool, use this. See exactly how Google views your site and what queries you rank for."

@@ -1670,6 +1670,12 @@ export function Pillar3Resources({ onNext }) {
         <h3 style={{ marginTop: '2rem' }}>🛠️ The CapeWeb Stack</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
           <ResourceCard
+            category="Hosting (Local)"
+            title="Afrihost / Xneelo"
+            description="Best for local-only businesses. Low latency for SA users. Reliable support."
+            link="https://www.xneelo.co.za/"
+          />
+          <ResourceCard
             category="Hosting & Edge"
             title="Vercel"
             description="The absolute best way to deploy Next.js apps. Zero config, instant global edge network."

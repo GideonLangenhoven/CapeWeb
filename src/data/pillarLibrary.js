@@ -229,3 +229,235 @@ export const PILLAR_LIBRARY = [
     ],
   },
 ];
+
+// Pillar 12: Sales & Revenue Quiz
+export const pillar12QuizQuestions = [
+  {
+    question: 'What is the "Bridge" method in a cold call?',
+    options: ['Talking about the weather', 'Connecting the prospect\'s problem to your solution immediately', 'Asking for money upfront'],
+    correctIndex: 1,
+  },
+  {
+    question: 'If a client says "It is too expensive", what is the likely real problem?',
+    options: ['They have no money', 'You have not demonstrated enough Value to outweigh the Friction', 'They hate you'],
+    correctIndex: 1,
+  },
+  {
+    question: 'Which form is required to declare conflicts of interest for a Government Tender?',
+    options: ['SBD 1', 'SBD 4', 'SBD 6.1'],
+    correctIndex: 1,
+  },
+  {
+    question: 'True or False: You should aim to get "No" as often as possible in the beginning.',
+    options: ['True - it builds resilience and moves you faster to a Yes', 'False - failure is bad'],
+    correctIndex: 0,
+  },
+  {
+    question: 'What is the CSD?',
+    options: ['Central Supplier Database - required for Gov work', 'Cape Town Service Department', 'Customer Service Desk'],
+    correctIndex: 0,
+  }
+];
+
+// Pillar 13: HR & Team Quiz
+export const pillar13QuizQuestions = [
+  {
+    question: 'What is the maximum number of ordinary hours an employee can work per week (excluding overtime)?',
+    options: ['40 hours', '45 hours', '50 hours'],
+    correctIndex: 1,
+  },
+  {
+    question: 'If an employee steals, can you fire them immediately on the spot?',
+    options: ['Yes, theft is serious', 'No, you must still hold a disciplinary hearing first', 'Only if you have video proof'],
+    correctIndex: 1,
+  },
+  {
+    question: 'What does COIDA cover?',
+    options: ['Retirement savings', 'Injuries and diseases contracted on duty', 'Unemployment payouts'],
+    correctIndex: 1,
+  },
+  {
+    question: 'Is a verbal contract valid in South Africa?',
+    options: ['No, everything must be written', 'Yes, but a written contract is legally required to prove details', 'Only for casual workers'],
+    correctIndex: 1, // Technically verbal is binding, but written particulars are required by BCEA. 
+  },
+  {
+    question: 'How often should you hold a "Pulse" meeting with your team?',
+    options: ['Once a year', 'Every week (Monday/Friday)', 'Only when there is a problem'],
+    correctIndex: 1,
+  }
+];
+
+// Pillar 14: Investment Quiz
+export const pillar14QuizQuestions = [
+  {
+    question: 'What is "Burn Rate"?',
+    options: ['How fast you can make a product', 'The amount of cash your business spends/loses monthly', 'The interest rate on a loan'],
+    correctIndex: 1,
+  },
+  {
+    question: 'Which agency provides GRANTS (free money) for youth under 35?',
+    options: ['SARS', 'NYDA', 'The Courier Guy'],
+    correctIndex: 1,
+  },
+  {
+    question: 'True or False: Banks usually invest in "Idea Stage" businesses.',
+    options: ['True', 'False - Banks need financial history'],
+    correctIndex: 1,
+  },
+  {
+    question: 'What is the main downside of Equity Funding?',
+    options: ['You have to pay it back monthly', 'You give away a portion of ownership/control', 'It is illegal'],
+    correctIndex: 1,
+  },
+  {
+    question: 'How long should you expect a government grant application to take?',
+    options: ['1 week', '3 to 6 months', '24 hours'],
+    correctIndex: 1,
+  }
+];
+
+// Pillar 15: Supply Chain Quiz
+export const pillar15QuizQuestions = [
+  {
+    question: 'What is "Volumetric Weight"?',
+    options: ['The actual weight of the item on a scale', 'The weight calculated based on the package size/dimensions', 'The weight of the truck'],
+    correctIndex: 1,
+  },
+  {
+    question: 'Which courier option is generally cheapest for township delivery?',
+    options: ['Express Overnight', 'PAXI (Pep Stores)', 'Uber Connect'],
+    correctIndex: 1,
+  },
+  {
+    question: 'If you import goods, who charges you VAT and Duties?',
+    options: ['The Chinese Supplier', 'SARS (Customs)', 'The Post Office'],
+    correctIndex: 1,
+  },
+  {
+    question: 'Why is "Just In Time" (JIT) stock risky?',
+    options: ['It costs too much', 'If a customer orders, you might not have stock ready immediately', 'It takes up too much space'],
+    correctIndex: 1,
+  },
+  {
+    question: 'What is "Landed Cost"?',
+    options: ['Just the price of the product', 'Product Cost + Shipping + Customs + Taxes', 'The price you sell it for'],
+    correctIndex: 1,
+  }
+];
+
+// Pillar 16: Product Strategy Quiz
+export const pillar16QuizQuestions = [
+  {
+    question: 'What is a "Painkiller" product?',
+    options: ['Something nice to have', 'A solution to a critical, urgent problem', 'A product sold in pharmacies'],
+    correctIndex: 1,
+  },
+  {
+    question: 'Why is the "Mom Test" important?',
+    options: ['Moms always know best', 'Friends and family are biased and will lie to protect your feelings', 'It saves money on research'],
+    correctIndex: 1,
+  },
+  {
+    question: 'In the prioritization matrix, what should you build first?',
+    options: ['Low Impact, High Effort tasks', 'High Impact, Low Effort (Quick Wins)', 'High Impact, High Effort (Major Projects)'],
+    correctIndex: 1,
+  },
+  {
+    question: 'What is an MVP?',
+    options: ['Most Valuable Player', 'Minimum Viable Product - the smallest version that delivers value', 'Maximum Value Project'],
+    correctIndex: 1,
+  },
+  {
+    question: 'Why should SA apps be "Light"?',
+    options: ['Because data is expensive and devices are older', 'Because dark mode is better', 'Because coding is easier'],
+    correctIndex: 0,
+  }
+];
+
+// Pillar 17: Partnerships Quiz
+export const pillar17QuizQuestions = [
+  {
+    question: 'What is "Fronting" in a B-BBEE context?',
+    options: ['Being the face of the company', 'Faking black ownership/management to get contracts', 'Designing a shop front'],
+    correctIndex: 1,
+  },
+  {
+    question: 'Why is a 50/50 partnership share split often risky?',
+    options: ['It is too fair', 'It can lead to deadlock where no decision can be made', 'Tax reasons'],
+    correctIndex: 1,
+  },
+  {
+    question: 'What is an SLA?',
+    options: ['Service Level Agreement - binding contract on deliverables', 'Standard Legal Advice', 'South African Law Association'],
+    correctIndex: 0,
+  },
+  {
+    question: 'What does ESD stand for?',
+    options: ['Extra Service Delivery', 'Enterprise Supplier Development', 'Essential Sales Data'],
+    correctIndex: 1,
+  },
+  {
+    question: 'True or False: A Memorandum of Understanding (MOU) is usually legally binding.',
+    options: ['True', 'False - it is usually just an agreement of intent'],
+    correctIndex: 1,
+  }
+];
+
+// Pillar 18: Crisis
+export const pillar18QuizQuestions = [
+  {
+    question: 'What is the "Streisand Effect"?',
+    options: ['A marketing strategy', 'When trying to hide something makes it much more public/popular', 'A type of solar panel'],
+    correctIndex: 1,
+  },
+  {
+    question: 'What happens during "Business Rescue"?',
+    options: ['The company is closed immediately', 'Creditors are frozen while a plan is made to save the company', 'The government gives you free money'],
+    correctIndex: 1,
+  },
+  {
+    question: 'Which device is essential to keep internet/Wi-Fi on during load shedding?',
+    options: ['A UPS (Uninterruptible Power Supply)', 'A torch', 'A gas stove'],
+    correctIndex: 0,
+  },
+  {
+    question: 'True or False: You should delete negative comments on social media.',
+    options: ['True, hide the hate', 'False, address them transparently'],
+    correctIndex: 1,
+  },
+  {
+    question: 'How many days do you usually have to respond to a legal letter of demand?',
+    options: ['24 hours', '10 - 14 business days (usually)', 'You can ignore it'],
+    correctIndex: 1,
+  }
+];
+
+// Pillar 19: Exit
+export const pillar19QuizQuestions = [
+  {
+    question: 'What is a common method for valuing small businesses?',
+    options: ['Multiple of SDE (Seller Discretionary Earnings)', 'Number of employees', 'How nice the logo is'],
+    correctIndex: 0,
+  },
+  {
+    question: 'What increases the valuation multiple of a business?',
+    options: ['The owner doing everything themselves', 'Systems that run without the owner', 'Having a lot of debt'],
+    correctIndex: 1,
+  },
+  {
+    question: 'What is a "Trade Sale"?',
+    options: ['Selling stock on the street', 'Selling the company to a competitor or another company', 'Trading goods for services'],
+    correctIndex: 1,
+  },
+  {
+    question: 'What is "Due Diligence"?',
+    options: ['Politeness', 'The investigation/audit period before buying a company', 'Paying taxes on time'],
+    correctIndex: 1,
+  },
+  {
+    question: 'What is a "Data Room"?',
+    options: ['A server room', 'A secure folder with all business documents for buyers to review', 'A place to store customer data'],
+    correctIndex: 1,
+  }
+];
