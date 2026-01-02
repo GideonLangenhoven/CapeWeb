@@ -59,7 +59,6 @@ import {
   Pillar9ModuleD,
   Pillar9ModuleE,
   Pillar9ModuleF,
-  Pillar9ModuleG, Pillar9ModuleH, Pillar9ModuleI,
   Pillar9Resources,
   Pillar9Quiz,
   Pillar9Completion,
@@ -77,11 +76,11 @@ import {
 } from './CapeWebPillar11';
 
 import {
-  Pillar12ModuleA, Pillar12ModuleB, Pillar12ModuleC, Pillar12ModuleD,
+  Pillar12ModuleA, Pillar12ModuleB, Pillar12ModuleC,
   Pillar12Resources, Pillar12Quiz, Pillar12Completion
 } from './CapeWebPillar12';
 import {
-  Pillar13ModuleA, Pillar13ModuleB, Pillar13ModuleC, Pillar13ModuleD,
+  Pillar13ModuleA, Pillar13ModuleB, Pillar13ModuleC,
   Pillar13Resources, Pillar13Quiz, Pillar13Completion
 } from './CapeWebPillar13';
 import {
@@ -551,7 +550,7 @@ export default function CapeWebBlueprint() {
                 }}
               >
                 <div>
-                  <div className="pillar-title">Pillar 2 · Web Development & Architecture</div>
+                  <div className="pillar-title">Pillar 3 · Web Development & Architecture</div>
                   <div className="pillar-subtitle">10 Modules: From fundamentals to full-stack mastery.</div>
                 </div>
                 <span className="toc-expander-icon" aria-hidden="true">
@@ -562,53 +561,53 @@ export default function CapeWebBlueprint() {
               {isPillar3Expanded && (
                 <div className="pillar-modules" id="pillar-content-pillar-web">
                   <button type="button" className={`pillar-module ${activeModule === 'p3-module-a' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p3-module-a')}>
-                    <div className="module-pill">Pillar 2</div>
+                    <div className="module-pill">Pillar 3</div>
                     <div><div className="module-title">Module A · Web Fundamentals</div><p>Strategy, sitemaps, and planning your Digital HQ.</p></div>
                   </button>
                   <button type="button" className={`pillar-module ${activeModule === 'p3-module-b' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p3-module-b')}>
-                    <div className="module-pill">Pillar 2</div>
+                    <div className="module-pill">Pillar 3</div>
                     <div><div className="module-title">Module B · No-Code Solutions</div><p>Building without code (Wix, Webflow, WordPress).</p></div>
                   </button>
                   <button type="button" className={`pillar-module ${activeModule === 'p3-module-c' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p3-module-c')}>
-                    <div className="module-pill">Pillar 2</div>
+                    <div className="module-pill">Pillar 3</div>
                     <div><div className="module-title">Module C · HTML, CSS & JS</div><p>The code foundations every founder should know.</p></div>
                   </button>
                   <button type="button" className={`pillar-module ${activeModule === 'p3-module-d' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p3-module-d')}>
-                    <div className="module-pill">Pillar 2</div>
+                    <div className="module-pill">Pillar 3</div>
                     <div><div className="module-title">Module D · Modern Frameworks</div><p>React, Next.js, and Tailwind CSS basics.</p></div>
                   </button>
                   <button type="button" className={`pillar-module ${activeModule === 'p3-module-e' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p3-module-e')}>
-                    <div className="module-pill">Pillar 2</div>
+                    <div className="module-pill">Pillar 3</div>
                     <div><div className="module-title">Module E · Backend & APIs</div><p>Databases, authentication, and server logic.</p></div>
                   </button>
                   <button type="button" className={`pillar-module ${activeModule === 'p3-module-f' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p3-module-f')}>
-                    <div className="module-pill">Pillar 2</div>
+                    <div className="module-pill">Pillar 3</div>
                     <div><div className="module-title">Module F · Hosting & Deployment</div><p>Getting live: Vercel, Netlify, and SA hosting.</p></div>
                   </button>
                   <button type="button" className={`pillar-module ${activeModule === 'p3-module-g' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p3-module-g')}>
-                    <div className="module-pill">Pillar 2</div>
+                    <div className="module-pill">Pillar 3</div>
                     <div><div className="module-title">Module G · Performance</div><p>Speed, Core Web Vitals, and optimization.</p></div>
                   </button>
                   <button type="button" className={`pillar-module ${activeModule === 'p3-module-h' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p3-module-h')}>
-                    <div className="module-pill">Pillar 2</div>
+                    <div className="module-pill">Pillar 3</div>
                     <div><div className="module-title">Module H · Security Basics</div><p>HTTPS, passwords, and protecting user data.</p></div>
                   </button>
                   <button type="button" className={`pillar-module ${activeModule === 'p3-module-i' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p3-module-i')}>
-                    <div className="module-pill">Pillar 2</div>
+                    <div className="module-pill">Pillar 3</div>
                     <div><div className="module-title">Module I · E-commerce</div><p>Selling online: WooCommerce, Shopify, Payments.</p></div>
                   </button>
                   <button type="button" className={`pillar-module ${activeModule === 'p3-module-j' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p3-module-j')}>
-                    <div className="module-pill">Pillar 2</div>
+                    <div className="module-pill">Pillar 3</div>
                     <div><div className="module-title">Module J · CMS Management</div><p>Headless vs Traditional CMS options.</p></div>
                   </button>
 
                   <button type="button" className={`pillar-module ${activeModule === 'p3-resources' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p3-resources')}>
-                    <div className="module-pill">Pillar 2</div>
+                    <div className="module-pill">Pillar 3</div>
                     <div><div className="module-title">Resources</div><p>Architect's Toolkit.</p></div>
                   </button>
 
                   <button type="button" className={`pillar-module ${activeModule === 'p3-quiz' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p3-quiz')}>
-                    <div className="module-pill">Pillar 2</div>
+                    <div className="module-pill">Pillar 3</div>
                     <div><div className="module-title">Final Exam · Architecture</div><p>Prove you know the stack.</p></div>
                   </button>
                 </div>
@@ -1403,7 +1402,7 @@ export default function CapeWebBlueprint() {
                 }}
               >
                 <div>
-                  <div className="pillar-title">Pillar 10 · Legal, Governance & Compliance</div>
+                  <div className="pillar-title">Pillar 2 · Legal, Governance & Compliance</div>
                   <div className="pillar-subtitle">Registrations, tax, contracts, POPIA, and doing it properly.</div>
                 </div>
                 <span className="toc-expander-icon" aria-hidden="true">
@@ -1419,7 +1418,7 @@ export default function CapeWebBlueprint() {
                     aria-current={activeModule === 'p2-module-a' ? 'true' : 'false'}
                     onClick={() => handleModuleChange('p2-module-a')}
                   >
-                    <div className="module-pill">Pillar 10</div>
+                    <div className="module-pill">Pillar 2</div>
                     <div>
                       <div className="module-title">Module A · Choose Your Legal Setup</div>
                       <p>Decide your business structure and "make it real" without wasting money.</p>
@@ -1432,7 +1431,7 @@ export default function CapeWebBlueprint() {
                     aria-current={activeModule === 'p2-module-b' ? 'true' : 'false'}
                     onClick={() => handleModuleChange('p2-module-b')}
                   >
-                    <div className="module-pill">Pillar 10</div>
+                    <div className="module-pill">Pillar 2</div>
                     <div>
                       <div className="module-title">Module B · Register & Tax Basics</div>
                       <p>Understand CIPC, SARS, eFiling, VAT, and micro-business options.</p>
@@ -1445,7 +1444,7 @@ export default function CapeWebBlueprint() {
                     aria-current={activeModule === 'p2-module-c' ? 'true' : 'false'}
                     onClick={() => handleModuleChange('p2-module-c')}
                   >
-                    <div className="module-pill">Pillar 10</div>
+                    <div className="module-pill">Pillar 2</div>
                     <div>
                       <div className="module-title">Module C · Customers, POPIA & Online Selling</div>
                       <p>Protect your business with policies: CPA, ECTA, POPIA, PAIA.</p>
@@ -2361,10 +2360,7 @@ export default function CapeWebBlueprint() {
               {activeModule === 'p9-module-c' && <Pillar9ModuleC />}
               {activeModule === 'p9-module-d' && <Pillar9ModuleD />}
               {activeModule === 'p9-module-e' && <Pillar9ModuleE />}
-              {activeModule === 'p9-module-f' && <Pillar9ModuleF onNext={() => handleModuleChange('p9-module-g')} />}
-              {activeModule === 'p9-module-g' && <Pillar9ModuleG onNext={() => handleModuleChange('p9-module-h')} />}
-              {activeModule === 'p9-module-h' && <Pillar9ModuleH onNext={() => handleModuleChange('p9-module-i')} />}
-              {activeModule === 'p9-module-i' && <Pillar9ModuleI onNext={() => handleModuleChange('p9-resources')} />}
+              {activeModule === 'p9-module-f' && <Pillar9ModuleF onNext={() => handleModuleChange('p9-resources')} />}
               {activeModule === 'p9-resources' && <Pillar9Resources onNext={() => handleModuleChange('p9-quiz')} />}
 
               {activeModule === 'p9-quiz' && (
@@ -2470,8 +2466,7 @@ export default function CapeWebBlueprint() {
               )}
               {activeModule === 'p12-module-a' && <Pillar12ModuleA onNext={() => handleModuleChange('p12-module-b')} />}
               {activeModule === 'p12-module-b' && <Pillar12ModuleB onNext={() => handleModuleChange('p12-module-c')} />}
-              {activeModule === 'p12-module-c' && <Pillar12ModuleC onNext={() => handleModuleChange('p12-module-d')} />}
-              {activeModule === 'p12-module-d' && <Pillar12ModuleD onNext={() => handleModuleChange('p12-resources')} />}
+              {activeModule === 'p12-module-c' && <Pillar12ModuleC onNext={() => handleModuleChange('p12-resources')} />}
               {activeModule === 'p12-resources' && <Pillar12Resources onNext={() => handleModuleChange('p12-quiz')} />}
               {activeModule === 'p12-quiz' && (
                 <Pillar12Quiz
@@ -2509,8 +2504,7 @@ export default function CapeWebBlueprint() {
               )}
               {activeModule === 'p13-module-a' && <Pillar13ModuleA onNext={() => handleModuleChange('p13-module-b')} />}
               {activeModule === 'p13-module-b' && <Pillar13ModuleB onNext={() => handleModuleChange('p13-module-c')} />}
-              {activeModule === 'p13-module-c' && <Pillar13ModuleC onNext={() => handleModuleChange('p13-module-d')} />}
-              {activeModule === 'p13-module-d' && <Pillar13ModuleD onNext={() => handleModuleChange('p13-resources')} />}
+              {activeModule === 'p13-module-c' && <Pillar13ModuleC onNext={() => handleModuleChange('p13-resources')} />}
               {activeModule === 'p13-resources' && <Pillar13Resources onNext={() => handleModuleChange('p13-quiz')} />}
               {activeModule === 'p13-quiz' && (
                 <Pillar13Quiz

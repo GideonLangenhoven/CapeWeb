@@ -4,6 +4,7 @@ import useLocomotiveScroll from '../hooks/useLocomotiveScroll';
 import useColorChange from '../hooks/useColorChange';
 import Footer from '../components/Footer';
 import ScrollStackedCards from '../components/ScrollStackedCards';
+import SEO from '../components/SEO';
 import './Services.css';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -339,7 +340,13 @@ function Services() {
   }, [selectedService, locomotiveScroll]);
 
   return (
-    <div className="expand-page" data-scroll-container ref={scrollRef}>
+    <React.Fragment>
+      <SEO
+        title="Our Digital Services"
+        description="Professional web development services in Cape Town. We specialize in custom websites, app development, and digital strategy."
+        path="/services"
+      />
+      <div className="expand-page" data-scroll-container ref={scrollRef}>
       <div ref={containerRef}>
 
         {/* 1. HERO SECTION (WHITE) */}
@@ -426,6 +433,7 @@ function Services() {
 
       </div>
     </div>
+    </React.Fragment>
   );
 }
 

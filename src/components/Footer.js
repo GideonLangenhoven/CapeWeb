@@ -238,15 +238,17 @@ export default function Footer() {
         </div>
 
         <div className="footer2__bottom">
-          <p>Copyright © {new Date().getFullYear()} All rights reserved.</p>
-          <div className="footer2__made">
-            <span>This template is made with</span>
-            <Heart size={14} className="footer2__heart" />
-            <span>by</span>
-            <a href="/" className="footer2__link footer2__link--inline">
-              CAPE WEB
-            </a>
+          <div>
+            <p style={{ marginBottom: '0.5rem', fontWeight: '500' }}>CapeWeb Digital Solutions</p>
+            <p style={{ marginBottom: '0.25rem' }}>Cape Town, South Africa</p>
+            <p style={{ fontSize: '0.9rem', opacity: 0.8 }}>Serving the Western Cape & Beyond</p>
           </div>
+          <div className="footer2__made">
+            <span>Made with</span>
+            <Heart size={14} className="footer2__heart" />
+            <span>in Cape Town</span>
+          </div>
+          <p style={{ fontSize: '0.85rem', opacity: 0.7 }}>Copyright © {new Date().getFullYear()} All rights reserved.</p>
         </div>
       </div>
     </footer>

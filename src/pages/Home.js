@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Hero from '../components/Hero';
 import Footer from '../components/Footer';
+import SEO from '../components/SEO';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import LocomotiveScroll from 'locomotive-scroll';
@@ -740,7 +741,13 @@ function Home() {
   };
 
   return (
-    <div className="home">
+    <React.Fragment>
+      <SEO
+        title="Best Web Design & Software Development"
+        description="CapeWeb provides custom React web development and SEO services in Cape Town. We build high-performance websites for South African businesses."
+        path="/"
+      />
+      <div className="home">
       <button
         className="fullscreen-btn"
         id="fullscreenBtn"
@@ -884,9 +891,21 @@ function Home() {
                     onMouseEnter={() => goToCard(index)}
                     onClick={() => goToCard(index)}
                   >
-                    <img className="project-card__bg" src={card.bg} alt="" />
+                    <img
+                      className="project-card__bg"
+                      src={card.bg}
+                      alt={`${card.title} web design services Cape Town background`}
+                      loading="lazy"
+                    />
                     <div className="project-card__content">
-                      <img className="project-card__thumb" src={card.thumb} alt="" />
+                      <img
+                        className="project-card__thumb"
+                        src={card.thumb}
+                        alt={`${card.title} web development portfolio Cape Town`}
+                        width="480"
+                        height="320"
+                        loading="lazy"
+                      />
                       <div>
                         <h3 className="project-card__title">{card.title}</h3>
                         <p className="project-card__desc">{card.description}</p>
@@ -967,7 +986,14 @@ function Home() {
                       <div className={`t-card ${index === testimonialIndex ? 'active' : ''}`.trim()} key={review.name}>
                         <blockquote className="t-quote">“{review.review}”</blockquote>
                         <div className="t-details">
-                          <img className="t-avatar" src={review.avatar} alt={review.name} />
+                          <img
+                            className="t-avatar"
+                            src={review.avatar}
+                            alt={`${review.name} - CapeWeb client testimonial`}
+                            width="60"
+                            height="60"
+                            loading="lazy"
+                          />
                           <div>
                             <p className="t-name">{review.name}</p>
                             <p className="t-role">{review.role}</p>
@@ -1109,6 +1135,7 @@ function Home() {
         </section>
       </div>
     </div>
+    </React.Fragment>
   );
 }
 
