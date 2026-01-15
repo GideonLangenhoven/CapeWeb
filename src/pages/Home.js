@@ -841,6 +841,7 @@ function Home() {
                   >
                     <span className="hl hl-cyan">Web development</span>
                     <span className="hover-video-preview" aria-hidden="true">
+                      {/* VIDEO COMMENTED OUT TO REDUCE REPOSITORY SIZE
                       <video
                         ref={(el) => {
                           hoverVideoRefs.current[0] = el;
@@ -852,6 +853,7 @@ function Home() {
                       >
                         <source src="/assets/plan-preview.mp4" type="video/mp4" />
                       </video>
+                      */}
                     </span>
                   </span>{' '}
                   and{' '}
@@ -862,6 +864,7 @@ function Home() {
                   >
                     <span className="hl hl-pink">digital marketing</span>
                     <span className="hover-video-preview" aria-hidden="true">
+                      {/* VIDEO COMMENTED OUT TO REDUCE REPOSITORY SIZE
                       <video
                         ref={(el) => {
                           hoverVideoRefs.current[1] = el;
@@ -873,6 +876,7 @@ function Home() {
                       >
                         <source src="/assets/plan-preview.mp4" type="video/mp4" />
                       </video>
+                      */}
                     </span>
                   </span>{' '}
                   experts.

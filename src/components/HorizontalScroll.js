@@ -187,6 +187,7 @@ const HorizontalScroll = () => {
       </section>
 
       <section data-bgcolor="#e3857a" data-textcolor="#f1dba7" className="horizontal-closing-section">
+        {/* VIDEO COMMENTED OUT TO REDUCE REPOSITORY SIZE
         <video
           ref={videoRef}
           className="scroll-triggered-video"
@@ -200,6 +201,7 @@ const HorizontalScroll = () => {
           <source src="https://videos.pexels.com/video-files/2795405/2795405-hd_1920_1080_30fps.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
+        */}
         <div className="horizontal-closing-content">
           <h2>Ready to automate your success?</h2>
           <p>Let's build something amazing together. Book your free strategy call and discover how we can transform your business.</p>
