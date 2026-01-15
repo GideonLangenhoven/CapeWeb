@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { VideoReferenceCard } from './VideoReferenceCard';
 import * as confettiModule from 'canvas-confetti';
 import { gsap } from 'gsap';
 import { InteractiveLayout, QuizLayout } from './CapeWebLayouts';
@@ -801,6 +802,17 @@ export function Pillar3ModuleA({ onNext }) {
           Steve Krug, author of "Don't Make Me Think", says that every confusing button drains the user's energy.
         </p>
 
+        <VideoReferenceCard
+          videoId="79pRcSjwpcY"
+          start={0}
+          title="Don't Make Me Think Summary"
+          description="Steve Krug explains the first law of usability: Don't make users think."
+        />
+
+        <BookInsight title="Don't Make Me Think" author="Steve Krug" book="Don't Make Me Think" color="#0EA5E9">
+          <p>"Your objective should always be to eliminate instructions entirely by making everything self-explanatory, or as close to it as possible."</p>
+        </BookInsight>
+
         <CognitiveLoadBattery />
 
         <h3 style={{ marginTop: '2rem' }}>The Reservoir of Goodwill</h3>
@@ -907,6 +919,13 @@ export function Pillar3ModuleB({ onNext }) {
           <strong>Use the leverage available to you.</strong>
         </p>
 
+        <VideoReferenceCard
+          videoId="hkSW1SCOAzQ"
+          start={0}
+          title="No-Code in 60 Seconds"
+          description="Understanding the No-Code movement and why it matters."
+        />
+
         <h3 style={{ marginTop: '2rem' }}>The Citizen Developer</h3>
         <p>
           Tools like Webflow and Framer are not "toys". They write cleaner code than most junior developers.
@@ -994,74 +1013,331 @@ export function Pillar3ModuleB({ onNext }) {
 }
 
 // Module C: Code Foundations
+// Module C: Code Foundations
 export function Pillar3ModuleC({ onNext }) {
+  // --- SUB-COMPONENTS FOR MODULE C ---
+
+  const HTMLBlock = () => (
+    <div style={{ padding: '1.5rem', border: '1px dashed #94A3B8', borderRadius: '8px', background: '#F8FAFC', marginBottom: '1rem' }}>
+      <CWHeading level={4}>1. HTML (The Skeleton)</CWHeading>
+      <p style={{ fontSize: '0.9rem', color: '#64748B' }}>HTML tells the browser <strong>what</strong> things are (Heading, Paragraph, Button).</p>
+      <div style={{ fontFamily: 'monospace', background: '#334155', color: '#CBD5E1', padding: '1rem', borderRadius: '6px' }}>
+        <div>&lt;h1&gt;iPhone 15&lt;/h1&gt;</div>
+        <div>&lt;p&gt;Titanium design.&lt;/p&gt;</div>
+        <div>&lt;button&gt;Buy Now&lt;/button&gt;</div>
+      </div>
+      <div style={{ marginTop: '1rem', padding: '1rem', background: 'white', border: '1px solid #E2E8F0', borderRadius: '4px' }}>
+        <h1>iPhone 15</h1>
+        <p>Titanium design.</p>
+        <button type="button">Buy Now</button>
+      </div>
+      <p style={{ fontSize: '0.8rem', color: '#EF4444', marginTop: '0.5rem' }}>result: Ugly, plain, but structured.</p>
+    </div>
+  );
+
+  const CSSBlock = () => {
+    const [active, setActive] = useState(false);
+    return (
+      <div style={{ padding: '1.5rem', border: '1px dashed #3B82F6', borderRadius: '8px', background: '#EFF6FF', marginBottom: '1rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+          <CWHeading level={4} style={{ marginBottom: 0 }}>2. CSS (The Skin)</CWHeading>
+          <CWButton size="sm" onClick={() => setActive(!active)} variant={active ? 'primary' : 'outline'}>
+            {active ? 'Remove CSS' : 'Apply CSS'}
+          </CWButton>
+        </div>
+        <p style={{ fontSize: '0.9rem', color: '#64748B' }}>CSS tells the browser <strong>how</strong> things look (Color, Spacing, Font).</p>
+
+        <div style={{
+          marginTop: '1rem',
+          padding: '2rem',
+          background: active ? '#000' : 'white',
+          color: active ? 'white' : 'black',
+          border: '1px solid #E2E8F0',
+          borderRadius: active ? '20px' : '4px',
+          textAlign: active ? 'center' : 'left',
+          transition: 'all 0.5s ease'
+        }}>
+          <h1 style={{ fontFamily: active ? 'Inter, sans-serif' : 'serif' }}>iPhone 15</h1>
+          <p style={{ fontFamily: active ? 'Inter, sans-serif' : 'serif', opacity: 0.8 }}>Titanium design.</p>
+          <button type="button" style={{
+            marginTop: '1rem',
+            background: active ? '#2563EB' : '#E2E8F0',
+            color: active ? 'white' : 'black',
+            border: 'none',
+            padding: active ? '0.75rem 2rem' : '0.2rem 0.5rem',
+            borderRadius: active ? '50px' : '2px',
+            fontSize: active ? '1rem' : '0.8rem',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease'
+          }}>Buy Now</button>
+        </div>
+      </div>
+    );
+  };
+
+  const JSBlock = () => {
+    const [count, setCount] = useState(0);
+    const [hasJS, setHasJS] = useState(false);
+
+    const handleBuy = () => {
+      if (!hasJS) return;
+      setCount(c => c + 1);
+      confettiModule.default({
+        particleCount: 50,
+        spread: 60,
+        origin: { y: 0.7 }
+      });
+    };
+
+    return (
+      <div style={{ padding: '1.5rem', border: '1px dashed #F59E0B', borderRadius: '8px', background: '#FFFBEB', marginBottom: '1rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+          <CWHeading level={4} style={{ marginBottom: 0 }}>3. JavaScript (The Brain)</CWHeading>
+          <CWButton size="sm" onClick={() => setHasJS(!hasJS)} variant={hasJS ? 'primary' : 'outline'}>
+            {hasJS ? 'Disable JS' : 'Enable JS'}
+          </CWButton>
+        </div>
+        <p style={{ fontSize: '0.9rem', color: '#64748B' }}>JavaScript tells the browser <strong>what to do</strong> (On Click, Update Cart, Animation).</p>
+
+        <div style={{
+          marginTop: '1rem',
+          padding: '2rem',
+          background: '#000',
+          color: 'white',
+          borderRadius: '20px',
+          textAlign: 'center'
+        }}>
+          <h1 style={{ fontFamily: 'Inter, sans-serif' }}>iPhone 15</h1>
+          <button
+            type="button"
+            onClick={handleBuy}
+            style={{
+              marginTop: '1rem',
+              background: hasJS ? '#2563EB' : '#94A3B8',
+              color: 'white',
+              border: 'none',
+              padding: '0.75rem 2rem',
+              borderRadius: '50px',
+              fontSize: '1rem',
+              cursor: hasJS ? 'pointer' : 'not-allowed',
+              transition: 'all 0.1s ease',
+              transform: hasJS ? 'scale(1)' : 'scale(0.95)'
+            }}>{hasJS ? `Buy Now (Cart: ${count})` : 'Buy Now (Broken)'}</button>
+
+          {!hasJS && <p style={{ color: '#EF4444', fontSize: '0.8rem', marginTop: '1rem' }}>Clicking does nothing because there is no logic.</p>}
+          {hasJS && <p style={{ color: '#10B981', fontSize: '0.8rem', marginTop: '1rem' }}>Logic Active! Cart updates and events fire.</p>}
+        </div>
+      </div>
+    );
+  };
+
+  const DOMTreeVisual = () => (
+    <div style={{ padding: '1.5rem', border: '1px dashed #8B5CF6', borderRadius: '8px', background: '#F5F3FF', marginBottom: '1rem' }}>
+      <CWHeading level={4}>4. The DOM (The Tree)</CWHeading>
+      <p style={{ fontSize: '0.9rem', color: '#64748B' }}>
+        The Browser doesn't read text. It converts your HTML into a family tree called the <strong>Document Object Model</strong>.
+        JavaScript updates this tree to change the page without reloading.
+      </p>
+
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem', paddingBottom: '1rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ padding: '0.5rem 1rem', background: '#DDD6FE', border: '2px solid #8B5CF6', borderRadius: '8px', fontWeight: 'bold', fontSize: '0.8rem' }}>Window (Parent)</div>
+          <div style={{ height: '20px', width: '2px', background: '#8B5CF6' }}></div>
+          <div style={{ padding: '0.5rem 1rem', background: '#DDD6FE', border: '2px solid #8B5CF6', borderRadius: '8px', fontWeight: 'bold', fontSize: '0.8rem' }}>Document (Web Page)</div>
+          <div style={{ height: '20px', width: '2px', background: '#8B5CF6' }}></div>
+          <div style={{ display: 'flex', gap: '2rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div style={{ padding: '0.5rem 1rem', background: 'white', border: '1px solid #8B5CF6', borderRadius: '8px', fontSize: '0.8rem' }}>&lt;h1&gt;</div>
+              <div style={{ height: '10px', width: '1px', background: '#8B5CF6' }}></div>
+              <div style={{ fontSize: '0.7rem', color: '#6B7280' }}>"iPhone 15"</div>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div style={{ padding: '0.5rem 1rem', background: 'white', border: '1px solid #8B5CF6', borderRadius: '8px', fontSize: '0.8rem' }}>&lt;button&gt;</div>
+              <div style={{ height: '10px', width: '1px', background: '#8B5CF6' }}></div>
+              <div style={{ fontSize: '0.7rem', color: '#6B7280' }}>"Buy"</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const FullStackBuilder = () => {
+    const [layers, setLayers] = useState({ html: true, css: false, js: false });
+    const [cart, setCart] = useState(0);
+
+    const toggle = (l) => setLayers(prev => ({ ...prev, [l]: !prev[l] }));
+
+    return (
+      <CWCard title="Interactive: The Full Stack" style={{ marginTop: '2rem', border: '2px solid #0F172A' }}>
+        <p style={{ marginBottom: '1rem' }}>Activate the layers to see how a modern web component is born.</p>
+
+        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+          <button type="button" onClick={() => toggle('html')} style={{ padding: '0.5rem 1rem', borderRadius: '20px', border: '1px solid #CBD5E1', background: layers.html ? '#334155' : 'white', color: layers.html ? 'white' : '#334155', cursor: 'not-allowed', opacity: 1 }}>1. HTML (Always On)</button>
+          <button type="button" onClick={() => toggle('css')} style={{ padding: '0.5rem 1rem', borderRadius: '20px', border: '1px solid #3B82F6', background: layers.css ? '#3B82F6' : 'white', color: layers.css ? 'white' : '#3B82F6', cursor: 'pointer' }}>2. CSS (Add Style)</button>
+          <button type="button" onClick={() => toggle('js')} style={{ padding: '0.5rem 1rem', borderRadius: '20px', border: '1px solid #F59E0B', background: layers.js ? '#F59E0B' : 'white', color: layers.js ? 'white' : '#F59E0B', cursor: 'pointer' }}>3. JS (Add Logic)</button>
+        </div>
+
+        <div style={{
+          padding: layers.css ? '2rem' : '1rem',
+          background: layers.css ? '#1E293B' : 'white',
+          borderRadius: layers.css ? '16px' : '0px',
+          transition: 'all 0.5s ease',
+          textAlign: layers.css ? 'center' : 'left',
+          color: layers.css ? 'white' : 'black',
+          border: '1px solid #E2E8F0',
+          position: 'relative',
+          overflow: 'hidden'
+        }}>
+          {/* Mock DOM Inspector looking badge */}
+          {Object.values(layers).every(Boolean) && <div style={{ position: 'absolute', top: 10, right: 10, fontSize: '0.7rem', background: '#22C55E', color: 'white', padding: '2px 8px', borderRadius: '4px' }}>LIVE COMPONENT</div>}
+
+          <h2 style={{
+            fontFamily: layers.css ? 'Inter, sans-serif' : 'serif',
+            marginBottom: layers.css ? '0.5rem' : '0'
+          }}>Tesla Model Y</h2>
+
+          <p style={{
+            fontFamily: layers.css ? 'Inter, sans-serif' : 'serif',
+            color: layers.css ? '#94A3B8' : 'black',
+            marginBottom: layers.css ? '1.5rem' : '0'
+          }}>From $43,990.</p>
+
+          <button
+            type="button"
+            onClick={() => {
+              if (layers.js) {
+                setCart(c => c + 1);
+                confettiModule.default({ particleCount: 30, spread: 50, origin: { y: 0.8 } });
+              }
+            }}
+            style={{
+              background: layers.css ? 'white' : '#E2E8F0',
+              color: layers.css ? 'black' : 'black',
+              border: 'none',
+              padding: layers.css ? '10px 24px' : '2px 6px',
+              borderRadius: layers.css ? '4px' : '2px',
+              fontWeight: layers.css ? 'bold' : 'normal',
+              cursor: layers.js ? 'pointer' : 'default',
+              marginTop: layers.css ? '0' : '10px',
+              fontSize: layers.css ? '1rem' : '0.8rem',
+              transition: 'transform 0.1s'
+            }}
+            onMouseDown={(e) => layers.js && (e.currentTarget.style.transform = 'scale(0.95)')}
+            onMouseUp={(e) => layers.js && (e.currentTarget.style.transform = 'scale(1)')}
+          >
+            Order Now
+          </button>
+
+          {layers.js && <div style={{ marginTop: '1rem', fontSize: '0.8rem', color: '#10B981', minHeight: '1.2em' }}>
+            {cart > 0 ? `Processing Order #${2390 + cart}...` : 'System Ready'}
+          </div>}
+
+          {!layers.js && <div style={{ marginTop: '1rem', fontSize: '0.8rem', color: '#94A3B8', minHeight: '1.2em' }}>
+            (JS Disabled: Button does nothing)
+          </div>}
+        </div>
+      </CWCard>
+    );
+  };
+
   return (
-    <InteractiveLayout title="Module C: Deep Dive into Code" subtitle="HTML, CSS, JS & The DOM.">
+    <InteractiveLayout title="Module C: Deep Dive into Code" subtitle="HTML, CSS, JS & The DOM explained properly.">
       <div className="cw-prose">
         <p className="cw-text-body">
-          Even if you use AI to write code, you must understand the fundamentals to debug it.
-          The browser is an engine. HTML is the chassis. CSS is the paint. JavaScript is the engine logic.
+          You don't need to be a coder to manage a tech business, but you <strong>must</strong> understand the 4 layers that make the web work.
+          Every single app (Facebook, Uber, Gmail) is built on these four pillars.
         </p>
 
-        <BoxModelInteractive />
+        <VideoReferenceCard
+          videoId="h33Srr5J9nY"
+          start={0}
+          title="How the Internet Works"
+          description="A quick overview of what actually happens when you type a URL."
+        />
+
+        <BookInsight title="Code is Poetry" author="Jon Duckett" book="HTML and CSS" color="#F59E0B">
+          <p>"Code is not just instructions for a computer. It is communication with other developers. Write it clearly."</p>
+        </BookInsight>
+
+        <ScenarioToggle
+          oldTitle="Spaghetti Code 🍝"
+          oldContent="HTML, CSS, and JS all mixed in one file. Changing a color breaks the checkout button. Nightmare to maintain."
+          newTitle="Clean Architecture 🏛️"
+          newContent="Separation of Concerns. HTML for structure, CSS for style, JS for logic. Easy to update, scalable, and bug-free."
+        />
+
+
+
+        <CWHeading level={3} style={{ marginTop: '3rem', marginBottom: '1.5rem' }}>The Four Pillars of the Web</CWHeading>
+
+        {/* 1. HTML */}
+        <HTMLBlock />
+
+        {/* 2. CSS */}
+        <CSSBlock />
+
+        {/* 3. JS */}
+        <JSBlock />
+
+        {/* 4. DOM */}
+        <DOMTreeVisual />
+
+        <CWAlert type="tip" title="Why is this separated?">
+          Separation of concerns. Structure (HTML) should not depend on Style (CSS). Logic (JS) should not break if Styles fail. This makes code maintainable.
+        </CWAlert>
+
+        {/* 5. TIED TOGETHER */}
+        <FullStackBuilder />
 
         <h3 style={{ marginTop: '2rem' }}>Semantic HTML</h3>
         <p>Using a <code>&lt;div&gt;</code> for a button is a cardinal sin. It ruins accessibility for blind users. Use the right tag for the job.</p>
 
-        <ScenarioToggle
-          oldTitle="The Div Soup"
-          oldContent={
-            <code>&lt;div onclick="..."&gt;Click Me&lt;/div&gt;</code>
-          }
-          newTitle="Semantic Gold"
-          newContent={
-            <code>&lt;button type="button"&gt;Click Me&lt;/button&gt;</code>
-          }
-        />
+        <BoxModelInteractive />
 
         {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
-        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%)', borderRadius: '24px', border: '1px solid #BFDBFE' }}>
-          <CWHeading level={3} style={{ color: '#1E40AF', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)', borderRadius: '24px', border: '1px solid #FCD34D' }}>
+          <CWHeading level={3} style={{ color: '#B45309', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
           </CWHeading>
 
-          <p style={{ fontSize: '1.1rem', color: '#1E3A8A', lineHeight: '1.7', marginBottom: '1.5rem' }}>
-            You don't need to write code, but you need to understand <strong>Code Quality</strong>. Bad code ("Spaghetti Code") is like a building with a weak foundation. It looks fine on Day 1, but cracks on Day 100.
+          <p style={{ fontSize: '1.1rem', color: '#92400E', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            Bad code is invisible debt. If your developer mixes HTML, CSS, and JS ("Spaghetti Code"), simple updates like changing a logo can take hours instead of minutes. Clean code saves you money on maintenance.
           </p>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
             <div>
-              <h4 style={{ color: '#1E40AF', marginBottom: '0.5rem' }}>1. The "SEO" Language</h4>
-              <p style={{ fontSize: '0.95rem', color: '#1E3A8A', lineHeight: '1.6' }}>
-                Google bot is blind. It reads code (HTML), not pixels. If your site is built with "Div Soup" (bad code), Google can't understand your content, and you won't rank. Semantic HTML is an SEO superpower.
+              <h4 style={{ color: '#D97706', marginBottom: '0.5rem' }}>1. Accessibility = SEO</h4>
+              <p style={{ fontSize: '0.95rem', color: '#92400E', lineHeight: '1.6' }}>
+                Semantic HTML (using the right tags) isn't just for screen readers; Google is a "blind user". If your site structure is clear, Google understands it better and ranks you higher.
               </p>
             </div>
             <div>
-              <h4 style={{ color: '#1E40AF', marginBottom: '0.5rem' }}>2. Vendor Lock-In</h4>
-              <p style={{ fontSize: '0.95rem', color: '#1E3A8A', lineHeight: '1.6' }}>
-                If you rely on a proprietary drag-and-drop builder with messy code export, you can never move your site. Clean, standard code ensures you own your digital asset forever.
+              <h4 style={{ color: '#D97706', marginBottom: '0.5rem' }}>2. Vendor Lock-in</h4>
+              <p style={{ fontSize: '0.95rem', color: '#92400E', lineHeight: '1.6' }}>
+                If your site is built on messy, proprietary code, you are trapped with that agency. If it's built on standard HTML/CSS/JS, any developer in the world can take over instantly.
               </p>
             </div>
           </div>
 
-          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #DBEAFE', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #FCD34D', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
             <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
               🚀 How CapeWeb Helps You Scale
             </h4>
             <p style={{ fontSize: '0.95rem', color: '#4B5563', marginBottom: '1rem' }}>
-              We write code for machines (Google) and humans.
+              We write code for humans, not just machines.
             </p>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
               <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
-                <span style={{ color: '#3B82F6', marginTop: '2px' }}>➜</span>
+                <span style={{ color: '#D97706', marginTop: '2px' }}>➜</span>
                 <span>
-                  <strong>Code Quality Audits:</strong> We use industry-standard tools to scan your existing site for "Code Rot" and security holes via our <a href="/services?service=performance-first" style={{ color: '#3B82F6', textDecoration: 'underline' }}>Performance First</a> audits.
+                  <strong>Clean Code Guarantee:</strong> We adhere to industry best practices via our <a href="/services?service=roi-custom-web-dev" style={{ color: '#D97706', textDecoration: 'underline' }}>Code Standards</a>. You own the code, and it's always transfer-ready.
                 </span>
               </li>
               <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
-                <span style={{ color: '#3B82F6', marginTop: '2px' }}>➜</span>
+                <span style={{ color: '#D97706', marginTop: '2px' }}>➜</span>
                 <span>
-                  <strong>Semantic SEO:</strong> Our <a href="/services?service=seo-2025-beyond-keywords" style={{ color: '#3B82F6', textDecoration: 'underline' }}>Advanced SEO</a> builds use Schema.org markup so AI agents (like ChatGPT) can easily read and recommend your business.
+                  <strong>Performance by Default:</strong> Clean code loads faster. A 10kb HTML file beats a 2MB bloated site every time.
                 </span>
               </li>
             </ul>
@@ -1070,10 +1346,10 @@ export function Pillar3ModuleC({ onNext }) {
 
         <MiniQuiz
           questions={[
-            { question: "Which CSS property adds space *inside* the border?", options: ["Margin", "Padding", "Flex"], correctIndex: 1 },
-            { question: "Which CSS property adds space *outside* the border?", options: ["Margin", "Padding", "Color"], correctIndex: 0 },
-            { question: "Why use Semantic HTML (like <button> instead of <div>)?", options: ["It is shorter", "It improves Accessibility and SEO", "It is blue"], correctIndex: 1 },
-            { question: "Who primarily 'reads' your HTML code?", options: ["Your mom", "Search Engine Bots (Google) and Browsers", "No one"], correctIndex: 1 }
+            { question: "Which language handles the 'Skeleton' or structure of the page?", options: ["CSS", "HTML", "JavaScript"], correctIndex: 1 },
+            { question: "Which language handles the 'Skin' or look and feel?", options: ["HTML", "CSS", "Python"], correctIndex: 1 },
+            { question: "What acts as the 'Brain' to handle user clicks and logic?", options: ["The DOM", "JavaScript", "HTML"], correctIndex: 1 },
+            { question: "What is the DOM?", options: ["A pizza topping", "The Tree structure the browser builds from your HTML", "A coding style"], correctIndex: 1 }
           ]}
           onNext={onNext}
         />
@@ -1084,6 +1360,126 @@ export function Pillar3ModuleC({ onNext }) {
 
 // Module D: Modern Frameworks
 export function Pillar3ModuleD({ onNext }) {
+  // --- SUB-COMPONENTS FOR MODULE D ---
+
+  const VirtualDOMSimulation = () => {
+    const [realDOMFlashes, setRealDOMFlashes] = useState(0);
+    const [virtualDOMFlashes, setVirtualDOMFlashes] = useState(0);
+    const [items, setItems] = useState(["Apple", "Banana", "Cherry"]);
+    const [lastUpdate, setLastUpdate] = useState(null);
+
+    const addItem = () => {
+      const storedFruits = ["Date", "Elderberry", "Fig", "Grape", "Honeydew"];
+      const nextFruit = storedFruits[items.length - 3] || "Generic Fruit";
+
+      // REAL DOM LOGIC (Simulation)
+      // In real DOM, everything repaints or reflows more heavily
+      setRealDOMFlashes(prev => prev + 1);
+
+      // VIRTUAL DOM LOGIC
+      // React calculates diff, sees only 1 list item added
+      setVirtualDOMFlashes(prev => prev + 1);
+
+      setItems(prev => [...prev, nextFruit]);
+      setLastUpdate(`Added "${nextFruit}"`);
+    };
+
+    return (
+      <div style={{ marginTop: '2rem', marginBottom: '2rem' }}>
+        <CWHeading level={4}>Interactive: Real DOM vs Virtual DOM</CWHeading>
+        <p style={{ fontSize: '0.9rem', color: '#64748B', marginBottom: '1.5rem' }}>
+          Click "Add Item" to see how they handle updates.
+        </p>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          {/* REAL DOM VISUALIZER */}
+          <div style={{ padding: '1rem', border: '1px solid #E2E8F0', borderRadius: '12px', background: '#FFF' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <strong style={{ color: '#EF4444' }}>Real DOM (Standard)</strong>
+              <span style={{ fontSize: '0.7rem', padding: '2px 8px', borderRadius: '10px', background: '#FEE2E2', color: '#991B1B' }}>Slow</span>
+            </div>
+
+            <div key={realDOMFlashes} className="flash-red" style={{
+              padding: '1rem',
+              background: '#F8FAFC',
+              borderRadius: '8px',
+              minHeight: '150px'
+            }}>
+              <ul style={{ paddingLeft: '1.2rem', margin: 0 }}>
+                {items.map((item, i) => (
+                  <li key={i}>{item}</li>
+                ))}
+              </ul>
+            </div>
+            <p style={{ fontSize: '0.75rem', marginTop: '0.5rem', color: '#EF4444' }}>
+              {realDOMFlashes > 0 ? "⚠️ Entire list repainted!" : "Waiting for update..."}
+            </p>
+          </div>
+
+          {/* VIRTUAL DOM VISUALIZER */}
+          <div style={{ padding: '1rem', border: '1px solid #E2E8F0', borderRadius: '12px', background: '#FFF' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <strong style={{ color: '#3B82F6' }}>Virtual DOM (React)</strong>
+              <span style={{ fontSize: '0.7rem', padding: '2px 8px', borderRadius: '10px', background: '#DBEAFE', color: '#1E40AF' }}>Fast</span>
+            </div>
+
+            <div style={{
+              padding: '1rem',
+              background: '#F8FAFC',
+              borderRadius: '8px',
+              minHeight: '150px'
+            }}>
+              <ul style={{ paddingLeft: '1.2rem', margin: 0 }}>
+                {items.map((item, i) => (
+                  <li key={i} className={i === items.length - 1 && realDOMFlashes > 0 ? "flash-green" : ""}>{item}</li>
+                ))}
+              </ul>
+            </div>
+            <p style={{ fontSize: '0.75rem', marginTop: '0.5rem', color: '#3B82F6' }}>
+              {virtualDOMFlashes > 0 ? "✅ Only new item updated!" : "Waiting for update..."}
+            </p>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem' }}>
+          <button onClick={addItem} style={{
+            padding: '0.75rem 2rem',
+            background: '#0F172A',
+            color: 'white',
+            border: 'none',
+            borderRadius: '50px',
+            fontSize: '1rem',
+            cursor: 'pointer',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+          }}>
+            Add Item
+          </button>
+        </div>
+
+        <style>{`
+          @keyframes flashRed {
+            0% { background-color: #FECACA; }
+            100% { background-color: #F8FAFC; }
+          }
+          @keyframes flashGreen {
+            0% { background-color: #BBF7D0; transform: scale(1.05); }
+            100% { background-color: transparent; transform: scale(1); }
+          }
+          .flash-red {
+            animation: flashRed 1s ease;
+          }
+          .flash-green {
+            animation: flashGreen 1s ease;
+            border-radius: 4px;
+            padding: 2px 4px;
+            display: inline-block;
+            width: 100%;
+          }
+        `}</style>
+      </div>
+    );
+  };
+
   return (
     <InteractiveLayout title="Module D: Component Architecture" subtitle="React, Next.js & Atomic Design.">
       <div className="cw-prose">
@@ -1091,8 +1487,34 @@ export function Pillar3ModuleD({ onNext }) {
           Modern web development is <strong>component-based</strong>. We don't build pages; we build systems of reusable parts. This is like LEGO.
         </p>
 
+        <VideoReferenceCard
+          videoId="N3AkSS5hXMA"
+          start={0}
+          title="React Components Explained"
+          description="Why building with components is the future of web development."
+        />
+
+        <BookInsight title="Atomic Design" author="Brad Frost" book="Atomic Design" color="#10B981">
+          <p>"We're not designing pages, we're designing systems of components."</p>
+        </BookInsight>
+
+        <ScenarioToggle
+          oldTitle="Copy-Paste Chaos 📝"
+          oldContent="You copy the 'Button' code 50 times across the site. To change the color, you edit 50 files."
+          newTitle="Component Zen 🧘"
+          newContent="You define the 'Button' component once. You change the color in one file, and it updates everywhere instantly."
+        />
+
         <h3>The Virtual DOM Magic</h3>
         <p>Why is React so fast? Because it doesn't reload the page. It keeps a "Virtual" copy of the page in memory, calculates what changed, and only updates that tiny piece.</p>
+
+        <VirtualDOMSimulation />
+
+        <CWAlert type="info" title="The Difference">
+          <strong>The Real DOM</strong> is slow because painting pixels to a screen is expensive for the browser.
+          <br /><br />
+          <strong>The Virtual DOM</strong> is fast because it is just math. React does the math first (Diffing), identifying exactly which pixels need to change, and then touches the Real DOM only once ensuring maximum performance.
+        </CWAlert>
 
         <VirtualDOMVisual />
 
@@ -1116,29 +1538,29 @@ export function Pillar3ModuleD({ onNext }) {
             <div>
               <h4 style={{ color: '#15803D', marginBottom: '0.5rem' }}>2. The "App-Like" Feel</h4>
               <p style={{ fontSize: '0.95rem', color: '#14532D', lineHeight: '1.6' }}>
-                Users expect websites to feel instant, like an iPhone app. React enables this. If your site feels "clunky" (full page reloads), users perceive your brand as "old".
+                Ever notice how Instagram feels instant? That's the Virtual DOM. No page reloads. This user experience keeps customers on your site longer.
               </p>
             </div>
           </div>
 
-          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #DCFCE7', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #86EFAC', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
             <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
               🚀 How CapeWeb Helps You Scale
             </h4>
             <p style={{ fontSize: '0.95rem', color: '#4B5563', marginBottom: '1rem' }}>
-              We build "Digital Assets", not just pages.
+              We build "Design Systems", not just websites.
             </p>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
               <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
                 <span style={{ color: '#22C55E', marginTop: '2px' }}>➜</span>
                 <span>
-                  <strong>Custom Web Apps:</strong> Need a client portal or a booking engine? We build it with React/Next.js via our <a href="/services?service=roi-custom-web-dev" style={{ color: '#22C55E', textDecoration: 'underline' }}>Custom Dev Service</a>, ensuring it's fast and secure.
+                  <strong>Atomic Design:</strong> We create a library of brand-perfect buttons, inputs, and cards. You can reuse these anywhere, ensuring 100% brand consistency forever.
                 </span>
               </li>
               <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
                 <span style={{ color: '#22C55E', marginTop: '2px' }}>➜</span>
                 <span>
-                  <strong>UI Kits:</strong> We create a "Design System" for your brand. This means consistency. Your buttons, forms, and colors will be identical across every page, building <a href="/services?service=future-digital-branding" style={{ color: '#22C55E', textDecoration: 'underline' }}>Brand Trust</a>.
+                  <strong>Future-Proofing:</strong> Our React/Next.js builds (part of our <a href="/services?service=custom-web-applications" style={{ color: '#22C55E', textDecoration: 'underline' }}>Web Apps</a> service) are ready for AI integration, PWA conversion, and massive scale from Day 1.
                 </span>
               </li>
             </ul>
@@ -1147,10 +1569,9 @@ export function Pillar3ModuleD({ onNext }) {
 
         <MiniQuiz
           questions={[
-            { question: "Why does React use a Virtual DOM?", options: ["To use more memory", "To start a virtual reality game", "To improve performance by only updating changed elements"], correctIndex: 2 },
-            { question: "What is a 'Component' in React?", options: ["A reusable piece of UI (like a Button)", "A database", "A server"], correctIndex: 0 },
-            { question: "Why choose Next.js over plain React?", options: ["It is harder", "Better SEO (SSR) and built-in routing", "It uses Python"], correctIndex: 1 },
-            { question: "What is 'State'?", options: ["The location of the user", "Data that changes over time (like a counter)", "A law"], correctIndex: 1 }
+            { question: "Why is the Virtual DOM faster?", options: ["It uses magic", "It calculates the minimum necessary update before touching the screen", "It deletes the whole page"], correctIndex: 1 },
+            { question: "What is a 'Component'?", options: ["A reusable building block (like LEGO)", "A virus", "A database"], correctIndex: 0 },
+            { question: "Which major companies use React?", options: ["Netflix, Facebook, Airbnb", "None", "MySpace"], correctIndex: 0 }
           ]}
           onNext={onNext}
         />
@@ -1165,6 +1586,17 @@ export function Pillar3ModuleE({ onNext }) {
     <InteractiveLayout title="Module E: Serverless & APIs" subtitle="The invisible infrastructure.">
       <div className="cw-prose">
         <p>The "Backend" is where the logic lives. In the past, you rented a physical server computer. Now, you rent "Functions" (Serverless) that only exist when someone clicks a button.</p>
+
+        <VideoReferenceCard
+          videoId="AMhlIF29NGo"
+          start={0}
+          title="API Waiter Analogy"
+          description="Understanding APIs using the simple 'Waiter' analogy."
+        />
+
+        <BookInsight title="The API Economy" author="ProgrammableWeb" book="API Economy" color="#F97316">
+          <p>"Software is no longer built, it is composed. APIs are the glue."</p>
+        </BookInsight>
 
         <APIWaiterVisual />
 
@@ -1246,7 +1678,25 @@ export function Pillar3ModuleF({ onNext }) {
         <p>Speed of light is finite. If your server is in London and your user is in Cape Town, the signal has to travel 10,000km. That takes time (~180ms).</p>
         <p><strong>Edge Computing</strong> puts a mini-server in Cape Town. Now the signal travels 5km (~5ms). This is instant.</p>
 
+        <VideoReferenceCard
+          videoId="qn6GDlMgoPA"
+          start={0}
+          title="IBM: Edge Computing"
+          description="Why moving your server closer to the user (The Edge) makes your app faster."
+        />
+
+        <BookInsight title="Latency is the Killer" author="Ilya Grigorik" book="High Performance Browser Networking" color="#9333EA">
+          <p>"It doesn't matter how fast your bandwidth is if the round-trip time is high. Speed is limited by the speed of light."</p>
+        </BookInsight>
+
         <EdgePingVisual />
+
+        <ScenarioToggle
+          oldTitle="Centralized (Old)"
+          oldContent="Server is in New York. South African user waits 250ms for every click. Site feels sluggish."
+          newTitle="Edge (New)"
+          newContent="Server is replicated in Johannesburg. South African user gets 10ms response. Site feels instant."
+        />
 
         <CWAlert type="info" title="Vercel & Netlify">
           These platforms deploy your code to 300+ locations worldwide instantly. You don't manage servers. You just push code.
@@ -1321,6 +1771,13 @@ export function Pillar3ModuleG({ onNext }) {
     <InteractiveLayout title="Module G: Performance Engineering" subtitle="Beyond 'Fast Loading'.">
       <div className="cw-prose">
         <p>Performance is not just about numbers; it is about <strong>Perception</strong>. The user hates wondering "Is it broken?".</p>
+
+        <VideoReferenceCard
+          videoId="4GWqJEfzvmg"
+          start={23}
+          title="NNGroup: Skeleton Screens"
+          description="How to improve perceived performance using skeleton loading screens."
+        />
 
         <SkeletonLoaderVisual />
 
@@ -1409,6 +1866,17 @@ export function Pillar3ModuleH({ onNext }) {
           The #1 rule: <strong>Never Trust User Input.</strong>
         </p>
 
+        <VideoReferenceCard
+          videoId="2OPVViV-GQk"
+          start={0}
+          title="SQL Injection Demo"
+          description="A demonstration of how hackers use SQL Injection to bypass login screens."
+        />
+
+        <BookInsight title="The Art of Deception" author="Kevin Mitnick" book="The Art of Deception" color="#EF4444">
+          <p>"The human factor is truly security's weakest link."</p>
+        </BookInsight>
+
         <SQLInjectionVisual />
 
         <p>If you don't sanitize this input, the database reads "OR 1=1" as "True" and grants admin access instantly.</p>
@@ -1492,6 +1960,17 @@ export function Pillar3ModuleI({ onNext }) {
         <h3>Friction vs Motivation</h3>
         <p>To increase sales, you must remove barriers (Friction). Every extra field in a form reduces sales by 10%.</p>
 
+        <VideoReferenceCard
+          videoId="uK5mVIJlxYw"
+          start={0}
+          title="Checkout Friction"
+          description="Why every extra field in your checkout form costs you money."
+        />
+
+        <BookInsight title="Influence" author="Robert Cialdini" book="Influence: The Psychology of Persuasion" color="#10B981">
+          <p>"We are influenced by others. Social Proof (Trust Badges/Reviews) bypasses the brain's skepticism."</p>
+        </BookInsight>
+
         <CheckoutFrictionVisual />
 
         <ScenarioToggle
@@ -1571,6 +2050,17 @@ export function Pillar3ModuleJ({ onNext }) {
       <div className="cw-prose">
         <p>In the past, your content was locked inside WordPress. Today, content needs to go everywhere: Your App, Your Website, Your Smart Watch.</p>
         <p><strong>Headless CMS</strong> (like Sanity or Strapi) stores content as pure data (JSON), not HTML. It breeds flexibility.</p>
+
+        <VideoReferenceCard
+          videoId="bGMo1XCNQMo"
+          start={0}
+          title="Headless CMS in 1 Min"
+          description="Decoupling your content from your frontend for maximum flexibility."
+        />
+
+        <BookInsight title="Content Strategy" author="Kristina Halvorson" book="Content Strategy for the Web" color="#3B82F6">
+          <p>"Content is not just words. It is data. Structure it so machines can read it."</p>
+        </BookInsight>
 
         <HeadlessCMSVisual />
 

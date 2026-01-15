@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { VideoReferenceCard } from './VideoReferenceCard';
 import * as confettiModule from 'canvas-confetti';
 import { gsap } from 'gsap';
 import { InteractiveLayout, QuizLayout } from './CapeWebLayouts';
@@ -525,6 +526,13 @@ export function Pillar8ModuleA({ onNext }) {
           Security is not just about keeping data <strong>Secret</strong>. It is also about keeping it <strong>Correct</strong> and <strong>Accessible</strong>.
         </p>
 
+        <VideoReferenceCard
+          videoId="fqnvzu-a5SA"
+          start={0}
+          title="The CIA Triad"
+          description="Confidentiality, Integrity, and Availability: The three pillars of security."
+        />
+
         <TriadVisual />
 
         <CWCard>
@@ -596,6 +604,13 @@ export function Pillar8ModuleB({ onNext }) {
           "Password123" is cracked in 0.001 seconds. Complexity matters.
         </p>
 
+        <VideoReferenceCard
+          videoId="7U-RbOKanYs"
+          start={0}
+          title="Computerphile: Password Cracking"
+          description="How hackers use GPUs to guess billions of passwords per second."
+        />
+
         <PasswordCrackerVisual />
 
         <ScenarioToggle
@@ -665,6 +680,13 @@ export function Pillar8ModuleC({ onNext }) {
           Hackers don't always break firewalls; they trick you into opening the door. This is called <strong>Phishing</strong>.
         </p>
 
+        <VideoReferenceCard
+          videoId="Lc7scxvKQOo"
+          start={0}
+          title="Social Engineering Animation"
+          description="Visualizing how attackers manipulate human psychology."
+        />
+
         <PhishingPremiumVisual />
 
         <BookInsight title="The Art of Deception" author="Kevin Mitnick" book="The Art of Deception" color="#EF4444">
@@ -731,6 +753,13 @@ export function Pillar8ModuleD({ onNext }) {
           <strong>HTTPS (TLS/SSL):</strong> Encrypts the tunnel between user and server. Without it, anyone on the Free WiFi at the coffee shop can read your passwords in plain text.
         </p>
 
+        <VideoReferenceCard
+          videoId="HyK2tu4nFRM"
+          start={0}
+          title="HTTP vs HTTPS"
+          description="Why that little green padlock is essential for e-commerce."
+        />
+
         <SSLHandshakeVisual />
 
         {/* NEW SECTION: Why It Matters */}
@@ -792,6 +821,13 @@ export function Pillar8ModuleE({ onNext }) {
         <p className="cw-text-body">
           In South Africa, <strong>POPIA</strong> mandates how you treat customer data. You cannot spam people. You must secure their data.
         </p>
+
+        <VideoReferenceCard
+          videoId="WzK_nyMecns"
+          start={16}
+          title="POPIA Explained (SA)"
+          description="A simple guide to the Protection of Personal Information Act."
+        />
 
         <ComplianceShieldVisual />
 
@@ -855,6 +891,13 @@ export function Pillar8ModuleF({ onNext }) {
     <InteractiveLayout title="Module F: Endpoint Protection" subtitle="My laptop was stolen.">
       <div className="cw-prose">
         <p>If your laptop is stolen, is the data safe? <strong>Full Disk Encryption (FileVault / BitLocker)</strong> scrambles the hard drive.</p>
+
+        <VideoReferenceCard
+          videoId="mfxCtnnBRik"
+          start={0}
+          title="Full Disk Encryption"
+          description="Ensuring your data is unreadable if your device is physically stolen."
+        />
 
         <RansomwareSim />
 
@@ -923,6 +966,13 @@ export function Pillar8ModuleG({ onNext }) {
       <div className="cw-prose">
         <p>The #1 cause of massive data leaks is <strong>Misconfigured S3 Buckets</strong>. Developers set "permissions: public" and forget.</p>
 
+        <VideoReferenceCard
+          videoId="qgOO1SG472I"
+          start={0}
+          title="S3 Bucket Security"
+          description="Understanding cloud storage permissions to prevent data leaks."
+        />
+
         <CloudBucketVisual />
 
         <p><strong>Principle of Least Privilege:</strong> Give a system ONLY the access it needs, nothing more.</p>
@@ -983,6 +1033,13 @@ export function Pillar8ModuleH({ onNext }) {
     <InteractiveLayout title="Module H: Incident Response" subtitle="Don't panic. Prepare.">
       <div className="cw-prose">
         <p>You will be hacked. It is a matter of "when", not "if".</p>
+
+        <VideoReferenceCard
+          videoId="4MGVTpXAAmo"
+          start={0}
+          title="Incident Response Lifecycle"
+          description="The 4 phases of handling a security breach effectively."
+        />
 
         <IncidentTimelineVisual />
 
@@ -1053,6 +1110,13 @@ export function Pillar8ModuleI({ onNext }) {
     <InteractiveLayout title="Module I: Security Culture" subtitle="The Human Firewall.">
       <div className="cw-prose">
         <p>Tech cannot fix human error. You must train your staff.</p>
+
+        <VideoReferenceCard
+          videoId="3j3_i9-g3g"
+          start={0}
+          title="The Human Firewall"
+          description="Building a security-conscious culture within your organization."
+        />
 
         <HumanFirewallVisual />
 

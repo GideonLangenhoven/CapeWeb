@@ -109,7 +109,8 @@ import {
 import {
   pillar12QuizQuestions, pillar13QuizQuestions, pillar14QuizQuestions,
   pillar15QuizQuestions, pillar16QuizQuestions, pillar17QuizQuestions,
-  pillar18QuizQuestions, pillar19QuizQuestions
+  pillar18QuizQuestions, pillar19QuizQuestions,
+  PILLAR_LIBRARY
 } from '../data/pillarLibrary';
 
 
@@ -198,6 +199,59 @@ export default function CapeWebBlueprint() {
   const handleModuleChange = (moduleId) => {
     setActiveModule(moduleId);
     scrollToTop();
+  };
+
+  const handlePillarToggle = (pillarId, isExpanded) => {
+    setActivePillar(pillarId);
+    // Close all first (Accordion style)
+    if (pillarId !== 1) setIsPillar1Expanded(false);
+    if (pillarId !== 2) setIsPillar2Expanded(false);
+    if (pillarId !== 3) setIsPillar3Expanded(false);
+    if (pillarId !== 4) setIsPillar4Expanded(false);
+    if (pillarId !== 5) setIsPillar5Expanded(false);
+    if (pillarId !== 6) setIsPillar6Expanded(false);
+    if (pillarId !== 7) setIsPillar7Expanded(false);
+    if (pillarId !== 8) setIsPillar8Expanded(false);
+    if (pillarId !== 9) setIsPillar9Expanded(false);
+    if (pillarId !== 10) setIsPillar10Expanded(false);
+    if (pillarId !== 11) setIsPillar11Expanded(false);
+    if (pillarId !== 12) setIsPillar12Expanded(false);
+    if (pillarId !== 13) setIsPillar13Expanded(false);
+    if (pillarId !== 14) setIsPillar14Expanded(false);
+    if (pillarId !== 15) setIsPillar15Expanded(false);
+    if (pillarId !== 16) setIsPillar16Expanded(false);
+    if (pillarId !== 17) setIsPillar17Expanded(false);
+    if (pillarId !== 18) setIsPillar18Expanded(false);
+    if (pillarId !== 19) setIsPillar19Expanded(false);
+
+    // Toggle target
+    const newState = !isExpanded;
+    switch (pillarId) {
+      case 1: setIsPillar1Expanded(newState); break;
+      case 2: setIsPillar2Expanded(newState); break;
+      case 3: setIsPillar3Expanded(newState); break;
+      case 4: setIsPillar4Expanded(newState); break;
+      case 5: setIsPillar5Expanded(newState); break;
+      case 6: setIsPillar6Expanded(newState); break;
+      case 7: setIsPillar7Expanded(newState); break;
+      case 8: setIsPillar8Expanded(newState); break;
+      case 9: setIsPillar9Expanded(newState); break;
+      case 10: setIsPillar10Expanded(newState); break;
+      case 11: setIsPillar11Expanded(newState); break;
+      case 12: setIsPillar12Expanded(newState); break;
+      case 13: setIsPillar13Expanded(newState); break;
+      case 14: setIsPillar14Expanded(newState); break;
+      case 15: setIsPillar15Expanded(newState); break;
+      case 16: setIsPillar16Expanded(newState); break;
+      case 17: setIsPillar17Expanded(newState); break;
+      case 18: setIsPillar18Expanded(newState); break;
+      case 19: setIsPillar19Expanded(newState); break;
+    }
+
+    if (newState) {
+      if (pillarId === 1) setActiveModule('p1-map');
+      else setActiveModule(`p${pillarId}-module-a`);
+    }
   };
 
   const handlePillar1QuizResponse = (questionIndex, optionIndex) => {
@@ -455,24 +509,18 @@ export default function CapeWebBlueprint() {
             <p className="search-hint">Browse by pillar or type what you want to learn.</p>
           </section>
 
-          <nav className="learn-capeweb-nav" aria-label="CapeWeb Blueprint Navigation" ref={navRef}>
+<nav className="learn-capeweb-nav" aria-label="CapeWeb Blueprint Navigation" ref={navRef}>
+            {/* Pillar 1 */}
             <div className="toc-pillar-group">
               <button
                 type="button"
                 className={`toc-pillar-title-button ${isPillar1Expanded ? 'is-open' : ''}`}
                 aria-expanded={isPillar1Expanded}
-                onClick={() => {
-                  setActivePillar(1);
-                  setIsPillar1Expanded(!isPillar1Expanded);
-                  setIsPillar2Expanded(false);
-                  if (!isPillar1Expanded) {
-                    setActiveModule('p1-map');
-                  }
-                }}
+                onClick={() => handlePillarToggle(1, isPillar1Expanded)}
               >
                 <div>
-                  <div className="pillar-title">Pillar 1 · Strategic Foundation &amp; Brand Identity</div>
-                  <div className="pillar-subtitle">Turn your idea into a clear plan + a brand people trust.</div>
+                  <div className="pillar-title">Pillar 1 · Strategic Foundation & Brand Identity</div>
+                  <div className="pillar-subtitle">Start here. Define your offer.</div>
                 </div>
                 <span className="toc-expander-icon" aria-hidden="true">
                   {isPillar1Expanded ? '▼' : '►'}
@@ -480,930 +528,109 @@ export default function CapeWebBlueprint() {
               </button>
 
               {isPillar1Expanded && (
-                <div className="pillar-modules" id="pillar-content-pillar-strategy">
-                  <button className={`pillar-module ${activeModule === 'p1-map' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p1-map')}>
+                <div className="pillar-modules" id="pillar-content-pillar-1">
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p1-map' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p1-map')}
+                  >
+                    <div className="module-pill">Pillar 1</div>
                     <div>
-                      <div className="module-title">The Roadmap</div>
-                      <p>Where are we going? A map from Idea to Business.</p>
+                      <div className="module-title">Journey Map</div>
+                      <p>From Idea to Plan</p>
                     </div>
                   </button>
-                  <button className={`pillar-module ${activeModule === 'p1-module-a' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p1-module-a')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p1-module-a' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p1-module-a')}
+                  >
+                    <div className="module-pill">Pillar 1</div>
                     <div>
-                      <div className="module-title">Module A · The Founder Routine</div>
-                      <p>Build the habit. You cannot build a company on "when I have time".</p>
+                      <div className="module-title">Module A · Idea</div>
+                      <p>What do you sell?</p>
                     </div>
                   </button>
-                  <button className={`pillar-module ${activeModule === 'p1-module-b' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p1-module-b')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p1-module-b' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p1-module-b')}
+                  >
+                    <div className="module-pill">Pillar 1</div>
                     <div>
-                      <div className="module-title">Module B · The Problem & Customer</div>
-                      <p>Validation: Don't guess, ask. Solving real pain.</p>
+                      <div className="module-title">Module B · Validation</div>
+                      <p>Will they buy?</p>
                     </div>
                   </button>
-                  <button className={`pillar-module ${activeModule === 'p1-module-c' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p1-module-c')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p1-module-c' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p1-module-c')}
+                  >
+                    <div className="module-pill">Pillar 1</div>
                     <div>
-                      <div className="module-title">Module C · Your Offer</div>
-                      <p>Value vs Friction: Making your product irresistible.</p>
+                      <div className="module-title">Module C · Business Model</div>
+                      <p>Lean Canvas.</p>
                     </div>
                   </button>
-                  <button className={`pillar-module ${activeModule === 'p1-module-d' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p1-module-d')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p1-module-d' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p1-module-d')}
+                  >
+                    <div className="module-pill">Pillar 1</div>
                     <div>
-                      <div className="module-title">Module D · Competitors</div>
-                      <p>Market Research: Know who you are fighting against.</p>
+                      <div className="module-title">Module D · Branding</div>
+                      <p>StoryBrand.</p>
                     </div>
                   </button>
-                  <button className={`pillar-module ${activeModule === 'p1-module-e' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p1-module-e')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p1-module-e' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p1-module-e')}
+                  >
+                    <div className="module-pill">Pillar 1</div>
                     <div>
-                      <div className="module-title">Module E · Business Model</div>
-                      <p>The Money Engine: Service, Product, Subscription, or Marketplace?</p>
+                      <div className="module-title">Module E · 30-Day Sprint</div>
+                      <p>Action Plan.</p>
                     </div>
                   </button>
-                  <button className={`pillar-module ${activeModule === 'p1-resources' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p1-resources')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p1-resources' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p1-resources')}
+                  >
+                    <div className="module-pill">Pillar 1</div>
                     <div>
-                      <div className="module-title">Module F · Resources</div>
-                      <p>Books, tools, and links to help you execute.</p>
+                      <div className="module-title">Resources</div>
+                      <p>Templates.</p>
                     </div>
                   </button>
-                  <button className={`pillar-module ${activeModule === 'p1-quiz' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p1-quiz')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p1-quiz' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p1-quiz')}
+                  >
+                    <div className="module-pill">Pillar 1</div>
                     <div>
                       <div className="module-title">Final Exam · Strategy</div>
-                      <p>Prove you have a plan.</p>
+                      <p>Validate yourself.</p>
                     </div>
                   </button>
                 </div>
               )}
             </div>
-
-            {/* Pillar 2 - Functional */}
-            <div className="toc-pillar-group">
-              <button
-                type="button"
-                className={`toc-pillar-title-button ${isPillar3Expanded ? 'is-open' : ''}`}
-                aria-expanded={isPillar3Expanded}
-                onClick={() => {
-                  setActivePillar(3);
-                  setIsPillar3Expanded(!isPillar3Expanded);
-                  setIsPillar1Expanded(false);
-                  setIsPillar2Expanded(false);
-                  if (!isPillar3Expanded) {
-                    setActiveModule('p3-module-a');
-                  }
-                }}
-              >
-                <div>
-                  <div className="pillar-title">Pillar 3 · Web Development & Architecture</div>
-                  <div className="pillar-subtitle">10 Modules: From fundamentals to full-stack mastery.</div>
-                </div>
-                <span className="toc-expander-icon" aria-hidden="true">
-                  {isPillar3Expanded ? '▼' : '►'}
-                </span>
-              </button>
-
-              {isPillar3Expanded && (
-                <div className="pillar-modules" id="pillar-content-pillar-web">
-                  <button type="button" className={`pillar-module ${activeModule === 'p3-module-a' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p3-module-a')}>
-                    <div className="module-pill">Pillar 3</div>
-                    <div><div className="module-title">Module A · Web Fundamentals</div><p>Strategy, sitemaps, and planning your Digital HQ.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p3-module-b' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p3-module-b')}>
-                    <div className="module-pill">Pillar 3</div>
-                    <div><div className="module-title">Module B · No-Code Solutions</div><p>Building without code (Wix, Webflow, WordPress).</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p3-module-c' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p3-module-c')}>
-                    <div className="module-pill">Pillar 3</div>
-                    <div><div className="module-title">Module C · HTML, CSS & JS</div><p>The code foundations every founder should know.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p3-module-d' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p3-module-d')}>
-                    <div className="module-pill">Pillar 3</div>
-                    <div><div className="module-title">Module D · Modern Frameworks</div><p>React, Next.js, and Tailwind CSS basics.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p3-module-e' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p3-module-e')}>
-                    <div className="module-pill">Pillar 3</div>
-                    <div><div className="module-title">Module E · Backend & APIs</div><p>Databases, authentication, and server logic.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p3-module-f' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p3-module-f')}>
-                    <div className="module-pill">Pillar 3</div>
-                    <div><div className="module-title">Module F · Hosting & Deployment</div><p>Getting live: Vercel, Netlify, and SA hosting.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p3-module-g' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p3-module-g')}>
-                    <div className="module-pill">Pillar 3</div>
-                    <div><div className="module-title">Module G · Performance</div><p>Speed, Core Web Vitals, and optimization.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p3-module-h' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p3-module-h')}>
-                    <div className="module-pill">Pillar 3</div>
-                    <div><div className="module-title">Module H · Security Basics</div><p>HTTPS, passwords, and protecting user data.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p3-module-i' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p3-module-i')}>
-                    <div className="module-pill">Pillar 3</div>
-                    <div><div className="module-title">Module I · E-commerce</div><p>Selling online: WooCommerce, Shopify, Payments.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p3-module-j' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p3-module-j')}>
-                    <div className="module-pill">Pillar 3</div>
-                    <div><div className="module-title">Module J · CMS Management</div><p>Headless vs Traditional CMS options.</p></div>
-                  </button>
-
-                  <button type="button" className={`pillar-module ${activeModule === 'p3-resources' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p3-resources')}>
-                    <div className="module-pill">Pillar 3</div>
-                    <div><div className="module-title">Resources</div><p>Architect's Toolkit.</p></div>
-                  </button>
-
-                  <button type="button" className={`pillar-module ${activeModule === 'p3-quiz' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p3-quiz')}>
-                    <div className="module-pill">Pillar 3</div>
-                    <div><div className="module-title">Final Exam · Architecture</div><p>Prove you know the stack.</p></div>
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Pillar 3 - Functional */}
-            <div className="toc-pillar-group">
-              <button
-                type="button"
-                className={`toc-pillar-title-button ${isPillar5Expanded ? 'is-open' : ''}`}
-                aria-expanded={isPillar5Expanded}
-                onClick={() => {
-                  setActivePillar(5);
-                  setIsPillar5Expanded(!isPillar5Expanded);
-                  setIsPillar1Expanded(false);
-                  setIsPillar2Expanded(false);
-                  setIsPillar3Expanded(false);
-                  setIsPillar4Expanded(false);
-                  if (!isPillar5Expanded) {
-                    setActiveModule('p5-module-a');
-                  }
-                }}
-              >
-                <div>
-                  <div className="pillar-title">Pillar 3 · Search Engine Optimization</div>
-                  <div className="pillar-subtitle">9 Modules: SEO for Real Revenue.</div>
-                </div>
-                <span className="toc-expander-icon" aria-hidden="true">
-                  {isPillar5Expanded ? '▼' : '►'}
-                </span>
-              </button>
-
-              {isPillar5Expanded && (
-                <div className="pillar-modules" id="pillar-content-pillar-seo">
-                  <button type="button" className={`pillar-module ${activeModule === 'p5-module-a' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p5-module-a')}>
-                    <div className="module-pill">Pillar 3</div>
-                    <div><div className="module-title">Module A · SEO Fundamentals</div><p>Technical, Content, and Authority pillars.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p5-module-b' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p5-module-b')}>
-                    <div className="module-pill">Pillar 3</div>
-                    <div><div className="module-title">Module B · Keyword Research</div><p>Finding what South Africans search for.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p5-module-c' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p5-module-c')}>
-                    <div className="module-pill">Pillar 3</div>
-                    <div><div className="module-title">Module C · On-Page SEO</div><p>Titles, metas, and structure.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p5-module-d' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p5-module-d')}>
-                    <div className="module-pill">Pillar 3</div>
-                    <div><div className="module-title">Module D · Technical SEO</div><p>Sitemaps, robots.txt, and speed.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p5-module-e' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p5-module-e')}>
-                    <div className="module-pill">Pillar 3</div>
-                    <div><div className="module-title">Module E · Local SEO</div><p>Google Business Profile & Maps domination.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p5-module-f' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p5-module-f')}>
-                    <div className="module-pill">Pillar 3</div>
-                    <div><div className="module-title">Module F · Content Strategy</div><p>Topic clusters and pillar pages.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p5-module-g' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p5-module-g')}>
-                    <div className="module-pill">Pillar 3</div>
-                    <div><div className="module-title">Module G · Link Building</div><p>Getting votes of confidence (backlinks).</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p5-module-h' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p5-module-h')}>
-                    <div className="module-pill">Pillar 3</div>
-                    <div><div className="module-title">Module H · Tools & Metrics</div><p>Google Search Console & Analytics.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p5-module-i' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p5-module-i')}>
-                    <div className="module-pill">Pillar 3</div>
-                    <div><div className="module-title">Module I · E-commerce SEO</div><p>Fixing duplicate content.</p></div>
-                  </button>
-
-                  <button type="button" className={`pillar-module ${activeModule === 'p5-resources' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p5-resources')}>
-                    <div className="module-pill">Pillar 3</div>
-                    <div><div className="module-title">Resources</div><p>SEO Toolkit.</p></div>
-                  </button>
-
-                  <button type="button" className={`pillar-module ${activeModule === 'p5-quiz' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p5-quiz')}>
-                    <div className="module-pill">Pillar 3</div>
-                    <div><div className="module-title">Final Exam · SEO Strategy</div><p>Prove you can rank.</p></div>
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Pillar 4 - Functional */}
-            <div className="toc-pillar-group">
-              <button
-                type="button"
-                className={`toc-pillar-title-button ${isPillar6Expanded ? 'is-open' : ''}`}
-                aria-expanded={isPillar6Expanded}
-                onClick={() => {
-                  setActivePillar(6);
-                  setIsPillar6Expanded(!isPillar6Expanded);
-                  setIsPillar1Expanded(false);
-                  setIsPillar2Expanded(false);
-                  setIsPillar3Expanded(false);
-                  setIsPillar4Expanded(false);
-                  setIsPillar5Expanded(false);
-                  if (!isPillar6Expanded) {
-                    setActiveModule('p6-module-a');
-                  }
-                }}
-              >
-                <div>
-                  <div className="pillar-title">Pillar 4 · Social Media &amp; Digital Marketing</div>
-                  <div className="pillar-subtitle">7 Modules: Storytelling at the Speed of Social.</div>
-                </div>
-                <span className="toc-expander-icon" aria-hidden="true">
-                  {isPillar6Expanded ? '▼' : '►'}
-                </span>
-              </button>
-
-              {isPillar6Expanded && (
-                <div className="pillar-modules" id="pillar-content-pillar-marketing">
-                  <button type="button" className={`pillar-module ${activeModule === 'p6-module-a' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p6-module-a')}>
-                    <div className="module-pill">Pillar 4</div>
-                    <div><div className="module-title">Module A · Platform Selection</div><p>TikTok, WhatsApp, LinkedIn - what works where.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p6-module-b' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p6-module-b')}>
-                    <div className="module-pill">Pillar 4</div>
-                    <div><div className="module-title">Module B · Content Creation</div><p>Educate, Entertain, Empower.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p6-module-c' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p6-module-c')}>
-                    <div className="module-pill">Pillar 4</div>
-                    <div><div className="module-title">Module C · Organic Growth</div><p>The Hook-Value-CTA framework.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p6-module-d' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p6-module-d')}>
-                    <div className="module-pill">Pillar 4</div>
-                    <div><div className="module-title">Module D · Paid Advertising</div><p>Meta Ads & Google Ads for SA budgets.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p6-module-e' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p6-module-e')}>
-                    <div className="module-pill">Pillar 4</div>
-                    <div><div className="module-title">Module E · WhatsApp Business</div><p>Catalogs, quick replies, and commerce.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p6-module-f' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p6-module-f')}>
-                    <div className="module-pill">Pillar 4</div>
-                    <div><div className="module-title">Module F · Influencer Marketing</div><p>Nano vs Macro influencers in SA.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p6-module-g' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p6-module-g')}>
-                    <div className="module-pill">Pillar 4</div>
-                    <div><div className="module-title">Module G · Analytics</div><p>Vanity metrics vs real business results.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p6-module-h' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p6-module-h')}>
-                    <div className="module-pill">Pillar 4</div>
-                    <div><div className="module-title">Module H · Analytics & ROAS</div><p>Calculating CAC, LTV, and knowing your numbers.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p6-module-i' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p6-module-i')}>
-                    <div className="module-pill">Pillar 4</div>
-                    <div><div className="module-title">Module I · Strategies</div><p>Jab, Jab, Right Hook.</p></div>
-                  </button>
-
-                  <button type="button" className={`pillar-module ${activeModule === 'p6-resources' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p6-resources')}>
-                    <div className="module-pill">Pillar 4</div>
-                    <div><div className="module-title">Resources</div><p>Marketing Toolkit.</p></div>
-                  </button>
-
-                  <button type="button" className={`pillar-module ${activeModule === 'p6-quiz' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p6-quiz')}>
-                    <div className="module-pill">Pillar 4</div>
-                    <div><div className="module-title">Final Exam · Marketing</div><p>Prove you can sell.</p></div>
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Pillar 5 - Functional */}
-            <div className="toc-pillar-group">
-              <button
-                type="button"
-                className={`toc-pillar-title-button ${isPillar9Expanded ? 'is-open' : ''}`}
-                aria-expanded={isPillar9Expanded}
-                onClick={() => {
-                  setActivePillar(9);
-                  setIsPillar9Expanded(!isPillar9Expanded);
-                  setIsPillar1Expanded(false);
-                  setIsPillar2Expanded(false);
-                  setIsPillar3Expanded(false);
-                  setIsPillar4Expanded(false);
-                  setIsPillar5Expanded(false);
-                  setIsPillar6Expanded(false);
-                  setIsPillar7Expanded(false);
-                  setIsPillar8Expanded(false);
-                  if (!isPillar9Expanded) {
-                    setActiveModule('p9-module-a');
-                  }
-                }}
-              >
-                <div>
-                  <div className="pillar-title">Pillar 5 · Financial Systems &amp; eCommerce</div>
-                  <div className="pillar-subtitle">Money, payments, pricing, bookkeeping, and selling online.</div>
-                </div>
-                <span className="toc-expander-icon" aria-hidden="true">
-                  {isPillar9Expanded ? '▼' : '►'}
-                </span>
-              </button>
-
-              {isPillar9Expanded && (
-                <div className="pillar-modules" id="pillar-content-pillar-money">
-                  <button
-                    type="button"
-                    className={`pillar-module ${activeModule === 'p9-module-a' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p9-module-a' ? 'true' : 'false'}
-                    onClick={() => handleModuleChange('p9-module-a')}
-                  >
-                    <div className="module-pill">Pillar 5</div>
-                    <div>
-                      <div className="module-title">Module A · The CapeWeb Money Machine</div>
-                      <p>Build a financial system that helps you price, sell, collect, and track every rand.</p>
-                    </div>
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`pillar-module ${activeModule === 'p9-module-b' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p9-module-b' ? 'true' : 'false'}
-                    onClick={() => handleModuleChange('p9-module-b')}
-                  >
-                    <div className="module-pill">Pillar 5</div>
-                    <div>
-                      <div className="module-title">Module B · Pricing Strategy & Psychology</div>
-                      <p>Cost-plus, value-based, competitive pricing, psychological tactics, margins, and discounts.</p>
-                    </div>
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`pillar-module ${activeModule === 'p9-module-c' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p9-module-c' ? 'true' : 'false'}
-                    onClick={() => handleModuleChange('p9-module-c')}
-                  >
-                    <div className="module-pill">Pillar 5</div>
-                    <div>
-                      <div className="module-title">Module C · Payment Processing for SA</div>
-                      <p>PayFast, Yoco, Ozow comparison, gateway setup, transaction fees, and payment security.</p>
-                    </div>
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`pillar-module ${activeModule === 'p9-module-d' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p9-module-d' ? 'true' : 'false'}
-                    onClick={() => handleModuleChange('p9-module-d')}
-                  >
-                    <div className="module-pill">Pillar 5</div>
-                    <div>
-                      <div className="module-title">Module D · Invoicing & Contracts</div>
-                      <p>Professional invoicing, payment terms, basic contracts, and debt collection.</p>
-                    </div>
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`pillar-module ${activeModule === 'p9-module-e' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p9-module-e' ? 'true' : 'false'}
-                    onClick={() => handleModuleChange('p9-module-e')}
-                  >
-                    <div className="module-pill">Pillar 5</div>
-                    <div>
-                      <div className="module-title">Module E · Cross-Border Trade & Logistics</div>
-                      <p>SADC markets, customs, PUDO/Paxi, cross-border payments, and regional expansion.</p>
-                    </div>
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`pillar-module ${activeModule === 'p9-module-f' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p9-module-f' ? 'true' : 'false'}
-                    onClick={() => handleModuleChange('p9-module-f')}
-                  >
-                    <div className="module-pill">Pillar 5</div>
-                    <div>
-                      <div className="module-title">Module F · SA Funding Ecosystem</div>
-                      <p>SEFA, SEDA, NYDA, provincial funding, stokvels, angel investors, and accessing growth capital.</p>
-                    </div>
-                  </button>
-
-                  <button type="button" className={`pillar-module ${activeModule === 'p9-module-g' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p9-module-g')}>
-                    <div className="module-pill">Pillar 5</div>
-                    <div><div className="module-title">Module G · Cash Flow vs Profit</div><p>Understanding burn rate and runway.</p></div>
-                  </button>
-
-                  <button type="button" className={`pillar-module ${activeModule === 'p9-module-h' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p9-module-h')}>
-                    <div className="module-pill">Pillar 5</div>
-                    <div><div className="module-title">Module H · Financial Forecasting</div><p>Predicting the future (Base/Best/Worst).</p></div>
-                  </button>
-
-                  <button type="button" className={`pillar-module ${activeModule === 'p9-module-i' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p9-module-i')}>
-                    <div className="module-pill">Pillar 5</div>
-                    <div><div className="module-title">Module I · The Scoreboard</div><p>P&L, Balance Sheet, and Cash Flow Statement.</p></div>
-                  </button>
-
-                  <button type="button" className={`pillar-module ${activeModule === 'p9-resources' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p9-resources')}>
-                    <div className="module-pill">Pillar 5</div>
-                    <div><div className="module-title">Resources</div><p>Financial Toolkit.</p></div>
-                  </button>
-
-                  <button type="button" className={`pillar-module ${activeModule === 'p9-quiz' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p9-quiz')}>
-                    <div className="module-pill">Pillar 5</div>
-                    <div><div className="module-title">Final Exam · Financial Systems</div><p>Prove you can manage money.</p></div>
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Pillar 6 - Functional */}
-            <div className="toc-pillar-group">
-              <button
-                type="button"
-                className={`toc-pillar-title-button ${isPillar11Expanded ? 'is-open' : ''}`}
-                aria-expanded={isPillar11Expanded}
-                onClick={() => {
-                  setActivePillar(11);
-                  setIsPillar11Expanded(!isPillar11Expanded);
-                  setIsPillar1Expanded(false);
-                  setIsPillar2Expanded(false);
-                  setIsPillar3Expanded(false);
-                  setIsPillar4Expanded(false);
-                  setIsPillar5Expanded(false);
-                  setIsPillar6Expanded(false);
-                  setIsPillar7Expanded(false);
-                  setIsPillar8Expanded(false);
-                  setIsPillar9Expanded(false);
-                  setIsPillar10Expanded(false);
-                  if (!isPillar11Expanded) {
-                    setActiveModule('p11-module-a');
-                  }
-                }}
-              >
-                <div>
-                  <div className="pillar-title">Pillar 6 · Customer Experience &amp; Support</div>
-                  <div className="pillar-subtitle">Turn support into a growth lever.</div>
-                </div>
-                <span className="toc-expander-icon" aria-hidden="true">
-                  {isPillar11Expanded ? '▼' : '►'}
-                </span>
-              </button>
-
-              {isPillar11Expanded && (
-                <div className="pillar-modules" id="pillar-content-pillar-cx">
-                  <button type="button" className={`pillar-module ${activeModule === 'p11-module-a' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p11-module-a')}>
-                    <div className="module-pill">Pillar 6</div>
-                    <div><div className="module-title">Module A · CX Strategy</div><p>Why customer service is your best marketing channel.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p11-module-b' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p11-module-b')}>
-                    <div className="module-pill">Pillar 6</div>
-                    <div><div className="module-title">Module B · Support Foundations</div><p>Speed, accuracy, and the human touch.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p11-module-c' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p11-module-c')}>
-                    <div className="module-pill">Pillar 6</div>
-                    <div><div className="module-title">Module C · Help Desk</div><p>Moving from Gmail to professional ticketing tools.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p11-module-d' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p11-module-d')}>
-                    <div className="module-pill">Pillar 6</div>
-                    <div><div className="module-title">Module D · Knowledge Base</div><p>Letting customers solve their own problems 24/7.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p11-module-e' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p11-module-e')}>
-                    <div className="module-pill">Pillar 6</div>
-                    <div><div className="module-title">Module E · Chat & WhatsApp</div><p>Closing sales with instant answers.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p11-module-f' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p11-module-f')}>
-                    <div className="module-pill">Pillar 6</div>
-                    <div><div className="module-title">Module F · Feedback</div><p>Measuring customer loyalty with Net Promoter Score.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p11-module-g' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p11-module-g')}>
-                    <div className="module-pill">Pillar 6</div>
-                    <div><div className="module-title">Module G · Retention</div><p>Fixing mistakes and keeping customers for life.</p></div>
-                  </button>
-
-                  <button type="button" className={`pillar-module ${activeModule === 'p11-resources' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p11-resources')}>
-                    <div className="module-pill">Pillar 6</div>
-                    <div><div className="module-title">Module H · Resources</div><p>CX Toolkit.</p></div>
-                  </button>
-
-                  <button type="button" className={`pillar-module ${activeModule === 'p11-quiz' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p11-quiz')}>
-                    <div className="module-pill">Pillar 6</div>
-                    <div><div className="module-title">Final Exam · CX Mastery</div><p>Prove you can serve.</p></div>
-                  </button>
-                </div>
-              )}
-            </div>
-
-
-
-            {/* Pillar 7 - Functional */}
-            <div className="toc-pillar-group">
-              <button
-                type="button"
-                className={`toc-pillar-title-button ${isPillar7Expanded ? 'is-open' : ''}`}
-                aria-expanded={isPillar7Expanded}
-                onClick={() => {
-                  setActivePillar(7);
-                  setIsPillar7Expanded(!isPillar7Expanded);
-                  setIsPillar1Expanded(false);
-                  setIsPillar2Expanded(false);
-                  setIsPillar3Expanded(false);
-                  setIsPillar4Expanded(false);
-                  setIsPillar5Expanded(false);
-                  setIsPillar6Expanded(false);
-                  if (!isPillar7Expanded) {
-                    setActiveModule('p7-module-a');
-                  }
-                }}
-              >
-                <div>
-                  <div className="pillar-title">Pillar 7 · AI & Automation</div>
-                  <div className="pillar-subtitle">9 Modules: Scale with AI Assistants.</div>
-                </div>
-                <span className="toc-expander-icon" aria-hidden="true">
-                  {isPillar7Expanded ? '▼' : '►'}
-                </span>
-              </button>
-
-              {isPillar7Expanded && (
-                <div className="pillar-modules" id="pillar-content-pillar-ai">
-                  <button type="button" className={`pillar-module ${activeModule === 'p7-module-a' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p7-module-a')}>
-                    <div className="module-pill">Pillar 7</div>
-                    <div><div className="module-title">Module A · AI Strategy</div><p>Creation, Automation, and Analysis layers.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p7-module-b' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p7-module-b')}>
-                    <div className="module-pill">Pillar 7</div>
-                    <div><div className="module-title">Module B · ChatGPT & LLMs</div><p>Prompt Engineering 101.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p7-module-c' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p7-module-c')}>
-                    <div className="module-pill">Pillar 7</div>
-                    <div><div className="module-title">Module C · Writing Tools</div><p>Claude, Jasper, and copy assistance.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p7-module-d' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p7-module-d')}>
-                    <div className="module-pill">Pillar 7</div>
-                    <div><div className="module-title">Module D · Design Tools</div><p>Midjourney, DALL-E 3, and assets.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p7-module-e' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p7-module-e')}>
-                    <div className="module-pill">Pillar 7</div>
-                    <div><div className="module-title">Module E · No-Code Auto</div><p>Zapier and Make fundamentals.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p7-module-f' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p7-module-f')}>
-                    <div className="module-pill">Pillar 7</div>
-                    <div><div className="module-title">Module F · AI Customer Support</div><p>Chatbots and instant replies.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p7-module-g' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p7-module-g')}>
-                    <div className="module-pill">Pillar 7</div>
-                    <div><div className="module-title">Module G · Data Analytics</div><p>Using AI to analyze spreadsheets.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p7-module-h' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p7-module-h')}>
-                    <div className="module-pill">Pillar 7</div>
-                    <div><div className="module-title">Module H · Advanced Auto</div><p>AI Agents and multi-step tasks.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p7-module-i' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p7-module-i')}>
-                    <div className="module-pill">Pillar 7</div>
-                    <div><div className="module-title">Module I · Productivity</div><p>Meeting notes and email assistants.</p></div>
-                  </button>
-
-                  <button type="button" className={`pillar-module ${activeModule === 'p7-resources' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p7-resources')}>
-                    <div className="module-pill">Pillar 7</div><div><div className="module-title">Resources</div><p>AI Architect Toolkit.</p></div>
-                  </button>
-
-                  <button type="button" className={`pillar-module ${activeModule === 'p7-quiz' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p7-quiz')}>
-                    <div className="module-pill">Pillar 7</div><div><div className="module-title">Final Exam · AI Architect</div><p>Prove you can automate.</p></div>
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Pillar 8 - Functional */}
-            <div className="toc-pillar-group">
-              <button
-                type="button"
-                className={`toc-pillar-title-button ${isPillar10Expanded ? 'is-open' : ''}`}
-                aria-expanded={isPillar10Expanded}
-                onClick={() => {
-                  setActivePillar(10);
-                  setIsPillar10Expanded(!isPillar10Expanded);
-                  setIsPillar1Expanded(false);
-                  setIsPillar2Expanded(false);
-                  setIsPillar3Expanded(false);
-                  setIsPillar4Expanded(false);
-                  setIsPillar5Expanded(false);
-                  setIsPillar6Expanded(false);
-                  setIsPillar7Expanded(false);
-                  setIsPillar8Expanded(false);
-                  setIsPillar9Expanded(false);
-                  if (!isPillar10Expanded) {
-                    setActiveModule('p10-module-a');
-                  }
-                }}
-              >
-                <div>
-                  <div className="pillar-title">Pillar 8 · Analytics &amp; Business Intelligence</div>
-                  <div className="pillar-subtitle">Run the business on data, not vibes.</div>
-                </div>
-                <span className="toc-expander-icon" aria-hidden="true">
-                  {isPillar10Expanded ? '▼' : '►'}
-                </span>
-              </button>
-
-              {isPillar10Expanded && (
-                <div className="pillar-modules" id="pillar-content-pillar-analytics">
-                  <button
-                    type="button"
-                    className={`pillar-module ${activeModule === 'p10-module-a' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p10-module-a' ? 'true' : 'false'}
-                    onClick={() => handleModuleChange('p10-module-a')}
-                  >
-                    <div className="module-pill">Pillar 8</div>
-                    <div>
-                      <div className="module-title">Module A · Fundamentals</div>
-                      <p>Understanding data, metrics, KPIs, and the analytics mindset.</p>
-                    </div>
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`pillar-module ${activeModule === 'p10-module-b' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p10-module-b' ? 'true' : 'false'}
-                    onClick={() => handleModuleChange('p10-module-b')}
-                  >
-                    <div className="module-pill">Pillar 8</div>
-                    <div>
-                      <div className="module-title">Module B · Google Analytics 4 (GA4)</div>
-                      <p>Setting up GA4, understanding events, reports, and user journeys.</p>
-                    </div>
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`pillar-module ${activeModule === 'p10-module-c' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p10-module-c' ? 'true' : 'false'}
-                    onClick={() => handleModuleChange('p10-module-c')}
-                  >
-                    <div className="module-pill">Pillar 8</div>
-                    <div>
-                      <div className="module-title">Module C · Google Tag Manager (GTM)</div>
-                      <p>Implementing tags, triggers, variables, and managing website tracking.</p>
-                    </div>
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`pillar-module ${activeModule === 'p10-module-d' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p10-module-d' ? 'true' : 'false'}
-                    onClick={() => handleModuleChange('p10-module-d')}
-                  >
-                    <div className="module-pill">Pillar 8</div>
-                    <div>
-                      <div className="module-title">Module D · E-commerce Analytics</div>
-                      <p>Tracking sales, conversions, product performance, and customer behavior.</p>
-                    </div>
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`pillar-module ${activeModule === 'p10-module-e' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p10-module-e' ? 'true' : 'false'}
-                    onClick={() => handleModuleChange('p10-module-e')}
-                  >
-                    <div className="module-pill">Pillar 8</div>
-                    <div>
-                      <div className="module-title">Module E · Attribution Models</div>
-                      <p>Understanding how different marketing channels contribute to conversions.</p>
-                    </div>
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`pillar-module ${activeModule === 'p10-module-f' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p10-module-f' ? 'true' : 'false'}
-                    onClick={() => handleModuleChange('p10-module-f')}
-                  >
-                    <div className="module-pill">Pillar 8</div>
-                    <div>
-                      <div className="module-title">Module F · Dashboards & Reporting</div>
-                      <p>Creating effective dashboards, visualizing data, and communicating insights.</p>
-                    </div>
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`pillar-module ${activeModule === 'p10-module-g' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p10-module-g' ? 'true' : 'false'}
-                    onClick={() => handleModuleChange('p10-module-g')}
-                  >
-                    <div className="module-pill">Pillar 8</div>
-                    <div>
-                      <div className="module-title">Module G · A/B Testing & Optimization</div>
-                      <p>Running experiments, testing hypotheses, and optimizing for better results.</p>
-                    </div>
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`pillar-module ${activeModule === 'p10-resources' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p10-resources' ? 'true' : 'false'}
-                    onClick={() => handleModuleChange('p10-resources')}
-                  >
-                    <div className="module-pill">Pillar 8</div>
-                    <div>
-                      <div className="module-title">Module H · Resources</div>
-                      <p>Tools, books, and references to deeper your knowledge.</p>
-                    </div>
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`pillar-module ${activeModule === 'p10-quiz' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p10-quiz' ? 'true' : 'false'}
-                    onClick={() => handleModuleChange('p10-quiz')}
-                  >
-                    <div className="module-pill">Pillar 8</div>
-                    <div>
-                      <div className="module-title">Final Exam · Analytics</div>
-                      <p>Test your knowledge and earn your badge.</p>
-                    </div>
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Pillar 9 - Functional */}
-            <div className="toc-pillar-group">
-              <button
-                type="button"
-                className={`toc-pillar-title-button ${isPillar8Expanded ? 'is-open' : ''}`}
-                aria-expanded={isPillar8Expanded}
-                onClick={() => {
-                  setActivePillar(8);
-                  setIsPillar8Expanded(!isPillar8Expanded);
-                  setIsPillar1Expanded(false);
-                  setIsPillar2Expanded(false);
-                  setIsPillar3Expanded(false);
-                  setIsPillar4Expanded(false);
-                  setIsPillar5Expanded(false);
-                  setIsPillar6Expanded(false);
-                  setIsPillar7Expanded(false);
-                  if (!isPillar8Expanded) {
-                    setActiveModule('p8-module-a');
-                  }
-                }}
-              >
-                <div>
-                  <div className="pillar-title">Pillar 9 · Cybersecurity &amp; Risk Management</div>
-                  <div className="pillar-subtitle">Protect your accounts, website, customers, and reputation.</div>
-                </div>
-                <span className="toc-expander-icon" aria-hidden="true">
-                  {isPillar8Expanded ? '▼' : '►'}
-                </span>
-              </button>
-
-              {isPillar8Expanded && (
-                <div className="pillar-modules" id="pillar-content-pillar-security">
-                  <button
-                    type="button"
-                    className={`pillar-module ${activeModule === 'p8-module-a' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p8-module-a' ? 'true' : 'false'}
-                    onClick={() => handleModuleChange('p8-module-a')}
-                  >
-                    <div className="module-pill">Pillar 9</div>
-                    <div>
-                      <div className="module-title">Module A · Fundamentals</div>
-                      <p>Understanding threats, risks, and the basics of digital self-defense.</p>
-                    </div>
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`pillar-module ${activeModule === 'p8-module-b' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p8-module-b' ? 'true' : 'false'}
-                    onClick={() => handleModuleChange('p8-module-b')}
-                  >
-                    <div className="module-pill">Pillar 9</div>
-                    <div>
-                      <div className="module-title">Module B · Passwords & Access</div>
-                      <p>Strong passwords, 2FA, password managers, and secure access practices.</p>
-                    </div>
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`pillar-module ${activeModule === 'p8-module-c' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p8-module-c' ? 'true' : 'false'}
-                    onClick={() => handleModuleChange('p8-module-c')}
-                  >
-                    <div className="module-pill">Pillar 9</div>
-                    <div>
-                      <div className="module-title">Module C · Email & Phishing</div>
-                      <p>Identifying scams, securing email accounts, and protecting against social engineering.</p>
-                    </div>
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`pillar-module ${activeModule === 'p8-module-d' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p8-module-d' ? 'true' : 'false'}
-                    onClick={() => handleModuleChange('p8-module-d')}
-                  >
-                    <div className="module-pill">Pillar 9</div>
-                    <div>
-                      <div className="module-title">Module D · Website Security</div>
-                      <p>HTTPS, CMS security, backups, and protecting your online presence.</p>
-                    </div>
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`pillar-module ${activeModule === 'p8-module-e' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p8-module-e' ? 'true' : 'false'}
-                    onClick={() => handleModuleChange('p8-module-e')}
-                  >
-                    <div className="module-pill">Pillar 9</div>
-                    <div>
-                      <div className="module-title">Module E · Data & POPIA</div>
-                      <p>Data protection, privacy, POPIA compliance, and secure data handling.</p>
-                    </div>
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`pillar-module ${activeModule === 'p8-module-f' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p8-module-f' ? 'true' : 'false'}
-                    onClick={() => handleModuleChange('p8-module-f')}
-                  >
-                    <div className="module-pill">Pillar 9</div>
-                    <div>
-                      <div className="module-title">Module F · Device Security</div>
-                      <p>Securing laptops, phones, tablets, and protecting against malware.</p>
-                    </div>
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`pillar-module ${activeModule === 'p8-module-g' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p8-module-g' ? 'true' : 'false'}
-                    onClick={() => handleModuleChange('p8-module-g')}
-                  >
-                    <div className="module-pill">Pillar 9</div>
-                    <div>
-                      <div className="module-title">Module G · Cloud Security</div>
-                      <p>Securing cloud accounts, storage, and understanding cloud risks.</p>
-                    </div>
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`pillar-module ${activeModule === 'p8-module-h' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p8-module-h' ? 'true' : 'false'}
-                    onClick={() => handleModuleChange('p8-module-h')}
-                  >
-                    <div className="module-pill">Pillar 9</div>
-                    <div>
-                      <div className="module-title">Module H · Incident Response</div>
-                      <p>What to do when things go wrong: detection, response, and recovery.</p>
-                    </div>
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`pillar-module ${activeModule === 'p8-module-i' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p8-module-i' ? 'true' : 'false'}
-                    onClick={() => handleModuleChange('p8-module-i')}
-                  >
-                    <div className="module-pill">Pillar 9</div>
-                    <div>
-                      <div className="module-title">Module I · Security Training</div>
-                      <p>Building a security-aware culture for yourself and your team.</p>
-                    </div>
-                  </button>
-
-                  <button type="button" className={`pillar-module ${activeModule === 'p8-resources' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p8-resources')}>
-                    <div className="module-pill">Pillar 9</div>
-                    <div><div className="module-title">Resources</div><p>Security Toolkit.</p></div>
-                  </button>
-
-                  <button type="button" className={`pillar-module ${activeModule === 'p8-quiz' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p8-quiz')}>
-                    <div className="module-pill">Pillar 9</div>
-                    <div><div className="module-title">Final Exam · Cybersecurity</div><p>Prove you can protect.</p></div>
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Pillar 10 - Functional */}
+            {/* Pillar 2 */}
             <div className="toc-pillar-group">
               <button
                 type="button"
                 className={`toc-pillar-title-button ${isPillar2Expanded ? 'is-open' : ''}`}
                 aria-expanded={isPillar2Expanded}
-                onClick={() => {
-                  setActivePillar(2);
-                  setIsPillar2Expanded(!isPillar2Expanded);
-                  setIsPillar1Expanded(false);
-                  if (!isPillar2Expanded) {
-                    setActiveModule('p2-module-a');
-                  }
-                }}
+                onClick={() => handlePillarToggle(2, isPillar2Expanded)}
               >
                 <div>
                   <div className="pillar-title">Pillar 2 · Legal, Governance & Compliance</div>
-                  <div className="pillar-subtitle">Registrations, tax, contracts, POPIA, and doing it properly.</div>
+                  <div className="pillar-subtitle">Registrations & Contracts.</div>
                 </div>
                 <span className="toc-expander-icon" aria-hidden="true">
                   {isPillar2Expanded ? '▼' : '►'}
@@ -1411,147 +638,274 @@ export default function CapeWebBlueprint() {
               </button>
 
               {isPillar2Expanded && (
-                <div className="pillar-modules" id="pillar-content-pillar-legal">
+                <div className="pillar-modules" id="pillar-content-pillar-2">
                   <button
                     type="button"
                     className={`pillar-module ${activeModule === 'p2-module-a' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p2-module-a' ? 'true' : 'false'}
                     onClick={() => handleModuleChange('p2-module-a')}
                   >
                     <div className="module-pill">Pillar 2</div>
                     <div>
-                      <div className="module-title">Module A · Choose Your Legal Setup</div>
-                      <p>Decide your business structure and "make it real" without wasting money.</p>
+                      <div className="module-title">Module A · Choose Structure</div>
+                      <p>Sole Prop vs Pty Ltd</p>
                     </div>
                   </button>
-
                   <button
                     type="button"
                     className={`pillar-module ${activeModule === 'p2-module-b' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p2-module-b' ? 'true' : 'false'}
                     onClick={() => handleModuleChange('p2-module-b')}
                   >
                     <div className="module-pill">Pillar 2</div>
                     <div>
-                      <div className="module-title">Module B · Register & Tax Basics</div>
-                      <p>Understand CIPC, SARS, eFiling, VAT, and micro-business options.</p>
+                      <div className="module-title">Module B · Register & Tax</div>
+                      <p>CIPC & SARS</p>
                     </div>
                   </button>
-
                   <button
                     type="button"
                     className={`pillar-module ${activeModule === 'p2-module-c' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p2-module-c' ? 'true' : 'false'}
                     onClick={() => handleModuleChange('p2-module-c')}
                   >
                     <div className="module-pill">Pillar 2</div>
                     <div>
-                      <div className="module-title">Module C · Customers, POPIA & Online Selling</div>
-                      <p>Protect your business with policies: CPA, ECTA, POPIA, PAIA.</p>
+                      <div className="module-title">Module C · POPIA & CPA</div>
+                      <p>Compliance</p>
                     </div>
                   </button>
-
                   <button
                     type="button"
                     className={`pillar-module ${activeModule === 'p2-module-d' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p2-module-d' ? 'true' : 'false'}
                     onClick={() => handleModuleChange('p2-module-d')}
                   >
-                    <div className="module-pill">Pillar 10</div>
+                    <div className="module-pill">Pillar 2</div>
                     <div>
-                      <div className="module-title">Module D · Employers & Ongoing Compliance</div>
-                      <p>PAYE/UIF/Compensation Fund + annual returns + beneficial ownership.</p>
+                      <div className="module-title">Module D · Employers</div>
+                      <p>PAYE/UIF</p>
                     </div>
                   </button>
-
                   <button
                     type="button"
                     className={`pillar-module ${activeModule === 'p2-module-e' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p2-module-e' ? 'true' : 'false'}
                     onClick={() => handleModuleChange('p2-module-e')}
                   >
-                    <div className="module-pill">Pillar 10</div>
+                    <div className="module-pill">Pillar 2</div>
                     <div>
-                      <div className="module-title">Module E · Hiring & Labor Law</div>
-                      <p>How to hire correctly (Contracts, CCMA, PAYE) without fear.</p>
+                      <div className="module-title">Module E · Hiring Law</div>
+                      <p>Contracts</p>
                     </div>
                   </button>
-
                   <button
                     type="button"
                     className={`pillar-module ${activeModule === 'p2-module-f' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p2-module-f' ? 'true' : 'false'}
                     onClick={() => handleModuleChange('p2-module-f')}
                   >
-                    <div className="module-pill">Pillar 10</div>
+                    <div className="module-pill">Pillar 2</div>
                     <div>
-                      <div className="module-title">Module F · B-BBEE & Tenders</div>
-                      <p>Unlock government revenue: CIPC, CSD, and B-BBEE affidavits.</p>
+                      <div className="module-title">Module F · B-BBEE</div>
+                      <p>Affidavits</p>
                     </div>
                   </button>
-
                   <button
                     type="button"
                     className={`pillar-module ${activeModule === 'p2-module-bonus' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p2-module-bonus' ? 'true' : 'false'}
                     onClick={() => handleModuleChange('p2-module-bonus')}
                   >
-                    <div className="module-pill">Pillar 10</div>
+                    <div className="module-pill">Pillar 2</div>
                     <div>
-                      <div className="module-title">Bonus · Cape Town Permits & Tenders</div>
-                      <p>City licences, informal trading permits, B-BBEE basics, CSD & eTenders.</p>
+                      <div className="module-title">Bonus · Cape Town</div>
+                      <p>Permits</p>
                     </div>
                   </button>
-
                   <button
                     type="button"
                     className={`pillar-module ${activeModule === 'p2-resources' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p2-resources' ? 'true' : 'false'}
                     onClick={() => handleModuleChange('p2-resources')}
                   >
-                    <div className="module-pill">Pillar 10</div>
+                    <div className="module-pill">Pillar 2</div>
                     <div>
                       <div className="module-title">Resources</div>
-                      <p>Official Portals, Tax Links, and Reading List.</p>
+                      <p>Legal Toolkit</p>
                     </div>
                   </button>
-
                   <button
                     type="button"
                     className={`pillar-module ${activeModule === 'p2-quiz' ? 'is-active' : ''}`}
-                    aria-current={activeModule === 'p2-quiz' ? 'true' : 'false'}
                     onClick={() => handleModuleChange('p2-quiz')}
                   >
-                    <div className="module-pill">Pillar 10</div>
+                    <div className="module-pill">Pillar 2</div>
                     <div>
                       <div className="module-title">Final Exam · Compliance</div>
-                      <p>Get your badge.</p>
+                      <p>Stay safe.</p>
                     </div>
                   </button>
                 </div>
               )}
             </div>
+            {/* Pillar 3 */}
+            <div className="toc-pillar-group">
+              <button
+                type="button"
+                className={`toc-pillar-title-button ${isPillar3Expanded ? 'is-open' : ''}`}
+                aria-expanded={isPillar3Expanded}
+                onClick={() => handlePillarToggle(3, isPillar3Expanded)}
+              >
+                <div>
+                  <div className="pillar-title">Pillar 3 · Web Development & Architecture</div>
+                  <div className="pillar-subtitle">Digital HQ.</div>
+                </div>
+                <span className="toc-expander-icon" aria-hidden="true">
+                  {isPillar3Expanded ? '▼' : '►'}
+                </span>
+              </button>
 
-            {/* Pillar 11 - Functional */}
+              {isPillar3Expanded && (
+                <div className="pillar-modules" id="pillar-content-pillar-3">
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p3-module-a' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p3-module-a')}
+                  >
+                    <div className="module-pill">Pillar 3</div>
+                    <div>
+                      <div className="module-title">Module A · Stack</div>
+                      <p>No-Code vs Code</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p3-module-b' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p3-module-b')}
+                  >
+                    <div className="module-pill">Pillar 3</div>
+                    <div>
+                      <div className="module-title">Module B · Domain & Hosting</div>
+                      <p>.co.za</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p3-module-c' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p3-module-c')}
+                  >
+                    <div className="module-pill">Pillar 3</div>
+                    <div>
+                      <div className="module-title">Module C · Design System</div>
+                      <p>Figma to Code</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p3-module-d' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p3-module-d')}
+                  >
+                    <div className="module-pill">Pillar 3</div>
+                    <div>
+                      <div className="module-title">Module D · Frontend</div>
+                      <p>React Basics</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p3-module-e' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p3-module-e')}
+                  >
+                    <div className="module-pill">Pillar 3</div>
+                    <div>
+                      <div className="module-title">Module E · Backend</div>
+                      <p>Databases</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p3-module-f' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p3-module-f')}
+                  >
+                    <div className="module-pill">Pillar 3</div>
+                    <div>
+                      <div className="module-title">Module F · APIs</div>
+                      <p>Connecting Data</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p3-module-g' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p3-module-g')}
+                  >
+                    <div className="module-pill">Pillar 3</div>
+                    <div>
+                      <div className="module-title">Module G · CMS</div>
+                      <p>Content Management</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p3-module-h' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p3-module-h')}
+                  >
+                    <div className="module-pill">Pillar 3</div>
+                    <div>
+                      <div className="module-title">Module H · Security</div>
+                      <p>SSL & Headers</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p3-module-i' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p3-module-i')}
+                  >
+                    <div className="module-pill">Pillar 3</div>
+                    <div>
+                      <div className="module-title">Module I · Performance</div>
+                      <p>Core Web Vitals</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p3-module-j' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p3-module-j')}
+                  >
+                    <div className="module-pill">Pillar 3</div>
+                    <div>
+                      <div className="module-title">Module J · Deployment</div>
+                      <p>CI/CD</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p3-resources' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p3-resources')}
+                  >
+                    <div className="module-pill">Pillar 3</div>
+                    <div>
+                      <div className="module-title">Resources</div>
+                      <p>Dev Toolkit</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p3-quiz' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p3-quiz')}
+                  >
+                    <div className="module-pill">Pillar 3</div>
+                    <div>
+                      <div className="module-title">Final Exam · Web</div>
+                      <p>Build.</p>
+                    </div>
+                  </button>
+                </div>
+              )}
+            </div>
+            {/* Pillar 4 */}
             <div className="toc-pillar-group">
               <button
                 type="button"
                 className={`toc-pillar-title-button ${isPillar4Expanded ? 'is-open' : ''}`}
                 aria-expanded={isPillar4Expanded}
-                onClick={() => {
-                  setActivePillar(4);
-                  setIsPillar4Expanded(!isPillar4Expanded);
-                  setIsPillar1Expanded(false);
-                  setIsPillar2Expanded(false);
-                  setIsPillar3Expanded(false);
-                  if (!isPillar4Expanded) {
-                    setActiveModule('p4-module-a');
-                  }
-                }}
+                onClick={() => handlePillarToggle(4, isPillar4Expanded)}
               >
                 <div>
-                  <div className="pillar-title">Pillar 11 · Mobile Application Development</div>
-                  <div className="pillar-subtitle">11 Modules: From idea to App Store launch.</div>
+                  <div className="pillar-title">Pillar 4 · Mobile Application Development</div>
+                  <div className="pillar-subtitle">App Store Launch.</div>
                 </div>
                 <span className="toc-expander-icon" aria-hidden="true">
                   {isPillar4Expanded ? '▼' : '►'}
@@ -1559,86 +913,1088 @@ export default function CapeWebBlueprint() {
               </button>
 
               {isPillar4Expanded && (
-                <div className="pillar-modules" id="pillar-content-pillar-mobile">
-                  <button type="button" className={`pillar-module ${activeModule === 'p4-module-a' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p4-module-a')}>
-                    <div className="module-pill">Pillar 11</div>
-                    <div><div className="module-title">Module A · Mobile Strategy</div><p>App vs Web, and planning your MVP.</p></div>
+                <div className="pillar-modules" id="pillar-content-pillar-4">
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p4-module-a' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p4-module-a')}
+                  >
+                    <div className="module-pill">Pillar 4</div>
+                    <div>
+                      <div className="module-title">Module A · Strategy</div>
+                      <p>App vs Web</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p4-module-b' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p4-module-b')}>
-                    <div className="module-pill">Pillar 11</div>
-                    <div><div className="module-title">Module B · No-Code Mobile</div><p>FlutterFlow, Adalo, and visual builders.</p></div>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p4-module-b' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p4-module-b')}
+                  >
+                    <div className="module-pill">Pillar 4</div>
+                    <div>
+                      <div className="module-title">Module B · No-Code</div>
+                      <p>FlutterFlow</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p4-module-c' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p4-module-c')}>
-                    <div className="module-pill">Pillar 11</div>
-                    <div><div className="module-title">Module C · React Native</div><p>Building cross-platform apps with JS.</p></div>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p4-module-c' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p4-module-c')}
+                  >
+                    <div className="module-pill">Pillar 4</div>
+                    <div>
+                      <div className="module-title">Module C · React Native</div>
+                      <p>Cross-Platform</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p4-module-d' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p4-module-d')}>
-                    <div className="module-pill">Pillar 11</div>
-                    <div><div className="module-title">Module D · Flutter Dev</div><p>Building beautiful apps with Google's toolkit.</p></div>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p4-module-d' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p4-module-d')}
+                  >
+                    <div className="module-pill">Pillar 4</div>
+                    <div>
+                      <div className="module-title">Module D · Flutter</div>
+                      <p>Google Toolkit</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p4-module-e' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p4-module-e')}>
-                    <div className="module-pill">Pillar 11</div>
-                    <div><div className="module-title">Module E · Native iOS/Android</div><p>When to go native (Swift/Kotlin).</p></div>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p4-module-e' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p4-module-e')}
+                  >
+                    <div className="module-pill">Pillar 4</div>
+                    <div>
+                      <div className="module-title">Module E · Native</div>
+                      <p>Swift/Kotlin</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p4-module-f' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p4-module-f')}>
-                    <div className="module-pill">Pillar 11</div>
-                    <div><div className="module-title">Module F · Backend & APIs</div><p>Connecting your app to the cloud.</p></div>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p4-module-f' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p4-module-f')}
+                  >
+                    <div className="module-pill">Pillar 4</div>
+                    <div>
+                      <div className="module-title">Module F · Backend</div>
+                      <p>Cloud & API</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p4-module-g' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p4-module-g')}>
-                    <div className="module-pill">Pillar 11</div>
-                    <div><div className="module-title">Module G · App Store Publish</div><p>Google Play & Apple App Store guides.</p></div>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p4-module-g' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p4-module-g')}
+                  >
+                    <div className="module-pill">Pillar 4</div>
+                    <div>
+                      <div className="module-title">Module G · Publishing</div>
+                      <p>App Stores</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p4-module-h' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p4-module-h')}>
-                    <div className="module-pill">Pillar 11</div>
-                    <div><div className="module-title">Module H · Mobile UX/UI</div><p>Designing for thumbs and small screens.</p></div>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p4-module-h' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p4-module-h')}
+                  >
+                    <div className="module-pill">Pillar 4</div>
+                    <div>
+                      <div className="module-title">Module H · UX/UI</div>
+                      <p>Mobile Design</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p4-module-i' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p4-module-i')}>
-                    <div className="module-pill">Pillar 11</div>
-                    <div><div className="module-title">Module I · Optimization</div><p>Performance, battery, and app size.</p></div>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p4-module-i' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p4-module-i')}
+                  >
+                    <div className="module-pill">Pillar 4</div>
+                    <div>
+                      <div className="module-title">Module I · Optimization</div>
+                      <p>Performance</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p4-module-j' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p4-module-j')}>
-                    <div className="module-pill">Pillar 11</div>
-                    <div><div className="module-title">Module J · Testing & QA</div><p>Beta testing and avoiding crashes.</p></div>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p4-module-j' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p4-module-j')}
+                  >
+                    <div className="module-pill">Pillar 4</div>
+                    <div>
+                      <div className="module-title">Module J · Testing</div>
+                      <p>QA & Beta</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p4-module-k' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p4-module-k')}>
-                    <div className="module-pill">Pillar 11</div>
-                    <div><div className="module-title">Module K · Monetization</div><p>IAP, subscriptions, and analytics.</p></div>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p4-module-k' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p4-module-k')}
+                  >
+                    <div className="module-pill">Pillar 4</div>
+                    <div>
+                      <div className="module-title">Module K · Monetization</div>
+                      <p>IAP</p>
+                    </div>
                   </button>
-
-                  <button type="button" className={`pillar-module ${activeModule === 'p4-resources' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p4-resources')}>
-                    <div className="module-pill">Pillar 11</div>
-                    <div><div className="module-title">Resources</div><p>Developer's Toolkit.</p></div>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p4-resources' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p4-resources')}
+                  >
+                    <div className="module-pill">Pillar 4</div>
+                    <div>
+                      <div className="module-title">Resources</div>
+                      <p>App Toolkit</p>
+                    </div>
                   </button>
-
-                  <button type="button" className={`pillar-module ${activeModule === 'p4-quiz' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p4-quiz')}>
-                    <div className="module-pill">Pillar 11</div>
-                    <div><div className="module-title">Final Exam · Mobile Dev</div><p>Prove you can launch an app.</p></div>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p4-quiz' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p4-quiz')}
+                  >
+                    <div className="module-pill">Pillar 4</div>
+                    <div>
+                      <div className="module-title">Final Exam · Mobile</div>
+                      <p>Launch.</p>
+                    </div>
                   </button>
                 </div>
               )}
             </div>
+            {/* Pillar 5 */}
+            <div className="toc-pillar-group">
+              <button
+                type="button"
+                className={`toc-pillar-title-button ${isPillar5Expanded ? 'is-open' : ''}`}
+                aria-expanded={isPillar5Expanded}
+                onClick={() => handlePillarToggle(5, isPillar5Expanded)}
+              >
+                <div>
+                  <div className="pillar-title">Pillar 5 · Search Engine Optimization</div>
+                  <div className="pillar-subtitle">Rank on Google.</div>
+                </div>
+                <span className="toc-expander-icon" aria-hidden="true">
+                  {isPillar5Expanded ? '▼' : '►'}
+                </span>
+              </button>
 
-            {/* Pillar 12 - Sales */}
+              {isPillar5Expanded && (
+                <div className="pillar-modules" id="pillar-content-pillar-5">
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p5-module-a' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p5-module-a')}
+                  >
+                    <div className="module-pill">Pillar 5</div>
+                    <div>
+                      <div className="module-title">Module A · SEO Basics</div>
+                      <p>How Search Works</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p5-module-b' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p5-module-b')}
+                  >
+                    <div className="module-pill">Pillar 5</div>
+                    <div>
+                      <div className="module-title">Module B · Keywords</div>
+                      <p>Search Intent</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p5-module-c' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p5-module-c')}
+                  >
+                    <div className="module-pill">Pillar 5</div>
+                    <div>
+                      <div className="module-title">Module C · On-Page</div>
+                      <p>Tags & Content</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p5-module-d' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p5-module-d')}
+                  >
+                    <div className="module-pill">Pillar 5</div>
+                    <div>
+                      <div className="module-title">Module D · Technical</div>
+                      <p>Speed & Indexing</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p5-module-e' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p5-module-e')}
+                  >
+                    <div className="module-pill">Pillar 5</div>
+                    <div>
+                      <div className="module-title">Module E · Content</div>
+                      <p>Blogging</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p5-module-f' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p5-module-f')}
+                  >
+                    <div className="module-pill">Pillar 5</div>
+                    <div>
+                      <div className="module-title">Module F · Local SEO</div>
+                      <p>Google Maps</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p5-module-g' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p5-module-g')}
+                  >
+                    <div className="module-pill">Pillar 5</div>
+                    <div>
+                      <div className="module-title">Module G · Link Building</div>
+                      <p>Authority</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p5-module-h' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p5-module-h')}
+                  >
+                    <div className="module-pill">Pillar 5</div>
+                    <div>
+                      <div className="module-title">Module H · Analytics</div>
+                      <p>Search Console</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p5-module-i' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p5-module-i')}
+                  >
+                    <div className="module-pill">Pillar 5</div>
+                    <div>
+                      <div className="module-title">Module I · Routine</div>
+                      <p>Maintenance</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p5-resources' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p5-resources')}
+                  >
+                    <div className="module-pill">Pillar 5</div>
+                    <div>
+                      <div className="module-title">Resources</div>
+                      <p>SEO Toolkit</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p5-quiz' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p5-quiz')}
+                  >
+                    <div className="module-pill">Pillar 5</div>
+                    <div>
+                      <div className="module-title">Final Exam · SEO</div>
+                      <p>Rank.</p>
+                    </div>
+                  </button>
+                </div>
+              )}
+            </div>
+            {/* Pillar 6 */}
+            <div className="toc-pillar-group">
+              <button
+                type="button"
+                className={`toc-pillar-title-button ${isPillar6Expanded ? 'is-open' : ''}`}
+                aria-expanded={isPillar6Expanded}
+                onClick={() => handlePillarToggle(6, isPillar6Expanded)}
+              >
+                <div>
+                  <div className="pillar-title">Pillar 6 · Social Media & Digital Marketing</div>
+                  <div className="pillar-subtitle">First 100 Sales.</div>
+                </div>
+                <span className="toc-expander-icon" aria-hidden="true">
+                  {isPillar6Expanded ? '▼' : '►'}
+                </span>
+              </button>
+
+              {isPillar6Expanded && (
+                <div className="pillar-modules" id="pillar-content-pillar-6">
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p6-module-a' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p6-module-a')}
+                  >
+                    <div className="module-pill">Pillar 6</div>
+                    <div>
+                      <div className="module-title">Module A · Strategy</div>
+                      <p>Channel Selection</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p6-module-b' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p6-module-b')}
+                  >
+                    <div className="module-pill">Pillar 6</div>
+                    <div>
+                      <div className="module-title">Module B · Content</div>
+                      <p>Creation</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p6-module-c' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p6-module-c')}
+                  >
+                    <div className="module-pill">Pillar 6</div>
+                    <div>
+                      <div className="module-title">Module C · Instagram</div>
+                      <p>Visuals</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p6-module-d' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p6-module-d')}
+                  >
+                    <div className="module-pill">Pillar 6</div>
+                    <div>
+                      <div className="module-title">Module D · LinkedIn</div>
+                      <p>B2B</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p6-module-e' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p6-module-e')}
+                  >
+                    <div className="module-pill">Pillar 6</div>
+                    <div>
+                      <div className="module-title">Module E · TikTok</div>
+                      <p>Video</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p6-module-f' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p6-module-f')}
+                  >
+                    <div className="module-pill">Pillar 6</div>
+                    <div>
+                      <div className="module-title">Module F · Facebook</div>
+                      <p>Groups & Pages</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p6-module-g' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p6-module-g')}
+                  >
+                    <div className="module-pill">Pillar 6</div>
+                    <div>
+                      <div className="module-title">Module G · Paid Ads</div>
+                      <p>Meta Ads</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p6-module-h' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p6-module-h')}
+                  >
+                    <div className="module-pill">Pillar 6</div>
+                    <div>
+                      <div className="module-title">Module H · Email</div>
+                      <p>Newsletters</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p6-module-i' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p6-module-i')}
+                  >
+                    <div className="module-pill">Pillar 6</div>
+                    <div>
+                      <div className="module-title">Module I · Launch</div>
+                      <p>Campaigns</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p6-resources' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p6-resources')}
+                  >
+                    <div className="module-pill">Pillar 6</div>
+                    <div>
+                      <div className="module-title">Resources</div>
+                      <p>Marketing Toolkit</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p6-quiz' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p6-quiz')}
+                  >
+                    <div className="module-pill">Pillar 6</div>
+                    <div>
+                      <div className="module-title">Final Exam · Social</div>
+                      <p>Grow.</p>
+                    </div>
+                  </button>
+                </div>
+              )}
+            </div>
+            {/* Pillar 7 */}
+            <div className="toc-pillar-group">
+              <button
+                type="button"
+                className={`toc-pillar-title-button ${isPillar7Expanded ? 'is-open' : ''}`}
+                aria-expanded={isPillar7Expanded}
+                onClick={() => handlePillarToggle(7, isPillar7Expanded)}
+              >
+                <div>
+                  <div className="pillar-title">Pillar 7 · Artificial Intelligence & Automation</div>
+                  <div className="pillar-subtitle">Scale with AI.</div>
+                </div>
+                <span className="toc-expander-icon" aria-hidden="true">
+                  {isPillar7Expanded ? '▼' : '►'}
+                </span>
+              </button>
+
+              {isPillar7Expanded && (
+                <div className="pillar-modules" id="pillar-content-pillar-7">
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p7-module-a' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p7-module-a')}
+                  >
+                    <div className="module-pill">Pillar 7</div>
+                    <div>
+                      <div className="module-title">Module A · AI Strategy</div>
+                      <p>Automation Layers</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p7-module-b' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p7-module-b')}
+                  >
+                    <div className="module-pill">Pillar 7</div>
+                    <div>
+                      <div className="module-title">Module B · LLMs</div>
+                      <p>ChatGPT</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p7-module-c' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p7-module-c')}
+                  >
+                    <div className="module-pill">Pillar 7</div>
+                    <div>
+                      <div className="module-title">Module C · Writing</div>
+                      <p>Copywriting</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p7-module-d' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p7-module-d')}
+                  >
+                    <div className="module-pill">Pillar 7</div>
+                    <div>
+                      <div className="module-title">Module D · Design</div>
+                      <p>Images</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p7-module-e' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p7-module-e')}
+                  >
+                    <div className="module-pill">Pillar 7</div>
+                    <div>
+                      <div className="module-title">Module E · No-Code</div>
+                      <p>Zapier/Make</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p7-module-f' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p7-module-f')}
+                  >
+                    <div className="module-pill">Pillar 7</div>
+                    <div>
+                      <div className="module-title">Module F · Support</div>
+                      <p>Chatbots</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p7-module-g' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p7-module-g')}
+                  >
+                    <div className="module-pill">Pillar 7</div>
+                    <div>
+                      <div className="module-title">Module G · Data</div>
+                      <p>Analysis</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p7-module-h' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p7-module-h')}
+                  >
+                    <div className="module-pill">Pillar 7</div>
+                    <div>
+                      <div className="module-title">Module H · Agents</div>
+                      <p>Advanced Auto</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p7-module-i' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p7-module-i')}
+                  >
+                    <div className="module-pill">Pillar 7</div>
+                    <div>
+                      <div className="module-title">Module I · Productivity</div>
+                      <p>Workflow</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p7-resources' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p7-resources')}
+                  >
+                    <div className="module-pill">Pillar 7</div>
+                    <div>
+                      <div className="module-title">Resources</div>
+                      <p>AI Toolkit</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p7-quiz' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p7-quiz')}
+                  >
+                    <div className="module-pill">Pillar 7</div>
+                    <div>
+                      <div className="module-title">Final Exam · AI</div>
+                      <p>Automate.</p>
+                    </div>
+                  </button>
+                </div>
+              )}
+            </div>
+            {/* Pillar 8 */}
+            <div className="toc-pillar-group">
+              <button
+                type="button"
+                className={`toc-pillar-title-button ${isPillar8Expanded ? 'is-open' : ''}`}
+                aria-expanded={isPillar8Expanded}
+                onClick={() => handlePillarToggle(8, isPillar8Expanded)}
+              >
+                <div>
+                  <div className="pillar-title">Pillar 8 · Cybersecurity & Risk Management</div>
+                  <div className="pillar-subtitle">Protect Your Business.</div>
+                </div>
+                <span className="toc-expander-icon" aria-hidden="true">
+                  {isPillar8Expanded ? '▼' : '►'}
+                </span>
+              </button>
+
+              {isPillar8Expanded && (
+                <div className="pillar-modules" id="pillar-content-pillar-8">
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p8-module-a' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p8-module-a')}
+                  >
+                    <div className="module-pill">Pillar 8</div>
+                    <div>
+                      <div className="module-title">Module A · Fundamentals</div>
+                      <p>Threats</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p8-module-b' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p8-module-b')}
+                  >
+                    <div className="module-pill">Pillar 8</div>
+                    <div>
+                      <div className="module-title">Module B · Passwords</div>
+                      <p>Access Control</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p8-module-c' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p8-module-c')}
+                  >
+                    <div className="module-pill">Pillar 8</div>
+                    <div>
+                      <div className="module-title">Module C · Phishing</div>
+                      <p>Email Security</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p8-module-d' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p8-module-d')}
+                  >
+                    <div className="module-pill">Pillar 8</div>
+                    <div>
+                      <div className="module-title">Module D · Website</div>
+                      <p>Hardening</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p8-module-e' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p8-module-e')}
+                  >
+                    <div className="module-pill">Pillar 8</div>
+                    <div>
+                      <div className="module-title">Module E · Data</div>
+                      <p>POPIA Protection</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p8-module-f' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p8-module-f')}
+                  >
+                    <div className="module-pill">Pillar 8</div>
+                    <div>
+                      <div className="module-title">Module F · Devices</div>
+                      <p>Endpoint Security</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p8-module-g' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p8-module-g')}
+                  >
+                    <div className="module-pill">Pillar 8</div>
+                    <div>
+                      <div className="module-title">Module G · Cloud</div>
+                      <p>SaaS Security</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p8-module-h' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p8-module-h')}
+                  >
+                    <div className="module-pill">Pillar 8</div>
+                    <div>
+                      <div className="module-title">Module H · Response</div>
+                      <p>Incidents</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p8-module-i' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p8-module-i')}
+                  >
+                    <div className="module-pill">Pillar 8</div>
+                    <div>
+                      <div className="module-title">Module I · Training</div>
+                      <p>Culture</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p8-resources' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p8-resources')}
+                  >
+                    <div className="module-pill">Pillar 8</div>
+                    <div>
+                      <div className="module-title">Resources</div>
+                      <p>Security Toolkit</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p8-quiz' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p8-quiz')}
+                  >
+                    <div className="module-pill">Pillar 8</div>
+                    <div>
+                      <div className="module-title">Final Exam · Security</div>
+                      <p>Defend.</p>
+                    </div>
+                  </button>
+                </div>
+              )}
+            </div>
+            {/* Pillar 9 */}
+            <div className="toc-pillar-group">
+              <button
+                type="button"
+                className={`toc-pillar-title-button ${isPillar9Expanded ? 'is-open' : ''}`}
+                aria-expanded={isPillar9Expanded}
+                onClick={() => handlePillarToggle(9, isPillar9Expanded)}
+              >
+                <div>
+                  <div className="pillar-title">Pillar 9 · Financial Systems & eCommerce</div>
+                  <div className="pillar-subtitle">Money Mechanics.</div>
+                </div>
+                <span className="toc-expander-icon" aria-hidden="true">
+                  {isPillar9Expanded ? '▼' : '►'}
+                </span>
+              </button>
+
+              {isPillar9Expanded && (
+                <div className="pillar-modules" id="pillar-content-pillar-9">
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p9-module-a' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p9-module-a')}
+                  >
+                    <div className="module-pill">Pillar 9</div>
+                    <div>
+                      <div className="module-title">Module A · CapeWeb Money</div>
+                      <p>System Basics</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p9-module-b' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p9-module-b')}
+                  >
+                    <div className="module-pill">Pillar 9</div>
+                    <div>
+                      <div className="module-title">Module B · Pricing</div>
+                      <p>Strategy</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p9-module-c' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p9-module-c')}
+                  >
+                    <div className="module-pill">Pillar 9</div>
+                    <div>
+                      <div className="module-title">Module C · Payments</div>
+                      <p>Gateways</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p9-module-d' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p9-module-d')}
+                  >
+                    <div className="module-pill">Pillar 9</div>
+                    <div>
+                      <div className="module-title">Module D · Invoicing</div>
+                      <p>Contracts</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p9-module-e' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p9-module-e')}
+                  >
+                    <div className="module-pill">Pillar 9</div>
+                    <div>
+                      <div className="module-title">Module E · Logistics</div>
+                      <p>Cross-Border</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p9-module-f' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p9-module-f')}
+                  >
+                    <div className="module-pill">Pillar 9</div>
+                    <div>
+                      <div className="module-title">Module F · Funding</div>
+                      <p>Ecosystem</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p9-resources' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p9-resources')}
+                  >
+                    <div className="module-pill">Pillar 9</div>
+                    <div>
+                      <div className="module-title">Resources</div>
+                      <p>Finance Toolkit</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p9-quiz' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p9-quiz')}
+                  >
+                    <div className="module-pill">Pillar 9</div>
+                    <div>
+                      <div className="module-title">Final Exam · Finance</div>
+                      <p>Profit.</p>
+                    </div>
+                  </button>
+                </div>
+              )}
+            </div>
+            {/* Pillar 10 */}
+            <div className="toc-pillar-group">
+              <button
+                type="button"
+                className={`toc-pillar-title-button ${isPillar10Expanded ? 'is-open' : ''}`}
+                aria-expanded={isPillar10Expanded}
+                onClick={() => handlePillarToggle(10, isPillar10Expanded)}
+              >
+                <div>
+                  <div className="pillar-title">Pillar 10 · Analytics & Business Intelligence</div>
+                  <div className="pillar-subtitle">Data Driven.</div>
+                </div>
+                <span className="toc-expander-icon" aria-hidden="true">
+                  {isPillar10Expanded ? '▼' : '►'}
+                </span>
+              </button>
+
+              {isPillar10Expanded && (
+                <div className="pillar-modules" id="pillar-content-pillar-10">
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p10-module-a' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p10-module-a')}
+                  >
+                    <div className="module-pill">Pillar 10</div>
+                    <div>
+                      <div className="module-title">Module A · Fundamentals</div>
+                      <p>Metrics</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p10-module-b' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p10-module-b')}
+                  >
+                    <div className="module-pill">Pillar 10</div>
+                    <div>
+                      <div className="module-title">Module B · GA4</div>
+                      <p>Tracking</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p10-module-c' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p10-module-c')}
+                  >
+                    <div className="module-pill">Pillar 10</div>
+                    <div>
+                      <div className="module-title">Module C · GTM</div>
+                      <p>Tags</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p10-module-d' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p10-module-d')}
+                  >
+                    <div className="module-pill">Pillar 10</div>
+                    <div>
+                      <div className="module-title">Module D · eCommerce</div>
+                      <p>Conversion</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p10-module-e' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p10-module-e')}
+                  >
+                    <div className="module-pill">Pillar 10</div>
+                    <div>
+                      <div className="module-title">Module E · Attribution</div>
+                      <p>Channels</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p10-module-f' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p10-module-f')}
+                  >
+                    <div className="module-pill">Pillar 10</div>
+                    <div>
+                      <div className="module-title">Module F · Reporting</div>
+                      <p>Dashboards</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p10-module-g' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p10-module-g')}
+                  >
+                    <div className="module-pill">Pillar 10</div>
+                    <div>
+                      <div className="module-title">Module G · Testing</div>
+                      <p>A/B</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p10-resources' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p10-resources')}
+                  >
+                    <div className="module-pill">Pillar 10</div>
+                    <div>
+                      <div className="module-title">Resources</div>
+                      <p>Data Toolkit</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p10-quiz' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p10-quiz')}
+                  >
+                    <div className="module-pill">Pillar 10</div>
+                    <div>
+                      <div className="module-title">Final Exam · Analytics</div>
+                      <p>Measure.</p>
+                    </div>
+                  </button>
+                </div>
+              )}
+            </div>
+            {/* Pillar 11 */}
+            <div className="toc-pillar-group">
+              <button
+                type="button"
+                className={`toc-pillar-title-button ${isPillar11Expanded ? 'is-open' : ''}`}
+                aria-expanded={isPillar11Expanded}
+                onClick={() => handlePillarToggle(11, isPillar11Expanded)}
+              >
+                <div>
+                  <div className="pillar-title">Pillar 11 · Customer Experience & Support</div>
+                  <div className="pillar-subtitle">Delight Customers.</div>
+                </div>
+                <span className="toc-expander-icon" aria-hidden="true">
+                  {isPillar11Expanded ? '▼' : '►'}
+                </span>
+              </button>
+
+              {isPillar11Expanded && (
+                <div className="pillar-modules" id="pillar-content-pillar-11">
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p11-module-a' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p11-module-a')}
+                  >
+                    <div className="module-pill">Pillar 11</div>
+                    <div>
+                      <div className="module-title">Module A · Strategy</div>
+                      <p>CX Flywheel</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p11-module-b' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p11-module-b')}
+                  >
+                    <div className="module-pill">Pillar 11</div>
+                    <div>
+                      <div className="module-title">Module B · Foundations</div>
+                      <p>Support</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p11-module-c' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p11-module-c')}
+                  >
+                    <div className="module-pill">Pillar 11</div>
+                    <div>
+                      <div className="module-title">Module C · Help Desk</div>
+                      <p>Ticketing</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p11-module-d' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p11-module-d')}
+                  >
+                    <div className="module-pill">Pillar 11</div>
+                    <div>
+                      <div className="module-title">Module D · Knowledge Base</div>
+                      <p>Self-Serve</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p11-module-e' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p11-module-e')}
+                  >
+                    <div className="module-pill">Pillar 11</div>
+                    <div>
+                      <div className="module-title">Module E · Chat</div>
+                      <p>WhatsApp</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p11-module-f' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p11-module-f')}
+                  >
+                    <div className="module-pill">Pillar 11</div>
+                    <div>
+                      <div className="module-title">Module F · Feedback</div>
+                      <p>NPS</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p11-module-g' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p11-module-g')}
+                  >
+                    <div className="module-pill">Pillar 11</div>
+                    <div>
+                      <div className="module-title">Module G · Retention</div>
+                      <p>Loyalty</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p11-resources' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p11-resources')}
+                  >
+                    <div className="module-pill">Pillar 11</div>
+                    <div>
+                      <div className="module-title">Resources</div>
+                      <p>CX Toolkit</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p11-quiz' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p11-quiz')}
+                  >
+                    <div className="module-pill">Pillar 11</div>
+                    <div>
+                      <div className="module-title">Final Exam · CX</div>
+                      <p>Serve.</p>
+                    </div>
+                  </button>
+                </div>
+              )}
+            </div>
+            {/* Pillar 12 */}
             <div className="toc-pillar-group">
               <button
                 type="button"
                 className={`toc-pillar-title-button ${isPillar12Expanded ? 'is-open' : ''}`}
                 aria-expanded={isPillar12Expanded}
-                onClick={() => {
-                  setActivePillar(12);
-                  setIsPillar12Expanded(!isPillar12Expanded);
-                  setIsPillar1Expanded(false); setIsPillar2Expanded(false); setIsPillar3Expanded(false);
-                  setIsPillar4Expanded(false); setIsPillar5Expanded(false); setIsPillar6Expanded(false);
-                  setIsPillar7Expanded(false); setIsPillar8Expanded(false); setIsPillar9Expanded(false);
-                  setIsPillar10Expanded(false); setIsPillar11Expanded(false); setIsPillar13Expanded(false);
-                  if (!isPillar12Expanded) {
-                    setActiveModule('p12-module-a');
-                  }
-                }}
+                onClick={() => handlePillarToggle(12, isPillar12Expanded)}
               >
                 <div>
                   <div className="pillar-title">Pillar 12 · Sales & Revenue</div>
-                  <div className="pillar-subtitle">Hunting, Pitching, and Closing.</div>
+                  <div className="pillar-subtitle">Hunting & Closing.</div>
                 </div>
                 <span className="toc-expander-icon" aria-hidden="true">
                   {isPillar12Expanded ? '▼' : '►'}
@@ -1646,56 +2002,76 @@ export default function CapeWebBlueprint() {
               </button>
 
               {isPillar12Expanded && (
-                <div className="pillar-modules" id="pillar-content-pillar-sales">
-                  <button type="button" className={`pillar-module ${activeModule === 'p12-module-a' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p12-module-a')}>
+                <div className="pillar-modules" id="pillar-content-pillar-12">
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p12-module-a' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p12-module-a')}
+                  >
                     <div className="module-pill">Pillar 12</div>
-                    <div><div className="module-title">Module A · Mindset</div><p>Stop begging. Start solving.</p></div>
+                    <div>
+                      <div className="module-title">Module A · Mindset</div>
+                      <p>Solve Problems</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p12-module-b' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p12-module-b')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p12-module-b' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p12-module-b')}
+                  >
                     <div className="module-pill">Pillar 12</div>
-                    <div><div className="module-title">Module B · The Pitch</div><p>Cold Calling & WhatsApp.</p></div>
+                    <div>
+                      <div className="module-title">Module B · The Pitch</div>
+                      <p>Outreach</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p12-module-c' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p12-module-c')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p12-module-c' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p12-module-c')}
+                  >
                     <div className="module-pill">Pillar 12</div>
-                    <div><div className="module-title">Module C · Objections</div><p>Handling "It's too expensive".</p></div>
+                    <div>
+                      <div className="module-title">Module C · Objections</div>
+                      <p>Closing</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p12-module-d' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p12-module-d')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p12-resources' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p12-resources')}
+                  >
                     <div className="module-pill">Pillar 12</div>
-                    <div><div className="module-title">Module D · Tenders</div><p>Government readiness.</p></div>
+                    <div>
+                      <div className="module-title">Resources</div>
+                      <p>Sales Toolkit</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p12-resources' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p12-resources')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p12-quiz' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p12-quiz')}
+                  >
                     <div className="module-pill">Pillar 12</div>
-                    <div><div className="module-title">Resources</div><p>Sales Toolkit.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p12-quiz' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p12-quiz')}>
-                    <div className="module-pill">Pillar 12</div>
-                    <div><div className="module-title">Final Exam · Sales</div><p>Rainmaker status.</p></div>
+                    <div>
+                      <div className="module-title">Final Exam · Sales</div>
+                      <p>Sell.</p>
+                    </div>
                   </button>
                 </div>
               )}
             </div>
-
-            {/* Pillar 13 - Team Building */}
+            {/* Pillar 13 */}
             <div className="toc-pillar-group">
               <button
                 type="button"
                 className={`toc-pillar-title-button ${isPillar13Expanded ? 'is-open' : ''}`}
                 aria-expanded={isPillar13Expanded}
-                onClick={() => {
-                  setActivePillar(13);
-                  setIsPillar13Expanded(!isPillar13Expanded);
-                  setIsPillar1Expanded(false); setIsPillar2Expanded(false); setIsPillar3Expanded(false);
-                  setIsPillar4Expanded(false); setIsPillar5Expanded(false); setIsPillar6Expanded(false);
-                  setIsPillar7Expanded(false); setIsPillar8Expanded(false); setIsPillar9Expanded(false);
-                  setIsPillar10Expanded(false); setIsPillar11Expanded(false); setIsPillar12Expanded(false);
-                  if (!isPillar13Expanded) {
-                    setActiveModule('p13-module-a');
-                  }
-                }}
+                onClick={() => handlePillarToggle(13, isPillar13Expanded)}
               >
                 <div>
                   <div className="pillar-title">Pillar 13 · Team Building & HR</div>
-                  <div className="pillar-subtitle">Hiring, firing, and scaling a team.</div>
+                  <div className="pillar-subtitle">Hiring & Culture.</div>
                 </div>
                 <span className="toc-expander-icon" aria-hidden="true">
                   {isPillar13Expanded ? '▼' : '►'}
@@ -1703,57 +2079,76 @@ export default function CapeWebBlueprint() {
               </button>
 
               {isPillar13Expanded && (
-                <div className="pillar-modules" id="pillar-content-pillar-hr">
-                  <button type="button" className={`pillar-module ${activeModule === 'p13-module-a' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p13-module-a')}>
+                <div className="pillar-modules" id="pillar-content-pillar-13">
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p13-module-a' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p13-module-a')}
+                  >
                     <div className="module-pill">Pillar 13</div>
-                    <div><div className="module-title">Module A · Hiring 101</div><p>Contracts & Laws.</p></div>
+                    <div>
+                      <div className="module-title">Module A · Hiring</div>
+                      <p>Laws</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p13-module-b' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p13-module-b')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p13-module-b' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p13-module-b')}
+                  >
                     <div className="module-pill">Pillar 13</div>
-                    <div><div className="module-title">Module B · Management</div><p>Culture & Pulse.</p></div>
+                    <div>
+                      <div className="module-title">Module B · Management</div>
+                      <p>Culture</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p13-module-c' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p13-module-c')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p13-module-c' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p13-module-c')}
+                  >
                     <div className="module-pill">Pillar 13</div>
-                    <div><div className="module-title">Module C · Discipline</div><p>The CCMA.</p></div>
+                    <div>
+                      <div className="module-title">Module C · Discipline</div>
+                      <p>CCMA</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p13-module-d' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p13-module-d')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p13-resources' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p13-resources')}
+                  >
                     <div className="module-pill">Pillar 13</div>
-                    <div><div className="module-title">Module D · Payroll</div><p>SARS & UIF.</p></div>
+                    <div>
+                      <div className="module-title">Resources</div>
+                      <p>HR Toolkit</p>
+                    </div>
                   </button>
-
-                  <button type="button" className={`pillar-module ${activeModule === 'p13-resources' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p13-resources')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p13-quiz' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p13-quiz')}
+                  >
                     <div className="module-pill">Pillar 13</div>
-                    <div><div className="module-title">Resources</div><p>HR Templates.</p></div>
-                  </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p13-quiz' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p13-quiz')}>
-                    <div className="module-pill">Pillar 13</div>
-                    <div><div className="module-title">Final Exam · HR</div><p>Lead with confidence.</p></div>
+                    <div>
+                      <div className="module-title">Final Exam · HR</div>
+                      <p>Lead.</p>
+                    </div>
                   </button>
                 </div>
               )}
             </div>
-            {/* Pillar 14 - Investment */}
+            {/* Pillar 14 */}
             <div className="toc-pillar-group">
               <button
                 type="button"
                 className={`toc-pillar-title-button ${isPillar14Expanded ? 'is-open' : ''}`}
                 aria-expanded={isPillar14Expanded}
-                onClick={() => {
-                  setActivePillar(14);
-                  setIsPillar14Expanded(!isPillar14Expanded);
-                  setIsPillar1Expanded(false); setIsPillar2Expanded(false); setIsPillar3Expanded(false);
-                  setIsPillar4Expanded(false); setIsPillar5Expanded(false); setIsPillar6Expanded(false);
-                  setIsPillar7Expanded(false); setIsPillar8Expanded(false); setIsPillar9Expanded(false);
-                  setIsPillar10Expanded(false); setIsPillar11Expanded(false);
-                  setIsPillar12Expanded(false); setIsPillar13Expanded(false); setIsPillar15Expanded(false);
-                  if (!isPillar14Expanded) {
-                    setActiveModule('p14-module-a');
-                  }
-                }}
+                onClick={() => handlePillarToggle(14, isPillar14Expanded)}
               >
                 <div>
                   <div className="pillar-title">Pillar 14 · Investment</div>
-                  <div className="pillar-subtitle">Funding, Grants & Pitching.</div>
+                  <div className="pillar-subtitle">Funding Your Dream.</div>
                 </div>
                 <span className="toc-expander-icon" aria-hidden="true">
                   {isPillar14Expanded ? '▼' : '►'}
@@ -1761,53 +2156,76 @@ export default function CapeWebBlueprint() {
               </button>
 
               {isPillar14Expanded && (
-                <div className="pillar-modules" id="pillar-content-pillar-investment">
-                  <button type="button" className={`pillar-module ${activeModule === 'p14-module-a' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p14-module-a')}>
+                <div className="pillar-modules" id="pillar-content-pillar-14">
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p14-module-a' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p14-module-a')}
+                  >
                     <div className="module-pill">Pillar 14</div>
-                    <div><div className="module-title">Module A · The Funding Reality</div><p>Equity vs Debt vs Grants.</p></div>
+                    <div>
+                      <div className="module-title">Module A · Reality</div>
+                      <p>Equity vs Debt</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p14-module-b' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p14-module-b')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p14-module-b' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p14-module-b')}
+                  >
                     <div className="module-pill">Pillar 14</div>
-                    <div><div className="module-title">Module B · Government Grants</div><p>NYDA, SEFA & The Paperwork.</p></div>
+                    <div>
+                      <div className="module-title">Module B · Grants</div>
+                      <p>Gov Support</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p14-module-c' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p14-module-c')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p14-module-c' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p14-module-c')}
+                  >
                     <div className="module-pill">Pillar 14</div>
-                    <div><div className="module-title">Module C · Pitch Deck</div><p>10 Slides to Win.</p></div>
+                    <div>
+                      <div className="module-title">Module C · Pitch Deck</div>
+                      <p>Slides</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p14-resources' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p14-resources')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p14-resources' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p14-resources')}
+                  >
                     <div className="module-pill">Pillar 14</div>
-                    <div><div className="module-title">Resources</div><p>Templates & Links.</p></div>
+                    <div>
+                      <div className="module-title">Resources</div>
+                      <p>Funding Toolkit</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p14-quiz' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p14-quiz')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p14-quiz' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p14-quiz')}
+                  >
                     <div className="module-pill">Pillar 14</div>
-                    <div><div className="module-title">Final Exam · Funding</div><p>Are you fundable?</p></div>
+                    <div>
+                      <div className="module-title">Final Exam · Funding</div>
+                      <p>Pitch.</p>
+                    </div>
                   </button>
                 </div>
               )}
             </div>
-
-            {/* Pillar 15 - Supply Chain */}
+            {/* Pillar 15 */}
             <div className="toc-pillar-group">
               <button
                 type="button"
                 className={`toc-pillar-title-button ${isPillar15Expanded ? 'is-open' : ''}`}
                 aria-expanded={isPillar15Expanded}
-                onClick={() => {
-                  setActivePillar(15);
-                  setIsPillar15Expanded(!isPillar15Expanded);
-                  setIsPillar1Expanded(false); setIsPillar2Expanded(false); setIsPillar3Expanded(false);
-                  setIsPillar4Expanded(false); setIsPillar5Expanded(false); setIsPillar6Expanded(false);
-                  setIsPillar7Expanded(false); setIsPillar8Expanded(false); setIsPillar9Expanded(false);
-                  setIsPillar10Expanded(false); setIsPillar11Expanded(false);
-                  setIsPillar12Expanded(false); setIsPillar13Expanded(false); setIsPillar14Expanded(false);
-                  if (!isPillar15Expanded) {
-                    setActiveModule('p15-module-a');
-                  }
-                }}
+                onClick={() => handlePillarToggle(15, isPillar15Expanded)}
               >
                 <div>
                   <div className="pillar-title">Pillar 15 · Supply Chain</div>
-                  <div className="pillar-subtitle">Operations, Logistics & Stock.</div>
+                  <div className="pillar-subtitle">Operations.</div>
                 </div>
                 <span className="toc-expander-icon" aria-hidden="true">
                   {isPillar15Expanded ? '▼' : '►'}
@@ -1815,54 +2233,76 @@ export default function CapeWebBlueprint() {
               </button>
 
               {isPillar15Expanded && (
-                <div className="pillar-modules" id="pillar-content-pillar-ops">
-                  <button type="button" className={`pillar-module ${activeModule === 'p15-module-a' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p15-module-a')}>
+                <div className="pillar-modules" id="pillar-content-pillar-15">
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p15-module-a' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p15-module-a')}
+                  >
                     <div className="module-pill">Pillar 15</div>
-                    <div><div className="module-title">Module A · Operations</div><p>Margins & Costs.</p></div>
+                    <div>
+                      <div className="module-title">Module A · Ops</div>
+                      <p>Margins</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p15-module-b' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p15-module-b')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p15-module-b' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p15-module-b')}
+                  >
                     <div className="module-pill">Pillar 15</div>
-                    <div><div className="module-title">Module B · Logistics</div><p>Couriers & PAXI.</p></div>
+                    <div>
+                      <div className="module-title">Module B · Logistics</div>
+                      <p>Shipping</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p15-module-c' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p15-module-c')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p15-module-c' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p15-module-c')}
+                  >
                     <div className="module-pill">Pillar 15</div>
-                    <div><div className="module-title">Module C · Inventory</div><p>Stock Control.</p></div>
+                    <div>
+                      <div className="module-title">Module C · Inventory</div>
+                      <p>Stock</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p15-resources' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p15-resources')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p15-resources' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p15-resources')}
+                  >
                     <div className="module-pill">Pillar 15</div>
-                    <div><div className="module-title">Resources</div><p>Suppliers & Tools.</p></div>
+                    <div>
+                      <div className="module-title">Resources</div>
+                      <p>Ops Toolkit</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p15-quiz' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p15-quiz')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p15-quiz' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p15-quiz')}
+                  >
                     <div className="module-pill">Pillar 15</div>
-                    <div><div className="module-title">Final Exam · Ops</div><p>Deliver the goods.</p></div>
+                    <div>
+                      <div className="module-title">Final Exam · Ops</div>
+                      <p>Deliver.</p>
+                    </div>
                   </button>
                 </div>
               )}
             </div>
-            {/* Pillar 16 - Product */}
+            {/* Pillar 16 */}
             <div className="toc-pillar-group">
               <button
                 type="button"
                 className={`toc-pillar-title-button ${isPillar16Expanded ? 'is-open' : ''}`}
                 aria-expanded={isPillar16Expanded}
-                onClick={() => {
-                  setActivePillar(16);
-                  setIsPillar16Expanded(!isPillar16Expanded);
-                  // Close others
-                  setIsPillar1Expanded(false); setIsPillar2Expanded(false); setIsPillar3Expanded(false);
-                  setIsPillar4Expanded(false); setIsPillar5Expanded(false); setIsPillar6Expanded(false);
-                  setIsPillar7Expanded(false); setIsPillar8Expanded(false); setIsPillar9Expanded(false);
-                  setIsPillar10Expanded(false); setIsPillar11Expanded(false);
-                  setIsPillar12Expanded(false); setIsPillar13Expanded(false);
-                  setIsPillar14Expanded(false); setIsPillar15Expanded(false); setIsPillar17Expanded(false);
-                  if (!isPillar16Expanded) {
-                    setActiveModule('p16-module-a');
-                  }
-                }}
+                onClick={() => handlePillarToggle(16, isPillar16Expanded)}
               >
                 <div>
                   <div className="pillar-title">Pillar 16 · Product Strategy</div>
-                  <div className="pillar-subtitle">Innovation & MVP.</div>
+                  <div className="pillar-subtitle">Innovation.</div>
                 </div>
                 <span className="toc-expander-icon" aria-hidden="true">
                   {isPillar16Expanded ? '▼' : '►'}
@@ -1870,55 +2310,76 @@ export default function CapeWebBlueprint() {
               </button>
 
               {isPillar16Expanded && (
-                <div className="pillar-modules" id="pillar-content-pillar-product">
-                  <button type="button" className={`pillar-module ${activeModule === 'p16-module-a' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p16-module-a')}>
+                <div className="pillar-modules" id="pillar-content-pillar-16">
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p16-module-a' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p16-module-a')}
+                  >
                     <div className="module-pill">Pillar 16</div>
-                    <div><div className="module-title">Module A · Market Fit</div><p>Vitamins vs Painkillers.</p></div>
+                    <div>
+                      <div className="module-title">Module A · Market Fit</div>
+                      <p>Validation</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p16-module-b' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p16-module-b')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p16-module-b' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p16-module-b')}
+                  >
                     <div className="module-pill">Pillar 16</div>
-                    <div><div className="module-title">Module B · Building for SA</div><p>Data costs & Lite apps.</p></div>
+                    <div>
+                      <div className="module-title">Module B · SA Context</div>
+                      <p>Local Build</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p16-module-c' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p16-module-c')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p16-module-c' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p16-module-c')}
+                  >
                     <div className="module-pill">Pillar 16</div>
-                    <div><div className="module-title">Module C · Prioritization</div><p>MVP Strategy.</p></div>
+                    <div>
+                      <div className="module-title">Module C · Prioritization</div>
+                      <p>MVP</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p16-resources' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p16-resources')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p16-resources' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p16-resources')}
+                  >
                     <div className="module-pill">Pillar 16</div>
-                    <div><div className="module-title">Resources</div><p>Figma & Lean Canvas.</p></div>
+                    <div>
+                      <div className="module-title">Resources</div>
+                      <p>Product Toolkit</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p16-quiz' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p16-quiz')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p16-quiz' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p16-quiz')}
+                  >
                     <div className="module-pill">Pillar 16</div>
-                    <div><div className="module-title">Final Exam · Product</div><p>Validate your idea.</p></div>
+                    <div>
+                      <div className="module-title">Final Exam · Product</div>
+                      <p>Create.</p>
+                    </div>
                   </button>
                 </div>
               )}
             </div>
-
-            {/* Pillar 17 - Partnerships */}
+            {/* Pillar 17 */}
             <div className="toc-pillar-group">
               <button
                 type="button"
                 className={`toc-pillar-title-button ${isPillar17Expanded ? 'is-open' : ''}`}
                 aria-expanded={isPillar17Expanded}
-                onClick={() => {
-                  setActivePillar(17);
-                  setIsPillar17Expanded(!isPillar17Expanded);
-                  // Close others
-                  setIsPillar1Expanded(false); setIsPillar2Expanded(false); setIsPillar3Expanded(false);
-                  setIsPillar4Expanded(false); setIsPillar5Expanded(false); setIsPillar6Expanded(false);
-                  setIsPillar7Expanded(false); setIsPillar8Expanded(false); setIsPillar9Expanded(false);
-                  setIsPillar10Expanded(false); setIsPillar11Expanded(false);
-                  setIsPillar12Expanded(false); setIsPillar13Expanded(false);
-                  setIsPillar14Expanded(false); setIsPillar15Expanded(false); setIsPillar16Expanded(false);
-                  if (!isPillar17Expanded) {
-                    setActiveModule('p17-module-a');
-                  }
-                }}
+                onClick={() => handlePillarToggle(17, isPillar17Expanded)}
               >
                 <div>
                   <div className="pillar-title">Pillar 17 · Partnerships</div>
-                  <div className="pillar-subtitle">Contracts & BEE.</div>
+                  <div className="pillar-subtitle">Ecosystems.</div>
                 </div>
                 <span className="toc-expander-icon" aria-hidden="true">
                   {isPillar17Expanded ? '▼' : '►'}
@@ -1926,46 +2387,72 @@ export default function CapeWebBlueprint() {
               </button>
 
               {isPillar17Expanded && (
-                <div className="pillar-modules" id="pillar-content-pillar-partnerships">
-                  <button type="button" className={`pillar-module ${activeModule === 'p17-module-a' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p17-module-a')}>
+                <div className="pillar-modules" id="pillar-content-pillar-17">
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p17-module-a' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p17-module-a')}
+                  >
                     <div className="module-pill">Pillar 17</div>
-                    <div><div className="module-title">Module A · Leverage</div><p>Joint Ventures.</p></div>
+                    <div>
+                      <div className="module-title">Module A · Leverage</div>
+                      <p>JVs</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p17-module-b' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p17-module-b')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p17-module-b' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p17-module-b')}
+                  >
                     <div className="module-pill">Pillar 17</div>
-                    <div><div className="module-title">Module B · B-BBEE</div><p>Enterprise Development.</p></div>
+                    <div>
+                      <div className="module-title">Module B · B-BBEE</div>
+                      <p>Compliance</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p17-module-c' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p17-module-c')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p17-module-c' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p17-module-c')}
+                  >
                     <div className="module-pill">Pillar 17</div>
-                    <div><div className="module-title">Module C · Contracts</div><p>SLAs & MOUs.</p></div>
+                    <div>
+                      <div className="module-title">Module C · Contracts</div>
+                      <p>Agreements</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p17-resources' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p17-resources')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p17-resources' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p17-resources')}
+                  >
                     <div className="module-pill">Pillar 17</div>
-                    <div><div className="module-title">Resources</div><p>Templates.</p></div>
+                    <div>
+                      <div className="module-title">Resources</div>
+                      <p>Partnership Toolkit</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p17-quiz' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p17-quiz')}>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p17-quiz' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p17-quiz')}
+                  >
                     <div className="module-pill">Pillar 17</div>
-                    <div><div className="module-title">Final Exam · Deals</div><p>Don't get tricked.</p></div>
+                    <div>
+                      <div className="module-title">Final Exam · Partnerships</div>
+                      <p>Collaborate.</p>
+                    </div>
                   </button>
                 </div>
               )}
             </div>
-            {/* Pillar 18 - Crisis */}
+            {/* Pillar 18 */}
             <div className="toc-pillar-group">
               <button
                 type="button"
                 className={`toc-pillar-title-button ${isPillar18Expanded ? 'is-open' : ''}`}
                 aria-expanded={isPillar18Expanded}
-                onClick={() => {
-                  setActivePillar(18);
-                  setIsPillar18Expanded(!isPillar18Expanded);
-                  // Close others - simplistic approach
-                  setIsPillar1Expanded(false); setIsPillar16Expanded(false); setIsPillar17Expanded(false); setIsPillar19Expanded(false);
-                  // Note: ideally close all, but prioritized recent ones for brevity
-                  if (!isPillar18Expanded) {
-                    setActiveModule('p18-module-a');
-                  }
-                }}
+                onClick={() => handlePillarToggle(18, isPillar18Expanded)}
               >
                 <div>
                   <div className="pillar-title">Pillar 18 · Crisis Management</div>
@@ -1975,729 +2462,740 @@ export default function CapeWebBlueprint() {
                   {isPillar18Expanded ? '▼' : '►'}
                 </span>
               </button>
+
               {isPillar18Expanded && (
-                <div className="pillar-modules" id="pillar-content-pillar-crisis">
-                  <button type="button" className={`pillar-module ${activeModule === 'p18-module-a' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p18-module-a')}>
-                    <div className="module-pill">Pillar 18</div><div><div className="module-title">Module A · PR Crisis</div></div>
+                <div className="pillar-modules" id="pillar-content-pillar-18">
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p18-module-a' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p18-module-a')}
+                  >
+                    <div className="module-pill">Pillar 18</div>
+                    <div>
+                      <div className="module-title">Module A · PR Crisis</div>
+                      <p>Comms</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p18-module-b' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p18-module-b')}>
-                    <div className="module-pill">Pillar 18</div><div><div className="module-title">Module B · Ops Crisis</div></div>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p18-module-b' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p18-module-b')}
+                  >
+                    <div className="module-pill">Pillar 18</div>
+                    <div>
+                      <div className="module-title">Module B · Ops Crisis</div>
+                      <p>Business Rescue</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p18-module-c' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p18-module-c')}>
-                    <div className="module-pill">Pillar 18</div><div><div className="module-title">Module C · Business Rescue</div></div>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p18-module-c' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p18-module-c')}
+                  >
+                    <div className="module-pill">Pillar 18</div>
+                    <div>
+                      <div className="module-title">Module C · Legal Crisis</div>
+                      <p>Defense</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p18-resources' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p18-resources')}>
-                    <div className="module-pill">Pillar 18</div><div><div className="module-title">Resources</div></div>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p18-resources' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p18-resources')}
+                  >
+                    <div className="module-pill">Pillar 18</div>
+                    <div>
+                      <div className="module-title">Resources</div>
+                      <p>Crisis Toolkit</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p18-quiz' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p18-quiz')}>
-                    <div className="module-pill">Pillar 18</div><div><div className="module-title">Final Exam</div></div>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p18-quiz' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p18-quiz')}
+                  >
+                    <div className="module-pill">Pillar 18</div>
+                    <div>
+                      <div className="module-title">Final Exam · Crisis</div>
+                      <p>Survive.</p>
+                    </div>
                   </button>
                 </div>
               )}
             </div>
-
-            {/* Pillar 19 - Exit */}
+            {/* Pillar 19 */}
             <div className="toc-pillar-group">
               <button
                 type="button"
                 className={`toc-pillar-title-button ${isPillar19Expanded ? 'is-open' : ''}`}
                 aria-expanded={isPillar19Expanded}
-                onClick={() => {
-                  setActivePillar(19);
-                  setIsPillar19Expanded(!isPillar19Expanded);
-                  // Close others
-                  setIsPillar1Expanded(false); setIsPillar16Expanded(false); setIsPillar17Expanded(false); setIsPillar18Expanded(false);
-                  if (!isPillar19Expanded) {
-                    setActiveModule('p19-module-a');
-                  }
-                }}
+                onClick={() => handlePillarToggle(19, isPillar19Expanded)}
               >
                 <div>
                   <div className="pillar-title">Pillar 19 · Exit Strategy</div>
-                  <div className="pillar-subtitle">Valuation & Sale.</div>
+                  <div className="pillar-subtitle">The Payday.</div>
                 </div>
                 <span className="toc-expander-icon" aria-hidden="true">
                   {isPillar19Expanded ? '▼' : '►'}
                 </span>
               </button>
+
               {isPillar19Expanded && (
-                <div className="pillar-modules" id="pillar-content-pillar-exit">
-                  <button type="button" className={`pillar-module ${activeModule === 'p19-module-a' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p19-module-a')}>
-                    <div className="module-pill">Pillar 19</div><div><div className="module-title">Module A · Valuation</div></div>
+                <div className="pillar-modules" id="pillar-content-pillar-19">
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p19-module-a' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p19-module-a')}
+                  >
+                    <div className="module-pill">Pillar 19</div>
+                    <div>
+                      <div className="module-title">Module A · Valuation</div>
+                      <p>Worth</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p19-module-b' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p19-module-b')}>
-                    <div className="module-pill">Pillar 19</div><div><div className="module-title">Module B · Building to Sell</div></div>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p19-module-b' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p19-module-b')}
+                  >
+                    <div className="module-pill">Pillar 19</div>
+                    <div>
+                      <div className="module-title">Module B · Process</div>
+                      <p>Selling</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p19-module-c' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p19-module-c')}>
-                    <div className="module-pill">Pillar 19</div><div><div className="module-title">Module C · Due Diligence</div></div>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p19-module-c' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p19-module-c')}
+                  >
+                    <div className="module-pill">Pillar 19</div>
+                    <div>
+                      <div className="module-title">Module C · Due Diligence</div>
+                      <p>Audit</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p19-resources' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p19-resources')}>
-                    <div className="module-pill">Pillar 19</div><div><div className="module-title">Resources</div></div>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p19-resources' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p19-resources')}
+                  >
+                    <div className="module-pill">Pillar 19</div>
+                    <div>
+                      <div className="module-title">Resources</div>
+                      <p>Exit Toolkit</p>
+                    </div>
                   </button>
-                  <button type="button" className={`pillar-module ${activeModule === 'p19-quiz' ? 'is-active' : ''}`} onClick={() => handleModuleChange('p19-quiz')}>
-                    <div className="module-pill">Pillar 19</div><div><div className="module-title">Final Exam</div></div>
+                  <button
+                    type="button"
+                    className={`pillar-module ${activeModule === 'p19-quiz' ? 'is-active' : ''}`}
+                    onClick={() => handleModuleChange('p19-quiz')}
+                  >
+                    <div className="module-pill">Pillar 19</div>
+                    <div>
+                      <div className="module-title">Final Exam · Exit</div>
+                      <p>Cash Out.</p>
+                    </div>
                   </button>
                 </div>
               )}
             </div>
-          </nav>
-        </aside>
+          </nav>        </aside>
       </div>
 
       <div className="learn-capeweb-article-pane">
-        <div className="learn-capeweb-article" ref={articleRef}>
-          {activePillar === 1 ? (
-            <>
-              {activeModule === 'p1-map' && (
-                <>
-                  <div className="article-eyebrow">Pillar 1 · Strategic Foundation &amp; Brand Identity</div>
-                  <h1>From Idea to a Real Business Plan</h1>
-                  <p className="article-summary">
-                    <strong>Objective:</strong> Turn your raw idea into a clear plan: who you serve, what you sell, why people trust you,
-                    and what your next 30 days look like.
-                  </p>
-                  <div className="article-divider" />
-                </>
-              )}
+          <div className="learn-capeweb-article" ref={articleRef}>
+            {activePillar === 1 ? (
+              <>
+                {activeModule === 'p1-map' && (
+                  <>
+                    <div className="article-eyebrow">Pillar 1 · Strategic Foundation & Brand Identity</div>
+                    <h1>From Idea to a Real Business Plan</h1>
+                    <p className="article-summary">
+                      Objective: Turn your raw idea into a clear plan: who you serve, what you sell, why people trust you, and what your next 30 days look like.
+                    </p>
+                    <div className="article-divider" />
+                  </>
+                )}
 
-              {activeModule === 'p1-map' && <Pillar1JourneyMap onNext={() => setActiveModule('p1-module-a')} />}
-              {activeModule === 'p1-module-a' && <Pillar1ModuleA onNext={() => setActiveModule('p1-module-b')} />}
-              {activeModule === 'p1-module-b' && <Pillar1ModuleB onNext={() => setActiveModule('p1-module-c')} />}
-              {activeModule === 'p1-module-c' && <Pillar1ModuleC onNext={() => setActiveModule('p1-module-d')} />}
-              {activeModule === 'p1-module-d' && <Pillar1ModuleD onNext={() => setActiveModule('p1-module-e')} />}
-              {activeModule === 'p1-module-e' && <Pillar1ModuleE onNext={() => setActiveModule('p1-resources')} />}
-              {activeModule === 'p1-resources' && <Pillar1Resources onNext={() => setActiveModule('p1-quiz')} />}
+                {activeModule === 'p1-map' && <Pillar1JourneyMap onNext={() => handleModuleChange('p1-module-a')} />}
+                {activeModule === 'p1-module-a' && <Pillar1ModuleA onNext={() => handleModuleChange('p1-module-b')} />}
+                {activeModule === 'p1-module-b' && <Pillar1ModuleB onNext={() => handleModuleChange('p1-module-c')} />}
+                {activeModule === 'p1-module-c' && <Pillar1ModuleC onNext={() => handleModuleChange('p1-module-d')} />}
+                {activeModule === 'p1-module-d' && <Pillar1ModuleD onNext={() => handleModuleChange('p1-module-e')} />}
+                {activeModule === 'p1-module-e' && <Pillar1ModuleE onNext={() => handleModuleChange('p1-resources')} />}
+                {activeModule === 'p1-resources' && <Pillar1Resources onNext={() => handleModuleChange('p1-quiz')} />}
+                {activeModule === 'p1-quiz' && (
+                  <Pillar1Quiz
+                    quizResponses={pillar1QuizResponses}
+                    onSelect={(q, o) => setPillar1QuizResponses(prev => ({ ...prev, [q]: o }))}
+                    onScore={handlePillar1Score}
+                    scoreMessage={pillar1ScoreMessage}
+                    onFinish={() => handleModuleChange('p1-completion')}
+                  />
+                )}
+                {activeModule === 'p1-completion' && <Pillar1Completion onNext={() => handlePillarToggle(2, false)} />}
+              </>
+            ) : activePillar === 2 ? (
+              <>
+                {activeModule === 'p2-module-a' && (
+                  <>
+                    <div className="article-eyebrow">Pillar 2 · Legal, Governance & Compliance</div>
+                    <h1>Legally Ready for Your First 100 Sales</h1>
+                    <p className="article-summary">
+                      Objective: You will understand the legal basics to trade confidently in South Africa: business structure, registration, tax basics, POPIA, and contracts.
+                    </p>
+                    <div className="article-divider" />
+                  </>
+                )}
 
-              {activeModule === 'p1-quiz' && (
-                <Pillar1Quiz
-                  quizResponses={pillar1QuizResponses}
-                  onSelect={handlePillar1QuizResponse}
-                  onScore={handlePillar1Score}
-                  scoreMessage={pillar1ScoreMessage}
-                  onFinish={() => setActiveModule('p1-completion')}
-                />
-              )}
+                {activeModule === 'p2-module-a' && <Pillar2ModuleA onNext={() => handleModuleChange('p2-module-b')} />}
+                {activeModule === 'p2-module-b' && <Pillar2ModuleB onNext={() => handleModuleChange('p2-module-c')} />}
+                {activeModule === 'p2-module-c' && <Pillar2ModuleC onNext={() => handleModuleChange('p2-module-d')} />}
+                {activeModule === 'p2-module-d' && <Pillar2ModuleD onNext={() => handleModuleChange('p2-module-e')} />}
+                {activeModule === 'p2-module-e' && <Pillar2ModuleE onNext={() => handleModuleChange('p2-module-f')} />}
+                {activeModule === 'p2-module-f' && <Pillar2ModuleF onNext={() => handleModuleChange('p2-module-module-bonus')} />}
+                {activeModule === 'p2-module-module-bonus' && <Pillar2ModuleBonus onNext={() => handleModuleChange('p2-resources')} />}
+                {activeModule === 'p2-resources' && <Pillar2Resources onNext={() => handleModuleChange('p2-quiz')} />}
+                {activeModule === 'p2-quiz' && (
+                  <Pillar2Quiz
+                    quizResponses={pillar2QuizResponses}
+                    onSelect={(q, o) => setPillar2QuizResponses(prev => ({ ...prev, [q]: o }))}
+                    onScore={handlePillar2Score}
+                    scoreMessage={pillar2ScoreMessage}
+                    onFinish={() => handleModuleChange('p2-completion')}
+                  />
+                )}
+                {activeModule === 'p2-completion' && <Pillar2Completion onNext={() => handlePillarToggle(3, false)} />}
+              </>
+            ) : activePillar === 3 ? (
+              <>
+                {activeModule === 'p3-module-a' && (
+                  <>
+                    <div className="article-eyebrow">Pillar 3 · Web Development & Architecture</div>
+                    <h1>The Digital HQ That Converts</h1>
+                    <p className="article-summary">
+                      Objective: Master the web stack. From simple No-Code pages to full-stack React applications, you will learn how to build, host, secure, and optimize a professional digital presence.
+                    </p>
+                    <div className="article-divider" />
+                  </>
+                )}
 
-              {activeModule === 'p1-completion' && <Pillar1Completion />}
-            </>
-          ) : activePillar === 2 ? (
-            <>
-              {activeModule === 'p2-module-a' && (
-                <>
-                  <div className="article-eyebrow">Pillar 10 · Legal, Governance & Compliance</div>
-                  <h1>Legally Ready for Your First 100 Sales (South Africa + Cape Town)</h1>
-                  <p className="article-summary">
-                    <strong>Objective:</strong> You will understand the legal basics to trade confidently in South Africa: business structure,
-                    registration, tax basics, POPIA, consumer rules for online selling, and ongoing compliance. You'll leave with a{' '}
-                    <strong>Compliance Passport</strong> checklist and a clear "what to do next" plan.
-                  </p>
-                  <div className="article-divider" />
-                </>
-              )}
+                {activeModule === 'p3-module-a' && <Pillar3ModuleA onNext={() => handleModuleChange('p3-module-b')} />}
+                {activeModule === 'p3-module-b' && <Pillar3ModuleB onNext={() => handleModuleChange('p3-module-c')} />}
+                {activeModule === 'p3-module-c' && <Pillar3ModuleC onNext={() => handleModuleChange('p3-module-d')} />}
+                {activeModule === 'p3-module-d' && <Pillar3ModuleD onNext={() => handleModuleChange('p3-module-e')} />}
+                {activeModule === 'p3-module-e' && <Pillar3ModuleE onNext={() => handleModuleChange('p3-module-f')} />}
+                {activeModule === 'p3-module-f' && <Pillar3ModuleF onNext={() => handleModuleChange('p3-module-g')} />}
+                {activeModule === 'p3-module-g' && <Pillar3ModuleG onNext={() => handleModuleChange('p3-module-h')} />}
+                {activeModule === 'p3-module-h' && <Pillar3ModuleH onNext={() => handleModuleChange('p3-module-i')} />}
+                {activeModule === 'p3-module-i' && <Pillar3ModuleI onNext={() => handleModuleChange('p3-module-j')} />}
+                {activeModule === 'p3-module-j' && <Pillar3ModuleJ onNext={() => handleModuleChange('p3-resources')} />}
+                {activeModule === 'p3-resources' && <Pillar3Resources onNext={() => handleModuleChange('p3-quiz')} />}
+                {activeModule === 'p3-quiz' && (
+                  <Pillar3Quiz
+                    quizResponses={pillar3QuizResponses}
+                    onSelect={(q, o) => setPillar3QuizResponses(prev => ({ ...prev, [q]: o }))}
+                    onScore={handlePillar3Score}
+                    scoreMessage={pillar3ScoreMessage}
+                    onFinish={() => handleModuleChange('p3-completion')}
+                  />
+                )}
+                {activeModule === 'p3-completion' && <Pillar3Completion onNext={() => handlePillarToggle(4, false)} />}
+              </>
+            ) : activePillar === 4 ? (
+              <>
+                {activeModule === 'p4-module-a' && (
+                  <>
+                    <div className="article-eyebrow">Pillar 4 · Mobile Application Development</div>
+                    <h1>The Store-Ready MVP</h1>
+                    <p className="article-summary">
+                      Objective: Go from idea to the App Store. Learn how to prototype, choose the right stack (Native vs Cross-Platform), and navigate the complex submission process.
+                    </p>
+                    <div className="article-divider" />
+                  </>
+                )}
 
-              {activeModule === 'p2-module-a' && <Pillar2ModuleA onNext={() => handleModuleChange('p2-module-b')} />}
-              {activeModule === 'p2-module-b' && <Pillar2ModuleB onNext={() => handleModuleChange('p2-module-c')} />}
-              {activeModule === 'p2-module-c' && <Pillar2ModuleC onNext={() => handleModuleChange('p2-module-d')} />}
-              {activeModule === 'p2-module-d' && <Pillar2ModuleD onNext={() => handleModuleChange('p2-module-e')} />}
-              {activeModule === 'p2-module-e' && <Pillar2ModuleE onNext={() => handleModuleChange('p2-module-f')} />}
-              {activeModule === 'p2-module-f' && <Pillar2ModuleF onNext={() => handleModuleChange('p2-module-bonus')} />}
-              {activeModule === 'p2-module-bonus' && <Pillar2ModuleBonus onNext={() => handleModuleChange('p2-resources')} />}
-              {activeModule === 'p2-resources' && <Pillar2Resources onNext={() => handleModuleChange('p2-quiz')} />}
+                {activeModule === 'p4-module-a' && <Pillar4ModuleA onNext={() => handleModuleChange('p4-module-b')} />}
+                {activeModule === 'p4-module-b' && <Pillar4ModuleB onNext={() => handleModuleChange('p4-module-c')} />}
+                {activeModule === 'p4-module-c' && <Pillar4ModuleC onNext={() => handleModuleChange('p4-module-d')} />}
+                {activeModule === 'p4-module-d' && <Pillar4ModuleD onNext={() => handleModuleChange('p4-module-e')} />}
+                {activeModule === 'p4-module-e' && <Pillar4ModuleE onNext={() => handleModuleChange('p4-module-f')} />}
+                {activeModule === 'p4-module-f' && <Pillar4ModuleF onNext={() => handleModuleChange('p4-module-g')} />}
+                {activeModule === 'p4-module-g' && <Pillar4ModuleG onNext={() => handleModuleChange('p4-module-h')} />}
+                {activeModule === 'p4-module-h' && <Pillar4ModuleH onNext={() => handleModuleChange('p4-module-i')} />}
+                {activeModule === 'p4-module-i' && <Pillar4ModuleI onNext={() => handleModuleChange('p4-module-j')} />}
+                {activeModule === 'p4-module-j' && <Pillar4ModuleJ onNext={() => handleModuleChange('p4-module-k')} />}
+                {activeModule === 'p4-module-k' && <Pillar4ModuleK onNext={() => handleModuleChange('p4-resources')} />}
+                {activeModule === 'p4-resources' && <Pillar4Resources onNext={() => handleModuleChange('p4-quiz')} />}
+                {activeModule === 'p4-quiz' && (
+                  <Pillar4Quiz
+                    quizResponses={pillar4QuizResponses}
+                    onSelect={(q, o) => setPillar4QuizResponses(prev => ({ ...prev, [q]: o }))}
+                    onScore={handlePillar4Score}
+                    scoreMessage={pillar4ScoreMessage}
+                    onFinish={() => handleModuleChange('p4-completion')}
+                  />
+                )}
+                {activeModule === 'p4-completion' && <Pillar4Completion onNext={() => handlePillarToggle(5, false)} />}
+              </>
+            ) : activePillar === 5 ? (
+              <>
+                {activeModule === 'p5-module-a' && (
+                  <>
+                    <div className="article-eyebrow">Pillar 5 · Search Engine Optimization</div>
+                    <h1>SEO for Real Revenue</h1>
+                    <p className="article-summary">
+                      Objective: Learn how Google finds you. You will understand keywords, on-page optimization, local SEO for Cape Town, and how to own organic demand.
+                    </p>
+                    <div className="article-divider" />
+                  </>
+                )}
 
-              {activeModule === 'p2-quiz' && (
-                <Pillar2Quiz onFinish={() => handleModuleChange('p2-completion')} />
-              )}
+                {activeModule === 'p5-module-a' && <Pillar5ModuleA onNext={() => handleModuleChange('p5-module-b')} />}
+                {activeModule === 'p5-module-b' && <Pillar5ModuleB onNext={() => handleModuleChange('p5-module-c')} />}
+                {activeModule === 'p5-module-c' && <Pillar5ModuleC onNext={() => handleModuleChange('p5-module-d')} />}
+                {activeModule === 'p5-module-d' && <Pillar5ModuleD onNext={() => handleModuleChange('p5-module-e')} />}
+                {activeModule === 'p5-module-e' && <Pillar5ModuleE onNext={() => handleModuleChange('p5-module-f')} />}
+                {activeModule === 'p5-module-f' && <Pillar5ModuleF onNext={() => handleModuleChange('p5-module-g')} />}
+                {activeModule === 'p5-module-g' && <Pillar5ModuleG onNext={() => handleModuleChange('p5-module-h')} />}
+                {activeModule === 'p5-module-h' && <Pillar5ModuleH onNext={() => handleModuleChange('p5-module-i')} />}
+                {activeModule === 'p5-module-i' && <Pillar5ModuleI onNext={() => handleModuleChange('p5-resources')} />}
+                {activeModule === 'p5-resources' && <Pillar5Resources onNext={() => handleModuleChange('p5-quiz')} />}
+                {activeModule === 'p5-quiz' && (
+                  <Pillar5Quiz
+                    quizResponses={pillar5QuizResponses}
+                    onSelect={(q, o) => setPillar5QuizResponses(prev => ({ ...prev, [q]: o }))}
+                    onScore={handlePillar5Score}
+                    scoreMessage={pillar5ScoreMessage}
+                    onFinish={() => handleModuleChange('p5-completion')}
+                  />
+                )}
+                {activeModule === 'p5-completion' && <Pillar5Completion onNext={() => handlePillarToggle(6, false)} />}
+              </>
+            ) : activePillar === 6 ? (
+              <>
+                {activeModule === 'p6-module-a' && (
+                  <>
+                    <div className="article-eyebrow">Pillar 6 · Social Media & Digital Marketing</div>
+                    <h1>Storytelling at the Speed of Social</h1>
+                    <p className="article-summary">
+                      Objective: Build a marketing system that gets your first 100 sales. Learn to pick platforms, create content, and run simple campaigns.
+                    </p>
+                    <div className="article-divider" />
+                  </>
+                )}
 
-              {activeModule === 'p2-completion' && <Pillar2Completion />}
-            </>
-          ) : activePillar === 3 ? (
-            <>
-              {activeModule === 'p3-module-a' && (
-                <>
-                  <div className="article-eyebrow">Pillar 2 · Web Development &amp; Architecture</div>
-                  <h1>The Digital HQ That Converts</h1>
-                  <p className="article-summary">
-                    <strong>Objective:</strong> Master the web stack. From simple No-Code pages to full-stack React applications,
-                    you will learn how to build, host, secure, and optimize a professional digital presence in South Africa.
-                  </p>
-                  <div className="article-divider" />
-                </>
-              )}
+                {activeModule === 'p6-module-a' && <Pillar6ModuleA onNext={() => handleModuleChange('p6-module-b')} />}
+                {activeModule === 'p6-module-b' && <Pillar6ModuleB onNext={() => handleModuleChange('p6-module-c')} />}
+                {activeModule === 'p6-module-c' && <Pillar6ModuleC onNext={() => handleModuleChange('p6-module-d')} />}
+                {activeModule === 'p6-module-d' && <Pillar6ModuleD onNext={() => handleModuleChange('p6-module-e')} />}
+                {activeModule === 'p6-module-e' && <Pillar6ModuleE onNext={() => handleModuleChange('p6-module-f')} />}
+                {activeModule === 'p6-module-f' && <Pillar6ModuleF onNext={() => handleModuleChange('p6-module-g')} />}
+                {activeModule === 'p6-module-g' && <Pillar6ModuleG onNext={() => handleModuleChange('p6-module-h')} />}
+                {activeModule === 'p6-module-h' && <Pillar6ModuleH onNext={() => handleModuleChange('p6-module-i')} />}
+                {activeModule === 'p6-module-i' && <Pillar6ModuleI onNext={() => handleModuleChange('p6-resources')} />}
+                {activeModule === 'p6-resources' && <Pillar6Resources onNext={() => handleModuleChange('p6-quiz')} />}
+                {activeModule === 'p6-quiz' && (
+                  <Pillar6Quiz
+                    quizResponses={pillar6QuizResponses}
+                    onSelect={(q, o) => setPillar6QuizResponses(prev => ({ ...prev, [q]: o }))}
+                    onScore={handlePillar6Score}
+                    scoreMessage={pillar6ScoreMessage}
+                    onFinish={() => handleModuleChange('p6-completion')}
+                  />
+                )}
+                {activeModule === 'p6-completion' && <Pillar6Completion onNext={() => handlePillarToggle(7, false)} />}
+              </>
+            ) : activePillar === 7 ? (
+              <>
+                {activeModule === 'p7-module-a' && (
+                  <>
+                    <div className="article-eyebrow">Pillar 7 · Artificial Intelligence & Automation</div>
+                    <h1>Scale with Automations and AI Assistants</h1>
+                    <p className="article-summary">
+                      Objective: Build an always-on system that captures leads, books meetings, and follows up—without you.
+                    </p>
+                    <div className="article-divider" />
+                  </>
+                )}
 
-              {activeModule === 'p3-module-a' && <Pillar3ModuleA />}
-              {activeModule === 'p3-module-b' && <Pillar3ModuleB />}
-              {activeModule === 'p3-module-c' && <Pillar3ModuleC />}
-              {activeModule === 'p3-module-d' && <Pillar3ModuleD />}
-              {activeModule === 'p3-module-e' && <Pillar3ModuleE />}
-              {activeModule === 'p3-module-f' && <Pillar3ModuleF />}
-              {activeModule === 'p3-module-g' && <Pillar3ModuleG />}
-              {activeModule === 'p3-module-h' && <Pillar3ModuleH />}
-              {activeModule === 'p3-module-i' && <Pillar3ModuleI />}
-              {activeModule === 'p3-module-j' && <Pillar3ModuleJ onNext={() => handleModuleChange('p3-resources')} />}
-              {activeModule === 'p3-resources' && <Pillar3Resources onNext={() => handleModuleChange('p3-quiz')} />}
+                {activeModule === 'p7-module-a' && <Pillar7ModuleA onNext={() => handleModuleChange('p7-module-b')} />}
+                {activeModule === 'p7-module-b' && <Pillar7ModuleB onNext={() => handleModuleChange('p7-module-c')} />}
+                {activeModule === 'p7-module-c' && <Pillar7ModuleC onNext={() => handleModuleChange('p7-module-d')} />}
+                {activeModule === 'p7-module-d' && <Pillar7ModuleD onNext={() => handleModuleChange('p7-module-e')} />}
+                {activeModule === 'p7-module-e' && <Pillar7ModuleE onNext={() => handleModuleChange('p7-module-f')} />}
+                {activeModule === 'p7-module-f' && <Pillar7ModuleF onNext={() => handleModuleChange('p7-module-g')} />}
+                {activeModule === 'p7-module-g' && <Pillar7ModuleG onNext={() => handleModuleChange('p7-module-h')} />}
+                {activeModule === 'p7-module-h' && <Pillar7ModuleH onNext={() => handleModuleChange('p7-module-i')} />}
+                {activeModule === 'p7-module-i' && <Pillar7ModuleI onNext={() => handleModuleChange('p7-resources')} />}
+                {activeModule === 'p7-resources' && <Pillar7Resources onNext={() => handleModuleChange('p7-quiz')} />}
+                {activeModule === 'p7-quiz' && (
+                  <Pillar7Quiz
+                    quizResponses={pillar7QuizResponses}
+                    onSelect={(q, o) => setPillar7QuizResponses(prev => ({ ...prev, [q]: o }))}
+                    onScore={handlePillar7Score}
+                    scoreMessage={pillar7ScoreMessage}
+                    onFinish={() => handleModuleChange('p7-completion')}
+                  />
+                )}
+                {activeModule === 'p7-completion' && <Pillar7Completion onNext={() => handlePillarToggle(8, false)} />}
+              </>
+            ) : activePillar === 8 ? (
+              <>
+                {activeModule === 'p8-module-a' && (
+                  <>
+                    <div className="article-eyebrow">Pillar 8 · Cybersecurity & Risk Management</div>
+                    <h1>Cybersecurity for Normal People</h1>
+                    <p className="article-summary">
+                      Objective: Build a simple, strong security foundation. Protect email, payments, and customer data.
+                    </p>
+                    <div className="article-divider" />
+                  </>
+                )}
 
-              {activeModule === 'p3-quiz' && (
-                <Pillar3Quiz
-                  quizResponses={pillar3QuizResponses}
-                  onSelect={handlePillar3QuizResponse}
-                  onScore={handlePillar3Score}
-                  scoreMessage={pillar3ScoreMessage}
-                  onFinish={() => setActiveModule('p3-completion')}
-                />
-              )}
-              {activeModule === 'p3-completion' && <Pillar3Completion />}
-            </>
-          ) : activePillar === 4 ? (
-            <>
-              {activeModule === 'p4-module-a' && (
-                <>
-                  <div className="article-eyebrow">Pillar 11 · Mobile Application Development</div>
-                  <h1>The Store-Ready MVP</h1>
-                  <p className="article-summary">
-                    <strong>Objective:</strong> Go from idea to the App Store. Learn how to prototype, choose the right stack (Native vs Cross-Platform),
-                    build your MVP, and navigate the complex submission process for Google Play and Apple App Store.
-                  </p>
-                  <div className="article-divider" />
-                </>
-              )}
+                {activeModule === 'p8-module-a' && <Pillar8ModuleA onNext={() => handleModuleChange('p8-module-b')} />}
+                {activeModule === 'p8-module-b' && <Pillar8ModuleB onNext={() => handleModuleChange('p8-module-c')} />}
+                {activeModule === 'p8-module-c' && <Pillar8ModuleC onNext={() => handleModuleChange('p8-module-d')} />}
+                {activeModule === 'p8-module-d' && <Pillar8ModuleD onNext={() => handleModuleChange('p8-module-e')} />}
+                {activeModule === 'p8-module-e' && <Pillar8ModuleE onNext={() => handleModuleChange('p8-module-f')} />}
+                {activeModule === 'p8-module-f' && <Pillar8ModuleF onNext={() => handleModuleChange('p8-module-g')} />}
+                {activeModule === 'p8-module-g' && <Pillar8ModuleG onNext={() => handleModuleChange('p8-module-h')} />}
+                {activeModule === 'p8-module-h' && <Pillar8ModuleH onNext={() => handleModuleChange('p8-module-i')} />}
+                {activeModule === 'p8-module-i' && <Pillar8ModuleI onNext={() => handleModuleChange('p8-resources')} />}
+                {activeModule === 'p8-resources' && <Pillar8Resources onNext={() => handleModuleChange('p8-quiz')} />}
+                {activeModule === 'p8-quiz' && (
+                  <Pillar8Quiz
+                    quizResponses={pillar8QuizResponses}
+                    onSelect={(q, o) => setPillar8QuizResponses(prev => ({ ...prev, [q]: o }))}
+                    onScore={handlePillar8Score}
+                    scoreMessage={pillar8ScoreMessage}
+                    onFinish={() => handleModuleChange('p8-completion')}
+                  />
+                )}
+                {activeModule === 'p8-completion' && <Pillar8Completion onNext={() => handlePillarToggle(9, false)} />}
+              </>
+            ) : activePillar === 9 ? (
+              <>
+                {activeModule === 'p9-module-a' && (
+                  <>
+                    <div className="article-eyebrow">Pillar 9 · Financial Systems & eCommerce</div>
+                    <h1>CapeWeb Money 101</h1>
+                    <p className="article-summary">
+                      Objective: Build a financial system that works. Track sales, pricing, payments, and tax prep.
+                    </p>
+                    <div className="article-divider" />
+                  </>
+                )}
 
-              {activeModule === 'p4-module-a' && <Pillar4ModuleA />}
-              {activeModule === 'p4-module-b' && <Pillar4ModuleB />}
-              {activeModule === 'p4-module-c' && <Pillar4ModuleC />}
-              {activeModule === 'p4-module-d' && <Pillar4ModuleD />}
-              {activeModule === 'p4-module-e' && <Pillar4ModuleE />}
-              {activeModule === 'p4-module-f' && <Pillar4ModuleF />}
-              {activeModule === 'p4-module-g' && <Pillar4ModuleG />}
-              {activeModule === 'p4-module-h' && <Pillar4ModuleH />}
-              {activeModule === 'p4-module-i' && <Pillar4ModuleI />}
-              {activeModule === 'p4-module-j' && <Pillar4ModuleJ />}
-              {activeModule === 'p4-module-k' && <Pillar4ModuleK />}
-              {activeModule === 'p4-resources' && <Pillar4Resources onNext={() => handleModuleChange('p4-quiz')} />}
+                {activeModule === 'p9-module-a' && <Pillar9ModuleA onNext={() => handleModuleChange('p9-module-b')} />}
+                {activeModule === 'p9-module-b' && <Pillar9ModuleB onNext={() => handleModuleChange('p9-module-c')} />}
+                {activeModule === 'p9-module-c' && <Pillar9ModuleC onNext={() => handleModuleChange('p9-module-d')} />}
+                {activeModule === 'p9-module-d' && <Pillar9ModuleD onNext={() => handleModuleChange('p9-module-e')} />}
+                {activeModule === 'p9-module-e' && <Pillar9ModuleE onNext={() => handleModuleChange('p9-module-f')} />}
+                {activeModule === 'p9-module-f' && <Pillar9ModuleF onNext={() => handleModuleChange('p9-resources')} />}
+                {activeModule === 'p9-resources' && <Pillar9Resources onNext={() => handleModuleChange('p9-quiz')} />}
+                {activeModule === 'p9-quiz' && (
+                  <Pillar9Quiz
+                    quizResponses={pillar9QuizResponses}
+                    onSelect={(q, o) => setPillar9QuizResponses(prev => ({ ...prev, [q]: o }))}
+                    onScore={handlePillar9Score}
+                    scoreMessage={pillar9ScoreMessage}
+                    onFinish={() => handleModuleChange('p9-completion')}
+                  />
+                )}
+                {activeModule === 'p9-completion' && <Pillar9Completion onNext={() => handlePillarToggle(10, false)} />}
+              </>
+            ) : activePillar === 10 ? (
+              <>
+                {activeModule === 'p10-module-a' && (
+                  <>
+                    <div className="article-eyebrow">Pillar 10 · Analytics & Business Intelligence</div>
+                    <h1>The Growth Dashboard</h1>
+                    <p className="article-summary">
+                      Objective: Build a beginner-friendly measurement system. Track what matters and learn from data.
+                    </p>
+                    <div className="article-divider" />
+                  </>
+                )}
 
-              {activeModule === 'p4-quiz' && (
-                <Pillar4Quiz
-                  quizResponses={pillar4QuizResponses}
-                  onSelect={handlePillar4QuizResponse}
-                  onScore={handlePillar4Score}
-                  scoreMessage={pillar4ScoreMessage}
-                  onFinish={() => setActiveModule('p4-completion')}
-                />
-              )}
-              {activeModule === 'p4-completion' && <Pillar4Completion />}
-            </>
-          ) : activePillar === 5 ? (
-            <>
-              {activeModule === 'p5-module-a' && (
-                <>
-                  <div className="article-eyebrow">Pillar 3 · Search Engine Optimization</div>
-                  <h1>SEO for Real Revenue</h1>
-                  <p className="article-summary">
-                    <strong>Objective:</strong> Learn how Google (and other search engines) find you, rank you, and send customers to your door.
-                    You will understand: <strong>(1)</strong> keywords and search intent, <strong>(2)</strong> on-page optimization,{' '}
-                    <strong>(3)</strong> technical SEO basics, <strong>(4)</strong> local SEO for Cape Town, <strong>(5)</strong> content systems
-                    that compound, <strong>(6)</strong> link-building that won't harm you, and <strong>(7)</strong> measurement that matters.
-                    By the end, you'll have an SEO action plan to own organic demand in your market.
-                  </p>
-                  <div className="article-divider" />
-                </>
-              )}
+                {activeModule === 'p10-module-a' && <Pillar10ModuleA onNext={() => handleModuleChange('p10-module-b')} />}
+                {activeModule === 'p10-module-b' && <Pillar10ModuleB onNext={() => handleModuleChange('p10-module-c')} />}
+                {activeModule === 'p10-module-c' && <Pillar10ModuleC onNext={() => handleModuleChange('p10-module-d')} />}
+                {activeModule === 'p10-module-d' && <Pillar10ModuleD onNext={() => handleModuleChange('p10-module-e')} />}
+                {activeModule === 'p10-module-e' && <Pillar10ModuleE onNext={() => handleModuleChange('p10-module-f')} />}
+                {activeModule === 'p10-module-f' && <Pillar10ModuleF onNext={() => handleModuleChange('p10-module-g')} />}
+                {activeModule === 'p10-module-g' && <Pillar10ModuleG onNext={() => handleModuleChange('p10-resources')} />}
+                {activeModule === 'p10-resources' && <Pillar10Resources onNext={() => handleModuleChange('p10-quiz')} />}
+                {activeModule === 'p10-quiz' && (
+                  <Pillar10Quiz
+                    quizResponses={pillar10QuizResponses}
+                    onSelect={(q, o) => setPillar10QuizResponses(prev => ({ ...prev, [q]: o }))}
+                    onScore={handlePillar10Score}
+                    scoreMessage={pillar10ScoreMessage}
+                    onFinish={() => handleModuleChange('p10-completion')}
+                  />
+                )}
+                {activeModule === 'p10-completion' && <Pillar10Completion onNext={() => handlePillarToggle(11, false)} />}
+              </>
+            ) : activePillar === 11 ? (
+              <>
+                {activeModule === 'p11-module-a' && (
+                  <>
+                    <div className="article-eyebrow">Pillar 11 · Customer Experience & Support</div>
+                    <h1>The CX Flywheel</h1>
+                    <p className="article-summary">
+                      Objective: Build a customer experience that feels like a 'real company' from day one.
+                    </p>
+                    <div className="article-divider" />
+                  </>
+                )}
 
-              {activeModule === 'p5-module-a' && <Pillar5ModuleA />}
-              {activeModule === 'p5-module-b' && <Pillar5ModuleB />}
-              {activeModule === 'p5-module-c' && <Pillar5ModuleC />}
-              {activeModule === 'p5-module-d' && <Pillar5ModuleD />}
-              {activeModule === 'p5-module-e' && <Pillar5ModuleE />}
-              {activeModule === 'p5-module-f' && <Pillar5ModuleF />}
-              {activeModule === 'p5-module-g' && <Pillar5ModuleG />}
-              {activeModule === 'p5-module-h' && <Pillar5ModuleH />}
-              {activeModule === 'p5-module-i' && <Pillar5ModuleI />}
-              {activeModule === 'p5-resources' && <Pillar5Resources onNext={() => handleModuleChange('p5-quiz')} />}
+                {activeModule === 'p11-module-a' && <Pillar11ModuleA onNext={() => handleModuleChange('p11-module-b')} />}
+                {activeModule === 'p11-module-b' && <Pillar11ModuleB onNext={() => handleModuleChange('p11-module-c')} />}
+                {activeModule === 'p11-module-c' && <Pillar11ModuleC onNext={() => handleModuleChange('p11-module-d')} />}
+                {activeModule === 'p11-module-d' && <Pillar11ModuleD onNext={() => handleModuleChange('p11-module-e')} />}
+                {activeModule === 'p11-module-e' && <Pillar11ModuleE onNext={() => handleModuleChange('p11-module-f')} />}
+                {activeModule === 'p11-module-f' && <Pillar11ModuleF onNext={() => handleModuleChange('p11-module-g')} />}
+                {activeModule === 'p11-module-g' && <Pillar11ModuleG onNext={() => handleModuleChange('p11-resources')} />}
+                {activeModule === 'p11-resources' && <Pillar11Resources onNext={() => handleModuleChange('p11-quiz')} />}
+                {activeModule === 'p11-quiz' && (
+                  <Pillar11Quiz
+                    quizResponses={pillar11QuizResponses}
+                    onSelect={(q, o) => setPillar11QuizResponses(prev => ({ ...prev, [q]: o }))}
+                    onScore={handlePillar11Score}
+                    scoreMessage={pillar11ScoreMessage}
+                    onFinish={() => handleModuleChange('p11-completion')}
+                  />
+                )}
+                {activeModule === 'p11-completion' && <Pillar11Completion onNext={() => handlePillarToggle(12, false)} />}
+              </>
+            ) : activePillar === 12 ? (
+              <>
+                {activeModule === 'p12-module-a' && (
+                  <>
+                    <div className="article-eyebrow">Pillar 12 · Sales & Revenue</div>
+                    <h1>Hunting for Business</h1>
+                    <p className="article-summary">
+                      Objective: Stop waiting for the phone to ring. Learn how to prospect, pitch, and close deals in the SA market.
+                    </p>
+                    <div className="article-divider" />
+                  </>
+                )}
 
-              {activeModule === 'p5-quiz' && (
-                <Pillar5Quiz
-                  quizResponses={pillar5QuizResponses}
-                  onSelect={handlePillar5QuizResponse}
-                  onScore={handlePillar5Score}
-                  scoreMessage={pillar5ScoreMessage}
-                  onFinish={() => setActiveModule('p5-completion')}
-                />
-              )}
-              {activeModule === 'p5-completion' && <Pillar5Completion />}
-            </>
-          ) : activePillar === 6 ? (
-            <>
-              {activeModule === 'p6-module-a' && (
-                <>
-                  <div className="article-eyebrow">Pillar 4 · Social Media &amp; Digital Marketing</div>
-                  <h1>Storytelling at the Speed of Social</h1>
-                  <p className="article-summary">
-                    <strong>Objective:</strong> Build a marketing system that gets your <strong>first 100 sales</strong>.
-                    You will learn the CapeWeb method: pick the right platforms, set up profiles that convert, create content that earns trust,
-                    run simple campaigns (even with R0), and track what leads to money.
-                    You'll finish with a <strong>7-day launch sprint</strong> and a <strong>weekly marketing scoreboard</strong>.
-                  </p>
-                  <div className="article-divider" />
-                </>
-              )}
+                {activeModule === 'p12-module-a' && <Pillar12ModuleA onNext={() => handleModuleChange('p12-module-b')} />}
+                {activeModule === 'p12-module-b' && <Pillar12ModuleB onNext={() => handleModuleChange('p12-module-c')} />}
+                {activeModule === 'p12-module-c' && <Pillar12ModuleC onNext={() => handleModuleChange('p12-resources')} />}
+                {activeModule === 'p12-resources' && <Pillar12Resources onNext={() => handleModuleChange('p12-quiz')} />}
+                {activeModule === 'p12-quiz' && (
+                  <Pillar12Quiz
+                    quizResponses={pillar12QuizResponses}
+                    onSelect={(q, o) => setPillar12QuizResponses(prev => ({ ...prev, [q]: o }))}
+                    onScore={handlePillar12Score}
+                    scoreMessage={pillar12ScoreMessage}
+                    onFinish={() => handleModuleChange('p12-completion')}
+                  />
+                )}
+                {activeModule === 'p12-completion' && <Pillar12Completion onNext={() => handlePillarToggle(13, false)} />}
+              </>
+            ) : activePillar === 13 ? (
+              <>
+                {activeModule === 'p13-module-a' && (
+                  <>
+                    <div className="article-eyebrow">Pillar 13 · Team Building & HR</div>
+                    <h1>Building a Team that Works</h1>
+                    <p className="article-summary">
+                      Objective: Transition from Solopreneur to Leader. Hiring, labour law, and culture.
+                    </p>
+                    <div className="article-divider" />
+                  </>
+                )}
 
-              {activeModule === 'p6-module-a' && <Pillar6ModuleA />}
-              {activeModule === 'p6-module-b' && <Pillar6ModuleB />}
-              {activeModule === 'p6-module-c' && <Pillar6ModuleC />}
-              {activeModule === 'p6-module-d' && <Pillar6ModuleD />}
-              {activeModule === 'p6-module-e' && <Pillar6ModuleE />}
-              {activeModule === 'p6-module-f' && <Pillar6ModuleF />}
-              {activeModule === 'p6-module-g' && <Pillar6ModuleG />}
-              {activeModule === 'p6-module-h' && <Pillar6ModuleH />}
-              {activeModule === 'p6-module-i' && <Pillar6ModuleI onNext={() => handleModuleChange('p6-resources')} />}
-              {activeModule === 'p6-resources' && <Pillar6Resources onNext={() => handleModuleChange('p6-quiz')} />}
+                {activeModule === 'p13-module-a' && <Pillar13ModuleA onNext={() => handleModuleChange('p13-module-b')} />}
+                {activeModule === 'p13-module-b' && <Pillar13ModuleB onNext={() => handleModuleChange('p13-module-c')} />}
+                {activeModule === 'p13-module-c' && <Pillar13ModuleC onNext={() => handleModuleChange('p13-resources')} />}
+                {activeModule === 'p13-resources' && <Pillar13Resources onNext={() => handleModuleChange('p13-quiz')} />}
+                {activeModule === 'p13-quiz' && (
+                  <Pillar13Quiz
+                    quizResponses={pillar13QuizResponses}
+                    onSelect={(q, o) => setPillar13QuizResponses(prev => ({ ...prev, [q]: o }))}
+                    onScore={handlePillar13Score}
+                    scoreMessage={pillar13ScoreMessage}
+                    onFinish={() => handleModuleChange('p13-completion')}
+                  />
+                )}
+                {activeModule === 'p13-completion' && <Pillar13Completion onNext={() => handlePillarToggle(14, false)} />}
+              </>
+            ) : activePillar === 14 ? (
+              <>
+                {activeModule === 'p14-module-a' && (
+                  <>
+                    <div className="article-eyebrow">Pillar 14 · Investment</div>
+                    <h1>Funding Your Dream</h1>
+                    <p className="article-summary">
+                      Objective: Understand the funding landscape. Equity, Debt, and Grants.
+                    </p>
+                    <div className="article-divider" />
+                  </>
+                )}
 
-              {activeModule === 'p6-quiz' && (
-                <Pillar6Quiz
-                  quizResponses={pillar6QuizResponses}
-                  onSelect={handlePillar6QuizResponse}
-                  onScore={handlePillar6Score}
-                  scoreMessage={pillar6ScoreMessage}
-                  onFinish={() => setActiveModule('p6-completion')}
-                />
-              )}
-              {activeModule === 'p6-completion' && <Pillar6Completion />}
-            </>
-          ) : activePillar === 7 ? (
-            <>
-              {activeModule === 'p7-module-a' && (
-                <>
-                  <div className="article-eyebrow">Pillar 7 · Artificial Intelligence &amp; Automation</div>
-                  <h1>Scale with Automations and AI Assistants</h1>
-                  <p className="article-summary">
-                    <strong>Objective:</strong> Build an always-on system that captures leads, books meetings, and follows up—without you.
-                    You will learn where automation fits (lead capture, WhatsApp replies, bookings), how to choose your stack (R0, CRM, or custom automation),
-                    when to add AI (prompts, chatbots, workflows), and how to stay compliant (POPIA, opt-ins, consent).
-                    You'll finish with a <strong>playbook library</strong>, an <strong>AI prompt builder</strong>, and a <strong>pipeline template</strong>.
-                  </p>
-                  <div className="article-divider" />
-                </>
-              )}
+                {activeModule === 'p14-module-a' && <Pillar14ModuleA onNext={() => handleModuleChange('p14-module-b')} />}
+                {activeModule === 'p14-module-b' && <Pillar14ModuleB onNext={() => handleModuleChange('p14-module-c')} />}
+                {activeModule === 'p14-module-c' && <Pillar14ModuleC onNext={() => handleModuleChange('p14-resources')} />}
+                {activeModule === 'p14-resources' && <Pillar14Resources onNext={() => handleModuleChange('p14-quiz')} />}
+                {activeModule === 'p14-quiz' && (
+                  <Pillar14Quiz
+                    quizResponses={pillar14QuizResponses}
+                    onSelect={(q, o) => setPillar14QuizResponses(prev => ({ ...prev, [q]: o }))}
+                    onScore={handlePillar14Score}
+                    scoreMessage={pillar14ScoreMessage}
+                    onFinish={() => handleModuleChange('p14-completion')}
+                  />
+                )}
+                {activeModule === 'p14-completion' && <Pillar14Completion onNext={() => handlePillarToggle(15, false)} />}
+              </>
+            ) : activePillar === 15 ? (
+              <>
+                {activeModule === 'p15-module-a' && (
+                  <>
+                    <div className="article-eyebrow">Pillar 15 · Supply Chain</div>
+                    <h1>Operations & Logistics</h1>
+                    <p className="article-summary">
+                      Objective: Master the physical side of business. Shipping, stock, and margins.
+                    </p>
+                    <div className="article-divider" />
+                  </>
+                )}
 
-              {activeModule === 'p7-module-a' && <Pillar7ModuleA />}
-              {activeModule === 'p7-module-b' && <Pillar7ModuleB />}
-              {activeModule === 'p7-module-c' && <Pillar7ModuleC />}
-              {activeModule === 'p7-module-d' && <Pillar7ModuleD />}
-              {activeModule === 'p7-module-e' && <Pillar7ModuleE />}
-              {activeModule === 'p7-module-f' && <Pillar7ModuleF />}
-              {activeModule === 'p7-module-g' && <Pillar7ModuleG />}
-              {activeModule === 'p7-module-h' && <Pillar7ModuleH />}
-              {activeModule === 'p7-module-i' && <Pillar7ModuleI onNext={() => handleModuleChange('p7-resources')} />}
-              {activeModule === 'p7-resources' && <Pillar7Resources onNext={() => handleModuleChange('p7-quiz')} />}
+                {activeModule === 'p15-module-a' && <Pillar15ModuleA onNext={() => handleModuleChange('p15-module-b')} />}
+                {activeModule === 'p15-module-b' && <Pillar15ModuleB onNext={() => handleModuleChange('p15-module-c')} />}
+                {activeModule === 'p15-module-c' && <Pillar15ModuleC onNext={() => handleModuleChange('p15-resources')} />}
+                {activeModule === 'p15-resources' && <Pillar15Resources onNext={() => handleModuleChange('p15-quiz')} />}
+                {activeModule === 'p15-quiz' && (
+                  <Pillar15Quiz
+                    quizResponses={pillar15QuizResponses}
+                    onSelect={(q, o) => setPillar15QuizResponses(prev => ({ ...prev, [q]: o }))}
+                    onScore={handlePillar15Score}
+                    scoreMessage={pillar15ScoreMessage}
+                    onFinish={() => handleModuleChange('p15-completion')}
+                  />
+                )}
+                {activeModule === 'p15-completion' && <Pillar15Completion onNext={() => handlePillarToggle(16, false)} />}
+              </>
+            ) : activePillar === 16 ? (
+              <>
+                {activeModule === 'p16-module-a' && (
+                  <>
+                    <div className="article-eyebrow">Pillar 16 · Product Strategy</div>
+                    <h1>Building What People Want</h1>
+                    <p className="article-summary">
+                      Objective: Validate your idea before building. Design for the SA reality.
+                    </p>
+                    <div className="article-divider" />
+                  </>
+                )}
 
-              {activeModule === 'p7-quiz' && (
-                <Pillar7Quiz
-                  quizResponses={pillar7QuizResponses}
-                  onSelect={handlePillar7QuizResponse}
-                  onScore={handlePillar7Score}
-                  scoreMessage={pillar7ScoreMessage}
-                  onFinish={() => handleModuleChange('p7-completion')}
-                />
-              )}
+                {activeModule === 'p16-module-a' && <Pillar16ModuleA onNext={() => handleModuleChange('p16-module-b')} />}
+                {activeModule === 'p16-module-b' && <Pillar16ModuleB onNext={() => handleModuleChange('p16-module-c')} />}
+                {activeModule === 'p16-module-c' && <Pillar16ModuleC onNext={() => handleModuleChange('p16-resources')} />}
+                {activeModule === 'p16-resources' && <Pillar16Resources onNext={() => handleModuleChange('p16-quiz')} />}
+                {activeModule === 'p16-quiz' && (
+                  <Pillar16Quiz
+                    quizResponses={pillar16QuizResponses}
+                    onSelect={(q, o) => setPillar16QuizResponses(prev => ({ ...prev, [q]: o }))}
+                    onScore={handlePillar16Score}
+                    scoreMessage={pillar16ScoreMessage}
+                    onFinish={() => handleModuleChange('p16-completion')}
+                  />
+                )}
+                {activeModule === 'p16-completion' && <Pillar16Completion onNext={() => handlePillarToggle(17, false)} />}
+              </>
+            ) : activePillar === 17 ? (
+              <>
+                {activeModule === 'p17-module-a' && (
+                  <>
+                    <div className="article-eyebrow">Pillar 17 · Partnerships</div>
+                    <h1>The Power of Ecosystems</h1>
+                    <p className="article-summary">
+                      Objective: Accelerate growth through partnerships. Navigate B-BBEE and contracts.
+                    </p>
+                    <div className="article-divider" />
+                  </>
+                )}
 
-              {activeModule === 'p7-completion' && <Pillar7Completion />}
-            </>
-          ) : activePillar === 8 ? (
-            <>
-              {activeModule === 'p8-module-a' && (
-                <>
-                  <div className="article-eyebrow">Pillar 9 · Cybersecurity &amp; Risk Management</div>
-                  <h1>Cybersecurity for Normal People (CapeWeb Edition)</h1>
-                  <p className="article-summary">
-                    <strong>Objective:</strong> Build a simple, strong security foundation for a Cape Town business that sells a <strong>product + service</strong>.
-                    You'll protect your email, social accounts, website, payments, devices, and customer data — and you'll create a "what to do if hacked" plan.
-                    You'll finish with a <strong>Risk Register</strong> and a <strong>Security Shield Checklist</strong>.
-                  </p>
-                  <div className="article-divider" />
-                </>
-              )}
+                {activeModule === 'p17-module-a' && <Pillar17ModuleA onNext={() => handleModuleChange('p17-module-b')} />}
+                {activeModule === 'p17-module-b' && <Pillar17ModuleB onNext={() => handleModuleChange('p17-module-c')} />}
+                {activeModule === 'p17-module-c' && <Pillar17ModuleC onNext={() => handleModuleChange('p17-resources')} />}
+                {activeModule === 'p17-resources' && <Pillar17Resources onNext={() => handleModuleChange('p17-quiz')} />}
+                {activeModule === 'p17-quiz' && (
+                  <Pillar17Quiz
+                    quizResponses={pillar17QuizResponses}
+                    onSelect={(q, o) => setPillar17QuizResponses(prev => ({ ...prev, [q]: o }))}
+                    onScore={handlePillar17Score}
+                    scoreMessage={pillar17ScoreMessage}
+                    onFinish={() => handleModuleChange('p17-completion')}
+                  />
+                )}
+                {activeModule === 'p17-completion' && <Pillar17Completion onNext={() => handlePillarToggle(18, false)} />}
+              </>
+            ) : activePillar === 18 ? (
+              <>
+                {activeModule === 'p18-module-a' && (
+                  <>
+                    <div className="article-eyebrow">Pillar 18 · Crisis Management</div>
+                    <h1>Survival Mode</h1>
+                    <p className="article-summary">
+                      Objective: Navigate storms without sinking. Legal, PR, and Operational Resilience.
+                    </p>
+                    <div className="article-divider" />
+                  </>
+                )}
 
+                {activeModule === 'p18-module-a' && <Pillar18ModuleA onNext={() => handleModuleChange('p18-module-b')} />}
+                {activeModule === 'p18-module-b' && <Pillar18ModuleB onNext={() => handleModuleChange('p18-module-c')} />}
+                {activeModule === 'p18-module-c' && <Pillar18ModuleC onNext={() => handleModuleChange('p18-resources')} />}
+                {activeModule === 'p18-resources' && <Pillar18Resources onNext={() => handleModuleChange('p18-quiz')} />}
+                {activeModule === 'p18-quiz' && (
+                  <Pillar18Quiz
+                    quizResponses={pillar18QuizResponses}
+                    onSelect={(q, o) => setPillar18QuizResponses(prev => ({ ...prev, [q]: o }))}
+                    onScore={handlePillar18Score}
+                    scoreMessage={pillar18ScoreMessage}
+                    onFinish={() => handleModuleChange('p18-completion')}
+                  />
+                )}
+                {activeModule === 'p18-completion' && <Pillar18Completion onNext={() => handlePillarToggle(19, false)} />}
+              </>
+            ) : activePillar === 19 ? (
+              <>
+                {activeModule === 'p19-module-a' && (
+                  <>
+                    <div className="article-eyebrow">Pillar 19 · Exit Strategy</div>
+                    <h1>The Big Payday</h1>
+                    <p className="article-summary">
+                      Objective: Sell your business for maximum value. Understand valuation and due diligence.
+                    </p>
+                    <div className="article-divider" />
+                  </>
+                )}
 
-              {activeModule === 'p8-module-a' && <Pillar8ModuleA />}
-              {activeModule === 'p8-module-b' && <Pillar8ModuleB />}
-              {activeModule === 'p8-module-c' && <Pillar8ModuleC />}
-              {activeModule === 'p8-module-d' && <Pillar8ModuleD />}
-              {activeModule === 'p8-module-e' && <Pillar8ModuleE />}
-              {activeModule === 'p8-module-f' && <Pillar8ModuleF />}
-              {activeModule === 'p8-module-g' && <Pillar8ModuleG />}
-              {activeModule === 'p8-module-h' && <Pillar8ModuleH />}
-              {activeModule === 'p8-module-i' && <Pillar8ModuleI onNext={() => handleModuleChange('p8-resources')} />}
-              {activeModule === 'p8-resources' && <Pillar8Resources onNext={() => handleModuleChange('p8-quiz')} />}
-
-              {activeModule === 'p8-quiz' && (
-                <Pillar8Quiz
-                  quizResponses={pillar8QuizResponses}
-                  onSelect={handlePillar8QuizResponse}
-                  onScore={handlePillar8Score}
-                  scoreMessage={pillar8ScoreMessage}
-                  onFinish={() => handleModuleChange('p8-completion')}
-                />
-              )}
-
-              {activeModule === 'p8-completion' && <Pillar8Completion />}
-            </>
-          ) : activePillar === 9 ? (
-            <>
-              {activeModule === 'p9-module-a' && (
-                <>
-                  <div className="article-eyebrow">Pillar 5 · Financial Systems &amp; eCommerce</div>
-                  <h1>CapeWeb Money 101</h1>
-                  <p className="article-summary">
-                    <strong>Objective:</strong> Build a financial system that works from Day 1. You'll track every sale, understand pricing, set up local payments,
-                    choose your eCommerce path, write fair policies, and prepare for tax season. By the end, you'll have a <strong>simple ledger</strong>, a
-                    <strong> pricing calculator</strong>, and a <strong>financial dashboard</strong> you can trust.
-                  </p>
-                  <div className="article-divider" />
-                </>
-              )}
-
-              {activeModule === 'p9-module-a' && <Pillar9ModuleA />}
-              {activeModule === 'p9-module-b' && <Pillar9ModuleB />}
-              {activeModule === 'p9-module-c' && <Pillar9ModuleC />}
-              {activeModule === 'p9-module-d' && <Pillar9ModuleD />}
-              {activeModule === 'p9-module-e' && <Pillar9ModuleE />}
-              {activeModule === 'p9-module-f' && <Pillar9ModuleF onNext={() => handleModuleChange('p9-resources')} />}
-              {activeModule === 'p9-resources' && <Pillar9Resources onNext={() => handleModuleChange('p9-quiz')} />}
-
-              {activeModule === 'p9-quiz' && (
-                <Pillar9Quiz
-                  quizResponses={pillar9QuizResponses}
-                  onSelect={handlePillar9QuizResponse}
-                  onScore={handlePillar9Score}
-                  scoreMessage={pillar9ScoreMessage}
-                  onFinish={() => handleModuleChange('p9-completion')}
-                />
-              )}
-
-              {activeModule === 'p9-completion' && <Pillar9Completion />}
-            </>
-          ) : activePillar === 10 ? (
-            <>
-              {activeModule === 'p10-module-a' && (
-                <>
-                  <div className="article-eyebrow">Pillar 8 · Analytics &amp; Business Intelligence</div>
-                  <h1>The Growth Dashboard (Measure → Learn → Improve)</h1>
-                  <p className="article-summary">
-                    <strong>Objective:</strong> Build a beginner-friendly measurement system for a product + service business in Cape Town.
-                    You'll learn what to track, how to track it (free tools), how to interpret it, and how to choose your next improvement.
-                  </p>
-                  <div className="article-divider" />
-                </>
-              )}
-
-
-              {activeModule === 'p10-module-a' && <Pillar10ModuleA />}
-              {activeModule === 'p10-module-b' && <Pillar10ModuleB />}
-              {activeModule === 'p10-module-c' && <Pillar10ModuleC />}
-              {activeModule === 'p10-module-d' && <Pillar10ModuleD />}
-              {activeModule === 'p10-module-e' && <Pillar10ModuleE />}
-              {activeModule === 'p10-module-f' && <Pillar10ModuleF />}
-              {activeModule === 'p10-module-g' && <Pillar10ModuleG onNext={() => handleModuleChange('p10-resources')} />}
-              {activeModule === 'p10-resources' && <Pillar10Resources onNext={() => handleModuleChange('p10-quiz')} />}
-
-              {activeModule === 'p10-quiz' && (
-                <Pillar10Quiz
-                  quizResponses={pillar10QuizResponses}
-                  onSelect={handlePillar10QuizResponse}
-                  onScore={handlePillar10Score}
-                  scoreMessage={pillar10ScoreMessage}
-                  onFinish={() => handleModuleChange('p10-completion')}
-                />
-              )}
-
-              {activeModule === 'p10-completion' && <Pillar10Completion />}
-            </>
-          ) : activePillar === 11 ? (
-            <>
-              {activeModule === 'p11-module-a' && (
-                <>
-                  <div className="article-eyebrow">Pillar 6 · Customer Experience &amp; Support</div>
-                  <h1>The CX Flywheel (Support → Trust → Reviews → More Sales)</h1>
-                  <p className="article-summary">
-                    <strong>Objective:</strong> Build a customer experience that feels like a "real company" from day one:
-                    fast replies, clear expectations, simple policies, and a system that learns from customer questions.
-                    This is how CapeWeb clients build businesses that run smoothly and grow.
-                  </p>
-                  <div className="article-divider" />
-                </>
-              )}
-
-
-              {activeModule === 'p11-module-a' && <Pillar11ModuleA />}
-              {activeModule === 'p11-module-b' && <Pillar11ModuleB />}
-              {activeModule === 'p11-module-c' && <Pillar11ModuleC />}
-              {activeModule === 'p11-module-d' && <Pillar11ModuleD />}
-              {activeModule === 'p11-module-e' && <Pillar11ModuleE />}
-              {activeModule === 'p11-module-f' && <Pillar11ModuleF />}
-              {activeModule === 'p11-module-g' && <Pillar11ModuleG onNext={() => handleModuleChange('p11-resources')} />}
-              {activeModule === 'p11-resources' && <Pillar11Resources onNext={() => handleModuleChange('p11-quiz')} />}
-
-              {activeModule === 'p11-quiz' && (
-                <Pillar11Quiz
-                  quizResponses={pillar11QuizResponses}
-                  onSelect={handlePillar11QuizResponse}
-                  onScore={handlePillar11Score}
-                  scoreMessage={pillar11ScoreMessage}
-                  onFinish={() => handleModuleChange('p11-completion')}
-                />
-              )}
-
-              {activeModule === 'p11-completion' && <Pillar11Completion onNext={() => {
-                setActivePillar(12);
-                setIsPillar12Expanded(true);
-                handleModuleChange('p12-module-a');
-              }} />}
-            </>
-          ) : activePillar === 12 ? (
-            <>
-              {activeModule === 'p12-module-a' && (
-                <>
-                  <div className="article-eyebrow">Pillar 12 · Sales & Revenue</div>
-                  <h1>Hunting for Business</h1>
-                  <p className="article-summary">
-                    <strong>Objective:</strong> Stop waiting for the phone to ring. Learn how to prospect, pitch, and close deals in the SA market.
-                  </p>
-                  <div className="article-divider" />
-                </>
-              )}
-              {activeModule === 'p12-module-a' && <Pillar12ModuleA onNext={() => handleModuleChange('p12-module-b')} />}
-              {activeModule === 'p12-module-b' && <Pillar12ModuleB onNext={() => handleModuleChange('p12-module-c')} />}
-              {activeModule === 'p12-module-c' && <Pillar12ModuleC onNext={() => handleModuleChange('p12-resources')} />}
-              {activeModule === 'p12-resources' && <Pillar12Resources onNext={() => handleModuleChange('p12-quiz')} />}
-              {activeModule === 'p12-quiz' && (
-                <Pillar12Quiz
-                  quizResponses={pillar12QuizResponses}
-                  onSelect={(q, o) => setPillar12QuizResponses(prev => ({ ...prev, [q]: o }))}
-                  onScore={handlePillar12Score}
-                  scoreMessage={pillar12ScoreMessage}
-                  onFinish={() => handleModuleChange('p12-completion')}
-                />
-              )}
-              {activeModule === 'p12-completion' && (
-                <Pillar12Completion
-                  onNext={() => {
-                    setActivePillar(13);
-                    setActiveModule('p13-module-a');
-                    setIsPillar12Expanded(false);
-                    setIsPillar13Expanded(true);
-                    scrollToTop();
-                  }}
-                />
-              )}
-              {/* Note: I should add a button in P12 Completion to go to P13 manually if needed, or rely on sidebar */}
-            </>
-          ) : activePillar === 13 ? (
-            <>
-              {activeModule === 'p13-module-a' && (
-                <>
-                  <div className="article-eyebrow">Pillar 13 · Team Building & HR</div>
-                  <h1>Building a Team that Works</h1>
-                  <p className="article-summary">
-                    <strong>Objective:</strong> Transition from Solopreneur to Leader. Learn hiring, labour law basics, CCMA procedures, and how to build a winning culture.
-                  </p>
-                  <div className="article-divider" />
-                </>
-              )}
-              {activeModule === 'p13-module-a' && <Pillar13ModuleA onNext={() => handleModuleChange('p13-module-b')} />}
-              {activeModule === 'p13-module-b' && <Pillar13ModuleB onNext={() => handleModuleChange('p13-module-c')} />}
-              {activeModule === 'p13-module-c' && <Pillar13ModuleC onNext={() => handleModuleChange('p13-resources')} />}
-              {activeModule === 'p13-resources' && <Pillar13Resources onNext={() => handleModuleChange('p13-quiz')} />}
-              {activeModule === 'p13-quiz' && (
-                <Pillar13Quiz
-                  quizResponses={pillar13QuizResponses}
-                  onSelect={handlePillar13QuizResponse}
-                  onScore={handlePillar13Score}
-                  scoreMessage={pillar13ScoreMessage}
-                  onFinish={() => handleModuleChange('p13-completion')}
-                />
-              )}
-              {activeModule === 'p13-completion' && <Pillar13Completion />}
-            </>
-          ) : activePillar === 14 ? (
-            <>
-              {activeModule === 'p14-module-a' && (
-                <>
-                  <div className="article-eyebrow">Pillar 14 · Investment</div>
-                  <h1>Funding Your Dream</h1>
-                  <p className="article-summary">
-                    <strong>Objective:</strong> Understand the funding landscape. Don't waste time on investors if you aren't ready. Master the 6-month rule.
-                  </p>
-                  <div className="article-divider" />
-                </>
-              )}
-              {activeModule === 'p14-module-a' && <Pillar14ModuleA onNext={() => handleModuleChange('p14-module-b')} />}
-              {activeModule === 'p14-module-b' && <Pillar14ModuleB onNext={() => handleModuleChange('p14-module-c')} />}
-              {activeModule === 'p14-module-c' && <Pillar14ModuleC onNext={() => handleModuleChange('p14-resources')} />}
-              {activeModule === 'p14-resources' && <Pillar14Resources onNext={() => handleModuleChange('p14-quiz')} />}
-              {activeModule === 'p14-quiz' && (
-                <Pillar14Quiz
-                  quizResponses={pillar14QuizResponses}
-                  onSelect={handlePillar14QuizResponse}
-                  onScore={handlePillar14Score}
-                  scoreMessage={pillar14ScoreMessage}
-                  onFinish={() => handleModuleChange('p14-completion')}
-                />
-              )}
-              {activeModule === 'p14-completion' && <Pillar14Completion onNext={() => {
-                setActivePillar(15);
-                setActiveModule('p15-module-a');
-                setIsPillar14Expanded(false);
-                setIsPillar15Expanded(true);
-                // scrollToTop(); // Assumed handled by effect
-              }} />}
-            </>
-          ) : activePillar === 15 ? (
-            <>
-              {activeModule === 'p15-module-a' && (
-                <>
-                  <div className="article-eyebrow">Pillar 15 · Supply Chain</div>
-                  <h1>Operations & Logistics</h1>
-                  <p className="article-summary">
-                    <strong>Objective:</strong> Master the physical side of business. Shipping, stock, and margins.
-                  </p>
-                  <div className="article-divider" />
-                </>
-              )}
-              {activeModule === 'p15-module-a' && <Pillar15ModuleA onNext={() => handleModuleChange('p15-module-b')} />}
-              {activeModule === 'p15-module-b' && <Pillar15ModuleB onNext={() => handleModuleChange('p15-module-c')} />}
-              {activeModule === 'p15-module-c' && <Pillar15ModuleC onNext={() => handleModuleChange('p15-resources')} />}
-              {activeModule === 'p15-resources' && <Pillar15Resources onNext={() => handleModuleChange('p15-quiz')} />}
-              {activeModule === 'p15-quiz' && (
-                <Pillar15Quiz
-                  quizResponses={pillar15QuizResponses}
-                  onSelect={handlePillar15QuizResponse}
-                  onScore={handlePillar15Score}
-                  scoreMessage={pillar15ScoreMessage}
-                  onFinish={() => handleModuleChange('p15-completion')}
-                />
-              )}
-              {activeModule === 'p15-completion' && <Pillar15Completion />}
-            </>
-          ) : activePillar === 16 ? (
-            <>
-              {activeModule === 'p16-module-a' && (
-                <>
-                  <div className="article-eyebrow">Pillar 16 · Product Strategy</div>
-                  <h1>Building What People Want</h1>
-                  <p className="article-summary">
-                    <strong>Objective:</strong> Validate your idea before building. Design for the SA reality (mobile-first, low data).
-                  </p>
-                  <div className="article-divider" />
-                </>
-              )}
-              {activeModule === 'p16-module-a' && <Pillar16ModuleA onNext={() => handleModuleChange('p16-module-b')} />}
-              {activeModule === 'p16-module-b' && <Pillar16ModuleB onNext={() => handleModuleChange('p16-module-c')} />}
-              {activeModule === 'p16-module-c' && <Pillar16ModuleC onNext={() => handleModuleChange('p16-resources')} />}
-              {activeModule === 'p16-resources' && <Pillar16Resources onNext={() => handleModuleChange('p16-quiz')} />}
-              {activeModule === 'p16-quiz' && (
-                <Pillar16Quiz
-                  quizResponses={pillar16QuizResponses}
-                  onSelect={handlePillar16QuizResponse}
-                  onScore={handlePillar16Score}
-                  scoreMessage={pillar16ScoreMessage}
-                  onFinish={() => handleModuleChange('p16-completion')}
-                />
-              )}
-              {activeModule === 'p16-completion' && <Pillar16Completion onNext={() => {
-                setActivePillar(17);
-                setActiveModule('p17-module-a');
-                setIsPillar16Expanded(false);
-                setIsPillar17Expanded(true);
-              }} />}
-            </>
-          ) : activePillar === 17 ? (
-            <>
-              {activeModule === 'p17-module-a' && (
-                <>
-                  <div className="article-eyebrow">Pillar 17 · Partnerships</div>
-                  <h1>The Power of Ecosystems</h1>
-                  <p className="article-summary">
-                    <strong>Objective:</strong> Accelerate growth through partnerships. Navigate B-BBEE and contracts safely.
-                  </p>
-                  <div className="article-divider" />
-                </>
-              )}
-              {activeModule === 'p17-module-a' && <Pillar17ModuleA onNext={() => handleModuleChange('p17-module-b')} />}
-              {activeModule === 'p17-module-b' && <Pillar17ModuleB onNext={() => handleModuleChange('p17-module-c')} />}
-              {activeModule === 'p17-module-c' && <Pillar17ModuleC onNext={() => handleModuleChange('p17-resources')} />}
-              {activeModule === 'p17-resources' && <Pillar17Resources onNext={() => handleModuleChange('p17-quiz')} />}
-              {activeModule === 'p17-quiz' && (
-                <Pillar17Quiz
-                  quizResponses={pillar17QuizResponses}
-                  onSelect={handlePillar17QuizResponse}
-                  onScore={handlePillar17Score}
-                  scoreMessage={pillar17ScoreMessage}
-                  onFinish={() => handleModuleChange('p17-completion')}
-                />
-              )}
-              {activeModule === 'p17-completion' && <Pillar17Completion onNext={() => {
-                setActivePillar(18);
-                setActiveModule('p18-module-a');
-                setIsPillar17Expanded(false);
-                setIsPillar18Expanded(true);
-              }} />}
-            </>
-          ) : activePillar === 18 ? (
-            <>
-              {activeModule === 'p18-module-a' && (
-                <>
-                  <div className="article-eyebrow">Pillar 18 · Crisis Management</div>
-                  <h1>Survival Mode</h1>
-                  <p className="article-summary"><strong>Objective:</strong> Navigate storms without sinking. Legal, PR, and Operational Resilience.</p>
-                  <div className="article-divider" />
-                </>
-              )}
-              {activeModule === 'p18-module-a' && <Pillar18ModuleA onNext={() => handleModuleChange('p18-module-b')} />}
-              {activeModule === 'p18-module-b' && <Pillar18ModuleB onNext={() => handleModuleChange('p18-module-c')} />}
-              {activeModule === 'p18-module-c' && <Pillar18ModuleC onNext={() => handleModuleChange('p18-resources')} />}
-              {activeModule === 'p18-resources' && <Pillar18Resources onNext={() => handleModuleChange('p18-quiz')} />}
-              {activeModule === 'p18-quiz' && (
-                <Pillar18Quiz
-                  quizResponses={pillar18QuizResponses}
-                  onSelect={handlePillar18QuizResponse}
-                  onScore={handlePillar18Score}
-                  scoreMessage={pillar18ScoreMessage}
-                  onFinish={() => handleModuleChange('p18-completion')}
-                />
-              )}
-              {activeModule === 'p18-completion' && <Pillar18Completion onNext={() => {
-                setActivePillar(19);
-                setActiveModule('p19-module-a');
-                setIsPillar18Expanded(false);
-                setIsPillar19Expanded(true);
-              }} />}
-            </>
-          ) : activePillar === 19 ? (
-            <>
-              {activeModule === 'p19-module-a' && (
-                <>
-                  <div className="article-eyebrow">Pillar 19 · Exit Strategy</div>
-                  <h1>The Big Payday</h1>
-                  <p className="article-summary"><strong>Objective:</strong> Sell your business for maximum value. Understand valuation and due diligence.</p>
-                  <div className="article-divider" />
-                </>
-              )}
-              {activeModule === 'p19-module-a' && <Pillar19ModuleA onNext={() => handleModuleChange('p19-module-b')} />}
-              {activeModule === 'p19-module-b' && <Pillar19ModuleB onNext={() => handleModuleChange('p19-module-c')} />}
-              {activeModule === 'p19-module-c' && <Pillar19ModuleC onNext={() => handleModuleChange('p19-resources')} />}
-              {activeModule === 'p19-resources' && <Pillar19Resources onNext={() => handleModuleChange('p19-quiz')} />}
-              {activeModule === 'p19-quiz' && (
-                <Pillar19Quiz
-                  quizResponses={pillar19QuizResponses}
-                  onSelect={handlePillar19QuizResponse}
-                  onScore={handlePillar19Score}
-                  scoreMessage={pillar19ScoreMessage}
-                  onFinish={() => handleModuleChange('p19-completion')}
-                />
-              )}
-              {activeModule === 'p19-completion' && <Pillar19Completion />}
-            </>
-          ) : null}
-        </div>
+                {activeModule === 'p19-module-a' && <Pillar19ModuleA onNext={() => handleModuleChange('p19-module-b')} />}
+                {activeModule === 'p19-module-b' && <Pillar19ModuleB onNext={() => handleModuleChange('p19-module-c')} />}
+                {activeModule === 'p19-module-c' && <Pillar19ModuleC onNext={() => handleModuleChange('p19-resources')} />}
+                {activeModule === 'p19-resources' && <Pillar19Resources onNext={() => handleModuleChange('p19-quiz')} />}
+                {activeModule === 'p19-quiz' && (
+                  <Pillar19Quiz
+                    quizResponses={pillar19QuizResponses}
+                    onSelect={(q, o) => setPillar19QuizResponses(prev => ({ ...prev, [q]: o }))}
+                    onScore={handlePillar19Score}
+                    scoreMessage={pillar19ScoreMessage}
+                    onFinish={() => handleModuleChange('p19-completion')}
+                  />
+                )}
+                {activeModule === 'p19-completion' && <Pillar19Completion />}
+              </>
+            ) : null}
+          </div>
       </div>
     </div >
   );

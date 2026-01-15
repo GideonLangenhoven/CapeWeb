@@ -7,7 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 // Define a safe subclass to override the buggy method
-class SafeLocomotiveScroll extends LocomotiveScroll {
+export class SafeLocomotiveScroll extends LocomotiveScroll {
     addSections() {
         this.sections = {};
 
@@ -81,14 +81,23 @@ export default function useLocomotiveScroll(start, smooth = true) {
 
         const scrollEl = scrollRef.current;
 
+        const applyTransformFallback = (el) => {
+            if (!el) return;
+            const style = window.getComputedStyle ? window.getComputedStyle(el) : null;
+            const transform = style?.transform || style?.webkitTransform || style?.mozTransform;
+            if (!transform || transform === 'none') {
+                el.style.transform = 'translate3d(0,0,0)';
+                el.style.webkitTransform = 'translate3d(0,0,0)';
+                el.style.msTransform = 'translate3d(0,0,0)';
+            }
+        };
+
         // Ensure elements have transforms before init (extra safety)
         const ensureTransforms = () => {
-            const sections = scrollEl.querySelectorAll('[data-scroll-section]');
-            sections.forEach(el => {
-                if (!el.style.transform) {
-                    el.style.transform = 'translate3d(0,0,0)';
-                }
-            });
+            if (smooth) {
+                applyTransformFallback(scrollEl);
+            }
+            scrollEl.querySelectorAll('[data-scroll-section], [data-scroll]').forEach(applyTransformFallback);
         };
         ensureTransforms();
 
@@ -110,6 +119,12 @@ export default function useLocomotiveScroll(start, smooth = true) {
         });
 
         locomotiveScrollRef.current = ls;
+
+        const originalUpdate = ls.update.bind(ls);
+        ls.update = () => {
+            ensureTransforms();
+            originalUpdate();
+        };
 
         // Force an update to register sections using the patched method
         ls.update();

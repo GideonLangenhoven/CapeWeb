@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { VideoReferenceCard } from './VideoReferenceCard';
 import * as confettiModule from 'canvas-confetti';
 import { gsap } from 'gsap';
 import { InteractiveLayout, QuizLayout } from './CapeWebLayouts';
@@ -303,6 +304,7 @@ function ROASCalculator() {
   )
 }
 
+
 function ScenarioToggle({ oldTitle, oldContent, newTitle, newContent }) {
   const [view, setView] = useState('old');
   return (
@@ -349,6 +351,135 @@ function ScenarioToggle({ oldTitle, oldContent, newTitle, newContent }) {
   );
 }
 
+function IntentFunnelVisual() {
+  return (
+    <div style={{ margin: '2rem 0', display: 'flex', gap: '1rem' }}>
+      <div style={{ flex: 1, padding: '1.5rem', background: '#DBEAFE', borderRadius: '16px', border: '1px solid #BFDBFE', textAlign: 'center' }}>
+        <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🔍</div>
+        <h4 style={{ margin: '0 0 0.5rem', color: '#1E40AF' }}>Google Search</h4>
+        <div style={{ fontSize: '0.9rem', color: '#1E3A8A', fontWeight: 'bold' }}>"I need a plumber NOW"</div>
+        <div style={{ marginTop: '1rem', background: '#2563EB', color: 'white', padding: '0.25rem', borderRadius: '4px', fontSize: '0.8rem' }}>High Intent ( Hot 🔥)</div>
+      </div>
+      <div style={{ flex: 1, padding: '1.5rem', background: '#FCE7F3', borderRadius: '16px', border: '1px solid #FBCFE8', textAlign: 'center' }}>
+        <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📱</div>
+        <h4 style={{ margin: '0 0 0.5rem', color: '#BE185D' }}>Instagram</h4>
+        <div style={{ fontSize: '0.9rem', color: '#9D174D', fontWeight: 'bold' }}>"Looking at cat memes"</div>
+        <div style={{ marginTop: '1rem', background: '#DB2777', color: 'white', padding: '0.25rem', borderRadius: '4px', fontSize: '0.8rem' }}>Low Intent ( Cold ❄️)</div>
+      </div>
+    </div>
+  );
+}
+
+function ScrollStopperVisual() {
+  const [stopped, setStopped] = useState(false);
+  
+  return (
+    <div style={{ margin: '2rem 0', height: '200px', background: '#F3F4F6', borderRadius: '16px', overflow: 'hidden', position: 'relative', border: '1px solid #E5E7EB' }}>
+       <div style={{ 
+          position: 'absolute', width: '100%', padding: '1rem',
+          top: stopped ? '50%' : '0', 
+          transform: stopped ? 'translateY(-50%)' : 'translateY(0)',
+          transition: 'top 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+          animation: !stopped ? 'scrollDown 2s linear infinite' : 'none',
+          textAlign: 'center'
+       }} onClick={() => setStopped(true)}>
+          {!stopped ? (
+            <>
+              <div style={{ height: '100px', background: '#D1D5DB', borderRadius: '8px', marginBottom: '1rem' }} />
+              <div style={{ height: '100px', background: '#D1D5DB', borderRadius: '8px', marginBottom: '1rem' }} />
+              <div style={{ height: '100px', background: '#D1D5DB', borderRadius: '8px', marginBottom: '1rem' }} />
+            </>
+          ) : (
+             <div style={{ background: '#EF4444', color: 'white', padding: '2rem', borderRadius: '12px', fontWeight: '900', fontSize: '1.5rem', boxShadow: '0 10px 25px rgba(239, 68, 68, 0.4)' }}>
+               🛑 STOP!
+               <div style={{ fontSize: '1rem', fontWeight: 'normal', marginTop: '0.5rem' }}>You stopped the scroll.</div>
+             </div>
+          )}
+       </div>
+       <style>{`@keyframes scrollDown { 0% { top: -100px; } 100% { top: 100%; } }`}</style>
+       {!stopped && <div style={{ position: 'absolute', bottom: '1rem', width: '100%', textAlign: 'center', color: '#6B7280', fontSize: '0.9rem' }}>Tap inside to stop content</div>}
+    </div>
+  );
+}
+
+function HeroGuideVisual() {
+  return (
+    <div style={{ margin: '2rem 0', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
+       <div style={{ textAlign: 'center' }}>
+          <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: '#FDE047', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem' }}>🦸</div>
+          <div style={{ marginTop: '0.5rem', fontWeight: 'bold', color: '#1F2937' }}>Luke (Customer)</div>
+       </div>
+       <div style={{ fontSize: '2rem', color: '#9CA3AF' }}>+</div>
+       <div style={{ textAlign: 'center' }}>
+          <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: '#10B981', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem' }}>🧙‍♂️</div>
+          <div style={{ marginTop: '0.5rem', fontWeight: 'bold', color: '#1F2937' }}>Yoda (You)</div>
+       </div>
+       <div style={{ fontSize: '2rem', color: '#9CA3AF' }}>=</div>
+       <div style={{ textAlign: 'center' }}>
+          <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: '#3B82F6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem' }}>🏆</div>
+          <div style={{ marginTop: '0.5rem', fontWeight: 'bold', color: '#1F2937' }}>Victory</div>
+       </div>
+    </div>
+  );
+}
+
+function ValueEquationVisual() {
+  return (
+    <div style={{ margin: '2rem 0', padding: '1.5rem', background: '#F0FDF4', borderRadius: '16px', border: '1px solid #BBF7D0' }}>
+       <div style={{ textAlign: 'center', fontSize: '1.5rem', fontWeight: 'bold', color: '#14532D', fontFamily: 'monospace' }}>
+          VALUE = <span style={{ color: '#15803D' }}>(Dream x Certainty)</span>
+          <div style={{ height: '2px', background: '#15803D', width: '80%', margin: '0.5rem auto' }} />
+           <span style={{ color: '#DC2626' }}>(Time x Effort)</span>
+       </div>
+       <div style={{ marginTop: '1rem', textAlign: 'center', fontSize: '0.9rem', color: '#166534' }}>
+          ⬇️ Decrease the bottom number to ⬆️ Increase Value.
+       </div>
+    </div>
+  );
+}
+
+function EmailAssetVisual() {
+  return (
+    <div style={{ margin: '2rem 0', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+      <div style={{ padding: '1rem', background: '#FEF2F2', borderRadius: '12px', border: '1px solid #FECACA' }}>
+         <h4 style={{ margin: '0 0 0.5rem', color: '#B91C1C' }}>🏠 Rented Land</h4>
+         <p style={{ margin: 0, fontSize: '0.9rem', color: '#7F1D1D' }}>Social Media. <br/>Algorithm changes = You lose business.</p>
+      </div>
+      <div style={{ padding: '1rem', background: '#ECFDF5', borderRadius: '12px', border: '1px solid #A7F3D0' }}>
+         <h4 style={{ margin: '0 0 0.5rem', color: '#047857' }}>🏰 Owned Castle</h4>
+         <p style={{ margin: 0, fontSize: '0.9rem', color: '#064E3B' }}>Email List. <br/>You own the data. Nobody can take it.</p>
+      </div>
+    </div>
+  );
+}
+
+function PixelVisual() {
+    return (
+      <div style={{ margin: '2rem 0', padding: '1rem', background: '#fff', border: '1px solid #E2E8F0', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+         <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: '2rem' }}>👀</div>
+            <div style={{ fontSize: '0.8rem', color: '#64748B' }}>Visitor</div>
+         </div>
+         <div style={{ flex: 1, height: '2px', background: '#CBD5E1', position: 'relative', margin: '0 1rem' }}>
+            <div style={{ position: 'absolute', top: '-14px', left: '50%', transform: 'translateX(-50%)', background: '#F1F5F9', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.7rem', color: '#475569' }}>Not Pixeled</div>
+         </div>
+         <div style={{ textAlign: 'center', opacity: 0.3 }}>
+            <div style={{ fontSize: '2rem' }}>👻</div>
+            <div style={{ fontSize: '0.8rem', color: '#64748B' }}>Lost Forever</div>
+         </div>
+         
+         <div style={{ width: '100%', height: '1px', background: '#000', margin: '1rem 0', display: 'none' }} />
+
+         <div style={{ textAlign: 'center', marginLeft: '2rem', borderLeft: '2px dashed #CBD5E1', paddingLeft: '2rem' }}>
+             <div style={{ background: '#3B82F6', color: 'white', padding: '0.5rem 1rem', borderRadius: '8px', fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '0.5rem' }}>
+                🍪 Pixel Fired
+             </div>
+             <div style={{ fontSize: '0.8rem', color: '#3B82F6' }}>"I see you!"</div>
+         </div>
+      </div>
+    );
+}
+
 // ==========================================
 // PILLAR 6 MODULES A-I
 // ==========================================
@@ -361,6 +492,13 @@ export function Pillar6ModuleA({ onNext }) {
         <p className="cw-text-body">
           You cannot speak to a stranger the same way you speak to a loyal customer. In marketing, we classify audiences by "temperature".
         </p>
+
+        <VideoReferenceCard
+          videoId="tGyFsYMvRtI"
+          start={0}
+          title="Russell Brunson: Traffic Secrets"
+          description="Understanding traffic temperature: Cold, Warm, and Hot audiences."
+        />
 
         <TrafficThermometer />
 
@@ -433,12 +571,39 @@ export function Pillar6ModuleB({ onNext }) {
           <strong>Google Ads</strong> is "Intent-Based". When someone types "Best Plumber Cape Town", they have a problem <em>right now</em>. They are "Hand Raisers".
         </p>
 
+        <VideoReferenceCard
+          videoId="yFp_oRVcf3c"
+          start={121}
+          title="Intent vs Interruption Marketing"
+          description="The difference between capturing existing demand (Search) and generating new demand (Social)."
+        />
+
+        <IntentFunnelVisual />
+        
+        <BookInsight title="The 80/20 of Adwords" author="Perry Marshall" book="Ultimate Guide to Google Ads" color="#4F46E5">
+          <p>"Nobody goes to Google to browse. They go to find. If you have the answer, they have the credit card."</p>
+        </BookInsight>
+
         <ScenarioToggle
           oldTitle="The Billboard (Hope)"
           oldContent="You pay R50,000 to show your plumbing ad to 100,000 driving people. Only 2 of them have a leak. Wasted money."
           newTitle="Google Search (Precision)"
           newContent="You pay R20 to show your ad to 1 person who JUST searched 'Plumber Help'. High conversion."
         />
+
+        {/* NEW SECTION: Why It Matters */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%)', borderRadius: '24px', border: '1px solid #BFDBFE' }}>
+          <CWHeading level={3} style={{ color: '#1E40AF', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+             <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+          </CWHeading>
+          <p style={{ fontSize: '1.1rem', color: '#1E3A8A', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+             Google Ads is the only advertising channel where the customer tells you exactly what they want to buy before you show them an ad. It is the highest ROI channel for service businesses.
+          </p>
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #BFDBFE' }}>
+             <h4 style={{ margin: '0 0 0.5rem', color: '#1E40AF' }}>The Intent Scale</h4>
+             <p style={{ margin: 0, fontSize: '0.9rem', color: '#3B82F6' }}>Someone searching "Best Divorce Lawyer" is worth 1000x more than someone scrolling TikTok.</p>
+          </div>
+        </div>
 
         <MiniQuiz
           questions={[
@@ -461,12 +626,35 @@ export function Pillar6ModuleC({ onNext }) {
           Users are there to see cat videos, not your ad. You must "Stop the Scroll".
         </p>
 
+        <VideoReferenceCard
+          videoId="7X8IIT9qIkk"
+          start={0}
+          title="How to Stop the Scroll"
+          description="Creative strategies to grab attention in the first 3 seconds."
+        />
+
+        <ScrollStopperVisual />
+
         <ScenarioToggle
           oldTitle="Boring Ad 😴"
           oldContent="A photo of your logo with 'We sell shoes'."
           newTitle="Pattern Interrupt 💥"
           newContent="A video of someone cutting a shoe in half with a chainsaw. User stops scrolling."
         />
+
+        <BookInsight title="The 3-Second Rule" author="Brendan Kane" book="Hook Point" color="#DB2777">
+          <p>"We live in a micro-attention world. You have 3 seconds to earn the next 30 seconds."</p>
+        </BookInsight>
+
+        {/* NEW SECTION: Why It Matters */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FDF2F8 0%, #FCE7F3 100%)', borderRadius: '24px', border: '1px solid #FBCFE8' }}>
+          <CWHeading level={3} style={{ color: '#BE185D', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+             <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+          </CWHeading>
+          <p style={{ fontSize: '1.1rem', color: '#9D174D', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+             If you try to run "Boring" ads on Facebook/Instagram, you will burn money. The algorithm penalizes content that people scroll past. To lower your ad costs, you must be entertaining first, and salesy second.
+          </p>
+        </div>
 
         <MiniQuiz
           questions={[
@@ -488,6 +676,15 @@ export function Pillar6ModuleD({ onNext }) {
           Most businesses fail because they talk about themselves. "We were founded in 1999." Nobody cares.
         </div>
 
+        <VideoReferenceCard
+          videoId="S8lH_TdQZgs"
+          start={38}
+          title="Donald Miller: StoryBrand 7 Steps"
+          description="Clarify your message by positioning the customer as the hero."
+        />
+
+        <HeroGuideVisual />
+
         <ScenarioToggle
           oldTitle="The Company Hero"
           oldContent="'WE are the best. WE have awards. WE are great.' (Customer tunes out)."
@@ -498,6 +695,16 @@ export function Pillar6ModuleD({ onNext }) {
         <BookInsight title="The Guide" author="Donald Miller" book="Building a StoryBrand" color="#F59E0B">
           <p>"The Customer is the Hero. You are the Guide (Yoda). Your Product is the Lightsaber."</p>
         </BookInsight>
+        
+        {/* NEW SECTION: Why It Matters */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)', borderRadius: '24px', border: '1px solid #FDE68A' }}>
+          <CWHeading level={3} style={{ color: '#B45309', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+             <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+          </CWHeading>
+          <p style={{ fontSize: '1.1rem', color: '#92400E', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+             People don't buy the best products. They buy the products they can understand the fastest. Simplifying your message makes you more profitable.
+          </p>
+        </div>
 
         <MiniQuiz
           questions={[
@@ -517,10 +724,36 @@ export function Pillar6ModuleE({ onNext }) {
       <div className="cw-prose">
         <p>If your marketing works but nobody buys, your <strong>Offer</strong> is weak. Compete on Value, not Price.</p>
 
+        <VideoReferenceCard
+          videoId="joF2fMj3XKk"
+          start={0}
+          title="Alex Hormozi: Value Equation"
+          description="How to create offers so good people feel stupid saying no."
+        />
+
+        <ValueEquationVisual />
+
+        <ScenarioToggle
+          oldTitle="Commodity"
+          oldContent="'Personal Trainer: R500/month'. (Comparable to everyone else)."
+          newTitle="Irresistible Offer"
+          newContent="'Lose 5kg in 30 days or I pay you R1000 + Custom Meal Plan'. (No Brainer)."
+        />
+
         <BookInsight title="Value Equation" author="Alex Hormozi" book="$100M Offers" color="#10B981">
           <p><strong>Value = (Dream Outcome x Likelihood) / (Time Delay x Effort)</strong></p>
           <p>To increase value, decrease the Time Delay and Effort. (e.g. "Lose 10kg in 1 week without exercise" &gt; "Lose 10kg in 1 year with hard work").</p>
         </BookInsight>
+
+        {/* NEW SECTION: Why It Matters */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)', borderRadius: '24px', border: '1px solid #BBF7D0' }}>
+          <CWHeading level={3} style={{ color: '#15803D', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+             <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+          </CWHeading>
+          <p style={{ fontSize: '1.1rem', color: '#166534', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+             If you have to do hard selling, your offer isn't good enough. A Grand Slam Offer does the selling for you.
+          </p>
+        </div>
 
         <MiniQuiz
           questions={[
@@ -543,10 +776,40 @@ export function Pillar6ModuleF({ onNext }) {
           <strong>Email</strong> is "Owned Land".
         </p>
 
+        <VideoReferenceCard
+          videoId="yK3Wk_z_Vzw"
+          start={60}
+          title="Why You Need an Email List"
+          description="Building an asset that you own and control, independent of algorithms."
+        />
+
+        <EmailAssetVisual />
+
         <CWCard>
           <h4>The Lead Magnet</h4>
           <p>Don't say "Join Newsletter". Say "Download Free Checklist". Give value first.</p>
         </CWCard>
+
+        <ScenarioToggle
+          oldTitle="Spam"
+          oldContent="'Buy my stuff. Buy my stuff.' (Unsubscribe)."
+          newTitle="Value Ladder"
+          newContent="'Here is a free tip. Here is another free tip. Want to buy the full system?' (Sale)."
+        />
+
+        <BookInsight title="The Value Ladder" author="Russell Brunson" book="DotCom Secrets" color="#F43F5E">
+          <p>"The goal of the funnel is to ascend customers from free value to your highest ticket offer."</p>
+        </BookInsight>
+
+        {/* NEW SECTION: Why It Matters */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FFF1F2 0%, #FFE4E6 100%)', borderRadius: '24px', border: '1px solid #FECDD3' }}>
+          <CWHeading level={3} style={{ color: '#BE123C', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+             <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+          </CWHeading>
+          <p style={{ fontSize: '1.1rem', color: '#9F1239', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+             You don't own your Facebook followers. Zuckerberg does. You own your email list. It is the only asset that guarantees you can reach your customers tomorrow.
+          </p>
+        </div>
 
         <MiniQuiz
           questions={[
@@ -566,11 +829,41 @@ export function Pillar6ModuleG({ onNext }) {
       <div className="cw-prose">
         <p>97% of people leave without buying. You must remind them.</p>
 
+        <VideoReferenceCard
+          videoId="gFWZ8a-PRMk"
+          start={39}
+          title="Retargeting Explained"
+          description="How to bring back lost visitors using the Facebook Pixel."
+        />
+
+        <PixelVisual />
+        
+        <BookInsight title="The 1-Page Plan" author="Allan Dib" book="The 1-Page Marketing Plan" color="#4F46E5">
+          <p>"The money is in the follow-up. Most businesses give up after one contact. The sale happens on the 7th contact."</p>
+        </BookInsight>
+
+        <ScenarioToggle
+          oldTitle="Leaky Bucket"
+          oldContent="100 visitors. 99 leave. 1 buys. (Low Profit)."
+          newTitle="Retargeting Net"
+          newContent="100 visitors. 99 leave. Pixel finds them on FB. 5 come back and buy. (High Profit)."
+        />
+        
         <CWAlert type="warning" title="Scenario: The Abandoned Cart">
           User adds shoes &rarr; Gets distracted &rarr; Leaves.
           <br /><strong>Retargeting Ad (1 hour later):</strong> "Hey, you forgot your shoes! Here is a 5% discount code."
           <br /><strong>Result:</strong> Conversion.
         </CWAlert>
+
+         {/* NEW SECTION: Why It Matters */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%)', borderRadius: '24px', border: '1px solid #BFDBFE' }}>
+          <CWHeading level={3} style={{ color: '#1E40AF', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+             <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+          </CWHeading>
+          <p style={{ fontSize: '1.1rem', color: '#1E3A8A', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+             It is 7x cheaper to bring back an old visitor than to find a new one. Retargeting is the "low hanging fruit" of marketing revenue.
+          </p>
+        </div>
 
         <MiniQuiz
           questions={[
@@ -590,7 +883,35 @@ export function Pillar6ModuleH({ onNext }) {
       <div className="cw-prose">
         <p>Marketing is not art. It is math. If you spend R1 and get R2 back, you keep spending.</p>
 
+        <VideoReferenceCard
+          videoId="0PNbSOT3GWU"
+          start={38}
+          title="ROAS Calculation Explained"
+          description="Measuring Return On Ad Spend to ensure profitability."
+        />
+
         <ROASCalculator />
+
+        <ScenarioToggle
+          oldTitle="Spending Blind"
+          oldContent="'I think my ads are working.' (Emotional)."
+          newTitle="Tracking ROAS"
+          newContent="'I spend R1 to make R4. I will spend R1 Million.' (Logical)."
+        />
+
+        <BookInsight title="Scientific Advertising" author="Claude Hopkins" book="Scientific Advertising" color="#0F172A">
+          <p>"Advertising is salesmanship in print. It is not for general effect. It is for profit."</p>
+        </BookInsight>
+
+        {/* NEW SECTION: Why It Matters */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FDF2F8 0%, #FCE7F3 100%)', borderRadius: '24px', border: '1px solid #FBCFE8' }}>
+          <CWHeading level={3} style={{ color: '#BE185D', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+             <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+          </CWHeading>
+          <p style={{ fontSize: '1.1rem', color: '#9D174D', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+             If you know your numbers (CAC and ROAS), advertising becomes an investment machine, not a gamble. You can scale infinitely as long as you are profitable.
+          </p>
+        </div>
 
         <MiniQuiz
           questions={[
@@ -609,6 +930,34 @@ export function Pillar6ModuleI({ onNext }) {
     <InteractiveLayout title="Module I: Content Marketing" subtitle="Giving before asking.">
       <div className="cw-prose">
         <p>Gary Vaynerchuk's philosophy: "Jab, Jab, Jab, Right Hook". Give value 3 times before you ask for a sale.</p>
+
+        <VideoReferenceCard
+          videoId="NfP43Y3IlDM"
+          start={0}
+          title="Gary Vee: Jab Jab Right Hook"
+          description="The winning content strategy: Give, Give, Give, then Ask."
+        />
+
+        <BookInsight title="Superfans" author="Pat Flynn" book="Superfans" color="#10B981">
+          <p>"People don't become superfans the moment they find you. It happens over time through moments of delight."</p>
+        </BookInsight>
+
+        <ScenarioToggle
+          oldTitle="Right Hook Only"
+          oldContent="Buy Now. Buy Now. Buy Now. (Ignored)."
+          newTitle="Jab Jab Jab Hook"
+          newContent="Free Value. Free Value. Free Value. Buy Now. (Sold)."
+        />
+
+        {/* NEW SECTION: Why It Matters */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)', borderRadius: '24px', border: '1px solid #BBF7D0' }}>
+          <CWHeading level={3} style={{ color: '#15803D', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+             <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+          </CWHeading>
+          <p style={{ fontSize: '1.1rem', color: '#166534', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+             In a noisy world, attention is the scarcest currency. You "pay" for attention with value (entertainment or education). Once you have earned it, you can make a withdrawal (ask for a sale).
+          </p>
+        </div>
 
         <MiniQuiz
           questions={[

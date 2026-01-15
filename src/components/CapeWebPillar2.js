@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { VideoReferenceCard } from './VideoReferenceCard';
 import * as confettiModule from 'canvas-confetti';
 import { gsap } from 'gsap';
 import { InteractiveLayout, QuizLayout, ReadingLayout } from './CapeWebLayouts';
@@ -862,20 +863,35 @@ const moduleAQuestions = [
 export function Pillar2ModuleA({ onNext }) {
   return (
     <InteractiveLayout title="Module A: Choose Your Legal Setup" subtitle="Decide your business structure and 'make it real'.">
-      <p style={{ fontSize: '1.1rem', marginBottom: '2rem', lineHeight: '1.6' }}>
+      
+      {/* 1. Teach Info */}
+      <p style={{ fontSize: '1.2rem', marginBottom: '2rem', lineHeight: '1.6', color: '#334155' }}>
         Here's the truth: you can make your first sales before you register a company. But you need to understand the risk.
         <br /><strong>The choice is simple:</strong> Speed (Sole Prop) vs Safety (Pty Ltd).
       </p>
 
-      {/* Interactive Liability Simulator */}
-      <CWCard style={{ marginBottom: '2rem', background: '#F8FAFC' }}>
-        <CWHeading level={4} style={{ textAlign: 'center' }}>Interactive: Understand "Limited Liability"</CWHeading>
-        <p style={{ textAlign: 'center', marginBottom: '0' }}>Click the options below to see what happens when things go wrong.</p>
-        <LiabilityShieldInteractive />
-      </CWCard>
+      {/* 2. Video */}
+      <VideoReferenceCard
+        videoId="5H-zzohQr-Q"
+        start={0}
+        title="Sole Prop vs Pty Ltd (SA)"
+        description="Understand the key differences between trading as yourself vs registering a company."
+      />
 
-      <CWHeading level={3}>Your Options Explained</CWHeading>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', margin: '1.5rem 0' }}>
+      {/* 3. Best Seller Insight */}
+      <BookInsight
+        title="Corporations are the secret of the rich"
+        author="Robert Kiyosaki"
+        book="Rich Dad Poor Dad"
+        color="#16A34A"
+      >
+        <p>"The rich use corporations to protect themselves and their money. As an individual, you earn, get taxed, and spend what is left. A corporation earns, spends everything it can, and is taxed on what is left."</p>
+        <p><strong>Lesson:</strong> Eventually, you want a Pty Ltd to separate your business money from your personal life.</p>
+      </BookInsight>
+
+      {/* 4. Core Concept */}
+      <CWHeading level={3} style={{ marginTop: '3rem', marginBottom: '1.5rem' }}>Core Concept: The 2 Paths</CWHeading>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
         <div style={{ padding: '1.5rem', background: '#fff', border: '1px solid #E5E7EB', borderRadius: '16px' }}>
           <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>👤</div>
           <h4 style={{ margin: '0 0 0.5rem' }}>Sole Proprietor</h4>
@@ -901,7 +917,32 @@ export function Pillar2ModuleA({ onNext }) {
         </div>
       </div>
 
-      {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
+      {/* 5. Interactive Modal/Graph */}
+      <CWCard style={{ marginBottom: '2rem', background: '#F8FAFC', padding: '0' }}>
+         <LiabilityShieldInteractive />
+      </CWCard>
+
+      {/* 6. Scenario */}
+      <div style={{ margin: '3rem 0' }}>
+         <CWHeading level={3} style={{ textAlign: 'center', marginBottom: '2rem' }}>Scenario: The Investment Rejection</CWHeading>
+         <CWCard style={{ background: '#FEF2F2', border: '1px solid #FECACA' }}>
+            <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'flex-start' }}>
+                <div style={{ fontSize: '3rem' }}>🙅‍♂️</div>
+                <div>
+                    <h4 style={{ color: '#991B1B', marginBottom: '0.5rem' }}>The "Personal Account" Mistake</h4>
+                    <p style={{ color: '#7F1D1D', lineHeight: '1.6' }}>
+                        <strong>The Situation:</strong> Sarah (Sole Prop) asks the bank for a R500k business loan to expand.
+                        <br />
+                        <strong>The Document Check:</strong> The bank asks for "Business Financials". Sarah sends her personal Capitec statements showing grocery shopping mixed with client payments.
+                        <br />
+                        <strong>The Outcome:</strong> <strong>Rejected.</strong> The bank cannot see the business performance. If she had a Pty Ltd with a separate account, the loan would be approved.
+                    </p>
+                </div>
+            </div>
+         </CWCard>
+      </div>
+
+      {/* 7. Why This Matters */}
       <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%)', borderRadius: '24px', border: '1px solid #BAE6FD' }}>
         <CWHeading level={3} style={{ color: '#0369A1', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
@@ -947,22 +988,10 @@ export function Pillar2ModuleA({ onNext }) {
               </span>
             </li>
           </ul>
-          <p style={{ fontSize: '0.85rem', color: '#64748B', marginTop: '1rem', fontStyle: 'italic', borderTop: '1px solid #F1F5F9', paddingTop: '0.75rem' }}>
-            Get the legal structure right, and we'll build the digital engine on top of it.
-          </p>
         </div>
       </div>
 
-      <BookInsight
-        title="Corporations are the secret of the rich"
-        author="Robert Kiyosaki"
-        book="Rich Dad Poor Dad"
-        color="#16A34A"
-      >
-        <p>"The rich use corporations to protect themselves and their money. As an individual, you earn, get taxed, and spend what is left. A corporation earns, spends everything it can, and is taxed on what is left."</p>
-        <p><strong>Lesson:</strong> Eventually, you want a Pty Ltd to separate your business money from your personal life.</p>
-      </BookInsight>
-
+      {/* 8. Knowledge Check */}
       <MiniQuiz questions={moduleAQuestions} title="Roadmap Knowledge Check" onNext={onNext} />
     </InteractiveLayout>
   );
@@ -996,24 +1025,62 @@ const moduleBQuestions = [
 export function Pillar2ModuleB({ onNext }) {
   return (
     <InteractiveLayout title="Module B: Register & Tax Basics" subtitle="The 'Setup Rails' for your business.">
-      <p style={{ fontSize: '1.1rem', marginBottom: '2rem' }}>
+      
+      {/* 1. Teach Info */}
+      <p style={{ fontSize: '1.2rem', marginBottom: '2rem', lineHeight: '1.6', color: '#334155' }}>
         This module gives you the "legal rails" your business runs on. You'll learn what to register, where, and why.
+        <br />Building a business without registration is like building a house on sand.
       </p>
 
-      {/* Interactive Roadmap */}
+      {/* 2. Video */}
+      <VideoReferenceCard
+        videoId="8r4Lxlx9gQM"
+        start={139}
+        title="SME Registration Steps"
+        description="A step-by-step guide to registering your business in South Africa."
+      />
+
+      {/* 3. Best Seller Insight */}
+      <BookInsight title="Take your profit first" author="Mike Michalowicz" book="Profit First" color="#FACC15">
+        <p>"The old formula is: Sales - Expenses = Profit. The new formula is: Sales - Profit = Expenses."</p>
+        <p><strong>Lesson:</strong> When you set up your bank accounts (Step 3), open a separate savings account called 'PROFIT' and put 1% of every sale there immediately. Do this before paying expenses.</p>
+      </BookInsight>
+
+      {/* 4. Core Concept */}
+      <div style={{ margin: '3rem 0' }}>
+         <CWHeading level={3} style={{ marginBottom: '1.5rem' }}>Core Concept: The Compliance Ladder</CWHeading>
+         <p style={{ marginBottom: '2rem', fontSize: '1.1rem' }}>You cannot jump to Step 4 (Tenders) without Step 1 (CIPC). You must build in order.</p>
+         
+         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
+            <CWCard style={{ borderLeft: '4px solid #F472B6' }}>
+                <strong style={{ display: 'block', color: '#BE185D', marginBottom: '0.5rem' }}>Step 1: Identity</strong>
+                <p style={{ margin: 0, fontSize: '0.9rem', color: '#4B5563' }}>CIPC Registration. This is your "Birth Certificate".</p>
+            </CWCard>
+            <CWCard style={{ borderLeft: '4px solid #F472B6' }}>
+                <strong style={{ display: 'block', color: '#BE185D', marginBottom: '0.5rem' }}>Step 2: Status</strong>
+                <p style={{ margin: 0, fontSize: '0.9rem', color: '#4B5563' }}>SARS Tax Number. This is your "ID Number".</p>
+            </CWCard>
+            <CWCard style={{ borderLeft: '4px solid #F472B6' }}>
+                <strong style={{ display: 'block', color: '#BE185D', marginBottom: '0.5rem' }}>Step 3: Operation</strong>
+                <p style={{ margin: 0, fontSize: '0.9rem', color: '#4B5563' }}>Bank Account. This is your "Wallet".</p>
+            </CWCard>
+         </div>
+      </div>
+
+      {/* 5. Interactive Modal/Graph */}
       <ComplianceRoadmapInteractive />
 
-      <CWCard>
+      <CWCard style={{ marginTop: '2rem', background: '#F8FAFC' }}>
         <CWHeading level={4} style={{ marginBottom: '1rem' }}>Resources to get it done</CWHeading>
         <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
           {/* Item 1 */}
-          <div style={{ padding: '1rem', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+          <div style={{ padding: '1rem', background: '#fff', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
             <div style={{ fontWeight: 700, marginBottom: '0.25rem' }}>1. BizPortal (CIPC)</div>
             <div style={{ color: '#64748B', fontSize: '0.9rem' }}>The easiest way to register. Do it all online.</div>
             <CWButton href="https://bizportal.gov.za/" target="_blank" style={{ marginTop: '0.5rem', fontSize: '0.8rem', padding: '0.4rem 0.8rem' }}>Visit BizPortal ↗</CWButton>
           </div>
           {/* Item 2 */}
-          <div style={{ padding: '1rem', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+          <div style={{ padding: '1rem', background: '#fff', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
             <div style={{ fontWeight: 700, marginBottom: '0.25rem' }}>2. SARS eFiling</div>
             <div style={{ color: '#64748B', fontSize: '0.9rem' }}>Activate your Tax Profile once you have your company number.</div>
             <CWButton href="https://www.sars.gov.za/" target="_blank" style={{ marginTop: '0.5rem', fontSize: '0.8rem', padding: '0.4rem 0.8rem' }}>Visit SARS ↗</CWButton>
@@ -1021,25 +1088,29 @@ export function Pillar2ModuleB({ onNext }) {
         </div>
       </CWCard>
 
-      <BookInsight title="Take your profit first" author="Mike Michalowicz" book="Profit First" color="#FACC15">
-        <p>"The old formula is: Sales - Expenses = Profit. The new formula is: Sales - Profit = Expenses."</p>
-        <p><strong>Lesson:</strong> When you set up your bank accounts (Step 3), open a separate savings account called 'PROFIT' and put 1% of every sale there immediately. Do this before paying expenses.</p>
-      </BookInsight>
+      {/* 6. Scenario */}
+      <div style={{ margin: '3rem 0' }}>
+        <CWHeading level={3} style={{ textAlign: 'center', marginBottom: '2rem' }}>Scenario: The Unregistered Deal</CWHeading>
+        <CWCard style={{ marginBottom: '2rem', background: '#FEF2F2', border: '1px solid #FECACA' }}>
+            <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'flex-start' }}>
+                <div style={{ fontSize: '3rem' }}>📝</div>
+                <div>
+                    <h4 style={{ color: '#991B1B', marginBottom: '0.5rem' }}>"Send me your Vendor Form"</h4>
+                    <p style={{ margin: 0, color: '#4B5563', lineHeight: '1.6' }}>
+                    <strong>The Situation:</strong> You finally land a big corporate client (Woolworths/Checkers). They love your product.
+                    <br />
+                    <strong>The Problem:</strong> They ask for your "Vendor Application". It requires a CIPC Registration Number, a Tax Clearance Certificate, and a Business Bank Letter.
+                    <br />
+                    <strong>The Result:</strong> You don't have them. By the time you register (2 weeks), they have moved to another supplier.
+                    <br />
+                    <span style={{ fontWeight: 700, color: '#DC2626' }}>Don't let admin kill your big break. Get the basics done now.</span>
+                    </p>
+                </div>
+            </div>
+        </CWCard>
+      </div>
 
-      <CWCard style={{ marginBottom: '2rem', background: '#FEF2F2', border: '1px solid #FECACA' }}>
-        <h4 style={{ color: '#991B1B', marginBottom: '0.5rem' }}>Scenario: The "Unregistered" Deal</h4>
-        <p style={{ margin: 0, color: '#4B5563' }}>
-          <strong>The Situation:</strong> You finally land a big corporate client (Woolworths/Checkers). They love your product.
-          <br /><br />
-          <strong>The Problem:</strong> They ask for your "Vendor Application". It requires a CIPC Registration Number, a Tax Clearance Certificate, and a Business Bank Letter.
-          <br /><br />
-          <strong>The Result:</strong> You don't have them. By the time you register (2 weeks), they have moved to another supplier.
-          <br />
-          <span style={{ fontWeight: 700, color: '#DC2626' }}>Don't let admin kill your big break. Get the basics done now.</span>
-        </p>
-      </CWCard>
-
-      {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
+      {/* 7. Why This Matters */}
       <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%)', borderRadius: '24px', border: '1px solid #6EE7B7' }}>
         <CWHeading level={3} style={{ color: '#047857', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
@@ -1088,7 +1159,7 @@ export function Pillar2ModuleB({ onNext }) {
         </div>
       </div>
 
-      {/* Activity Section Replaced by MiniQuiz */}
+      {/* 8. Knowledge Check */}
       <MiniQuiz questions={moduleBQuestions} title="Roadmap Knowledge Check" onNext={onNext} />
     </InteractiveLayout>
   );
@@ -1119,6 +1190,106 @@ function ComplianceCalendarDiagram() {
       </div>
     </CWCard>
   )
+}
+
+// Interactive: Trust Battery
+function TrustBatteryInteractive() {
+    const [charge, setCharge] = useState(20);
+    const [elements, setElements] = useState({
+        policy: false,
+        contact: false,
+        refunds: false,
+        https: false
+    });
+
+    const toggle = (key, value) => {
+        const newElements = { ...elements, [key]: !elements[key] };
+        setElements(newElements);
+        // Calculate charge: Base 20 + 20 per item
+        const count = Object.values(newElements).filter(Boolean).length;
+        setCharge(20 + (count * 20));
+    };
+
+    return (
+        <div style={{ margin: '3rem 0', padding: '1.5rem', background: '#F0F9FF', borderRadius: '24px', textAlign: 'center' }}>
+            <h3 style={{ marginBottom: '1.5rem', color: '#0C4A6E' }}>The Customer Trust Battery</h3>
+            <p style={{ marginBottom: '2rem', color: '#475569' }}>
+                Customers arrive with low trust (skepticism). You must "charge" them up before they will buy.
+            </p>
+
+            {/* Battery Visual */}
+            <div style={{ width: '200px', height: '100px', border: '5px solid #334155', borderRadius: '16px', position: 'relative', margin: '0 auto 2rem', padding: '5px', display: 'flex' }}>
+                <div style={{
+                    width: charge + '%',
+                    background: charge < 40 ? '#EF4444' : charge < 80 ? '#F59E0B' : '#10B981',
+                    height: '100%',
+                    borderRadius: '8px',
+                    transition: 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    color: '#fff', fontWeight: 800, fontSize: '1.5rem'
+                }}>
+                    {charge}%
+                </div>
+                {/* Battery Tip */}
+                <div style={{ position: 'absolute', right: '-15px', top: '25px', width: '10px', height: '40px', background: '#334155', borderRadius: '0 4px 4px 0' }} />
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+                <button
+                    onClick={() => toggle('policy', 20)}
+                    style={{
+                        padding: '1rem', borderRadius: '12px', border: '2px solid',
+                        borderColor: elements.policy ? '#0284C7' : '#E2E8F0',
+                        background: elements.policy ? '#E0F2FE' : '#fff',
+                        cursor: 'pointer', textAlign: 'left'
+                    }}
+                >
+                    <div style={{ fontWeight: 700 }}>{elements.policy ? '✅' : '⬜'} Privacy Policy</div>
+                    <div style={{ fontSize: '0.8rem', color: '#64748B' }}>"They won't spam me."</div>
+                </button>
+                <button
+                    onClick={() => toggle('contact', 20)}
+                    style={{
+                        padding: '1rem', borderRadius: '12px', border: '2px solid',
+                        borderColor: elements.contact ? '#0284C7' : '#E2E8F0',
+                        background: elements.contact ? '#E0F2FE' : '#fff',
+                        cursor: 'pointer', textAlign: 'left'
+                    }}
+                >
+                    <div style={{ fontWeight: 700 }}>{elements.contact ? '✅' : '⬜'} Real Contact Info</div>
+                    <div style={{ fontSize: '0.8rem', color: '#64748B' }}>"They are real humans."</div>
+                </button>
+                <button
+                    onClick={() => toggle('refunds', 20)}
+                    style={{
+                        padding: '1rem', borderRadius: '12px', border: '2px solid',
+                        borderColor: elements.refunds ? '#0284C7' : '#E2E8F0',
+                        background: elements.refunds ? '#E0F2FE' : '#fff',
+                        cursor: 'pointer', textAlign: 'left'
+                    }}
+                >
+                    <div style={{ fontWeight: 700 }}>{elements.refunds ? '✅' : '⬜'} Fair Terms</div>
+                    <div style={{ fontSize: '0.8rem', color: '#64748B' }}>"I can return if broken."</div>
+                </button>
+                <button
+                    onClick={() => toggle('https', 20)}
+                    style={{
+                        padding: '1rem', borderRadius: '12px', border: '2px solid',
+                        borderColor: elements.https ? '#0284C7' : '#E2E8F0',
+                        background: elements.https ? '#E0F2FE' : '#fff',
+                        cursor: 'pointer', textAlign: 'left'
+                    }}
+                >
+                    <div style={{ fontWeight: 700 }}>{elements.https ? '✅' : '⬜'} Secure Site</div>
+                    <div style={{ fontSize: '0.8rem', color: '#64748B' }}>"My card is safe."</div>
+                </button>
+            </div>
+            
+            <p style={{ fontWeight: 700, color: charge >= 80 ? '#10B981' : '#64748B' }}>
+                {charge >= 80 ? "Result: CUSTOMER BUYS! 🎉" : "Result: Customer leaves..."}
+            </p>
+        </div>
+    );
 }
 
 const moduleCQuestions = [
@@ -1217,14 +1388,28 @@ function RefundScenarioInteractive() {
 export function Pillar2ModuleC({ onNext }) {
   return (
     <InteractiveLayout title="Module C: Customers & Privacy (CPA & POPIA)" subtitle="Protecting your business by respecting your customers.">
+      
+      {/* 1. Intro */}
       <p style={{ fontSize: '1.1rem', marginBottom: '2rem' }}>
         Your first 100 sales will come from trust. Trust comes from clarity. You need to know the rules of the game when dealing with people's money and data.
       </p>
 
-      <RefundScenarioInteractive />
+      {/* 2. Video */}
+      <VideoReferenceCard
+        videoId="WzK_nyMecns"
+        start={51}
+        title="POPIA: Who is affected?"
+        description="Understand if your business needs to comply with the POPI Act."
+      />
 
-      <CWHeading level={3}>The 2 Big Laws You Must Know</CWHeading>
+       {/* 3. Book Insight (Moved Up) */}
+       <BookInsight title="Trust is the Currency" author="Marcus Sheridan" book="They Ask You Answer" color="#3B82F6">
+        <p>"If you are willing to answer the questions your competitors are afraid to answer, you will win the trust of the market."</p>
+        <p><strong>Lesson:</strong> A clear Refund Policy (CPA) and Privacy Policy (POPIA) effectively answer the question: <em>"Can I trust you?"</em></p>
+      </BookInsight>
 
+      {/* 4. Core Concept */}
+      <CWHeading level={3}>Core Concept: The 2 Big Laws</CWHeading>
       <div style={{ display: 'grid', gap: '1.5rem', marginBottom: '2rem' }}>
         <CWCard>
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
@@ -1239,7 +1424,6 @@ export function Pillar2ModuleC({ onNext }) {
             </div>
           </div>
         </CWCard>
-
         <CWCard>
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
             <div style={{ fontSize: '2rem' }}>🔒</div>
@@ -1253,10 +1437,15 @@ export function Pillar2ModuleC({ onNext }) {
             </div>
           </div>
         </CWCard>
-
       </div>
 
-      {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
+      {/* 5. Interactive (Trust Battery) */}
+      <TrustBatteryInteractive />
+
+      {/* 6. Scenario */}
+      <RefundScenarioInteractive />
+
+      {/* 7. Why It Matters + CapeWeb Offering */}
       <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%)', borderRadius: '24px', border: '1px solid #BFDBFE' }}>
         <CWHeading level={3} style={{ color: '#1E40AF', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
@@ -1305,11 +1494,7 @@ export function Pillar2ModuleC({ onNext }) {
         </div>
       </div>
 
-      <BookInsight title="Trust is the Currency" author="Marcus Sheridan" book="They Ask You Answer" color="#3B82F6">
-        <p>"If you are willing to answer the questions your competitors are afraid to answer, you will win the trust of the market."</p>
-        <p><strong>Lesson:</strong> A clear Refund Policy (CPA) and Privacy Policy (POPIA) effectively answer the question: <em>"Can I trust you?"</em></p>
-      </BookInsight>
-
+      {/* 8. Quiz */}
       <MiniQuiz questions={moduleCQuestions} title="Roadmap Knowledge Check" onNext={onNext} />
 
     </InteractiveLayout >
@@ -1364,120 +1549,201 @@ function ComplianceCalendarInteractive() {
   )
 }
 
+// Interactive: Deregistration Disaster Scenario
+function DeregistrationDisasterScenario() {
+    const [mode, setMode] = useState('forgot'); // 'forgot' vs 'system'
+
+    return (
+        <div style={{ margin: '3rem 0', padding: '2rem', background: '#FFF7ED', borderRadius: '24px', border: '1px solid #FED7AA' }}>
+            <h3 style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#9A3412' }}>Scenario: The R100 Mistake</h3>
+            <p style={{ textAlign: 'center', marginBottom: '2rem', color: '#4B5563' }}>
+                All Pty Ltd companies must pay CIPC ~R100 once a year. What happens if you forget?
+            </p>
+
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '2rem' }}>
+                <button
+                    onClick={() => setMode('forgot')}
+                    style={{
+                        padding: '0.75rem 1.5rem', borderRadius: '100px', border: 'none',
+                        background: mode === 'forgot' ? '#EF4444' : '#fff',
+                        color: mode === 'forgot' ? '#fff' : '#64748B',
+                        fontWeight: 700, cursor: 'pointer', transition: 'all 0.3s',
+                        boxShadow: mode === 'forgot' ? '0 4px 12px rgba(239, 68, 68, 0.3)' : 'none'
+                    }}
+                >
+                    The Forgetful Founder
+                </button>
+                <button
+                    onClick={() => setMode('system')}
+                    style={{
+                        padding: '0.75rem 1.5rem', borderRadius: '100px', border: 'none',
+                        background: mode === 'system' ? '#EA580C' : '#fff',
+                        color: mode === 'system' ? '#fff' : '#64748B',
+                        fontWeight: 700, cursor: 'pointer', transition: 'all 0.3s',
+                        boxShadow: mode === 'system' ? '0 4px 12px rgba(234, 88, 12, 0.3)' : 'none'
+                    }}
+                >
+                    The System Builder
+                </button>
+            </div>
+
+            {mode === 'forgot' ? (
+                <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', borderLeft: '4px solid #EF4444', animation: 'fadeIn 0.5s' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+                        <span style={{ fontSize: '2rem' }}>🥶</span>
+                        <h4 style={{ margin: 0, color: '#991B1B' }}>Result: Frozen Accounts</h4>
+                    </div>
+                    <ul style={{ paddingLeft: '1.5rem', color: '#7F1D1D', lineHeight: 1.6 }}>
+                        <li>CIPC deregisters your company for "non-compliance".</li>
+                        <li>FNB/Standard Bank automatically freezes your bank account.</li>
+                        <li><strong>Disaster:</strong> You cannot pay staff on Friday. You cannot buy stock. You are effectively out of business until you pay R4,000 penalties and wait 3 months.</li>
+                    </ul>
+                </div>
+            ) : (
+                <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', borderLeft: '4px solid #EA580C', animation: 'fadeIn 0.5s' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+                        <span style={{ fontSize: '2rem' }}>🛡️</span>
+                        <h4 style={{ margin: 0, color: '#9A3412' }}>Result: Business as Usual</h4>
+                    </div>
+                    <ul style={{ paddingLeft: '1.5rem', color: '#9A3412', lineHeight: 1.6 }}>
+                        <li>They set a Google Calendar repeat event: "Check CIPC".</li>
+                        <li>They pay the R100 fee on time.</li>
+                        <li><strong>Outcome:</strong> Bank account stays open. Credit score improves. Investors see "Good Standing". Total peace of mind.</li>
+                    </ul>
+                </div>
+            )}
+        </div>
+    );
+}
+
 export function Pillar2ModuleD({ onNext }) {
-  return (
-    <InteractiveLayout title="Module D: Ongoing Compliance" subtitle="Stay in business. Avoid the fines.">
-      <p style={{ fontSize: '1.1rem', marginBottom: '2rem' }}>
-        Registering is easy. Staying registered requires discipline. You have a few key dates every year that you cannot miss.
-      </p>
-
-      <ComplianceCalendarInteractive />
-
-      <BookInsight
-        title="Don't Lose Your Company"
-        author="Michael Gerber"
-        book="The E-Myth Revisited"
-        quote="The technician works IN the business. The entrepreneur works ON the business."
-        takeaway="Governance is working ON your business. Scheduling your annual returns is an entrepreneurial act."
-        color="#EF4444"
-      />
-
-      <CWCard style={{ marginBottom: '2rem', background: '#FFF7ED', border: '1px solid #FED7AA' }}>
-        <h4 style={{ color: '#9A3412', marginBottom: '0.5rem' }}>Scenario: The R100 Disaster</h4>
-        <p style={{ margin: 0, color: '#4B5563' }}>
-          <strong>The Situation:</strong> Sarah runs a successful design agency. She forgets to pay her CIPC Annual Return fee (R100) for two years.
-          <br /><br />
-          <strong>The Crisis:</strong> One day, her card declines. The bank has frozen her account because CIPC "Deregistered" her company.
-          <br /><br />
-          <strong>The Fix:</strong> It takes 3 months of paperwork and R4,000 in penalties to re-activate it. She can't pay staff for 2 weeks.
-          <br />
-          <span style={{ fontWeight: 700, color: '#C2410C' }}>Set a calendar reminder. Pay the R100.</span>
-        </p>
-      </CWCard>
-
-      {/* NEW SECTION: Why It Matters + CapeWeb Offering */}
-      <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%)', borderRadius: '24px', border: '1px solid #FDBA74' }}>
-        <CWHeading level={3} style={{ color: '#EA580C', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
-        </CWHeading>
-
-        <p style={{ fontSize: '1.1rem', color: '#9A3412', lineHeight: '1.7', marginBottom: '1.5rem' }}>
-          Compliance isn't just a "CFO thing"; it's a <strong>Value Protector</strong>. If you ever plan to sell your business, investors will look at your "Good Standing" history first.
-        </p>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
-          <div>
-            <h4 style={{ color: '#C2410C', marginBottom: '0.5rem' }}>1. The "Exit" Premium</h4>
-            <p style={{ fontSize: '0.95rem', color: '#9A3412', lineHeight: '1.6' }}>
-              A business with 5 years of perfect CIPC and SARS compliance is worth significantly more than a "messy" one. It proves operational maturity.
+    return (
+        <InteractiveLayout title="Module D: Ongoing Compliance" subtitle="Stay in business. Avoid the fines.">
+            
+            {/* 1. Intro */}
+            <p style={{ fontSize: '1.1rem', marginBottom: '2rem' }}>
+                Registering is easy. Staying registered requires discipline. You have a few key dates every year that you cannot miss.
             </p>
-          </div>
-          <div>
-            <h4 style={{ color: '#C2410C', marginBottom: '0.5rem' }}>2. Credit & Funding</h4>
-            <p style={{ fontSize: '0.95rem', color: '#9A3412', lineHeight: '1.6' }}>
-              Banks use automated scoring. If your CIPC status is "Deregistration Process", your credit application is auto-rejected instantly. No human ever sees it.
-            </p>
-          </div>
-        </div>
 
-        <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #FED7AA', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
-          <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
-            🚀 How CapeWeb Helps You Scale
-          </h4>
-          <p style={{ fontSize: '0.95rem', color: '#4B5563', marginBottom: '1rem' }}>
-            We keep your digital house in order so you can keep your legal house in order.
-          </p>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
-            <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
-              <span style={{ color: '#F97316', marginTop: '2px' }}>➜</span>
-              <span>
-                <strong>Zero-Downtime Infrastructure:</strong> Just like CIPC requires annual upkeep, your website needs it too. Our <a href="/services?service=roi-custom-web-dev" style={{ color: '#F97316', textDecoration: 'underline' }}>Performance Monitoring</a> ensures your site never gets "deregistered" from the internet due to technical debt.
-              </span>
-            </li>
-            <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
-              <span style={{ color: '#F97316', marginTop: '2px' }}>➜</span>
-              <span>
-                <strong>Systematized Operations:</strong> Use our <a href="/services?service=ai-agents-sales-team" style={{ color: '#F97316', textDecoration: 'underline' }}>Booking Flows & Reminders</a> to set up internal alerts for your own team—"Tax Filing Due in 3 days"—so you never miss a deadline again.
-              </span>
-            </li>
-          </ul>
-        </div>
-      </div>
+            {/* 2. Video */}
+            <VideoReferenceCard
+                videoId="wTud5QL9HC0"
+                start={90}
+                title="2025 Compliance Updates"
+                description="Stay ahead of the latest CIPC and legislative changes affecting small businesses."
+            />
 
-      <CWAlert type="info" title="What about hiring?">
-        Module E covers Employees, PAYE, and Labor Law in detail. This module is about the company itself.
-      </CWAlert>
+            {/* 3. Book Insight (Moved Up) */}
+            <BookInsight
+                title="Don't Lose Your Company"
+                author="Michael Gerber"
+                book="The E-Myth Revisited"
+                quote="The technician works IN the business. The entrepreneur works ON the business."
+                takeaway="Governance is working ON your business. Scheduling your annual returns is an entrepreneurial act."
+                color="#EF4444"
+            />
 
-      {/* Mini Quiz for Module D */}
-      <MiniQuiz
-        question="When must a company file Annual Returns with CIPC?"
-        questions={[
-          {
-            question: "When must a company file Annual Returns with CIPC?",
-            options: ["Every month", "Only when making profit", "Every year on the anniversary of registration"],
-            correctIndex: 2
-          },
-          {
-            question: "What happens if you ignore Annual Returns?",
-            options: ["Nothing", "CIPC deregisters your company and banks freeze your accounts", "You get a warning"],
-            correctIndex: 1
-          },
-          {
-            question: "When is Provisional Tax due?",
-            options: ["Monthly", "Twice a year (August & February)", "Only at year end"],
-            correctIndex: 1
-          },
-          {
-            question: "Why is 'Good Standing' important?",
-            options: ["It looks nice", "It is required for loans, contracts, and tenders", "It prevents load shedding"],
-            correctIndex: 1
-          }
-        ]}
-        title="Roadmap Knowledge Check"
-        onNext={onNext}
-      />
-    </InteractiveLayout>
-  );
+            {/* 4. Core Concept */}
+            <CWHeading level={3}>Core Concept: The Good Standing Shield</CWHeading>
+            <CWCard>
+                <div style={{display:'flex', gap:'1rem', alignItems:'center'}}>
+                    <div style={{fontSize:'2.5rem'}}>🛡️</div>
+                    <p>
+                        "Good Standing" is a status CIPC gives you. It is your shield. 
+                        Without it, you cannot get loans, apply for tenders, or sometimes even open supplier accounts. 
+                        Lose it, and you are naked in the market.
+                    </p>
+                </div>
+            </CWCard>
+
+            {/* 5. Interactive (Calendar) */}
+            <ComplianceCalendarInteractive />
+
+            {/* 6. Scenario (Upgraded) */}
+            <DeregistrationDisasterScenario />
+
+            {/* 7. Why It Matters + CapeWeb Offering */}
+            <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%)', borderRadius: '24px', border: '1px solid #FDBA74' }}>
+                <CWHeading level={3} style={{ color: '#EA580C', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+                </CWHeading>
+
+                <p style={{ fontSize: '1.1rem', color: '#9A3412', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+                    Compliance isn't just a "CFO thing"; it's a <strong>Value Protector</strong>. If you ever plan to sell your business, investors will look at your "Good Standing" history first.
+                </p>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+                    <div>
+                        <h4 style={{ color: '#C2410C', marginBottom: '0.5rem' }}>1. The "Exit" Premium</h4>
+                        <p style={{ fontSize: '0.95rem', color: '#9A3412', lineHeight: '1.6' }}>
+                            A business with 5 years of perfect CIPC and SARS compliance is worth significantly more than a "messy" one. It proves operational maturity.
+                        </p>
+                    </div>
+                    <div>
+                        <h4 style={{ color: '#C2410C', marginBottom: '0.5rem' }}>2. Credit & Funding</h4>
+                        <p style={{ fontSize: '0.95rem', color: '#9A3412', lineHeight: '1.6' }}>
+                            Banks use automated scoring. If your CIPC status is "Deregistration Process", your credit application is auto-rejected instantly. No human ever sees it.
+                        </p>
+                    </div>
+                </div>
+
+                <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #FED7AA', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
+                    <h4 style={{ margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0b0f1a' }}>
+                        🚀 How CapeWeb Helps You Scale
+                    </h4>
+                    <p style={{ fontSize: '0.95rem', color: '#4B5563', marginBottom: '1rem' }}>
+                        We keep your digital house in order so you can keep your legal house in order.
+                    </p>
+                    <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+                        <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                            <span style={{ color: '#F97316', marginTop: '2px' }}>➜</span>
+                            <span>
+                                <strong>Zero-Downtime Infrastructure:</strong> Just like CIPC requires annual upkeep, your website needs it too. Our <a href="/services?service=roi-custom-web-dev" style={{ color: '#F97316', textDecoration: 'underline' }}>Performance Monitoring</a> ensures your site never gets "deregistered" from the internet due to technical debt.
+                            </span>
+                        </li>
+                        <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
+                            <span style={{ color: '#F97316', marginTop: '2px' }}>➜</span>
+                            <span>
+                                <strong>Systematized Operations:</strong> Use our <a href="/services?service=ai-agents-sales-team" style={{ color: '#F97316', textDecoration: 'underline' }}>Booking Flows & Reminders</a> to set up internal alerts for your own team—"Tax Filing Due in 3 days"—so you never miss a deadline again.
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <CWAlert type="info" title="What about hiring?">
+                Module E covers Employees, PAYE, and Labor Law in detail. This module is about the company itself.
+            </CWAlert>
+
+            {/* 8. Quiz */}
+            <MiniQuiz
+                questions={[
+                    {
+                        question: "When must a company file Annual Returns with CIPC?",
+                        options: ["Every month", "Only when making profit", "Every year on the anniversary of registration"],
+                        correctIndex: 2
+                    },
+                    {
+                        question: "What happens if you ignore Annual Returns?",
+                        options: ["Nothing", "CIPC deregisters your company and banks freeze your accounts", "You get a warning"],
+                        correctIndex: 1
+                    },
+                    {
+                        question: "When is Provisional Tax due?",
+                        options: ["Monthly", "Twice a year (August & February)", "Only at year end"],
+                        correctIndex: 1
+                    },
+                    {
+                        question: "Why is 'Good Standing' important?",
+                        options: ["It looks nice", "It is required for loans, contracts, and tenders", "It prevents load shedding"],
+                        correctIndex: 1
+                    }
+                ]}
+                title="Roadmap Knowledge Check"
+                onNext={onNext}
+            />
+        </InteractiveLayout>
+    );
 }
 
 
@@ -1512,6 +1778,13 @@ export function Pillar2ModuleBonus({ onNext }) {
       <p style={{ fontSize: '1.1rem', marginBottom: '2rem' }}>
         Most online-first businesses won't need special permits at Day 1. But Cape Town has specific licences for food, events, and public spaces.
       </p>
+
+      <VideoReferenceCard
+        videoId="g3llG4O4Lyc"
+        start={0}
+        title="Cape Town Trading Permits"
+        description="How to get a business license or trading permit in Cape Town."
+      />
 
       <CWCard>
         <CWHeading level={4} style={{ marginBottom: '1rem' }}>Do you need a permit?</CWHeading>
@@ -2055,6 +2328,13 @@ export function Pillar2ModuleE({ onNext }) {
         <br /><strong>The Golden Rule:</strong> Hire slow, fire rarely (because it's hard), and always use a contract.
       </p>
 
+      <VideoReferenceCard
+        videoId="93YaPfmDxgE"
+        start={60}
+        title="Hiring Costs (PAYE/UIF)"
+        description="Understanding the true cost of an employee beyond just their salary."
+      />
+
       <HiringCalculatorInteractive />
 
       <CWHeading level={3}>The "Big 3" You Must Pay</CWHeading>
@@ -2269,6 +2549,13 @@ export function Pillar2ModuleF({ onNext }) {
       <p style={{ fontSize: '1.1rem', marginBottom: '2rem' }}>
         In South Africa, B-BBEE is a business reality. You can ignore it and sell B2C, or embrace it and unlock B2G (Government) and B2B (Corporate) revenue.
       </p>
+
+      <VideoReferenceCard
+        videoId="ReLyTEMKP1E"
+        start={75}
+        title="B-BBEE & Affidavits"
+        description="How the B-BBEE Affidavit works for EMEs and why it's easier than you think."
+      />
 
       <CWHeading level={3}>Do you need a B-BBEE Certificate?</CWHeading>
       <div style={{ background: '#F0FDF4', padding: '1.5rem', borderRadius: '12px', border: '1px solid #BBF7D0', marginBottom: '2rem' }}>

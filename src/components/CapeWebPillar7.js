@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { VideoReferenceCard } from './VideoReferenceCard';
 import * as confettiModule from 'canvas-confetti';
 import { gsap } from 'gsap';
 import { InteractiveLayout, QuizLayout } from './CapeWebLayouts';
@@ -483,6 +484,13 @@ export function Pillar7ModuleA({ onNext }) {
           Your goal is to use AI to handle the boring 80%, so you can focus on the creative 20%.
         </p>
 
+        <VideoReferenceCard
+          videoId="ZOOAqs2wXjk"
+          start={0}
+          title="The Centaur Phase Explained"
+          description="Why Human + AI outperforms AI alone."
+        />
+
         <CentaurModelVisual />
 
         <BookInsight title="The Future of Intelligence" author="Max Tegmark" book="Life 3.0" color="#3B82F6">
@@ -545,6 +553,13 @@ export function Pillar7ModuleB({ onNext }) {
           It is a very fancy autocomplete.
         </p>
 
+        <VideoReferenceCard
+          videoId="xNRgycrPQFY"
+          start={0}
+          title="Next Token Prediction"
+          description="Understanding how Large Language Models actually 'think'."
+        />
+
         <TokenPredictionVisual />
 
         <CWAlert type="warning" title="Hallucinations">
@@ -593,6 +608,13 @@ export function Pillar7ModuleC({ onNext }) {
           To get great writing, you need <strong>Context</strong>.
         </p>
 
+        <VideoReferenceCard
+          videoId="uDIW34h8cmM"
+          start={0}
+          title="Matthew Berman: Prompt Engineering"
+          description="Mastering the art of talking to AI models for better output."
+        />
+
         <PromptEngineeringVisual />
 
         {/* NEW SECTION: Why It Matters */}
@@ -639,6 +661,13 @@ export function Pillar7ModuleD({ onNext }) {
           Tools like <strong>Midjourney</strong> can create photorealistic assets for your website. No need to pay for stock photos.
         </p>
 
+        <VideoReferenceCard
+          videoId="7z7OxhNP6Qs"
+          start={0}
+          title="Midjourney Full Guide"
+          description="A crash course in generative art creation."
+        />
+
         <MidjourneyVisual />
 
         {/* NEW SECTION: Why It Matters */}
@@ -683,6 +712,13 @@ export function Pillar7ModuleE({ onNext }) {
           <strong>Zapier</strong> allows you to clone yourself. You can build a "Sales Team" that runs 24/7 for $20/month.
           Trigger &rarr; Action &rarr; Action.
         </p>
+
+        <VideoReferenceCard
+          videoId="agqeELAmcB4"
+          start={30}
+          title="Zapier for Beginners 2025"
+          description="Automating your business workflows without writing code."
+        />
 
         <ZapierFlowVisual />
 
@@ -739,6 +775,13 @@ export function Pillar7ModuleF({ onNext }) {
       <div className="cw-prose">
         <p>Customers hate waiting. AI Chatbots (trained on your own PDF documents) can answer "What is your refund policy?" instantly.</p>
 
+        <VideoReferenceCard
+          videoId="GOffPy9kk28"
+          start={0}
+          title="Vector Databases in 2 Mins"
+          description="How RAG (Retrieval Augmented Generation) allows AI to learn your private data."
+        />
+
         <ChatbotTrainingVisual />
 
         {/* NEW SECTION: Why It Matters */}
@@ -784,6 +827,13 @@ export function Pillar7ModuleG({ onNext }) {
         <p>You can upload an Excel file to ChatGPT (Code Interpreter) and say: "Analyze this sales data. Tell me which product has the highest profit margin."</p>
         <p>It writes Python code, runs it, and gives you charts. It is like having a Harvard graduate in your pocket.</p>
 
+        <VideoReferenceCard
+          videoId="in3BS4St3h0"
+          start={0}
+          title="ChatGPT Data Analysis Demo"
+          description="Turning raw data into actionable business insights instantly."
+        />
+
         <AnalysisVisual />
 
         {/* NEW SECTION: Why It Matters */}
@@ -824,6 +874,13 @@ export function Pillar7ModuleH({ onNext }) {
     <InteractiveLayout title="Module H: Autonomous Agents" subtitle="Goal-directed AI.">
       <div className="cw-prose">
         <p>Chatbots reply. <strong>Agents</strong> do.</p>
+
+        <VideoReferenceCard
+          videoId="98cRLHTMGUc"
+          start={0}
+          title="Autonomous Agents Explained"
+          description="How Agents use tools to complete complex goals autonomously."
+        />
         <AgentLoopVisual />
 
         {/* NEW SECTION: Why It Matters */}
@@ -859,6 +916,13 @@ export function Pillar7ModuleI({ onNext }) {
     <InteractiveLayout title="Module I: Meeting Intelligence" subtitle="Never take notes again.">
       <div className="cw-prose">
         <p>Tools like <strong>Otter.ai</strong> join your Zoom calls, transcribe everything, and email you a summary. This saves 15 minutes per meeting.</p>
+
+        <VideoReferenceCard
+          videoId="QeA2vBdiSYw"
+          start={0}
+          title="Otter.ai Meeting Workflow"
+          description="Never take meeting notes again. Let AI generate the summary and action items."
+        />
 
         <MeetingVisual />
 
@@ -953,6 +1017,13 @@ export function Pillar7Resources({ onNext }) {
         </div>
 
         <h3 style={{ marginTop: '3rem' }}>📚 Recommended Reading</h3>
+
+        <VideoReferenceCard
+          videoId="ivLHyw64YL4"
+          start={0}
+          title="Life 3.0 Summary"
+          description="Max Tegmark's vision of the future of life in the age of Artificial General Intelligence."
+        />
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
           <ResourceCard
             category="Society"

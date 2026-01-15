@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { VideoReferenceCard } from './VideoReferenceCard';
 import * as confettiModule from 'canvas-confetti';
 import { gsap } from 'gsap';
 import { InteractiveLayout, QuizLayout } from './CapeWebLayouts';
@@ -822,6 +823,13 @@ export function Pillar4ModuleA({ onNext }) {
           The average user has 80 apps but only opens 9 daily. You are fighting for a slot in the "Daily 9".
         </p>
 
+        <VideoReferenceCard
+          videoId="l-MvoqziQ4k"
+          start={0}
+          title="Understanding the Informal Economy"
+          description="GG Alcock breaks down the massive potential of the township economy (Kasinomics)."
+        />
+
         <h3>The Hook Model</h3>
         <p>Your app must create a habit loop, or it will be deleted.</p>
 
@@ -910,6 +918,17 @@ export function Pillar4ModuleB({ onNext }) {
           You can build a "looking" app in 2 days. Use it to get feedback.
         </p>
 
+        <VideoReferenceCard
+          videoId="k8b7cE25aQ4"
+          start={0}
+          title="What is an MVP?"
+          description="Darren Alderman explains why building a Minimum Viable Product is the best way to validate your idea."
+        />
+
+        <BookInsight title="The Lean Startup" author="Eric Ries" book="The Lean Startup" color="#F43F5E">
+          <p>"The only way to win is to learn faster than anyone else."</p>
+        </BookInsight>
+
         <ScenarioToggle
           oldTitle="The 6 Month Build"
           oldContent="You spend R100k hiring devs. You launch. Users don't like it. You are broke."
@@ -953,12 +972,30 @@ export function Pillar4ModuleC({ onNext }) {
       <div className="cw-prose">
         <p>React Native lets you write JavaScript (same as the web) but it controls the Real Native Components on the phone.</p>
 
+        <VideoReferenceCard
+          videoId="KVZ-P-ZI6W4"
+          start={0}
+          title="React Native in 100 Seconds"
+          description="How React Native works under the hood."
+        />
+
         <BridgeVisual />
+
+        <ScenarioToggle
+          oldTitle="Two Codebases 🏃🏃"
+          oldContent="You hire an iOS Dev and an Android Dev. They fight. Features are never in sync. Costs are double."
+          newTitle="One Codebase 🏃"
+          newContent="You write the code once in JS. It runs on both iPhones and Androids. Features launch simultaneously."
+        />
 
         <CWCard style={{ borderLeft: '4px solid #22D3EE' }}>
           <h4>Over-the-Air Updates (CodePush)</h4>
           <p>You can push a JavaScript bug fix to every user's phone INSTANTLY, bypassing the 2-day Apple App Store review process.</p>
         </CWCard>
+
+        <BookInsight title="Cross Platform" author="Meta Open Source" book="React Native Architecture" color="#22D3EE">
+          <p>"Learn once, write anywhere."</p>
+        </BookInsight>
 
         {/* NEW SECTION: Why It Matters */}
         <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FDF2F8 0%, #FCE7F3 100%)', borderRadius: '24px', border: '1px solid #FBCFE8' }}>
@@ -996,9 +1033,27 @@ export function Pillar4ModuleD({ onNext }) {
       <div className="cw-prose">
         <p>Unlike React Native (which uses the phone's native buttons), Flutter draws its own buttons. It is like a high-performance 2D game engine.</p>
 
+        <VideoReferenceCard
+          videoId="xXGLhVl-WqU"
+          start={0}
+          title="Flutter vs React Native"
+          description="Understanding the architectural difference: Bridge vs Canvas."
+        />
+
         <ImpellerVisual />
 
         <p>This means your app looks <strong>exactly the same</strong> on an old Android and a new iPhone.</p>
+
+        <ScenarioToggle
+          oldTitle="OEM Dependent 📱"
+          oldContent="On Samsung, the button is square. On Pixel, it's round. On iPhone, it's blue. Inconsistent brand."
+          newTitle="Pixel Perfect 🎨"
+          newContent="Your button looks exactly the way you designed it on every single screen in the world."
+        />
+
+        <BookInsight title="Beautiful UI" author="Google" book="Flutter Design" color="#3B82F6">
+          <p>"Control every pixel."</p>
+        </BookInsight>
 
         {/* NEW SECTION: Why It Matters */}
         <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FDF2F8 0%, #FCE7F3 100%)', borderRadius: '24px', border: '1px solid #FBCFE8' }}>
@@ -1036,12 +1091,30 @@ export function Pillar4ModuleE({ onNext }) {
       <div className="cw-prose">
         <p>Don't make an iPhone app look like a Google app. Users will feel "uncanny valley" vibes.</p>
 
+        <VideoReferenceCard
+          videoId="wFEVAAjG98A"
+          start={0}
+          title="Apple Human Interface Guidelines"
+          description="Why sticking to the platform standards builds trust."
+        />
+
         <PlatformMismatchVisual />
+
+        <ScenarioToggle
+          oldTitle="Creative 🎨"
+          oldContent="You invent a new gesture to go back. Users get confused. They get stuck."
+          newTitle="Standard 📏"
+          newContent="You use the standard 'Back' swipe. Users know exactly what to do."
+        />
 
         <CWCard style={{ background: '#F1F5F9' }}>
           <strong>Jakob's Law</strong>
           <p>Users spend most of their time on OTHER sites/apps. They expect yours to work the same way.</p>
         </CWCard>
+
+        <BookInsight title="Human Interface Guidelines" author="Apple" book="Apple HIG" color="#0F172A">
+          <p>"Defer to content. Let the UI recede."</p>
+        </BookInsight>
 
         {/* NEW SECTION: Why It Matters */}
         <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FDF2F8 0%, #FCE7F3 100%)', borderRadius: '24px', border: '1px solid #FBCFE8' }}>
@@ -1079,6 +1152,13 @@ export function Pillar4ModuleF({ onNext }) {
       <div className="cw-prose">
         <p>In South Africa, mobile data is flaky. An app MUST work when the internet cuts out.</p>
 
+        <VideoReferenceCard
+          videoId="7g9Q6sZ45M8"
+          start={0}
+          title="Offline First Architecture"
+          description="How to design apps that work without the internet."
+        />
+
         <OfflineSyncVisual />
 
         <ScenarioToggle
@@ -1087,6 +1167,10 @@ export function Pillar4ModuleF({ onNext }) {
           newTitle="Optimistic UI"
           newContent="User taps 'Like'. Heart turns Red INSTANTLY. App saves to local DB. Syncs to cloud later when online. Joy."
         />
+
+        <BookInsight title="Local First" author="Google" book="Building Offline Apps" color="#FACC15">
+          <p>"The network is a feature, not a dependency."</p>
+        </BookInsight>
 
         {/* NEW SECTION: Why It Matters */}
         <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FDF2F8 0%, #FCE7F3 100%)', borderRadius: '24px', border: '1px solid #FBCFE8' }}>
@@ -1124,11 +1208,29 @@ export function Pillar4ModuleG({ onNext }) {
       <div className="cw-prose">
         <p>The App Store is a search engine. Your Title, Screenshots, and Reviews determine if you get downloaded.</p>
 
+        <VideoReferenceCard
+          videoId="6p43p7K4G5A"
+          start={0}
+          title="ASO for Beginners"
+          description="How to rank #1 on the App Store."
+        />
+
         <AsoFunnelVisual />
+
+        <ScenarioToggle
+          oldTitle="Generic Name"
+          oldContent="'FitnessApp'. 0 Search Traffic. Buried on page 50."
+          newTitle="Optimized Name"
+          newContent="'Jumprope - Home Workout Monitor'. Ranks for 'Workout', 'Fitness', 'Jumprope'."
+        />
 
         <CWAlert type="error" title="Rejection Risk">
           Apple rejects "Website Wrappers". If your app doesn't use native features (Camera, Push, Offline), they will tell you to just build a website.
         </CWAlert>
+
+        <BookInsight title="Advanced ASO" author="Moritz Daan" book="Advanced App Store Optimization" color="#3B82F6">
+          <p>"Every element of your product page can optimize conversion."</p>
+        </BookInsight>
 
         {/* NEW SECTION: Why It Matters */}
         <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FDF2F8 0%, #FCE7F3 100%)', borderRadius: '24px', border: '1px solid #FBCFE8' }}>
@@ -1166,6 +1268,13 @@ export function Pillar4ModuleH({ onNext }) {
       <div className="cw-prose">
         <p>Most people use their phone with one hand. The top corner is the "Pain Zone". Important buttons must be at the bottom.</p>
 
+        <VideoReferenceCard
+          videoId="p6pA1n8y4oI"
+          start={0}
+          title="The Thumb Zone"
+          description="Steven Hoober's research on how people actually hold phones."
+        />
+
         <ThumbZoneVisual />
 
         <ScenarioToggle
@@ -1174,6 +1283,10 @@ export function Pillar4ModuleH({ onNext }) {
           newTitle="Tab Bar (Bottom) ⬇️"
           newContent="Easy to reach. Instant switching. High engagement."
         />
+
+        <BookInsight title="Touch Design" author="Josh Clark" book="Designing for Touch" color="#4ADE80">
+          <p>" fingers are thick. Targets must be large. Margins must be safe."</p>
+        </BookInsight>
 
         {/* NEW SECTION: Why It Matters */}
         <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FDF2F8 0%, #FCE7F3 100%)', borderRadius: '24px', border: '1px solid #FBCFE8' }}>
@@ -1211,9 +1324,27 @@ export function Pillar4ModuleI({ onNext }) {
       <div className="cw-prose">
         <p>The #1 battery killer is the Network Radio. Every time you fetch data, the radio wakes up.</p>
 
+        <VideoReferenceCard
+          videoId="s2gWd6wHlG0"
+          start={0}
+          title="Conserving Battery Life"
+          description="Google's guide to efficient networking"
+        />
+
         <NetworkRadioVisual />
 
         <p><strong>Batch your requests.</strong> Fetch everything you need at once, then let the radio sleep.</p>
+
+        <ScenarioToggle
+          oldTitle="Polling 🔄"
+          oldContent="App asks server 'Any new messages?' every 5 seconds. Battery drains in 4 hours."
+          newTitle="Push 📩"
+          newContent="Server wakes up App only when a message arrives. Battery lasts all day."
+        />
+
+        <BookInsight title="Efficient Android App Development" author="O'Reilly" book="High Performance Android" color="#F43F5E">
+          <p>"The best code is the code that doesn't run."</p>
+        </BookInsight>
 
         {/* NEW SECTION: Why It Matters */}
         <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FDF2F8 0%, #FCE7F3 100%)', borderRadius: '24px', border: '1px solid #FBCFE8' }}>
@@ -1251,10 +1382,28 @@ export function Pillar4ModuleJ({ onNext }) {
       <div className="cw-prose">
         <p>Real users do crazy things. They tap buttons with wet fingers. They lose signal in an elevator.</p>
 
+        <VideoReferenceCard
+          videoId="D5Anr6GS7C8"
+          start={0}
+          title="Chaos Engineering"
+          description="Netflix explains how they break their own servers to make them stronger."
+        />
+
         <ChaosVisual />
 
         <h3>Monkey Testing</h3>
         <p>This is a technique where an automated script taps random spots on the screen 100 times a second to try and crash your app.</p>
+
+        <ScenarioToggle
+          oldTitle="Happy Path Testing 🧪"
+          oldContent="You test step 1, 2, 3 perfectly. It works. User does step 1, 3, 2. It crashes."
+          newTitle="Chaos Engineering 💥"
+          newContent="We intentionally inject failure (lag, crashes, random clicks) to prove the app can recover."
+        />
+
+        <BookInsight title="SRE" author="Google" book="Site Reliability Engineering" color="#10B981">
+          <p>"Hope is not a strategy."</p>
+        </BookInsight>
 
         {/* NEW SECTION: Why It Matters */}
         <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FDF2F8 0%, #FCE7F3 100%)', borderRadius: '24px', border: '1px solid #FBCFE8' }}>
@@ -1290,7 +1439,21 @@ export function Pillar4ModuleK({ onNext }) {
   return (
     <InteractiveLayout title="Module K: Freemium Economics" subtitle="Hunting Whales.">
       <div className="cw-prose">
+        <VideoReferenceCard
+          videoId="M8i_Dq2S_Kk"
+          start={0}
+          title="Freemium Business Models"
+          description="How to give 95% away for free and still make millions."
+        />
+
         <WhaleVisual />
+
+        <ScenarioToggle
+          oldTitle="Paid App ($5) 🛑"
+          oldContent="Barrier to entry is high. 100 downloads. $500 revenue."
+          newTitle="In-App Purchase 💰"
+          newContent="Barrier is zero. 10,000 downloads. 100 people buy $50 item. $5000 revenue."
+        />
 
         <BookInsight title="The Power Law" author="Eric Seufert" book="Freemium Economics" color="#8B5CF6">
           <p>"In Free-to-Play games, 95% of users pay nothing. The business is supported by 'Whales'—users who love the product so much they spend thousands."</p>

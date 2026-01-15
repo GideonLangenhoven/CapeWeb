@@ -13,6 +13,7 @@ const { chromium } = require('playwright');
       path: 'homepage-layout.png',
       fullPage: true
     });
+    
 
     console.log('Screenshot saved as homepage-layout.png');
 

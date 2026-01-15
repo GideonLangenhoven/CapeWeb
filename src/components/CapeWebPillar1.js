@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { VideoReferenceCard } from './VideoReferenceCard';
 import ReactDOM from 'react-dom';
 import { ReadingLayout, InteractiveLayout, QuizLayout } from './CapeWebLayouts';
 import { CWButton, CWHeading, CWCard, CWInput, CWBadge, CWAlert, CWProgressBar, BookInsight } from './CapeWebUI';
@@ -1194,10 +1195,18 @@ export function Pillar1JourneyMap({ onNext }) {
                 </p>
 
                 <h4 style={{ marginTop: '2rem' }}>The Build-Measure-Learn Loop</h4>
+                <h4 style={{ marginTop: '2rem' }}>The Build-Measure-Learn Loop</h4>
                 <p>
                     You don't build a business in a cave for 6 months. You build it in 1-week loops.
                     This concept (popularized by Eric Ries) dictates that the faster you learn, the faster you win.
                 </p>
+
+                <VideoReferenceCard
+                    videoId="L_6xU71Q-lY"
+                    start={0}
+                    title="The Build-Measure-Learn Loop"
+                    description="Eric Ries explains the core feedback loop that drives successful startups."
+                />
 
                 <WeeklyLoopInfinity />
 
@@ -1473,6 +1482,13 @@ export function Pillar1ModuleA({ onNext }) {
                     They build a <strong>routine</strong> that makes working automatic.
                 </p>
 
+                <VideoReferenceCard
+                    videoId="4S7w0wDSiyw"
+                    start={0}
+                    title="Systems vs Goals (James Clear)"
+                    description="Focus on your systems, not just your goals. Winners and losers have the same goals."
+                />
+
                 <BookInsight title="Systems > Goals" author="James Clear" book="Atomic Habits" color="#0EA5E9">
                     "You do not rise to the level of your goals. You fall to the level of your systems.
                     Your goal is your desired outcome. Your system is the collection of daily habits that will get you there."
@@ -1533,6 +1549,15 @@ export function Pillar1ModuleA({ onNext }) {
                 </CWCard>
 
                 <RoutineScenarioInteractive />
+
+                <h3 style={{ marginTop: '2rem' }}>Why This Matters For Business</h3>
+                <p>
+                    Most businesses don't die from bad ideas. They die because the founder gives up.
+                    <br />
+                    When you rely on intensity (hero mode), you are guaranteed to quit when things get hard.
+                    When you rely on a routine (consistency), you survive long enough to win.
+                    <strong>Survival is the only metric that counts in year one.</strong>
+                </p>
 
                 <MiniQuiz questions={moduleAQuizQuestions} title="Routine Knowledge Check" onNext={onNext} />
             </div>
@@ -1703,6 +1728,13 @@ export function Pillar1ModuleB({ onNext }) {
                     So they market to everyone, and connect with no one.
                 </p>
 
+                <VideoReferenceCard
+                    videoId="LqC-oXjatmA"
+                    start={0}
+                    title="Simon Sinek on Strategy"
+                    description="Why you need to understand the 'Infinite Game' to succeed in business."
+                />
+
                 <BookInsight title="The Tribe Concept" author="Seth Godin" book="This is Marketing" color="#10B981">
                     "Everyone is not your customer. It’s better to have 1,000 true fans than 100,000 people who sort of like you.
                     People like us do things like this."
@@ -1752,6 +1784,15 @@ export function Pillar1ModuleB({ onNext }) {
                 <CWAlert type="warning" title="Validation Rule">
                     Do not ask "Would you buy my product?" People lie to be nice. Ask "Tell me about the last time you tried to solve this problem?"
                 </CWAlert>
+
+                <h3 style={{ marginTop: '2rem' }}>Why This Matters For Business</h3>
+                <p>
+                    <strong>Broad marketing is expensive. Niche marketing is cheap.</strong>
+                    <br />
+                    If you try to sell to "everyone", you are competing with Coca-Cola and Takealot. You will lose.
+                    If you sell to "Vegan Cyclists in Sea Point", you have no competition and your ads cost pennies.
+                    Niching down is the only way for a small business to survive against giants.
+                </p>
 
                 <MiniQuiz questions={moduleBQuizQuestions} title="Focus Knowledge Check" onNext={onNext} />
             </div>
@@ -1881,6 +1922,13 @@ export function Pillar1ModuleC({ onNext }) {
                     It needs to be <strong>Irresistible</strong>.
                 </p>
 
+                <VideoReferenceCard
+                    videoId="uyrQWeoaIiw"
+                    start={0}
+                    title="Alex Hormozi: $100M Offers In 9 Minutes"
+                    description="Animated summary of how to create a Grand Slam Offer."
+                />
+
                 <BookInsight title="The Grand Slam Offer" author="Alex Hormozi" book="$100M Offers" color="#8B5CF6">
                     "The goal is to make an offer so good that people feel stupid saying no.
                     Make the value discrepancy so large that checking out is a no-brainer."
@@ -1946,6 +1994,15 @@ export function Pillar1ModuleC({ onNext }) {
                         </div>
                     </div>
                 </CWCard>
+
+                <h3 style={{ marginTop: '2rem' }}>Why This Matters For Business</h3>
+                <p>
+                    <strong>A strong offer makes sales easy. A weak offer makes sales impossible.</strong>
+                    <br />
+                    If you have to "convince" or "pressure" people to buy, your offer is weak.
+                    When you fix the Value Equation (High Dream Outcome + Low Risk), customers start convincing <em>you</em> to take their money.
+                    Spend 80% of your time fixing the offer, and marketing becomes effortless.
+                </p>
 
                 <MiniQuiz questions={moduleCQuizQuestions} title="Offer Knowledge Check" onNext={onNext} />
             </div>
@@ -2068,6 +2125,13 @@ export function Pillar1ModuleD({ onNext }) {
                     <strong>The Goal:</strong> Don't try to beat the big guys at their own game. Find the gap they are missing.
                 </p>
 
+                <VideoReferenceCard
+                    videoId="KY2uQCluq_w"
+                    start={0}
+                    title="Blue Ocean Strategy (<5min)"
+                    description="Stop competing in crowded markets. Create a Blue Ocean where competition is irrelevant."
+                />
+
                 <BookInsight title="Don't Compete" author="W. Chan Kim" book="Blue Ocean Strategy" color="#F59E0B">
                     "Cutthroat competition results in nothing but a bloody ocean.
                     Create a blue ocean of uncontested market space where the competition is irrelevant."
@@ -2092,6 +2156,14 @@ export function Pillar1ModuleD({ onNext }) {
                 </div>
 
                 <CompetitorScenario />
+
+                <h3 style={{ marginTop: '2rem' }}>Why This Matters For Business</h3>
+                <p>
+                    <strong>Price wars are a race to the bottom. Value innovation is a race to the top.</strong>
+                    <br />
+                    If you just copy your competitors, the only reason a customer chooses you is if you are cheaper. This destroys your profit margins.
+                    By checking the "Blue Ocean" (what are they missing?), you can charge premium prices because you are the <em>only</em> one offering that specific value.
+                </p>
 
                 <MiniQuiz questions={moduleDQuizQuestions} title="Competitor Knowledge Check" onNext={onNext} />
             </div>
@@ -2185,6 +2257,13 @@ export function Pillar1ModuleE({ onNext }) {
                     Don't reinvent the wheel. Pick a standard model that works.
                 </p>
 
+                <VideoReferenceCard
+                    videoId="epgy3wLi46I"
+                    start={0}
+                    title="The E-Myth: Technician vs Entrepreneur"
+                    description="Why most small businesses fail and what to do about it."
+                />
+
                 <BookInsight title="The Entrepreneurial Seizure" author="Michael Gerber" book="The E-Myth Revisited" color="#EC4899">
                     "If your business depends on you, you don't own a business—you own a job.
                     And it's the worst job in the world because you work for a lunatic. Build systems that work without you."
@@ -2237,6 +2316,15 @@ export function Pillar1ModuleE({ onNext }) {
                 </div>
 
                 <ModelScenario />
+
+                <h3 style={{ marginTop: '2rem' }}>Why This Matters For Business</h3>
+                <p>
+                    <strong>You are building a machine, not a job.</strong>
+                    <br />
+                    If you choose a Service model without a plan to scale (e.g., hiring staff), you have just created a high-stress job for yourself.
+                    If you choose a Product model without capital, you will run out of cash.
+                    Knowing your model <em>before</em> you start prevents you from getting trapped in a business that can't grow.
+                </p>
 
                 <MiniQuiz questions={moduleEQuizQuestions} title="Model Knowledge Check" onNext={onNext} />
             </div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { VideoReferenceCard } from './VideoReferenceCard';
 import * as confettiModule from 'canvas-confetti';
 import { gsap } from 'gsap';
 import { InteractiveLayout, QuizLayout } from './CapeWebLayouts';
@@ -340,6 +341,7 @@ function LinkJuiceVisual() {
   )
 }
 
+
 function ScenarioToggle({ oldTitle, oldContent, newTitle, newContent }) {
   const [view, setView] = useState('old');
   return (
@@ -386,6 +388,104 @@ function ScenarioToggle({ oldTitle, oldContent, newTitle, newContent }) {
   );
 }
 
+function CoreWebVitalsVisual() {
+  return (
+    <div style={{ margin: '2rem 0', padding: '1.5rem', background: '#F8FAFC', borderRadius: '16px', border: '1px solid #E2E8F0' }}>
+      <h4 style={{ margin: '0 0 1rem', textAlign: 'center', color: '#475569' }}>The Speed Trifecta</h4>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+        {[
+          { label: 'LCP', name: 'Loading', val: '2.5s', color: '#10B981' },
+          { label: 'FID', name: 'Input Delay', val: '100ms', color: '#10B981' },
+          { label: 'CLS', name: 'Visual Stability', val: '0.1', color: '#10B981' }
+        ].map(m => (
+          <div key={m.label} style={{ background: '#fff', padding: '1rem', borderRadius: '12px', border: '1px solid #E2E8F0', textAlign: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+            <div style={{ fontWeight: 900, color: '#334155', marginBottom: '0.25rem' }}>{m.label}</div>
+            <div style={{ fontSize: '0.8rem', color: '#64748B', marginBottom: '0.5rem' }}>{m.name}</div>
+            <div style={{ fontSize: '1.25rem', fontWeight: 700, color: m.color, background: '#ECFDF5', padding: '0.25rem', borderRadius: '6px' }}>{m.val}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function MapPackVisual() {
+  return (
+    <div style={{ margin: '2rem 0', padding: '1rem', background: '#fff', borderRadius: '16px', border: '1px solid #CBD5E1', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}>
+      <div style={{ height: '150px', background: '#E2E8F0', borderRadius: '8px', marginBottom: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94A3B8' }}>
+        📍 Google Maps View
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        {[1, 2, 3].map(i => (
+          <div key={i} style={{ display: 'flex', gap: '1rem', padding: '0.75rem', borderBottom: i < 3 ? '1px solid #F1F5F9' : 'none' }}>
+            <div style={{ width: '40px', height: '40px', background: i === 1 ? '#FEF3C7' : '#F1F5F9', borderRadius: '4px', display: 'grid', placeItems: 'center', fontWeight: 'bold', color: i === 1 ? '#D97706' : '#64748B' }}>{String.fromCharCode(64 + i)}</div>
+            <div>
+              <div style={{ height: '10px', width: '120px', background: i === 1 ? '#D97706' : '#CBD5E1', borderRadius: '100px', marginBottom: '6px' }} />
+              <div style={{ height: '8px', width: '80px', background: '#F1F5F9', borderRadius: '100px' }} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function EEATVisual() {
+  return (
+    <div style={{ margin: '2rem 0', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
+      {['Experience', 'Expertise', 'Authoritativeness', 'Trust'].map((label, i) => (
+        <div key={label} style={{
+          flex: 1, minWidth: '80px', padding: '1rem 0.5rem', textAlign: 'center',
+          background: i === 3 ? '#BE185D' : '#FDF2F8', color: i === 3 ? 'white' : '#831843',
+          borderRadius: '12px', border: i === 3 ? 'none' : '1px solid #FBCFE8',
+          fontWeight: i === 3 ? 800 : 500, boxShadow: i === 3 ? '0 10px 20px -5px rgba(190, 24, 93, 0.3)' : 'none'
+        }}>
+          {label.charAt(0)}
+          <br />
+          <span style={{ fontSize: '0.7rem', opacity: 0.8 }}>{label}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function EngagementVisual() {
+  return (
+    <div style={{ margin: '2rem 0', padding: '2rem', background: '#EFF6FF', borderRadius: '24px', border: '1px solid #BFDBFE' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+        <div style={{ flex: 1, textAlign: 'right', color: '#64748B' }}>Bouncing (0s)</div>
+        <div style={{ width: '60%', height: '12px', background: '#E2E8F0', borderRadius: '100px', overflow: 'hidden' }}>
+          <div style={{ width: '80%', height: '100%', background: '#EF4444' }} />
+        </div>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <div style={{ flex: 1, textAlign: 'right', fontWeight: 'bold', color: '#1E40AF' }}>Engaging (3m+)</div>
+        <div style={{ width: '60%', height: '12px', background: '#E2E8F0', borderRadius: '100px', overflow: 'hidden' }}>
+          <div style={{ width: '80%', height: '100%', background: '#3B82F6' }} />
+        </div>
+      </div>
+      <div style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.9rem', color: '#3B82F6' }}>Goal: Increase dwell time</div>
+    </div>
+  );
+}
+
+function IndexBloatVisual() {
+  return (
+    <div style={{ margin: '2rem 0', background: '#fff', border: '1px solid #E2E8F0', borderRadius: '16px', overflow: 'hidden', display: 'flex' }}>
+      <div style={{ flex: 1, padding: '2rem', borderRight: '1px solid #E2E8F0', textAlign: 'center', background: '#F0FDF4' }}>
+        <div style={{ fontSize: '2rem' }}>💎</div>
+        <div style={{ fontWeight: 'bold', color: '#166534' }}>1 Page</div>
+        <div style={{ fontSize: '0.8rem', color: '#15803D' }}>Ranking Power: 100/100</div>
+      </div>
+      <div style={{ flex: 1, padding: '2rem', textAlign: 'center', background: '#FEF2F2', opacity: 0.5 }}>
+        <div style={{ fontSize: '2rem' }}>📄📄📄</div>
+        <div style={{ fontWeight: 'bold', color: '#991B1B' }}>1000 Pages</div>
+        <div style={{ fontSize: '0.8rem', color: '#B91C1C' }}>Ranking Power: 0.1/100</div>
+      </div>
+    </div>
+  );
+}
+
 // ==========================================
 // PILLAR 5 MODULES A-I
 // ==========================================
@@ -399,6 +499,15 @@ export function Pillar5ModuleA({ onNext }) {
           Google results are a "Winner Take All" market. The #1 spot gets ~33% of clicks. The #10 spot gets &lt; 1%.
           If you are a new shoe store, you cannot rank for "Shoes" (Competition: Nike, Adidas).
         </p>
+
+
+
+        <VideoReferenceCard
+          videoId="wV2gLoaL60w"
+          start={0}
+          title="RankMath: Long Tail Strategy"
+          description="A guide to targeting low-competition, high-conversion keywords."
+        />
 
         <LongTailVisual />
 
@@ -465,7 +574,7 @@ export function Pillar5ModuleA({ onNext }) {
           onNext={onNext}
         />
       </div>
-    </InteractiveLayout>
+    </InteractiveLayout >
   );
 }
 
@@ -477,6 +586,13 @@ export function Pillar5ModuleB({ onNext }) {
         <p className="cw-text-body">
           People don't just type words; they ask questions. With <strong>SGE (Search Generative Experience)</strong>, AI answers simple questions. To survive, you must provide deep, human insight.
         </p>
+
+        <VideoReferenceCard
+          videoId="dwZA5TqZW8Y"
+          start={18}
+          title="They Ask You Answer Summary"
+          description="Marcus Sheridan's philosophy: Radical transparency builds trust."
+        />
 
         <CWAlert type="warning" title="Keyword Cannibalization">
           <strong>The Trap:</strong> You write 5 different blog posts all trying to rank for "Best Coffee in CT".
@@ -500,6 +616,26 @@ export function Pillar5ModuleB({ onNext }) {
           ]}
           onNext={onNext}
         />
+
+         {/* NEW SECTION: Why It Matters */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)', borderRadius: '24px', border: '1px solid #BBF7D0' }}>
+          <CWHeading level={3} style={{ color: '#15803D', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+             <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+          </CWHeading>
+          <p style={{ fontSize: '1.1rem', color: '#166534', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+            Answering customer questions publicly is the cheapest way to build trust at scale. It acts as a 24/7 sales rep that never sleeps.
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
+             <div>
+                <h4 style={{ color: '#166534', marginBottom: '0.5rem' }}>1. Barrier Removal</h4>
+                <p style={{ fontSize: '0.95rem', color: '#14532D', lineHeight: '1.6' }}>If you don't answer "How much does it cost?", they will go to a competitor who does.</p>
+             </div>
+             <div>
+                <h4 style={{ color: '#166534', marginBottom: '0.5rem' }}>2. Voice Search Ready</h4>
+                <p style={{ fontSize: '0.95rem', color: '#14532D', lineHeight: '1.6' }}>Voice assistants (Siri, Alexa) read out direct answers. If you provide the answer, you are the source.</p>
+             </div>
+          </div>
+        </div>
       </div>
     </InteractiveLayout>
   );
@@ -515,12 +651,46 @@ export function Pillar5ModuleC({ onNext }) {
           <strong>The Robot needs to know where to file your page.</strong> The Human needs to click.
         </p>
 
+        <VideoReferenceCard
+          videoId="AUsVNl4f2i4"
+          start={0}
+          title="Brian Dean: Skyscraper Technique"
+          description="How to create content that naturally attracts backlinks by being significantly better than what exists."
+        />
+
         <SFERPVisual />
 
         <CWHeading level={3}>Skyscraper Technique</CWHeading>
         <p className="cw-text-body">
           Find the #1 article. Create one that is <strong>10x better</strong> (More updated, better design). Then tell everyone.
         </p>
+
+        <ScenarioToggle
+          oldTitle="Average Post"
+          oldContent="500 words. Stock photo. No data. 'Here is what we think'."
+          newTitle="Skyscraper Post"
+          newContent="3000 words. Custom graphs. Cited research. 'Here is the definitive guide'."
+        />
+
+        <BookInsight title="Contagious Content" author="Jonah Berger" book="Contagious" color="#3B82F6">
+          <p>"Virality isn't born, it's made. Content that is practical, emotional, and tells a story wins."</p>
+        </BookInsight>
+
+        {/* NEW SECTION: Why It Matters */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%)', borderRadius: '24px', border: '1px solid #BFDBFE' }}>
+          <CWHeading level={3} style={{ color: '#1D4ED8', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+             <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+          </CWHeading>
+          <p style={{ fontSize: '1.1rem', color: '#1E40AF', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+             You cannot compete on volume against AI. You must compete on quality. One "Skyscraper" asset is worth 100 mediocre blog posts.
+          </p>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
+             <li style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', fontSize: '0.95rem', color: '#1E3A8A' }}>
+               <span style={{ color: '#2563EB', marginTop: '2px' }}>➜</span>
+               <span><strong>Backlink Magnet:</strong> High-quality resources naturally attract links from other sites, boosting your entire domain authority.</span>
+             </li>
+          </ul>
+        </div>
 
         <MiniQuiz
           questions={[
@@ -540,17 +710,44 @@ export function Pillar5ModuleD({ onNext }) {
       <div className="cw-prose">
         <p>Google has a "Crawl Budget". If your site is slow, Google leaves.</p>
 
+        <VideoReferenceCard
+          videoId="4pI8nBt98ys"
+          start={17}
+          title="Core Web Vitals Guide"
+          description="Understanding Google's user experience metrics: LCP, FID, and CLS."
+        />
+
         <CWCard>
           <h4>Canonical Tags</h4>
           <p>Telling Google "This is the ORIGINAL version" prevents duplicate content penalties.</p>
         </CWCard>
 
+        <CoreWebVitalsVisual />
+        
+        <BookInsight title="Speed is a Feature" author="Lara Hogan" book="Designing for Performance" color="#8B5CF6">
+          <p>"A page load slow-down of just one second could cost Amazon $1.6 billion in sales each year."</p>
+        </BookInsight>
+
         <ScenarioToggle
           oldTitle="Slow & Heavy"
-          oldContent="Large images, layout shifts (CLS), user rage clicks."
+          oldContent="Large images, layout shifts (CLS), user rage clicks. Google rank drops."
           newTitle="Fast & Stable"
-          newContent="Optimized images, static layout, happy user."
+          newContent="Optimized images, static layout, happy user. Google rank rises."
         />
+
+        {/* NEW SECTION: Why It Matters */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%)', borderRadius: '24px', border: '1px solid #DDD6FE' }}>
+          <CWHeading level={3} style={{ color: '#6D28D9', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+             <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+          </CWHeading>
+          <p style={{ fontSize: '1.1rem', color: '#5B21B6', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+             Google penalizes slow sites because users hate them. If your site takes >3 seconds to load, 53% of mobile users abandon it before seeing a single word.
+          </p>
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '16px', border: '1px solid #DDD6FE' }}>
+             <h4 style={{ margin: '0 0 0.5rem', color: '#6B21A8' }}>The Conversion Impact</h4>
+             <p style={{ margin: 0, fontSize: '0.9rem', color: '#4C1D95' }}>Walmart found that for every 1 second of improvement in load time, they experienced a 2% increase in conversion rate.</p>
+          </div>
+        </div>
 
         <MiniQuiz
           questions={[
@@ -570,12 +767,35 @@ export function Pillar5ModuleE({ onNext }) {
       <div className="cw-prose">
         <p>For local businesses, Google looks for trust signals across the web. You must be consistent.</p>
 
+        <VideoReferenceCard
+          videoId="YVRxmpPyhlU"
+          start={75}
+          title="Moz: NAP Consistency"
+          description="Why Name, Address, and Phone number consistency is critical for local ranking."
+        />
+
+        <MapPackVisual />
+
         <ScenarioToggle
           oldTitle="Inconsistent (Bad)"
           oldContent="FB: '12 Main Rd'. Web: '12 Main Road, Cape Town'. (Google is confused)."
           newTitle="Consistent (Good)"
           newContent="FB: '12 Main Road, Cape Town'. Web: '12 Main Road, Cape Town'. (Google trusts)."
         />
+
+        <BookInsight title="Local SEO Mastery" author="Moz" book="The Beginner's Guide to Local SEO" color="#D97706">
+          <p>"Proximity, Relevance, and Prominence are the three pillars of Local Search."</p>
+        </BookInsight>
+
+        {/* NEW SECTION: Why It Matters */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)', borderRadius: '24px', border: '1px solid #FDE68A' }}>
+          <CWHeading level={3} style={{ color: '#B45309', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+             <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+          </CWHeading>
+          <p style={{ fontSize: '1.1rem', color: '#92400E', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+             46% of all Google searches are seeking local information. If you don't show up in the "Map Pack" (the top 3 map results), you are invisible to half of your potential customers.
+          </p>
+        </div>
 
         <MiniQuiz
           questions={[
@@ -595,9 +815,35 @@ export function Pillar5ModuleF({ onNext }) {
       <div className="cw-prose">
         <p>In the age of AI spam, Google prioritizes <strong>Experience</strong>. AI cannot taste food or hike a mountain.</p>
 
+        <VideoReferenceCard
+          videoId="Nrz_4P3QCt4"
+          start={0}
+          title="Semrush: Google E-E-A-T"
+          description="Understanding Experience, Expertise, Authoritativeness, and Trustworthiness."
+        />
+
+        <EEATVisual />
+
         <BookInsight title="Experience vs Expertise" author="Google" book="Search Quality Guidelines" color="#F43F5E">
           <p>"E-E-A-T stands for Experience, Expertise, Authoritativeness, and Trustworthiness."</p>
         </BookInsight>
+
+        <ScenarioToggle
+          oldTitle="Anonymous Blog"
+          oldContent="Written by 'Admin'. No bio. financial advice. (Untrustworthy)."
+          newTitle="Expert Author"
+          newContent="Written by Dr. John Smith, PhD. Linked to LinkedIn. (Trustworthy)."
+        />
+
+        {/* NEW SECTION: Why It Matters */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #FFF1F2 0%, #FFE4E6 100%)', borderRadius: '24px', border: '1px solid #FECDD3' }}>
+          <CWHeading level={3} style={{ color: '#BE123C', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+             <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+          </CWHeading>
+          <p style={{ fontSize: '1.1rem', color: '#9F1239', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+             For clear "Your Money or Your Life" (YMYL) topics (Health, Finance, Law), Google will NOT rank you unless you prove you are a qualified expert.
+          </p>
+        </div>
 
         <MiniQuiz
           questions={[
@@ -617,9 +863,37 @@ export function Pillar5ModuleG({ onNext }) {
       <div className="cw-prose">
         <p>A link from another site is a "Vote of Confidence". But not all votes are equal.</p>
 
+        <VideoReferenceCard
+          videoId="3vuTHqRjxvQ"
+          start={48}
+          title="Digital PR vs Link Building"
+          description="Why earning links through great stories (Digital PR) beats buying spammy links."
+        />
+
         <LinkJuiceVisual />
 
         <p>Don't spam. Create news. Release a survey on "Cape Town Coffee Prices". Send it to journalists.</p>
+
+        <ScenarioToggle
+          oldTitle="Buying Links"
+          oldContent="Spending R500 on Fiverr for 1000 links. (Risk: Google Ban)."
+          newTitle="Earning Links"
+          newContent="Publishing original data that News24 wants to cite. (Reward: High Rankings)."
+        />
+
+        <BookInsight title="Manipulating Media" author="Ryan Holiday" book="Trust Me, I'm Lying" color="#10B981">
+          <p>"The best way to get a story in the New York Times is to trade up the chain from a small blog."</p>
+        </BookInsight>
+
+        {/* NEW SECTION: Why It Matters */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)', borderRadius: '24px', border: '1px solid #BBF7D0' }}>
+          <CWHeading level={3} style={{ color: '#15803D', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+             <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+          </CWHeading>
+          <p style={{ fontSize: '1.1rem', color: '#166534', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+             Backlinks are the "currency" of the web. Without them, even the best content will struggle to rank. Digital PR is how you print your own currency legitimately.
+          </p>
+        </div>
 
         <MiniQuiz
           questions={[
@@ -639,12 +913,35 @@ export function Pillar5ModuleH({ onNext }) {
       <div className="cw-prose">
         <p><strong>Bounce Rate</strong> is dead. It is replaced by <strong>Engagement Rate</strong>.</p>
 
+        <VideoReferenceCard
+          videoId="x0vubz0YhoE"
+          start={139}
+          title="Engagement Rate vs Bounce Rate"
+          description="Why Google switched to Engagement Rate in GA4 and what it means for your content."
+        />
+
+        <EngagementVisual />
+
         <ScenarioToggle
           oldTitle="Vanity Metric"
           oldContent="'We got 10,000 hits!' (But 99% left instantly)."
           newTitle="Actionable Metric"
           newContent="'We got 100 engaged sessions who stayed for 3 mins'."
         />
+
+        <BookInsight title="The One Metric That Matters" author="Alistair Croll" book="Lean Analytics" color="#3B82F6">
+          <p>"If a metric doesn't change how you behave, it's a bad metric."</p>
+        </BookInsight>
+
+        {/* NEW SECTION: Why It Matters */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%)', borderRadius: '24px', border: '1px solid #BFDBFE' }}>
+          <CWHeading level={3} style={{ color: '#1D4ED8', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+             <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+          </CWHeading>
+          <p style={{ fontSize: '1.1rem', color: '#1E40AF', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+             Stop looking at "hits" or "views". They are vanity metrics. Focus on "Engagement Rate" and "Conversions". You can't pay rent with views.
+          </p>
+        </div>
 
         <MiniQuiz
           questions={[
@@ -664,9 +961,39 @@ export function Pillar5ModuleI({ onNext }) {
       <div className="cw-prose">
         <p>E-commerce sites often have filters (Red, Blue, Size 10). If Google indexes every combination, you get <strong>Index Bloat</strong>.</p>
 
+        <VideoReferenceCard
+          videoId="RdUkRlOwQPY"
+          start={42}
+          title="Faceted Navigation SEO"
+          description="How to handle massive e-commerce sites without wasting crawl budget."
+        />
+
+        <IndexBloatVisual />
+
         <CWAlert type="warning" title="The Fix">
           Use <code>robots.txt</code> to block crawling of parameter URLs.
         </CWAlert>
+
+        <ScenarioToggle
+          oldTitle="Unfiltered Chaos"
+          oldContent="10,000 pages indexed. Google crawls 50 per day. Important pages ignored."
+          newTitle="Faceted Control"
+          newContent="100 'Master' pages indexed. Google crawls all of them. Rankings soar."
+        />
+
+        <BookInsight title="Crawl Budget" author="Eric Enge" book="The Art of SEO" color="#166534">
+          <p>"Search engines have limited resources. If they spend it crawling junk, they won't find your gems."</p>
+        </BookInsight>
+
+        {/* NEW SECTION: Why It Matters */}
+        <div style={{ margin: '3rem 0', padding: '2rem', background: 'linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)', borderRadius: '24px', border: '1px solid #BBF7D0' }}>
+          <CWHeading level={3} style={{ color: '#15803D', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+             <span style={{ fontSize: '1.5rem' }}>🧠</span> Why This Matters for Business Owners
+          </CWHeading>
+          <p style={{ fontSize: '1.1rem', color: '#166534', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+             If you run an ecommerce store, "Index Bloat" is the silent killer. It dilutes your site's authority. Fixing this technical issue often results in massive traffic gains overnight.
+          </p>
+        </div>
 
         <MiniQuiz
           questions={[

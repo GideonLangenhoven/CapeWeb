@@ -7,5 +7,6 @@
 
 export { default as CookieConsent } from './CookieConsent';
 export { default as TrustBadges } from './TrustBadges';
-export { default as ErrorBoundary, withErrorBoundary } from './ErrorBoundary';
+export { default as ErrorBoundary } from './ErrorBoundary';
+export { withErrorBoundary } from './ErrorBoundary';
 export { default as ContactForm } from './ContactForm';

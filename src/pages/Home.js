@@ -5,8 +5,7 @@ import Footer from '../components/Footer';
 import SEO from '../components/SEO';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import LocomotiveScroll from 'locomotive-scroll';
-import 'locomotive-scroll/dist/locomotive-scroll.css';
+import { SafeLocomotiveScroll } from '../hooks/useLocomotiveScroll';
 import './Home.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -110,6 +109,7 @@ function Home() {
   const sliderTouchStartRef = useRef({ x: 0, y: 0 });
   const testimonialTimerRef = useRef(null);
   const playerRef = useRef(null);
+  const hoverVideoRefs = useRef([]);
 
   const [leadSubmitted, setLeadSubmitted] = useState(false);
   const [activeCard, setActiveCard] = useState(0);
@@ -140,6 +140,19 @@ function Home() {
       if (index === prev) return prev;
       return Math.min(Math.max(index, 0), PRODUCT_CARDS.length - 1);
     });
+  }, []);
+
+  const handlePreviewEnter = useCallback((index) => {
+    const video = hoverVideoRefs.current[index];
+    if (!video) return;
+    video.play().catch(() => {});
+  }, []);
+
+  const handlePreviewLeave = useCallback((index) => {
+    const video = hoverVideoRefs.current[index];
+    if (!video) return;
+    video.pause();
+    video.currentTime = 0;
   }, []);
 
   const handleLeadSubmit = useCallback(async (event) => {
@@ -219,18 +232,25 @@ function Home() {
     document.documentElement.style.scrollBehavior = 'auto';
 
     // Helper to ensure sections have a transform
+    const applyTransformFallback = (el) => {
+      if (!el) return;
+      const style = window.getComputedStyle ? window.getComputedStyle(el) : null;
+      const transform = style?.transform || style?.webkitTransform || style?.mozTransform;
+      if (!transform || transform === 'none') {
+        el.style.transform = 'translate3d(0, 0, 0)';
+        el.style.webkitTransform = 'translate3d(0, 0, 0)';
+        el.style.msTransform = 'translate3d(0, 0, 0)';
+      }
+    };
+
     const fixScrollSections = () => {
-      scrollContainer.querySelectorAll('[data-scroll-section]').forEach((section) => {
-        const transform = getComputedStyle(section).transform;
-        if (!transform || transform === 'none') {
-          section.style.transform = 'translate3d(0, 0, 0)';
-        }
-      });
+      applyTransformFallback(scrollContainer);
+      scrollContainer.querySelectorAll('[data-scroll-section], [data-scroll]').forEach(applyTransformFallback);
     };
 
     fixScrollSections();
 
-    const loco = new LocomotiveScroll({
+    const loco = new SafeLocomotiveScroll({
       el: scrollContainer,
       smooth: true,
       lerp: 0.12,
@@ -440,6 +460,7 @@ function Home() {
     const viewport = sliderViewportRef.current;
     const track = sliderTrackRef.current;
     if (!viewport || !track) return;
+    if (track.scrollWidth <= viewport.clientWidth + 1) return;
     const card = track.children[activeCard];
     if (!card) return;
     const offset = card.offsetLeft - (viewport.clientWidth / 2 - card.clientWidth / 2);
@@ -748,393 +769,429 @@ function Home() {
         path="/"
       />
       <div className="home">
-      <button
-        className="fullscreen-btn"
-        id="fullscreenBtn"
-        type="button"
-        aria-label="Toggle fullscreen"
-        title={isFullscreen ? 'Exit fullscreen (F11)' : 'Toggle fullscreen (F11)'}
-        onClick={toggleFullscreen}
-      >
-        {isFullscreen ? (
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
-          </svg>
-        ) : (
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
-          </svg>
-        )}
-      </button>
-
-      <div className="scroll-container" data-scroll-container ref={scrollContainerRef}>
-        <Hero />
-
-        <section
-          id="keyhole"
-          className="keyhole-section"
-          ref={keyholeRef}
-          data-bgcolor="#ffffff"
-          data-textcolor="#1f2937"
-          data-scroll-section
+        <button
+          className="fullscreen-btn"
+          id="fullscreenBtn"
+          type="button"
+          aria-label="Toggle fullscreen"
+          title={isFullscreen ? 'Exit fullscreen (F11)' : 'Toggle fullscreen (F11)'}
+          onClick={toggleFullscreen}
         >
-          <span className="keyhole" aria-hidden="true" />
-          <span className="arrow" aria-hidden="true">
-            <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="-5 -5 30 30">
-              <path d="M 0 10 H 20 L 10 0 M 20 10 L 10 20" strokeWidth="4" strokeLinecap="square" strokeLinejoin="round" />
+          {isFullscreen ? (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
             </svg>
-          </span>
-          <figure className="keyhole-section__figure">
-            <div
-              style={{ backgroundColor: '#ffffff' }}
-              role="img"
-              aria-label="Cape Town team collaboration"
-            />
-          </figure>
-          <div className="keyhole-section__content">
-            <div className="keyhole-content-wrapper">
-              <div className="keyhole-label">ABOUT</div>
-              <h2 className="keyhole-headline">
-                Driving Brand Growth Through Strategic Engagement and <span className="hl hl-pink">Meaningful Connections.</span>
-              </h2>
-              <p className="keyhole-body">
-                We build websites that hustle harder than you do—using AI to schedule, follow up, and book appointments on autopilot. From high-converting Shopify stores to custom apps, we turn leads into loyalists. Throw in expert SEO, scroll-stopping graphic design, and ad campaigns on Google and Meta that actually work, and you’ve got a digital dream team ready to dominate.
-              </p>
-              <a href="/about" className="keyhole-cta">
-                GO DOWN THE RABBIT HOLE
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </a>
-            </div>
-          </div>
-        </section>
+          ) : (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+            </svg>
+          )}
+        </button>
 
+        <div className="scroll-container" data-scroll-container ref={scrollContainerRef}>
+          <Hero />
 
-
-        <section id="plan" className="scroll-section" data-bgcolor="#A3F7BF" data-textcolor="#1f2937" data-scroll-section>
-          <div className="section-inner">
-            <div className="section-top">
-              <a href="#ai-guide" className="cta-slide">See pricing & process</a>
-            </div>
-            <div className="plan-content">
-              <h2 className="display-xl">
-                We are <span className="hl hl-cyan">web development</span> and <span className="hl hl-pink">digital marketing</span> experts.
-              </h2>
-              <p className="subhead">Focused sprints. Clear outcomes. Real growth.</p>
-              <div className="plan-textfx">
-                <div className="fx-wrap">
-                  {PLAN_LINES.map((line) => (
-                    <Link
-                      to={`/services?service=${line.service}`}
-                      className="tfx-line"
-                      key={line.label}
-                    >
-                      {line.label} <span>{line.accent}</span>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section
-          id="prod-slider"
-          className="scroll-section"
-          data-bgcolor="#FFF591"
-          data-textcolor="#1f2937"
-          data-scroll-section
-          aria-label="Who we help"
-        >
-          <div className="wrap">
-            <div className="head">
-              <h2>
-                Who we help <span className="hl hl-pink">win online</span>.
-              </h2>
-              <div className="controls">
-                <button
-                  id="ps-prev"
-                  className="nav-btn"
-                  type="button"
-                  aria-label="Prev"
-                  onClick={() => setActiveCard((prev) => Math.max(prev - 1, 0))}
-                  disabled={activeCard === 0}
-                >
-                  ‹
-                </button>
-                <button
-                  id="ps-next"
-                  className="nav-btn"
-                  type="button"
-                  aria-label="Next"
-                  onClick={() => setActiveCard((prev) => Math.min(prev + 1, PRODUCT_CARDS.length - 1))}
-                  disabled={activeCard === PRODUCT_CARDS.length - 1}
-                >
-                  ›
-                </button>
-              </div>
-            </div>
-            <div className="slider" ref={sliderViewportRef}>
+          <section
+            id="keyhole"
+            className="keyhole-section"
+            ref={keyholeRef}
+            data-bgcolor="#ffffff"
+            data-textcolor="#1f2937"
+            data-scroll-section
+          >
+            <span className="keyhole" aria-hidden="true" />
+            <span className="arrow" aria-hidden="true">
+              <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="-5 -5 30 30">
+                <path d="M 0 10 H 20 L 10 0 M 20 10 L 10 20" strokeWidth="4" strokeLinecap="square" strokeLinejoin="round" />
+              </svg>
+            </span>
+            <figure className="keyhole-section__figure">
               <div
-                className="track"
-                id="ps-track"
-                ref={sliderTrackRef}
-                onTouchStart={handleSliderTouchStart}
-                onTouchEnd={handleSliderTouchEnd}
-              >
-                {PRODUCT_CARDS.map((card, index) => (
-                  <article
-                    className="project-card"
-                    key={card.title}
-                    active={index === activeCard ? 'true' : null}
-                    onMouseEnter={() => goToCard(index)}
-                    onClick={() => goToCard(index)}
+                style={{ backgroundColor: '#ffffff' }}
+                role="img"
+                aria-label="Cape Town team collaboration"
+              />
+            </figure>
+            <div className="keyhole-section__content">
+              <div className="keyhole-content-wrapper">
+                <div className="keyhole-label">ABOUT</div>
+                <h2 className="keyhole-headline">
+                  Driving Brand Growth Through Strategic Engagement and <span className="hl hl-pink">Meaningful Connections.</span>
+                </h2>
+                <p className="keyhole-body">
+                  We build websites that hustle harder than you do—using AI to schedule, follow up, and book appointments on autopilot. From high-converting Shopify stores to custom apps, we turn leads into loyalists. Throw in expert SEO, scroll-stopping graphic design, and ad campaigns on Google and Meta that actually work, and you’ve got a digital dream team ready to dominate.
+                </p>
+              </div>
+            </div>
+          </section>
+
+
+
+          <section id="plan" className="scroll-section" data-bgcolor="#A3F7BF" data-textcolor="#1f2937" data-scroll-section>
+            <div className="section-inner">
+              <div className="section-top">
+                <a href="#ai-guide" className="cta-slide">See pricing & process</a>
+              </div>
+              <div className="plan-content">
+                <h2 className="display-xl plan-headline">
+                  <span
+                    className="hover-video-trigger"
+                    onMouseEnter={() => handlePreviewEnter(0)}
+                    onMouseLeave={() => handlePreviewLeave(0)}
                   >
-                    <img
-                      className="project-card__bg"
-                      src={card.bg}
-                      alt={`${card.title} web design services Cape Town background`}
-                      loading="lazy"
-                    />
-                    <div className="project-card__content">
-                      <img
-                        className="project-card__thumb"
-                        src={card.thumb}
-                        alt={`${card.title} web development portfolio Cape Town`}
-                        width="480"
-                        height="320"
-                        loading="lazy"
-                      />
-                      <div>
-                        <h3 className="project-card__title">{card.title}</h3>
-                        <p className="project-card__desc">{card.description}</p>
-                        <button className="project-card__btn" type="button">
-                          Details
-                        </button>
-                      </div>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </div>
-            <div className="dots" id="ps-dots">
-              {PRODUCT_CARDS.map((card, index) => (
-                <span
-                  key={card.title}
-                  className={`dot ${index === activeCard ? 'active' : ''}`.trim()}
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => goToCard(index)}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter' || event.key === ' ') {
-                      event.preventDefault();
-                      goToCard(index);
-                    }
-                  }}
-                />
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="logo-carousel" data-bgcolor="#05DFD7" data-textcolor="#1f2937" data-scroll-section aria-label="Trusted by brands">
-          <div className="wrap">
-            <div className="marquee">
-              <ul id="logoStrip" ref={logoStripRef}>
-                {LOGO_ITEMS.map((item) => (
-                  <li className="logo-item" key={item}>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <ul aria-hidden="true">
-                {LOGO_ITEMS.map((item) => (
-                  <li className="logo-item" key={`${item}-clone`}>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <section
-          id="testimonials"
-          className="scroll-section"
-          data-bgcolor="#FF8A5B"
-          data-textcolor="#1f2937"
-          data-scroll-section
-          aria-label="Customer testimonials"
-        >
-          <div className="section-inner">
-            <div className="section-top">
-              <a href="#ai-guide" className="cta-slide">Book a call</a>
-            </div>
-            <div className="t-wrap">
-              <div className="t-head">
-                <h3>Real results from real clients</h3>
-                <p>Short wins. Compounding gains.</p>
-              </div>
-              <div className="t-grid">
-                <button className="t-btn" type="button" data-slide="prev" aria-label="Previous" onClick={() => handleTestimonialChange(-1)}>
-                  ‹
-                </button>
-                <div className="t-slider" id="t-slider">
-                  <div className="t-stack" id="t-stack">
-                    {REVIEWS.map((review, index) => (
-                      <div className={`t-card ${index === testimonialIndex ? 'active' : ''}`.trim()} key={review.name}>
-                        <blockquote className="t-quote">“{review.review}”</blockquote>
-                        <div className="t-details">
-                          <img
-                            className="t-avatar"
-                            src={review.avatar}
-                            alt={`${review.name} - CapeWeb client testimonial`}
-                            width="60"
-                            height="60"
-                            loading="lazy"
-                          />
-                          <div>
-                            <p className="t-name">{review.name}</p>
-                            <p className="t-role">{review.role}</p>
-                          </div>
-                        </div>
-                      </div>
+                    <span className="hl hl-cyan">Web development</span>
+                    <span className="hover-video-preview" aria-hidden="true">
+                      <video
+                        ref={(el) => {
+                          hoverVideoRefs.current[0] = el;
+                        }}
+                        muted
+                        loop
+                        playsInline
+                        preload="auto"
+                      >
+                        <source src="/assets/plan-preview.mp4" type="video/mp4" />
+                      </video>
+                    </span>
+                  </span>{' '}
+                  and{' '}
+                  <span
+                    className="hover-video-trigger"
+                    onMouseEnter={() => handlePreviewEnter(1)}
+                    onMouseLeave={() => handlePreviewLeave(1)}
+                  >
+                    <span className="hl hl-pink">digital marketing</span>
+                    <span className="hover-video-preview" aria-hidden="true">
+                      <video
+                        ref={(el) => {
+                          hoverVideoRefs.current[1] = el;
+                        }}
+                        muted
+                        loop
+                        playsInline
+                        preload="auto"
+                      >
+                        <source src="/assets/plan-preview.mp4" type="video/mp4" />
+                      </video>
+                    </span>
+                  </span>{' '}
+                  experts.
+                </h2>
+                <p className="subhead">Focused sprints. Clear outcomes. Real growth.</p>
+                <div className="plan-textfx">
+                  <div className="fx-wrap">
+                    {PLAN_LINES.map((line) => (
+                      <Link
+                        to={`/services?service=${line.service}`}
+                        className="tfx-line"
+                        key={line.label}
+                      >
+                        {line.label} <span>{line.accent}</span>
+                      </Link>
                     ))}
                   </div>
                 </div>
-                <button className="t-btn" type="button" data-slide="next" aria-label="Next" onClick={() => handleTestimonialChange(1)}>
-                  ›
+              </div>
+            </div>
+          </section>
+
+          <section
+            id="prod-slider"
+            className="scroll-section"
+            data-bgcolor="#FFF591"
+            data-textcolor="#1f2937"
+            data-scroll-section
+            aria-label="Who we help"
+          >
+            <div className="wrap">
+              <div className="head">
+                <h2>
+                  Who we help <span className="hl hl-pink">win online</span>.
+                </h2>
+                <div className="controls">
+                  <button
+                    id="ps-prev"
+                    className="nav-btn"
+                    type="button"
+                    aria-label="Prev"
+                    onClick={() => setActiveCard((prev) => Math.max(prev - 1, 0))}
+                    disabled={activeCard === 0}
+                  >
+                    ‹
+                  </button>
+                  <button
+                    id="ps-next"
+                    className="nav-btn"
+                    type="button"
+                    aria-label="Next"
+                    onClick={() => setActiveCard((prev) => Math.min(prev + 1, PRODUCT_CARDS.length - 1))}
+                    disabled={activeCard === PRODUCT_CARDS.length - 1}
+                  >
+                    ›
+                  </button>
+                </div>
+              </div>
+              <div className="slider" ref={sliderViewportRef}>
+                <div
+                  className="track"
+                  id="ps-track"
+                  ref={sliderTrackRef}
+                  style={{ '--cards': `${PRODUCT_CARDS.length}` }}
+                  onTouchStart={handleSliderTouchStart}
+                  onTouchEnd={handleSliderTouchEnd}
+                >
+                  {PRODUCT_CARDS.map((card, index) => (
+                    <article
+                      className="project-card"
+                      key={card.title}
+                      active={index === activeCard ? 'true' : null}
+                      onMouseEnter={() => goToCard(index)}
+                      onClick={() => goToCard(index)}
+                    >
+                      <img
+                        className="project-card__bg"
+                        src={card.bg}
+                        alt={`${card.title} web design services Cape Town background`}
+                        loading="lazy"
+                      />
+                      <div className="project-card__content">
+                        <img
+                          className="project-card__thumb"
+                          src={card.thumb}
+                          alt={`${card.title} web development portfolio Cape Town`}
+                          width="480"
+                          height="320"
+                          loading="lazy"
+                        />
+                        <div>
+                          <h3 className="project-card__title">{card.title}</h3>
+                          <p className="project-card__desc">{card.description}</p>
+                          <button className="project-card__btn" type="button">
+                            Details
+                          </button>
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
+              <div className="dots" id="ps-dots">
+                {PRODUCT_CARDS.map((card, index) => (
+                  <span
+                    key={card.title}
+                    className={`dot ${index === activeCard ? 'active' : ''}`.trim()}
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => goToCard(index)}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        goToCard(index);
+                      }
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <section className="logo-carousel" data-bgcolor="#05DFD7" data-textcolor="#1f2937" data-scroll-section aria-label="Trusted by brands">
+            <div className="wrap">
+              <div className="marquee">
+                <ul id="logoStrip" ref={logoStripRef}>
+                  {LOGO_ITEMS.map((item) => (
+                    <li className="logo-item" key={item}>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <ul aria-hidden="true">
+                  {LOGO_ITEMS.map((item) => (
+                    <li className="logo-item" key={`${item}-clone`}>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section
+            id="testimonials"
+            className="scroll-section"
+            data-bgcolor="#FF8A5B"
+            data-textcolor="#1f2937"
+            data-scroll-section
+            aria-label="Customer testimonials"
+          >
+            <div className="section-inner">
+              <div className="section-top">
+                <a href="#ai-guide" className="cta-slide">Book a call</a>
+              </div>
+              <div className="t-wrap">
+                <div className="t-head">
+                  <h3>Real results from real clients</h3>
+                  <p>Short wins. Compounding gains.</p>
+                </div>
+                <div className="t-grid">
+                  <button className="t-btn" type="button" data-slide="prev" aria-label="Previous" onClick={() => handleTestimonialChange(-1)}>
+                    ‹
+                  </button>
+                  <div className="t-slider" id="t-slider">
+                    <div className="t-stack" id="t-stack">
+                      {REVIEWS.map((review, index) => (
+                        <div className={`t-card ${index === testimonialIndex ? 'active' : ''}`.trim()} key={review.name}>
+                          <blockquote className="t-quote">“{review.review}”</blockquote>
+                          <div className="t-details">
+                            <img
+                              className="t-avatar"
+                              src={review.avatar}
+                              alt={`${review.name} - CapeWeb client testimonial`}
+                              width="60"
+                              height="60"
+                              loading="lazy"
+                            />
+                            <div>
+                              <p className="t-name">{review.name}</p>
+                              <p className="t-role">{review.role}</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <button className="t-btn" type="button" data-slide="next" aria-label="Next" onClick={() => handleTestimonialChange(1)}>
+                    ›
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="ai-guide" className="scroll-section" data-bgcolor="#93C5FD" data-textcolor="#1f2937" data-scroll-section>
+            <div className="section-inner" style={{ textAlign: 'center' }}>
+              <div className="section-top" style={{ justifyContent: 'flex-end' }}>
+                <a href="#yt-hero" className="cta-slide">Watch the demo</a>
+              </div>
+              <h2 className="display-lg">
+                Steal our <span className="hl hl-green">automation playbook</span>.
+              </h2>
+              <p className="subhead" style={{ margin: '0 auto' }}>
+                Five workflows that save 10+ hours a week. Free, no fluff.
+              </p>
+              <form className="lead-form" id="leadForm" onSubmit={handleLeadSubmit} noValidate>
+                <div className="lead-form__field">
+                  <label htmlFor="lead-name">Name</label>
+                  <input id="lead-name" type="text" name="name" placeholder="John Doe" required />
+                </div>
+                <div className="lead-form__field">
+                  <label htmlFor="lead-email">Email address</label>
+                  <input id="lead-email" type="email" name="email" placeholder="you@business.co.za" required />
+                </div>
+                <button type="submit">Send me the playbook</button>
+                <p className="lead-form__consent">We'll send one useful email—unsubscribe anytime.</p>
+                {leadSubmitted && <p className="lead-form__success">Thanks! Your download link is on its way to your inbox.</p>}
+              </form>
+            </div>
+          </section>
+
+          <section
+            id="fluid-mask"
+            className="scroll-section"
+            data-bgcolor="#DDD6FE"
+            data-textcolor="#1f2937"
+            data-scroll-section
+            aria-label="SAVE TIME"
+          >
+            <div className="fluid-inner" ref={fluidWrapRef}>
+              <canvas className="fluid-canvas" aria-hidden="true" ref={fluidCanvasRef} />
+              <svg className="text-cut" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" role="img" aria-label="SAVE TIME AND MONEY">
+                <defs>
+                  <mask id="cutout-mask">
+                    <rect x="0" y="0" width="1600" height="900" fill="white" />
+                    {FLUID_LINES.map((line, idx) => (
+                      <text
+                        key={line}
+                        x="50%"
+                        y={`${40 + idx * 22}%`}
+                        fill="black"
+                        fontFamily="Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif"
+                        fontWeight="900"
+                        fontSize="216"
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        letterSpacing="8"
+                      >
+                        {line}
+                      </text>
+                    ))}
+                  </mask>
+                </defs>
+                <rect x="0" y="0" width="1600" height="900" fill="#A78BFA" mask="url(#cutout-mask)" />
+              </svg>
+            </div>
+          </section>
+
+          <section
+            id="yt-hero"
+            className="scroll-section"
+            data-bgcolor="#0b0f1a"
+            data-textcolor="#ffffff"
+            data-scroll-section
+            aria-label="Watch how we help you save time"
+          >
+            <div className="section-inner" style={{ gap: '1rem', textAlign: 'center', marginBottom: '3rem' }}>
+              <h2 className="display-lg">
+                Watch how we <span className="hl hl-pink">automate the boring stuff</span>.
+              </h2>
+              <p className="subhead" style={{ margin: '0 auto', maxWidth: '860px' }}>
+                A quick walkthrough showing SEO + social + AI working together.
+              </p>
+            </div>
+            <div className="header" data-bg-video={BG_VIDEO_ID} data-fg-video={FG_VIDEO_ID}>
+              <div className="header__background">
+                <iframe
+                  id="bg-iframe"
+                  ref={bgIframeRef}
+                  title="Background video"
+                  src=""
+                  allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+                  loading="eager"
+                  referrerPolicy="origin"
+                />
+              </div>
+              <div
+                className="header__video-overlay js-video-overlay"
+                ref={videoOverlayRef}
+                style={{ backgroundImage: `url('https://img.youtube.com/vi/${BG_VIDEO_ID}/maxresdefault.jpg')` }}
+              />
+              <div className="header__scrim" aria-hidden="true" />
+              <div className="play-cta">
+                <button className="play-cta__btn" id="openPlayer" type="button" aria-label="Play video" onClick={openVideoModal}>
+                  <span className="play-cta__ring" aria-hidden="true" />
+                  <span className="play-cta__icon" aria-hidden="true" />
                 </button>
               </div>
             </div>
-          </div>
-        </section>
-
-        <section id="ai-guide" className="scroll-section" data-bgcolor="#93C5FD" data-textcolor="#1f2937" data-scroll-section>
-          <div className="section-inner" style={{ textAlign: 'center' }}>
-            <div className="section-top" style={{ justifyContent: 'flex-end' }}>
-              <a href="#yt-hero" className="cta-slide">Watch the demo</a>
-            </div>
-            <h2 className="display-lg">
-              Steal our <span className="hl hl-green">automation playbook</span>.
-            </h2>
-            <p className="subhead" style={{ margin: '0 auto' }}>
-              Five workflows that save 10+ hours a week. Free, no fluff.
-            </p>
-            <form className="lead-form" id="leadForm" onSubmit={handleLeadSubmit} noValidate>
-              <div className="lead-form__field">
-                <label htmlFor="lead-name">Name</label>
-                <input id="lead-name" type="text" name="name" placeholder="John Doe" required />
+            <div className={`video-modal ${isVideoOpen ? 'is-open' : ''}`.trim()} id="videoModal" aria-hidden={!isVideoOpen} aria-label="Video player dialog">
+              <div className="video-modal__backdrop" id="modalBackdrop" role="presentation" onClick={closeVideoModal} />
+              <div className="video-modal__stage" role="dialog" aria-modal="true">
+                <button className="video-modal__close" id="closePlayer" type="button" aria-label="Close video" onClick={closeVideoModal}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                </button>
+                <div id="yt-fg" />
               </div>
-              <div className="lead-form__field">
-                <label htmlFor="lead-email">Email address</label>
-                <input id="lead-email" type="email" name="email" placeholder="you@business.co.za" required />
-              </div>
-              <button type="submit">Send me the playbook</button>
-              <p className="lead-form__consent">We'll send one useful email—unsubscribe anytime.</p>
-              {leadSubmitted && <p className="lead-form__success">Thanks! Your download link is on its way to your inbox.</p>}
-            </form>
-          </div>
-        </section>
-
-        <section
-          id="fluid-mask"
-          className="scroll-section"
-          data-bgcolor="#DDD6FE"
-          data-textcolor="#1f2937"
-          data-scroll-section
-          aria-label="SAVE TIME"
-        >
-          <div className="fluid-inner" ref={fluidWrapRef}>
-            <canvas className="fluid-canvas" aria-hidden="true" ref={fluidCanvasRef} />
-            <svg className="text-cut" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" role="img" aria-label="SAVE TIME AND MONEY">
-              <defs>
-                <mask id="cutout-mask">
-                  <rect x="0" y="0" width="1600" height="900" fill="white" />
-                  {FLUID_LINES.map((line, idx) => (
-                    <text
-                      key={line}
-                      x="50%"
-                      y={`${40 + idx * 22}%`}
-                      fill="black"
-                      fontFamily="Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif"
-                      fontWeight="900"
-                      fontSize="216"
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                      letterSpacing="8"
-                    >
-                      {line}
-                    </text>
-                  ))}
-                </mask>
-              </defs>
-              <rect x="0" y="0" width="1600" height="900" fill="#A78BFA" mask="url(#cutout-mask)" />
-            </svg>
-          </div>
-        </section>
-
-        <section
-          id="yt-hero"
-          className="scroll-section"
-          data-bgcolor="#0b0f1a"
-          data-textcolor="#ffffff"
-          data-scroll-section
-          aria-label="Watch how we help you save time"
-        >
-          <div className="section-inner" style={{ gap: '1rem', textAlign: 'center', marginBottom: '3rem' }}>
-            <h2 className="display-lg">
-              Watch how we <span className="hl hl-pink">automate the boring stuff</span>.
-            </h2>
-            <p className="subhead" style={{ margin: '0 auto', maxWidth: '860px' }}>
-              A quick walkthrough showing SEO + social + AI working together.
-            </p>
-          </div>
-          <div className="header" data-bg-video={BG_VIDEO_ID} data-fg-video={FG_VIDEO_ID}>
-            <div className="header__background">
-              <iframe
-                id="bg-iframe"
-                ref={bgIframeRef}
-                title="Background video"
-                src=""
-                allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-                loading="eager"
-                referrerPolicy="origin"
-              />
             </div>
-            <div
-              className="header__video-overlay js-video-overlay"
-              ref={videoOverlayRef}
-              style={{ backgroundImage: `url('https://img.youtube.com/vi/${BG_VIDEO_ID}/maxresdefault.jpg')` }}
-            />
-            <div className="header__scrim" aria-hidden="true" />
-            <div className="play-cta">
-              <button className="play-cta__btn" id="openPlayer" type="button" aria-label="Play video" onClick={openVideoModal}>
-                <span className="play-cta__ring" aria-hidden="true" />
-                <span className="play-cta__icon" aria-hidden="true" />
-              </button>
-            </div>
-          </div>
-          <div className={`video-modal ${isVideoOpen ? 'is-open' : ''}`.trim()} id="videoModal" aria-hidden={!isVideoOpen} aria-label="Video player dialog">
-            <div className="video-modal__backdrop" id="modalBackdrop" role="presentation" onClick={closeVideoModal} />
-            <div className="video-modal__stage" role="dialog" aria-modal="true">
-              <button className="video-modal__close" id="closePlayer" type="button" aria-label="Close video" onClick={closeVideoModal}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-              </button>
-              <div id="yt-fg" />
-            </div>
-          </div>
-        </section>
+          </section>
 
-        <section className="scroll-section footer-section" data-bgcolor="#0b0f1a" data-textcolor="#ffffff" data-scroll-section>
-          <Footer />
-        </section>
+          <section className="scroll-section footer-section" data-bgcolor="#0b0f1a" data-textcolor="#ffffff" data-scroll-section>
+            <Footer />
+          </section>
+        </div>
       </div>
-    </div>
     </React.Fragment>
   );
 }

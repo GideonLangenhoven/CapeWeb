@@ -22,7 +22,8 @@ import useVoiceflowWidget from './hooks/useVoiceflowWidget'; // Import the Voice
 import ScrollToTop from './components/ScrollToTop'; // Import ScrollToTop
 import ScrollToTopButton from './components/ScrollToTopButton'; // Import ScrollToTopButton
 import CustomCursor from './components/CustomCursor'; // Import custom cursor
-import { ErrorBoundary, CookieConsent } from './components/shared';
+import ErrorBoundary from './components/shared/ErrorBoundary';
+import CookieConsent from './components/shared/CookieConsent';
 
 // Main App component
 function App() {
