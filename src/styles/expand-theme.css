@@ -1,0 +1,97 @@
+/* EXPAND Theme Shared Styles */
+:root {
+    --expand-white: #ffffff;
+    --expand-black: #0b0f1a;
+    --expand-purple: #240b36;
+    --expand-accent: #E3FDF5;
+}
+
+/* Page Container */
+.expand-page {
+    background-color: transparent;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* Typography */
+.expand-label {
+    background-color: #000;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    display: inline-block;
+}
+
+.expand-title-hero {
+    font-size: clamp(3rem, 8vw, 7rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    color: #000;
+}
+
+.expand-title-section {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 3rem;
+    color: #fff;
+}
+
+.expand-text-lg {
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    line-height: 1.5;
+    font-weight: 400;
+    max-width: 800px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Sections */
+.section-white {
+    background-color: transparent;
+    color: var(--expand-black);
+    padding: 20vh max(5vw, 2rem) 10vh;
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+}
+
+.section-black {
+    background-color: transparent;
+    color: var(--expand-white);
+    padding: 15vh max(5vw, 2rem);
+    min-height: 100vh;
+    position: relative;
+    z-index: 2;
+}
+
+.section-purple {
+    background-color: transparent;
+    color: var(--expand-white);
+    padding: 15vh max(5vw, 2rem);
+    min-height: 100vh;
+    position: relative;
+    z-index: 3;
+}
+
+/* Utilities */
+.reveal-text {
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.text-accent {
+    color: var(--expand-accent);
+}
+
+.border-top-white-20 {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}

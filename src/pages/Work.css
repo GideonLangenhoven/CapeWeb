@@ -1,0 +1,103 @@
+@import '../styles/expand-theme.css';
+
+/* Work Specific Styles */
+
+/* Projects List (Black Section) */
+.projects-list {
+    margin-top: 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10rem;
+}
+
+.project-card {
+    position: relative;
+    width: 100%;
+}
+
+.project-card__image-wrap {
+    width: 100%;
+    height: 70vh;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.project-card__image {
+    width: 100%;
+    height: 120%;
+    /* For parallax */
+    object-fit: cover;
+    filter: grayscale(100%);
+    transition: filter 0.5s ease;
+}
+
+.project-card:hover .project-card__image {
+    filter: grayscale(0%);
+}
+
+.project-card__info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 1.5rem;
+}
+
+.project-card__title {
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 800;
+    margin: 0;
+    line-height: 1;
+}
+
+.project-card__meta {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.project-tag {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.25rem 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 100px;
+}
+
+.project-card__desc {
+    font-size: 1.125rem;
+    max-width: 400px;
+    line-height: 1.5;
+    opacity: 0.8;
+}
+
+/* CTA Section (Purple) */
+.work-cta {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.work-cta__btn {
+    display: inline-block;
+    background-color: #fff;
+    color: #000;
+    padding: 1.5rem 3rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 3rem;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.work-cta__btn:hover {
+    transform: translateY(-5px);
+    background-color: var(--expand-accent);
+}

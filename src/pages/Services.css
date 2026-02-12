@@ -1,0 +1,272 @@
+@import '../styles/expand-theme.css';
+
+/* Services Specific Styles */
+
+/* Pillars Grid (Black Section) */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 4rem;
+    margin-top: 4rem;
+}
+
+/* Hero Services Styles */
+.hero-services {
+    position: relative;
+    min-height: 64vh;
+    /* Slightly tighter height (20% reduction) to pull the next section closer */
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    margin: 15vh 0 4rem;
+    width: 100%;
+}
+
+/* Background Animated Boxes */
+.hero-services .graphic {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: flex;
+    transform: translate(-50%, -50%);
+    opacity: 0.43;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.hero-services .graphic .box {
+    height: 520px;
+    width: 96px;
+    /* Background color will be set by GSAP */
+    background-color: #ffffff;
+    pointer-events: auto;
+    /* Enable hover interactions */
+    cursor: pointer;
+    transform-origin: center bottom;
+}
+
+.hero-services .graphic .box:not(:last-of-type) {
+    margin-right: 20px;
+}
+
+/* Main Text Styling */
+.hero-services .tagline {
+    position: relative;
+    z-index: 10;
+    max-width: 80%;
+    text-align: center;
+    font-size: clamp(3rem, 6vw, 6rem);
+    font-weight: 400;
+    user-select: none;
+    line-height: 1.2;
+    color: #ffffff;
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    /* Ensure font matches request */
+}
+
+/* Helper for split text */
+.hero-services .tagline span {
+    display: inline-block;
+}
+
+.service-card {
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.4s ease;
+}
+
+.service-card:hover {
+    border-color: var(--expand-accent);
+    transform: translateY(-10px);
+}
+
+.service-card__icon {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    display: block;
+    color: var(--expand-accent);
+}
+
+.service-card h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #ffffff;
+}
+
+.service-card p {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    opacity: 0.8;
+    margin-bottom: 2rem;
+    color: #e5e7eb;
+}
+
+.service-card ul {
+    list-style: none;
+    padding: 0;
+}
+
+.service-card li {
+    margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+    position: relative;
+    font-size: 1rem;
+    opacity: 0.9;
+    color: #d1d5db;
+}
+
+.service-card li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--expand-accent);
+}
+
+/* Process Steps (Purple Section) */
+.process-list {
+    max-width: 1000px;
+    margin: 6rem auto 0;
+}
+
+.process-item {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 2rem;
+    margin-bottom: 5rem;
+    align-items: flex-start;
+}
+
+.process-num {
+    font-size: 4rem;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.1);
+    line-height: 0.8;
+}
+
+.process-content h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--expand-accent);
+}
+
+.process-content p {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    opacity: 0.9;
+}
+
+/* Vertical Loop Section */
+.v-loop-section {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+    background: transparent;
+    /* Match the previous section's background */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.v-loop-gallery {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    height: 120%;
+    /* Allow some overflow for the loop */
+    position: absolute;
+    top: -10%;
+    left: 50%;
+    transform: translateX(-50%);
+    overflow: visible;
+    z-index: 1;
+}
+
+.v-loop-col {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    width: 33.33%;
+    align-self: flex-start;
+    justify-self: flex-start;
+}
+
+.v-loop-col:nth-child(2) {
+    align-self: flex-end;
+    justify-self: flex-end;
+    margin-top: 10%;
+    /* Offset for visual interest */
+}
+
+.v-loop-image {
+    width: 100%;
+    filter: saturate(0);
+    padding: 1rem;
+    will-change: transform;
+}
+
+.v-loop-image:hover {
+    z-index: 10;
+    filter: saturate(1);
+}
+
+.v-loop-image img {
+    width: 100%;
+    height: 300px;
+    /* Fixed height for consistency */
+    object-fit: cover;
+    display: block;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transition: 0.3s ease-out;
+    border-radius: 8px;
+}
+
+.v-loop-title {
+    font-weight: 800;
+    font-size: clamp(2rem, 5vw, 5rem);
+    text-align: center;
+    z-index: 20;
+    pointer-events: none;
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    mix-blend-mode: difference;
+    width: 100%;
+    text-transform: uppercase;
+    line-height: 1.1;
+}
+
+@media screen and (max-width: 768px) {
+    .v-loop-gallery {
+        width: 150%;
+        /* Wider on mobile to show more */
+    }
+
+    .v-loop-col {
+        width: 50%;
+        /* Show fewer columns or adjust width */
+    }
+
+    .v-loop-image img {
+        height: 200px;
+    }
+}
+
+/* White Section Overrides */
+.section-white .process-num {
+    color: rgba(0, 0, 0, 0.1);
+}
+
+.section-white .process-content h3 {
+    color: #000;
+    /* Or a dark accent like #240b36 */
+}
+
+.section-white .process-content p {
+    color: #333;
+}

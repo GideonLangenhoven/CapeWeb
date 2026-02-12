@@ -1,0 +1,164 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 4071 >>
+stream
+BT
+/F1 10 Tf
+1 0 0 1 72 760 Tm
+12 TL
+(CapeWeb Adaptive Syllabus Spec \(Deepseek Integration\)) Tj
+T*
+(Prepared for Flowweb – focus: SA SMB onboarding) Tj
+T*
+() Tj
+T*
+(1. Current Observations) Tj
+T*
+(- Pillar nav and summaries exist \(CapeWebBlueprint.js:536-1110\) but Pillars 3-11) Tj
+T*
+(  only expose one module each.) Tj
+T*
+(- Activities lean toward generic founder persona \(age 25, R0 budget\).) Tj
+T*
+(- Links skew to national portals; little municipal/provincial branching.) Tj
+T*
+(- Quizzes exist but don't change plan or unlock tailored assets.) Tj
+T*
+(- No automation to reorder or reprioritize pillars per use case.) Tj
+T*
+() Tj
+T*
+(2. Identified Gaps \(SA context\)) Tj
+T*
+(- Funding pathways \(SEFA, SEDA, NYDA, SmartXchange\) not surfaced.) Tj
+T*
+(- Township/rural logistics \(PUDO, Paxi, informal credit\) absent.) Tj
+T*
+(- Industry compliance \(health, food, building, medical\) not referenced.) Tj
+T*
+(- B-BBEE scoring + supplier readiness lacks worksheets.) Tj
+T*
+(- Limited multilingual or accessibility cues for isiXhosa/isiZulu.) Tj
+T*
+(- Cross-border trade \(SADC e-commerce, import duties\) missing.) Tj
+T*
+(- Workforce issues \(Bargaining councils, BCEA, COIDA\) only hinted.) Tj
+T*
+() Tj
+T*
+(3. Business-Build Process Adjustments) Tj
+T*
+(- Replace static journey with Needs Analysis > Adaptive Pillars > Sprint loops.) Tj
+T*
+(- Introduce sector archetypes \(services, retail, agri, SaaS, NPO\).) Tj
+T*
+(- Auto-generate 30-60-90 action maps tied to compliance deadlines.) Tj
+T*
+(- Layer township/metro toggles to restructure examples + pricing.) Tj
+T*
+() Tj
+T*
+(4. Deepseek Integration Flow) Tj
+T*
+(- Step 1 Intake: collect founder profile, funding, traction, sector, geography.) Tj
+T*
+(- Step 2 Gap scan: Deepseek reviews stored syllabus meta + user data.) Tj
+T*
+(- Step 3 Pillar remix: reorder, reword objectives, attach relevant links.) Tj
+T*
+(- Step 4 Action feed: push weekly missions, escalate blockers to humans.) Tj
+T*
+(- Step 5 Reflection: compare quiz scores vs. targets to re-train plan.) Tj
+T*
+() Tj
+T*
+(5. Master Prompt for Deepseek) Tj
+T*
+("You are CapeWeb's syllabus strategist. Given USER_BRIEF + PILLAR_LIBRARY,) Tj
+T*
+( audit fit, flag gaps, rewrite objectives, and output: \(a\) prioritized 11-pillar) Tj
+T*
+( roadmap, \(b\) SA-specific resources per pillar, \(c\) follow-up questions.) Tj
+T*
+( Always keep 11 pillars but you may rename, cluster, or repeat submodules) Tj
+T*
+( to match the business use case. Highlight regulatory, funding, and market) Tj
+T*
+( nuances relevant to the user's province and sector.") Tj
+T*
+() Tj
+T*
+(6. Prompt Templates to Patch Gaps) Tj
+T*
+(- Legal/Compliance: "Deepseek, expand Pillar 2 for a food truck in) Tj
+T*
+(   Durban covering health permits, eThekwini licensing, and POPIA forms.") Tj
+T*
+(- Finance: "Deepseek, rewrite Pillar 9 for cross-border e-commerce using) Tj
+T*
+(   Paystack, Forex, customs VAT, and township lay-by options.") Tj
+T*
+(- Marketing: "Deepseek, adapt Pillar 6 for isiXhosa-first audience with) Tj
+T*
+(   WhatsApp Commerce scripts and offline activation ideas.") Tj
+T*
+(- Cybersecurity: "Deepseek, update Pillar 8 for a clinic handling) Tj
+T*
+(   patient data under HPCSA and POPIA breach duties.") Tj
+T*
+(- CX: "Deepseek, convert Pillar 11 into a service blueprint for field) Tj
+T*
+(   technicians using multilingual chatbots + airtime rewards.") Tj
+T*
+() Tj
+T*
+(7. Interaction Upgrades) Tj
+T*
+(- Dynamic checklists per municipality + trade.) Tj
+T*
+(- Skills-gap radar mixing quiz results + declared confidence.) Tj
+T*
+(- Resource locker surfaced contextually \(templates, calculators, grants\).) Tj
+T*
+(- Workflow timers that turn learning steps into scheduled actions.) Tj
+T*
+(- Shareable PDF/WhatsApp recaps after each pillar.) Tj
+T*
+() Tj
+T*
+(8. Implementation Considerations) Tj
+T*
+(- Store personalization schema \(profile, pain points, regulation level\).) Tj
+T*
+(- Version syllabus metadata so Deepseek can diff and propose edits.) Tj
+T*
+(- Cache AI outputs and allow manual overrides.) Tj
+T*
+(- Track analytics on which prompts produce completions.) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000004363 00000 n 
+trailer << /Size 6 /Root 1 0 R >>
+startxref
+4433
+%%EOF

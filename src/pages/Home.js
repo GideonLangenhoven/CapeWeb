@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Hero from '../components/Hero';
 import Footer from '../components/Footer';
+import SEO from '../components/SEO';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import LocomotiveScroll from 'locomotive-scroll';
@@ -53,11 +55,11 @@ const REVIEWS = [
 ];
 
 const PLAN_LINES = [
-  { label: 'Performance First', accent: '98+ Lighthouse' },
-  { label: 'SEO that Sticks', accent: 'Structured & Fast' },
-  { label: 'Automation Built-In', accent: 'Bookings & Follow-ups' },
-  { label: 'Content that Converts', accent: 'StoryBrand Ready' },
-  { label: 'Care Plans that Care', accent: 'Ship • Learn • Improve' }
+  { label: 'Performance First', accent: '98+ Lighthouse', service: 'shopify-speed-audit' },
+  { label: 'SEO that Sticks', accent: 'Structured & Fast', service: 'seo-2025-beyond-keywords' },
+  { label: 'Automation Built-In', accent: 'Bookings & Follow-ups', service: 'ai-agents-sales-team' },
+  { label: 'Content that Converts', accent: 'StoryBrand Ready', service: 'future-digital-branding' },
+  { label: 'Care Plans that Care', accent: 'Ship • Learn • Improve', service: 'roi-custom-web-dev' }
 ];
 
 const BG_VIDEO_ID = '69yA-F7yOiQ';
@@ -97,7 +99,6 @@ const loadExternalScript = (src) => {
 
 function Home() {
   const scrollContainerRef = useRef(null);
-  const problemRef = useRef(null);
   const keyholeRef = useRef(null);
   const sliderTrackRef = useRef(null);
   const sliderViewportRef = useRef(null);
@@ -129,6 +130,11 @@ function Home() {
     return () => clearInterval(testimonialTimerRef.current);
   }, [restartTestimonialTimer]);
 
+  // Reset scroll on mount
+  React.useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const goToCard = useCallback((index) => {
     setActiveCard((prev) => {
       if (index === prev) return prev;
@@ -136,15 +142,48 @@ function Home() {
     });
   }, []);
 
-  const handleLeadSubmit = useCallback((event) => {
+  const handleLeadSubmit = useCallback(async (event) => {
     event.preventDefault();
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const email = formData.get('email');
+    const name = formData.get('name');
+
+    if (!email || !name) return;
+
+    // 1. Trigger Download immediately (UX)
+    const link = document.createElement('a');
+    link.href = '/The-Automation-Playbook.pdf';
+    link.download = 'The-Automation-Playbook.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
     setLeadSubmitted(true);
-    event.currentTarget.reset();
+    form.reset();
+
+    // 2. Send to Google Sheets (Background)
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwLFgbHHM63wG-WrNwFrwzzLoj0kv6r7MD9RHPDFhTAVeS-8Y2UopbSVrzacie8GuZARg/exec';
+
+    try {
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: email,
+          name: name,
+          guideType: 'automation-playbook'
+        }),
+      });
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
   }, []);
 
   const toggleFullscreen = useCallback(() => {
     if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(() => {});
+      document.documentElement.requestFullscreen().catch(() => { });
     } else {
       document.exitFullscreen?.();
     }
@@ -179,14 +218,34 @@ function Home() {
     const previousScrollBehavior = document.documentElement.style.scrollBehavior;
     document.documentElement.style.scrollBehavior = 'auto';
 
+    // Helper to ensure sections have a transform
+    const fixScrollSections = () => {
+      scrollContainer.querySelectorAll('[data-scroll-section]').forEach((section) => {
+        const transform = getComputedStyle(section).transform;
+        if (!transform || transform === 'none') {
+          section.style.transform = 'translate3d(0, 0, 0)';
+        }
+      });
+    };
+
+    fixScrollSections();
+
     const loco = new LocomotiveScroll({
       el: scrollContainer,
       smooth: true,
-      lerp: 0.09,
+      lerp: 0.12,
       tablet: { smooth: true },
       smartphone: { smooth: false },
-      resetNativeScroll: true
+      resetNativeScroll: true,
+      reloadOnContextChange: true
     });
+
+    // Override update to always apply fix
+    const originalUpdate = loco.update.bind(loco);
+    loco.update = () => {
+      fixScrollSections();
+      originalUpdate();
+    };
 
     const handleAnchorClick = (event) => {
       const target = event.target.closest('a[href^="#"]');
@@ -249,8 +308,8 @@ function Home() {
         ScrollTrigger.create({
           trigger: section,
           scroller: scrollContainer,
-          start: 'top+=10rem top',
-          end: 'bottom top',
+          start: 'top 60%',
+          end: 'bottom 40%',
           onEnter: () => setTheme(section.dataset.bgcolor, section.dataset.textcolor),
           onEnterBack: () => setTheme(section.dataset.bgcolor, section.dataset.textcolor),
           onLeaveBack: () => setTheme(prevBg, prevFg)
@@ -281,8 +340,8 @@ function Home() {
           )
           .fromTo(
             content,
-            { opacity: 0, clipPath: 'inset(100% 0 0 0)' },
-            { opacity: 1, clipPath: 'inset(0 0 0 0)', ease: 'power2.out' },
+            { opacity: 1, clipPath: 'inset(49% 49% 49% 49% round 80px)' },
+            { opacity: 1, clipPath: 'inset(0% 0% 0% 0%)', ease: 'power2.out' },
             0
           )
       );
@@ -306,9 +365,9 @@ function Home() {
       tweens.push(
         gsap.fromTo(
           line,
-          { backgroundSize: '0% 1px' },
+          { backgroundSize: '0% 100%' },
           {
-            backgroundSize: '100% 1px',
+            backgroundSize: '100% 100%',
             scrollTrigger: {
               trigger: line,
               scroller: scrollContainer,
@@ -324,12 +383,16 @@ function Home() {
     const refresh = () => loco.update();
     ScrollTrigger.addEventListener('refresh', refresh);
 
-    setTimeout(() => {
-      loco.update();
-      ScrollTrigger.refresh();
-    }, 300);
+    let timeoutId;
+    requestAnimationFrame(() => {
+      timeoutId = setTimeout(() => {
+        loco.update();
+        ScrollTrigger.refresh();
+      }, 500);
+    });
 
     return () => {
+      clearTimeout(timeoutId);
       scrollContainer.removeEventListener('click', handleAnchorClick);
       ScrollTrigger.removeEventListener('refresh', refresh);
       triggers.forEach((trigger) => trigger.kill());
@@ -346,43 +409,6 @@ function Home() {
         background: '#ffffff',
         color: '#1f2937'
       });
-    };
-  }, []);
-
-  useEffect(() => {
-    const section = problemRef.current;
-    const scrollContainer = scrollContainerRef.current;
-    if (!section || !scrollContainer) return undefined;
-
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReduced) {
-      gsap.set(section, { '--target': '0%' });
-      return undefined;
-    }
-
-    gsap.set(section, { '--target': '100%' });
-
-    const tween = gsap.to(section, {
-      '--target': '0%',
-      ease: 'none',
-      scrollTrigger: {
-        trigger: section,
-        scroller: scrollContainer,
-        start: 'top top',
-        end: '+=1000',
-        pin: true,
-        scrub: 1,
-        anticipatePin: 1
-      }
-    });
-
-    const handleResize = () => ScrollTrigger.refresh();
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      tween.scrollTrigger?.kill();
-      tween.kill();
     };
   }, []);
 
@@ -511,7 +537,7 @@ function Home() {
     const canvas = fluidCanvasRef.current;
     const wrap = fluidWrapRef.current;
     if (!canvas || !wrap) return undefined;
-    let cleanup = () => {};
+    let cleanup = () => { };
     let isCancelled = false;
 
     const initFluid = () => {
@@ -670,7 +696,7 @@ function Home() {
     } else {
       loadExternalScript('https://unpkg.com/ogl@0.0.32/dist/ogl.min.js')
         .then(initFluid)
-        .catch(() => {});
+        .catch(() => { });
     }
 
     return () => {
@@ -715,7 +741,13 @@ function Home() {
   };
 
   return (
-    <div className="home">
+    <React.Fragment>
+      <SEO
+        title="Best Web Design & Software Development"
+        description="CapeWeb provides custom React web development and SEO services in Cape Town. We build high-performance websites for South African businesses."
+        path="/"
+      />
+      <div className="home">
       <button
         className="fullscreen-btn"
         id="fullscreenBtn"
@@ -739,34 +771,11 @@ function Home() {
         <Hero />
 
         <section
-          id="problem"
-          className="gradient-reveal-section"
-          ref={problemRef}
-          data-scroll-section
-        >
-          <div className="gradient-content">
-            <div className="section-top">
-              <a href="#problem" className="kicker"><span className="dot" aria-hidden="true" /> About</a>
-              <a href="#ai-guide" className="cta">Come play with us <span className="arr">→</span></a>
-            </div>
-            <h1 className="gradient-title">
-              Driving Brand <span className="hl hl-pink">Growth</span> Through Strategic
-              <span className="hl hl-cyan"> Engagement</span> and
-              <span className="hl hl-yellow"> Meaningful Connections</span>.
-              <span className="gradient-subtitle">We design, market, and automate experiences that turn attention into revenue.</span>
-            </h1>
-            <div className="gradient-stakes">
-              Slow sites and manual tasks cost customers. Let's fix both.
-            </div>
-          </div>
-        </section>
-
-        <section
           id="keyhole"
           className="keyhole-section"
           ref={keyholeRef}
-          data-bgcolor="#F35588"
-          data-textcolor="#ffffff"
+          data-bgcolor="#ffffff"
+          data-textcolor="#1f2937"
           data-scroll-section
         >
           <span className="keyhole" aria-hidden="true" />
@@ -776,52 +785,55 @@ function Home() {
             </svg>
           </span>
           <figure className="keyhole-section__figure">
-            <img
-              src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&h=1600&fit=crop"
-              alt="Cape Town team collaboration"
-              width="1600"
-              height="1600"
+            <div
+              style={{ backgroundColor: '#ffffff' }}
+              role="img"
+              aria-label="Cape Town team collaboration"
             />
           </figure>
           <div className="keyhole-section__content">
-            <h2>
-              Meet your <span className="hl hl-yellow">digital dream team</span>.
-            </h2>
-            <p>We turn "our site doesn't convert" into growth—design, dev, SEO and automation under one roof.</p>
-          </div>
-        </section>
-
-        <section className="logo-carousel" data-bgcolor="#05DFD7" data-textcolor="#1f2937" data-scroll-section aria-label="Trusted by brands">
-          <div className="wrap">
-            <div className="marquee">
-              <ul id="logoStrip" ref={logoStripRef}>
-                {LOGO_ITEMS.map((item) => (
-                  <li className="logo-item" key={item}>
-                    {item}
-                  </li>
-                ))}
-              </ul>
+            <div className="keyhole-content-wrapper">
+              <div className="keyhole-label">ABOUT</div>
+              <h2 className="keyhole-headline">
+                Driving Brand Growth Through Strategic Engagement and <span className="hl hl-pink">Meaningful Connections.</span>
+              </h2>
+              <p className="keyhole-body">
+                We build websites that hustle harder than you do—using AI to schedule, follow up, and book appointments on autopilot. From high-converting Shopify stores to custom apps, we turn leads into loyalists. Throw in expert SEO, scroll-stopping graphic design, and ad campaigns on Google and Meta that actually work, and you’ve got a digital dream team ready to dominate.
+              </p>
+              <a href="/about" className="keyhole-cta">
+                GO DOWN THE RABBIT HOLE
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </a>
             </div>
           </div>
         </section>
+
+
 
         <section id="plan" className="scroll-section" data-bgcolor="#A3F7BF" data-textcolor="#1f2937" data-scroll-section>
           <div className="section-inner">
             <div className="section-top">
-              <a href="#plan" className="kicker"><span className="dot" /> Services</a>
-              <a href="#ai-guide" className="cta">See pricing &amp; process <span className="arr">→</span></a>
+              <a href="#ai-guide" className="cta-slide">See pricing & process</a>
             </div>
-            <h2 className="display-xl">
-              We are <span className="hl hl-cyan">web development</span> and <span className="hl hl-pink">digital marketing</span> experts.
-            </h2>
-            <p className="subhead">Focused sprints. Clear outcomes. Real growth.</p>
-            <div className="plan-textfx">
-              <div className="fx-wrap">
-                {PLAN_LINES.map((line) => (
-                  <div className="tfx-line" key={line.label}>
-                    {line.label} <span>{line.accent}</span>
-                  </div>
-                ))}
+            <div className="plan-content">
+              <h2 className="display-xl">
+                We are <span className="hl hl-cyan">web development</span> and <span className="hl hl-pink">digital marketing</span> experts.
+              </h2>
+              <p className="subhead">Focused sprints. Clear outcomes. Real growth.</p>
+              <div className="plan-textfx">
+                <div className="fx-wrap">
+                  {PLAN_LINES.map((line) => (
+                    <Link
+                      to={`/services?service=${line.service}`}
+                      className="tfx-line"
+                      key={line.label}
+                    >
+                      {line.label} <span>{line.accent}</span>
+                    </Link>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -879,9 +891,21 @@ function Home() {
                     onMouseEnter={() => goToCard(index)}
                     onClick={() => goToCard(index)}
                   >
-                    <img className="project-card__bg" src={card.bg} alt="" />
+                    <img
+                      className="project-card__bg"
+                      src={card.bg}
+                      alt={`${card.title} web design services Cape Town background`}
+                      loading="lazy"
+                    />
                     <div className="project-card__content">
-                      <img className="project-card__thumb" src={card.thumb} alt="" />
+                      <img
+                        className="project-card__thumb"
+                        src={card.thumb}
+                        alt={`${card.title} web development portfolio Cape Town`}
+                        width="480"
+                        height="320"
+                        loading="lazy"
+                      />
                       <div>
                         <h3 className="project-card__title">{card.title}</h3>
                         <p className="project-card__desc">{card.description}</p>
@@ -914,18 +938,38 @@ function Home() {
           </div>
         </section>
 
+        <section className="logo-carousel" data-bgcolor="#05DFD7" data-textcolor="#1f2937" data-scroll-section aria-label="Trusted by brands">
+          <div className="wrap">
+            <div className="marquee">
+              <ul id="logoStrip" ref={logoStripRef}>
+                {LOGO_ITEMS.map((item) => (
+                  <li className="logo-item" key={item}>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <ul aria-hidden="true">
+                {LOGO_ITEMS.map((item) => (
+                  <li className="logo-item" key={`${item}-clone`}>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+
         <section
           id="testimonials"
           className="scroll-section"
-          data-bgcolor="#F35588"
-          data-textcolor="#ffffff"
+          data-bgcolor="#FF8A5B"
+          data-textcolor="#1f2937"
           data-scroll-section
           aria-label="Customer testimonials"
         >
           <div className="section-inner">
             <div className="section-top">
-              <a href="#testimonials" className="kicker"><span className="dot" /> Results</a>
-              <a href="#ai-guide" className="cta">Book a call <span className="arr">→</span></a>
+              <a href="#ai-guide" className="cta-slide">Book a call</a>
             </div>
             <div className="t-wrap">
               <div className="t-head">
@@ -942,7 +986,14 @@ function Home() {
                       <div className={`t-card ${index === testimonialIndex ? 'active' : ''}`.trim()} key={review.name}>
                         <blockquote className="t-quote">“{review.review}”</blockquote>
                         <div className="t-details">
-                          <img className="t-avatar" src={review.avatar} alt={review.name} />
+                          <img
+                            className="t-avatar"
+                            src={review.avatar}
+                            alt={`${review.name} - CapeWeb client testimonial`}
+                            width="60"
+                            height="60"
+                            loading="lazy"
+                          />
                           <div>
                             <p className="t-name">{review.name}</p>
                             <p className="t-role">{review.role}</p>
@@ -960,11 +1011,10 @@ function Home() {
           </div>
         </section>
 
-        <section id="ai-guide" className="scroll-section" data-bgcolor="#05DFD7" data-textcolor="#1f2937" data-scroll-section>
+        <section id="ai-guide" className="scroll-section" data-bgcolor="#93C5FD" data-textcolor="#1f2937" data-scroll-section>
           <div className="section-inner" style={{ textAlign: 'center' }}>
-            <div className="section-top">
-              <a href="#ai-guide" className="kicker"><span className="dot" /> Get the guide</a>
-              <a href="#yt-hero" className="cta">Watch the demo <span className="arr">→</span></a>
+            <div className="section-top" style={{ justifyContent: 'flex-end' }}>
+              <a href="#yt-hero" className="cta-slide">Watch the demo</a>
             </div>
             <h2 className="display-lg">
               Steal our <span className="hl hl-green">automation playbook</span>.
@@ -973,6 +1023,10 @@ function Home() {
               Five workflows that save 10+ hours a week. Free, no fluff.
             </p>
             <form className="lead-form" id="leadForm" onSubmit={handleLeadSubmit} noValidate>
+              <div className="lead-form__field">
+                <label htmlFor="lead-name">Name</label>
+                <input id="lead-name" type="text" name="name" placeholder="John Doe" required />
+              </div>
               <div className="lead-form__field">
                 <label htmlFor="lead-email">Email address</label>
                 <input id="lead-email" type="email" name="email" placeholder="you@business.co.za" required />
@@ -987,17 +1041,11 @@ function Home() {
         <section
           id="fluid-mask"
           className="scroll-section"
-          data-bgcolor="#A3F7BF"
+          data-bgcolor="#DDD6FE"
           data-textcolor="#1f2937"
           data-scroll-section
           aria-label="SAVE TIME"
         >
-          <div className="section-inner container-tight" style={{ gap: '.5rem' }}>
-            <div className="section-top">
-              <a href="#fluid-mask" className="kicker"><span className="dot" /> Why it matters</a>
-              <a href="#ai-guide" className="cta">Start saving time <span className="arr">→</span></a>
-            </div>
-          </div>
           <div className="fluid-inner" ref={fluidWrapRef}>
             <canvas className="fluid-canvas" aria-hidden="true" ref={fluidCanvasRef} />
             <svg className="text-cut" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" role="img" aria-label="SAVE TIME AND MONEY">
@@ -1022,7 +1070,7 @@ function Home() {
                   ))}
                 </mask>
               </defs>
-              <rect x="0" y="0" width="1600" height="900" fill="#A3F7BF" mask="url(#cutout-mask)" />
+              <rect x="0" y="0" width="1600" height="900" fill="#A78BFA" mask="url(#cutout-mask)" />
             </svg>
           </div>
         </section>
@@ -1030,57 +1078,54 @@ function Home() {
         <section
           id="yt-hero"
           className="scroll-section"
-          data-bgcolor="#FFF591"
-          data-textcolor="#1f2937"
+          data-bgcolor="#0b0f1a"
+          data-textcolor="#ffffff"
           data-scroll-section
           aria-label="Watch how we help you save time"
         >
-          <div className="section-inner" style={{ gap: '1rem', textAlign: 'center' }}>
-            <div className="section-top">
-              <a href="#yt-hero" className="kicker"><span className="dot" /> Demo</a>
-            </div>
+          <div className="section-inner" style={{ gap: '1rem', textAlign: 'center', marginBottom: '3rem' }}>
             <h2 className="display-lg">
               Watch how we <span className="hl hl-pink">automate the boring stuff</span>.
             </h2>
             <p className="subhead" style={{ margin: '0 auto', maxWidth: '860px' }}>
               A quick walkthrough showing SEO + social + AI working together.
             </p>
-            <div className="header" data-bg-video={BG_VIDEO_ID} data-fg-video={FG_VIDEO_ID}>
-              <div className="header__background">
-                <iframe
-                  id="bg-iframe"
-                  ref={bgIframeRef}
-                  title="Background video"
-                  src=""
-                  allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-                  loading="eager"
-                  referrerPolicy="origin"
-                />
-              </div>
-              <div
-                className="header__video-overlay js-video-overlay"
-                ref={videoOverlayRef}
-                style={{ backgroundImage: `url('https://img.youtube.com/vi/${BG_VIDEO_ID}/maxresdefault.jpg')` }}
+          </div>
+          <div className="header" data-bg-video={BG_VIDEO_ID} data-fg-video={FG_VIDEO_ID}>
+            <div className="header__background">
+              <iframe
+                id="bg-iframe"
+                ref={bgIframeRef}
+                title="Background video"
+                src=""
+                allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+                loading="eager"
+                referrerPolicy="origin"
               />
-              <div className="header__scrim" aria-hidden="true" />
-              <div className="play-cta">
-                <button className="play-cta__btn" id="openPlayer" type="button" aria-label="Play video" onClick={openVideoModal}>
-                  <span className="play-cta__ring" aria-hidden="true" />
-                  <span className="play-cta__icon" aria-hidden="true" />
-                </button>
-              </div>
             </div>
-            <div className={`video-modal ${isVideoOpen ? 'is-open' : ''}`.trim()} id="videoModal" aria-hidden={!isVideoOpen} aria-label="Video player dialog">
-              <div className="video-modal__backdrop" id="modalBackdrop" role="presentation" onClick={closeVideoModal} />
-              <div className="video-modal__stage" role="dialog" aria-modal="true">
-                <button className="video-modal__close" id="closePlayer" type="button" aria-label="Close video" onClick={closeVideoModal}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <line x1="18" y1="6" x2="6" y2="18" />
-                    <line x1="6" y1="6" x2="18" y2="18" />
-                  </svg>
-                </button>
-                <div id="yt-fg" />
-              </div>
+            <div
+              className="header__video-overlay js-video-overlay"
+              ref={videoOverlayRef}
+              style={{ backgroundImage: `url('https://img.youtube.com/vi/${BG_VIDEO_ID}/maxresdefault.jpg')` }}
+            />
+            <div className="header__scrim" aria-hidden="true" />
+            <div className="play-cta">
+              <button className="play-cta__btn" id="openPlayer" type="button" aria-label="Play video" onClick={openVideoModal}>
+                <span className="play-cta__ring" aria-hidden="true" />
+                <span className="play-cta__icon" aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+          <div className={`video-modal ${isVideoOpen ? 'is-open' : ''}`.trim()} id="videoModal" aria-hidden={!isVideoOpen} aria-label="Video player dialog">
+            <div className="video-modal__backdrop" id="modalBackdrop" role="presentation" onClick={closeVideoModal} />
+            <div className="video-modal__stage" role="dialog" aria-modal="true">
+              <button className="video-modal__close" id="closePlayer" type="button" aria-label="Close video" onClick={closeVideoModal}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+              <div id="yt-fg" />
             </div>
           </div>
         </section>
@@ -1090,6 +1135,7 @@ function Home() {
         </section>
       </div>
     </div>
+    </React.Fragment>
   );
 }
 

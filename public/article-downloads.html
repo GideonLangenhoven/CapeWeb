@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CapeWeb Article Downloads</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0b0f1a;
+            --bg-purple: #240b36;
+            --accent: #A64B23;
+            --text-light: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.8);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: #333;
+            /* Dark background for browser view */
+            color: var(--text-light);
+        }
+
+        .instructions {
+            background: #fff;
+            color: #000;
+            padding: 20px;
+            text-align: center;
+            font-family: sans-serif;
+        }
+
+        .page {
+            position: relative;
+            width: 210mm;
+            min-height: 297mm;
+            padding: 40px;
+            background: var(--bg-dark);
+            overflow: hidden;
+            margin: 20px auto;
+            /* Spacing for browser view */
+            page-break-after: always;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .brand {
+            font-size: 12px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 20px;
+            display: block;
+            font-weight: 900;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 42px;
+            line-height: 1.1;
+            margin: 0 0 15px 0;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: var(--text-dim);
+            max-width: 600px;
+            margin: 0 auto;
+            font-weight: 300;
+            line-height: 1.5;
+        }
+
+        /* Content */
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            margin-top: 40px;
+        }
+
+        .section-number {
+            background: var(--accent);
+            color: #fff;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border-radius: 50%;
+            font-size: 14px;
+        }
+
+        .section-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            margin: 0;
+            color: var(--text-light);
+        }
+
+        p {
+            line-height: 1.6;
+            color: var(--text-dim);
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .visual-block {
+            background: var(--bg-purple);
+            border-radius: 8px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .checklist li {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .checklist li::before {
+            content: "✓";
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .highlight-box {
+            border-left: 3px solid var(--accent);
+            padding-left: 20px;
+            margin: 30px 0;
+            font-style: italic;
+            color: var(--text-light);
+        }
+
+        /* Footer */
+        .footer {
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 11px;
+            color: var(--text-dim);
+        }
+
+        /* Print Specifics */
+        @media print {
+            body {
+                background: none;
+            }
+
+            .instructions {
+                display: none;
+            }
+
+            .page {
+                margin: 0;
+                box-shadow: none;
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="instructions">
+        <h2>🖨️ How to Save as PDF</h2>
+        <p>1. Press <strong>Cmd + P</strong> (Mac) or <strong>Ctrl + P</strong> (Windows).</p>
+        <p>2. Destination: <strong>Save as PDF</strong>.</p>
+        <p>3. Margins: <strong>None</strong> (Important!).</p>
+        <p>4. Options: Check <strong>Background graphics</strong>.</p>
+        <p>5. To save individual articles, select specific pages (e.g., "1" for the first article) in the print dialog.
+        </p>
+    </div>
+
+    <!-- ARTICLE 1: ROI of Custom Web Dev -->
+    <div class="page">
+        <header>
+            <span class="brand">CapeWeb Resources</span>
+            <h1>The ROI of Custom Web Development</h1>
+            <p class="subtitle">Why Templates Are Costing You Money and How Custom Code Drives Revenue.</p>
+        </header>
+
+        <div class="content-grid">
+            <div>
+                <div class="section-title">
+                    <div class="section-number">01</div>
+                    <h2 class="section-heading">Speed is a Feature</h2>
+                </div>
+                <p>Templates are built to sell to everyone, which means they are packed with bloat. Custom sites are
+                    built for performance.</p>
+                <p><strong>The Data:</strong> Amazon found that every 100ms of latency cost them 1% in sales. A custom
+                    site loads only what it needs, ensuring lightning-fast performance that Google loves.</p>
+            </div>
+            <div class="visual-block">
+                <h3 style="margin-top:0; font-size:18px;">Template vs. Custom</h3>
+                <ul class="checklist">
+                    <li><strong>Bloat:</strong> Templates load unused scripts.</li>
+                    <li><strong>Security:</strong> WordPress themes are frequent hack targets.</li>
+                    <li><strong>Scalability:</strong> Custom code grows with your business without breaking.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section-title">
+            <div class="section-number">02</div>
+            <h2 class="section-heading">Conversion-Centered Design</h2>
+        </div>
+        <p>A template forces your content into a box. Custom development builds the box around your content.</p>
+        <div class="highlight-box">
+            "A template is an expense; it solves an immediate problem but depreciates. Custom development is an
+            investment that appreciates over time."
+        </div>
+        <p>We design strategic layouts where Call-to-Actions (CTAs) are placed exactly where user attention flows,
+            drastically increasing lead generation.</p>
+
+        <div class="footer">
+            <p>&copy; 2025 CapeWeb. All rights reserved. | capeweb.co.za</p>
+        </div>
+    </div>
+
+    <!-- ARTICLE 2: AI Agents -->
+    <div class="page">
+        <header>
+            <span class="brand">CapeWeb Resources</span>
+            <h1>AI Agents: The 24/7 Sales Team</h1>
+            <p class="subtitle">The Employee Who Never Sleeps, Never Takes a Break, and Always Closes.</p>
+        </header>
+
+        <div class="content-grid">
+            <div>
+                <div class="section-title">
+                    <div class="section-number">01</div>
+                    <h2 class="section-heading">The "Office Hours" Problem</h2>
+                </div>
+                <p>The modern consumer expects instant gratification. If they visit your site at 11 PM and you don't
+                    reply until 9 AM, you've lost the sale.</p>
+                <p>AI Agents are powered by LLMs. They understand context, sentiment, and nuance. They don't just answer
+                    questions; they sell.</p>
+            </div>
+            <div class="visual-block">
+                <h3 style="margin-top:0; font-size:18px;">Agent Capabilities</h3>
+                <ul class="checklist">
+                    <li><strong>Ingestion:</strong> Learns from your PDFs and website.</li>
+                    <li><strong>Interaction:</strong> Engages in natural conversation.</li>
+                    <li><strong>Action:</strong> Books appointments directly in your calendar.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section-title">
+            <div class="section-number">02</div>
+            <h2 class="section-heading">Infinite Scalability</h2>
+        </div>
+        <p>An AI agent can handle 1 visitor or 10,000 simultaneously without breaking a sweat. It provides a VIP
+            experience to every single user, instantly.</p>
+        <div class="highlight-box">
+            "Don't replace your humans. Free them up to handle high-value deals while AI handles the volume."
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2025 CapeWeb. All rights reserved. | capeweb.co.za</p>
+        </div>
+    </div>
+
+    <!-- ARTICLE 3: SEO in 2025 -->
+    <div class="page">
+        <header>
+            <span class="brand">CapeWeb Resources</span>
+            <h1>SEO in 2025: Beyond Keywords</h1>
+            <p class="subtitle">How to Rank in the Era of AI Overviews and Semantic Search.</p>
+        </header>
+
+        <div class="content-grid">
+            <div>
+                <div class="section-title">
+                    <div class="section-number">01</div>
+                    <h2 class="section-heading">The Death of "10 Blue Links"</h2>
+                </div>
+                <p>Users aren't typing keywords anymore; they're asking questions. Google's AI looks for comprehensive
+                    answers, not just keyword matches.</p>
+                <p><strong>Information Gain:</strong> Google rewards content that adds something NEW to the
+                    conversation. Rehashed content will not rank.</p>
+            </div>
+            <div class="visual-block">
+                <h3 style="margin-top:0; font-size:18px;">The New Ranking Factors</h3>
+                <ul class="checklist">
+                    <li><strong>E-E-A-T:</strong> Experience, Expertise, Authority, Trust.</li>
+                    <li><strong>User Signals:</strong> High dwell time = High ranking.</li>
+                    <li><strong>Topic Clusters:</strong> deeply covering a subject area.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section-title">
+            <div class="section-number">02</div>
+            <h2 class="section-heading">The Topic Cluster Model</h2>
+        </div>
+        <p>Stop writing isolated blog posts. Build "Pillar Pages" that cover a broad topic comprehensively, then link
+            out to specific "Cluster Content."</p>
+        <div class="highlight-box">
+            "SEO isn't dead, but gaming the system is. The future belongs to brands that publish expert-led content."
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2025 CapeWeb. All rights reserved. | capeweb.co.za</p>
+        </div>
+    </div>
+
+    <!-- ARTICLE 4: Shopify Speed Audit -->
+    <div class="page">
+        <header>
+            <span class="brand">CapeWeb Resources</span>
+            <h1>Shopify Speed Audit</h1>
+            <p class="subtitle">Why Your Store is Leaking Money and How to Fix It.</p>
+        </header>
+
+        <div class="content-grid">
+            <div>
+                <div class="section-title">
+                    <div class="section-number">01</div>
+                    <h2 class="section-heading">The 3-Second Rule</h2>
+                </div>
+                <p>53% of mobile users abandon a site if it takes longer than 3 seconds to load. Speed is currency in
+                    e-commerce.</p>
+                <p><strong>Walmart Data:</strong> Every 1 second of improvement in load time resulted in a 2% increase
+                    in conversions.</p>
+            </div>
+            <div class="visual-block">
+                <h3 style="margin-top:0; font-size:18px;">Common Speed Killers</h3>
+                <ul class="checklist">
+                    <li><strong>App Overload:</strong> Too many scripts running.</li>
+                    <li><strong>Huge Images:</strong> Uncompressed banners.</li>
+                    <li><strong>Bloated Themes:</strong> Poorly coded templates.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section-title">
+            <div class="section-number">02</div>
+            <h2 class="section-heading">The Audit Checklist</h2>
+        </div>
+        <p>1. Run a Lighthouse Score in Chrome DevTools.<br>
+            2. Compress all images to WebP format.<br>
+            3. Remove unused apps and their ghost code.<br>
+            4. Minify CSS and JS files.</p>
+        <div class="highlight-box">
+            "Treat your site speed like your store's hygiene. Keep it clean, keep it fast, and watch your conversion
+            rate climb."
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2025 CapeWeb. All rights reserved. | capeweb.co.za</p>
+        </div>
+    </div>
+
+    <!-- ARTICLE 5: Future of Branding -->
+    <div class="page">
+        <header>
+            <span class="brand">CapeWeb Resources</span>
+            <h1>The Future of Digital Branding</h1>
+            <p class="subtitle">Moving Beyond the Static Logo: Dynamic, Reactive, and Alive.</p>
+        </header>
+
+        <div class="content-grid">
+            <div>
+                <div class="section-title">
+                    <div class="section-number">01</div>
+                    <h2 class="section-heading">Dynamic Identity Systems</h2>
+                </div>
+                <p>A modern brand isn't a stamp; it's a system. Your logo should adapt to its container—complex on
+                    desktop, simplified on a watch.</p>
+                <p><strong>Motion as an Asset:</strong> How does your brand move? The "Ta-dum" of Netflix is as iconic
+                    as the logo itself.</p>
+            </div>
+            <div class="visual-block">
+                <h3 style="margin-top:0; font-size:18px;">New Brand Elements</h3>
+                <ul class="checklist">
+                    <li><strong>Micro-interactions:</strong> Buttons that react playfully.</li>
+                    <li><strong>Generative Visuals:</strong> Unique patterns for every user.</li>
+                    <li><strong>Sonic Branding:</strong> The sound of your app.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section-title">
+            <div class="section-number">02</div>
+            <h2 class="section-heading">Interactivity is Engagement</h2>
+        </div>
+        <p>Static images are easy to ignore. Interactive elements demand attention. Move from "telling" to "showing"
+            with live demos and reactive interfaces.</p>
+        <div class="highlight-box">
+            "If your brand doesn't move, it can't move people. Design for the screen first, not the printed page."
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2025 CapeWeb. All rights reserved. | capeweb.co.za</p>
+        </div>
+    </div>
+
+    <!-- ARTICLE 6: Local SEO -->
+    <div class="page">
+        <header>
+            <span class="brand">CapeWeb Resources</span>
+            <h1>Local SEO: Dominate Cape Town</h1>
+            <p class="subtitle">How to Win the Battle for Your Backyard and Own the "Near Me" Search.</p>
+        </header>
+
+        <div class="content-grid">
+            <div>
+                <div class="section-title">
+                    <div class="section-number">01</div>
+                    <h2 class="section-heading">The "Map Pack" is King</h2>
+                </div>
+                <p>Google shows the "Map Pack" above organic results. These users have high intent—they are ready to buy
+                    or visit immediately.</p>
+                <p><strong>Google Business Profile:</strong> Your GBP is your new homepage. Verify it, fill it out
+                    completely, and post regular updates.</p>
+            </div>
+            <div class="visual-block">
+                <h3 style="margin-top:0; font-size:18px;">Ranking Signals</h3>
+                <ul class="checklist">
+                    <li><strong>Reviews:</strong> Quantity and quality of 5-star ratings.</li>
+                    <li><strong>Keywords:</strong> "Best web design in Cape Town".</li>
+                    <li><strong>Responsiveness:</strong> Reply to every review.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section-title">
+            <div class="section-number">02</div>
+            <h2 class="section-heading">Local Content Strategy</h2>
+        </div>
+        <p>Don't write generic content. Localize it. Instead of "Wedding Venues", write "Top 10 Wedding Venues in
+            Stellenbosch".</p>
+        <div class="highlight-box">
+            "Local SEO is the lowest-hanging fruit. The competition is lower, and the leads are higher quality. Own your
+            backyard first."
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2025 CapeWeb. All rights reserved. | capeweb.co.za</p>
+        </div>
+    </div>
+
+</body>
+
+</html>

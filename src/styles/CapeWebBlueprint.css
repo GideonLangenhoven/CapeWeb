@@ -1,0 +1,480 @@
+.learn-capeweb-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 380px) 1fr;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  background: var(--cw-bg-sidebar-gradient);
+  /* VIBRANT GRADIENT BG */
+  /* Dark Frame */
+  border-radius: var(--cw-radius-xl);
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  border: 1px solid var(--cw-sidebar-border);
+  box-shadow: var(--cw-shadow-lg);
+  align-items: stretch;
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+  height: min(120vh, 1200px);
+  overflow: hidden;
+  font-family: var(--cw-font-sans);
+}
+
+.learn-capeweb-toc {
+  background: var(--cw-bg-sidebar);
+  border-radius: var(--cw-radius-lg);
+  padding: 0;
+  /* Remove padding to let content flow */
+  border: none;
+  height: 100%;
+  padding-right: 0.5rem;
+  /* Slight spacing for scrollbar */
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.learn-capeweb-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.search-bar-wrapper {
+  position: relative;
+}
+
+.learn-capeweb-search {
+  width: 100%;
+  border-radius: var(--cw-radius-md);
+  background: var(--cw-bg-sidebar-surface);
+  border: 1px solid var(--cw-sidebar-border);
+  color: var(--cw-white);
+  padding: 0.85rem 3rem 0.85rem 1.2rem;
+  font-size: 0.95rem;
+  transition: var(--cw-transition-fast);
+}
+
+.learn-capeweb-search:focus {
+  outline: none;
+  border-color: var(--cw-sidebar-text-muted);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.clear-search-btn {
+  position: absolute;
+  right: 0.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--cw-sidebar-text);
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+
+.search-hint {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+}
+
+.learn-capeweb-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-y: auto;
+  max-height: 70vh;
+  padding-right: 0.3rem;
+}
+
+.learn-capeweb-nav::-webkit-scrollbar {
+  width: 6px;
+}
+
+.learn-capeweb-nav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+}
+
+.toc-pillar-title-button {
+  width: 100%;
+  border-radius: var(--cw-radius-md);
+  border: 1px solid transparent;
+  padding: 0.85rem var(--cw-space-4);
+  display: flex;
+  gap: 0.8rem;
+  justify-content: space-between;
+  align-items: center;
+  background: transparent;
+  color: var(--cw-sidebar-text-muted);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.toc-pillar-title-button:hover {
+  background: var(--cw-bg-sidebar-surface);
+  color: var(--cw-white);
+}
+
+.toc-pillar-title-button.is-open {
+  border-color: var(--cw-sidebar-border);
+  background: var(--cw-bg-sidebar-surface);
+  color: var(--cw-white);
+}
+
+.pillar-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.pillar-subtitle {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 0.2rem;
+}
+
+.pillar-modules {
+  margin-top: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pillar-module {
+  border-radius: 12px;
+  border: 1px solid transparent;
+  padding: 1rem 1.25rem;
+  background: #f9b9b7;
+  /* User requested Pink for inactive */
+  color: #374151;
+  /* Dark gray for legibility on pink */
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  /* Stack content vertically */
+  justify-content: center;
+  gap: 0.25rem;
+  /* Space between Title and Desc */
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+  transition: all 0.2s ease;
+  min-height: 80px;
+  /* Ensure touch target size */
+}
+
+.pillar-module:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #FFFFFF;
+}
+
+/* THE ACTIVE STATE - VIBRANT & HIGH CONTRAST */
+.pillar-module.is-active {
+  background: var(--cw-color-vib-cyan);
+  /* CYAN POP */
+  color: #0b0f1a;
+  /* Ink Black Text */
+  border: none;
+  transform: scale(1.02);
+  box-shadow: var(--cw-shadow-vibrant);
+  /* GLOW */
+}
+
+/* Remove the pill functionality essentially, but keep class just in case of stragglers */
+.module-pill {
+  display: none;
+  /* Globally hide the badges as per user request */
+}
+
+/* Black Badge on White Card for Active State */
+.pillar-module.is-active .module-pill {
+  display: none;
+}
+
+.module-title {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: inherit;
+}
+
+/* Force title to be black on active */
+.pillar-module.is-active .module-title {
+  color: #000000;
+  font-size: 1.1rem;
+  /* Slightly larger on active */
+}
+
+/* Inactive description text */
+.pillar-module p {
+  font-size: 0.85rem;
+  color: #6B7280;
+  margin: 0;
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+.pillar-module.is-active p {
+  color: #4B5563;
+  /* Darker gray on active */
+}
+
+.learn-capeweb-article-pane {
+  background: #FFFFFF;
+  /* FORCE WHITE */
+  border-radius: var(--cw-radius-lg);
+  padding: 4rem 5rem;
+  color: #1F2937;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: var(--cw-shadow-lg);
+  /* RAINBOW TOP BORDER FOR VIBRANCY */
+  border-top: 6px solid;
+  border-image: linear-gradient(to right, var(--cw-color-vib-yellow), var(--cw-color-vib-green), var(--cw-color-vib-cyan), var(--cw-color-vib-pink)) 1;
+}
+
+.learn-capeweb-article.learn-capeweb-no-selection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 320px;
+}
+
+.learn-capeweb-article {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  overscroll-behavior: contain;
+  position: relative;
+  isolation: isolate;
+}
+
+.learn-capeweb-article::-webkit-scrollbar {
+  width: 8px;
+}
+
+.learn-capeweb-article::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 999px;
+}
+
+.learn-page {
+  background: linear-gradient(180deg, #1a1a1a 0%, #2d2d2d 45%, #1f1f1f 100%);
+  padding-bottom: clamp(4rem, 8vw, 6rem);
+}
+
+.learn-page .section-white {
+  padding: clamp(4rem, 8vw, 6rem) max(5vw, 2rem);
+  color: #ffffff;
+  background: transparent;
+}
+
+.learn-page .blueprint-heading {
+  max-width: 960px;
+  margin: 0 auto;
+  color: #ffffff;
+}
+
+.learn-page .reveal-text {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.learn-page .blueprint-heading .expand-title-section {
+  color: #ffffff;
+}
+
+.learn-page .blueprint-heading .expand-text-lg {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.learn-page .blueprint-heading strong {
+  color: #ffffff;
+}
+
+.learn-page .blueprint-heading ul {
+  color: #0b0f1a;
+}
+
+.learn-page .blueprint-heading ul li {
+  color: #0b0f1a;
+}
+
+.learn-page .learn-capeweb-layout {
+  margin: clamp(2rem, 5vw, 3rem) auto;
+}
+
+.learn-capeweb-layout.loading-state {
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.learn-capeweb-layout.loading-state .learn-capeweb-article-pane {
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.article-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  color: var(--cw-neutral-500);
+  font-size: 0.8rem;
+  margin-bottom: 0.75rem;
+}
+
+.learn-capeweb-article h3 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--cw-text-heading);
+  margin-bottom: 1rem;
+  margin-top: 2.5rem;
+}
+
+.article-summary {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--cw-text-body);
+}
+
+.article-divider {
+  width: 50px;
+  height: 4px;
+  border-radius: 999px;
+  background: #0b0f1a;
+  margin: 1.2rem 0;
+}
+
+.learn-capeweb-article ul {
+  margin: 0;
+  padding-left: 1.2rem;
+  color: #1f2937;
+  line-height: 1.8;
+}
+
+.no-results {
+  color: rgba(255, 255, 255, 0.8);
+  padding: 1rem;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.no-article-selected-message {
+  font-size: 1rem;
+  color: #4b5563;
+  text-align: center;
+}
+
+@media (max-width: 1024px) {
+  .learn-capeweb-layout {
+    grid-template-columns: 1fr;
+    height: auto;
+    overflow: visible;
+  }
+
+  .learn-capeweb-toc {
+    overflow: visible;
+    height: auto;
+  }
+
+  .learn-capeweb-article-pane {
+    height: min(70vh, 700px);
+  }
+
+  .learn-capeweb-nav {
+    max-height: unset;
+  }
+}
+
+@media (max-width: 640px) {
+  .learn-capeweb-layout {
+    padding: 1rem;
+    border-radius: 20px;
+    height: auto;
+    overflow: visible;
+  }
+
+  .learn-capeweb-toc,
+  .learn-capeweb-article-pane {
+    border-radius: 20px;
+  }
+
+  .pillar-module {
+    grid-template-columns: 1fr;
+  }
+
+  .learn-capeweb-toc {
+    overflow: visible;
+  }
+
+  .learn-capeweb-article-pane {
+    height: auto;
+    overflow: visible;
+  }
+
+  .learn-capeweb-article {
+    height: auto;
+    overflow: visible;
+    overscroll-behavior: auto;
+  }
+}
+/* Roboto Flex Font Import */
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100&display=swap");
+
+/* Animation Keyframes */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulseGlow {
+    0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
+    70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+@keyframes bg {
+    100% { background-position: 200% center; }
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Counter Component Styles */
+.counter {
+    position: relative;
+    font-size: max(4rem, 2rem + 5vw);
+    font-variation-settings: "wght" var(--font-variation-weight, 600);
+    margin: 0;
+    line-height: 1;
+    color: #0b0f1a;
+    opacity: 0;
+}
+
+.celebrate {
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+    background-color: #4158d0;
+    background-image: linear-gradient(45deg, #ff5acd, #fbda61, #ff5acd);
+    background-size: 200% auto;
+    filter: drop-shadow(white 1px 1px 0) drop-shadow(#fbda61 2px 2px 2px);
+    animation: bg 4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}

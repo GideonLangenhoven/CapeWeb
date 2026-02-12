@@ -1023,6 +1023,7 @@ const Hero = () => {
     "headline": "Websites that sell 24/7",
     "cta": "Get a Free Site Audit"
   }
+  
 }
 
 // af.json (Afrikaans)

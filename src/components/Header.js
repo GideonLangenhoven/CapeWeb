@@ -5,7 +5,8 @@ import SplitRevealLogo from './SplitRevealLogo';
 
 const navItems = [
   { label: 'Services', to: '/services' },
-  { label: 'Work', to: '/gallery' },
+  { label: 'Gallery', to: '/gallery' },
+  { label: 'Learn', to: '/learn' },
   { label: 'Resources', to: '/resources' },
   { label: 'Contact', to: '/contact' }
 ];
@@ -14,41 +15,25 @@ function Header() {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isKeyholeActive, setIsKeyholeActive] = useState(false);
   const selectorRef = useRef(null);
   const navRef = useRef(null);
 
   useEffect(() => {
     const updateScrollState = () => {
-      // Non-home pages should always have a filled navbar
-      if (location.pathname !== '/') {
-        setIsScrolled(true);
-        return;
-      }
-
-      const trigger = document.querySelector('[data-nav-fill-trigger]');
-      const headerHeight = navRef.current ? navRef.current.offsetHeight : 0;
-
-      if (!trigger) {
-        setIsScrolled(window.scrollY > 40);
-        return;
-      }
-
-      const triggerOffset = trigger.getBoundingClientRect().top + window.scrollY;
-      const scrollPosition = window.scrollY + headerHeight;
-
-      setIsScrolled(scrollPosition >= triggerOffset);
+      // Scroll detection disabled to keep header consistent (Solid Black)
+      // setIsScrolled(false);
+      // setIsKeyholeActive(false);
     };
 
     updateScrollState();
     // Delay a second measurement to ensure DOM layout is ready
     const timer = setTimeout(updateScrollState, 50);
 
-    window.addEventListener('scroll', updateScrollState, { passive: true });
     window.addEventListener('resize', updateScrollState);
 
     return () => {
       clearTimeout(timer);
-      window.removeEventListener('scroll', updateScrollState);
       window.removeEventListener('resize', updateScrollState);
     };
   }, [location.pathname]);
@@ -104,13 +89,14 @@ function Header() {
   const isActive = (path) => location.pathname === path;
 
 
+
   return (
-    <header className={`site-header ${isScrolled ? 'site-header--scrolled' : ''}`}>
+    <header className={`site-header ${isScrolled ? 'site-header--scrolled' : ''} ${isKeyholeActive ? 'site-header--keyhole-active' : ''}`}>
       <nav className="navbar navbar-expand-custom navbar-mainbg">
         <div className="container header-container">
-          <Link to="/" className="navbar-brand navbar-logo" aria-label="capeweb home">
+          <a href="/" className="navbar-brand navbar-logo" aria-label="capeweb home">
             <SplitRevealLogo />
-          </Link>
+          </a>
 
           <button
             className={`navbar-toggler ${isMenuOpen ? 'navbar-toggler--open' : ''}`}
@@ -146,9 +132,9 @@ function Header() {
           </div>
 
           <div className="header-actions">
-            <Link to="/contact" className="btn btn-primary btn-nav" aria-label="Book a Free Strategy Call">
+            <a href="https://calendly.com/capeweb/discovery-call" className="btn btn-primary btn-nav" aria-label="Book a Free Strategy Call" target="_blank" rel="noopener noreferrer">
               Book a Free Strategy Call
-            </Link>
+            </a>
           </div>
         </div>
       </nav>
@@ -175,9 +161,9 @@ function Header() {
             </details>
           )}
           <div className="mobile-nav__cta">
-            <Link to="/contact" className="btn btn-primary">
+            <a href="https://calendly.com/capeweb/discovery-call" className="btn btn-primary" target="_blank" rel="noopener noreferrer">
               Book a Free Strategy Call
-            </Link>
+            </a>
             <Link to="/resources" className="btn btn-ghost">
               Download the AI Time-Saver Guide
             </Link>

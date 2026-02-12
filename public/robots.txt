@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://capeweb.co.za/sitemap.xml

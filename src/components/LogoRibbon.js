@@ -6,17 +6,15 @@ const LogoRibbon = () => {
   return (
     <div className="logo-ribbon-container">
       <div className="logo-ribbon-track">
-        {/* First set of logos */}
-        {homeData.clientLogos.map((logo, index) => (
-          <div key={`logo-1-${index}`} className="logo-item">
-            <img src={logo.logo} alt={`${logo.name} logo`} />
-          </div>
-        ))}
-        {/* Duplicate set for seamless loop */}
-        {homeData.clientLogos.map((logo, index) => (
-          <div key={`logo-2-${index}`} className="logo-item">
-            <img src={logo.logo} alt={`${logo.name} logo`} />
-          </div>
+        {/* Generate 4 sets of logos for seamless infinite scroll on wide screens */}
+        {[...Array(4)].map((_, setIndex) => (
+          <React.Fragment key={`set-${setIndex}`}>
+            {homeData.clientLogos.map((logo, index) => (
+              <div key={`logo-${setIndex}-${index}`} className="logo-item">
+                <img src={logo.logo} alt={`${logo.name} logo`} />
+              </div>
+            ))}
+          </React.Fragment>
         ))}
       </div>
     </div>

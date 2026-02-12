@@ -1,0 +1,105 @@
+/* LightBulb.css */
+
+/* CSS Variables replacing Stylus logic */
+/* Note: We handle the ON state change by updating specific variables on the .lightbulb-container or root */
+
+:root {
+    --lb-on: 1;
+    /* Start ON (Light) */
+    /* Calculated colors */
+    --lb-bg: hsl(calc(200 - (var(--lb-on) * 160)), calc((20 + (var(--lb-on) * 50)) * 1%), calc((20 + (var(--lb-on) * 60)) * 1%));
+    --lb-cord: hsl(0, 0%, calc((60 - (var(--lb-on) * 50)) * 1%));
+    --lb-stroke: hsl(0, 0%, calc((60 - (var(--lb-on) * 50)) * 1%));
+    --lb-shine: hsla(0, 0%, 100%, calc(0.75 - (var(--lb-on) * 0.5)));
+    --lb-cap: hsl(0, 0%, calc((40 + (var(--lb-on) * 30)) * 1%));
+    --lb-filament: hsl(45, calc(var(--lb-on) * 80%), calc((25 + (var(--lb-on) * 75)) * 1%));
+
+    /* Text Color Logic: On(1)=Dark Text, Off(0)=Light Text */
+    /* Lightness: 85% if Off, 10% if On */
+    --lb-text: hsl(220, 20%, calc(85% - (var(--lb-on) * 75%)));
+
+    /* Bulb fill color logic: hsl(180 - 95*on, 80%, 80%, 0.1 + 0.4*on) */
+    --lb-bulb-h: calc(180 - (95 * var(--lb-on)));
+    --lb-bulb-a: calc(0.1 + (0.4 * var(--lb-on)));
+    --lb-bulb-fill: hsla(var(--lb-bulb-h), 80%, 80%, var(--lb-bulb-a));
+}
+
+/* Apply background change to the page body when a specific class is present, 
+   or we can rely on the JS setting the --lb-on variable on document.documentElement */
+body {
+    transition: background-color 0.3s ease;
+    /* We don't force body background here to avoid overriding other pages, 
+     but the user asked for "wholepage" change. 
+     We can let the component control document.documentElement style. */
+}
+
+.toggle-scene {
+    overflow: visible !important;
+    height: 400px;
+    /* Matched to text height */
+    position: absolute;
+    top: 21rem;
+    /* Moved 2rem up */
+    right: calc(5vw + 20rem);
+    /* Moved 10rem right (from 30rem) */
+    /* Position to the right as requested */
+    z-index: 100;
+}
+
+.toggle-scene__cord {
+    stroke: var(--lb-cord);
+    cursor: move;
+    fill: none;
+}
+
+/* Hide fallback cords by default */
+.toggle-scene__cord:nth-of-type(1) {
+    display: none;
+}
+
+.toggle-scene__cord:nth-of-type(2),
+.toggle-scene__cord:nth-of-type(3),
+.toggle-scene__cord:nth-of-type(4),
+.toggle-scene__cord:nth-of-type(5) {
+    display: none;
+}
+
+.toggle-scene__cord-end {
+    stroke: var(--lb-cord);
+    fill: var(--lb-cord);
+}
+
+.toggle-scene__dummy-cord {
+    stroke-width: 6;
+    stroke: var(--lb-cord);
+}
+
+.bulb__filament {
+    stroke: var(--lb-filament);
+}
+
+.bulb__shine {
+    stroke: var(--lb-shine);
+}
+
+.bulb__flash {
+    stroke: hsl(45, 80%, 80%);
+    display: none;
+}
+
+.bulb__bulb {
+    stroke: var(--lb-stroke);
+    fill: var(--lb-bulb-fill);
+}
+
+.bulb__cap {
+    fill: var(--lb-cap);
+}
+
+.bulb__cap-shine {
+    fill: var(--lb-shine);
+}
+
+.bulb__cap-outline {
+    stroke: var(--lb-stroke);
+}
