@@ -1,0 +1,83 @@
+import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+var GEMINI_KEY = Deno.env.get("GEMINI_API_KEY")!;
+var SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
+var SUPABASE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+var supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+var CORS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Content-Type": "application/json",
+};
+
+var SYSTEM_PROMPT = "You are a friendly, casual booking assistant for Cape Kayak Adventures in Cape Town, South Africa. You chat like a real person — warm, helpful, occasionally using emojis but not overdoing it. Keep responses SHORT (1-3 sentences max unless they ask for detail).\n\nABOUT THE BUSINESS:\n- Cape Kayak Adventures, operating since 1994 (30+ years!)\n- Based at Three Anchor Bay, Beach Road, Sea Point, Cape Town\n- Google Maps: https://www.google.com/maps/place/CAPE+KAYAK+ADVENTURES\n- 4.9 star rating, 200+ reviews\n\nTOURS:\n- Sea Kayak Tour: R600/person, 90 min — guided paddle along Atlantic coast, seals, dolphins, stunning views\n- Sunset Paddle: R750/person, 120 min — magical sunset experience, includes sparkling wine on return\n- Private Tour: R1,200/person, 120 min — exclusive tour for your group, fully customisable\n\nWHAT TO BRING: Sunscreen (reef-safe), hat & sunglasses with strap, towel, change of clothes, water bottle, light layers. We provide all equipment, life jackets, dry bags.\n\nMEETING POINT: Three Anchor Bay, Beach Road, Sea Point. Arrive 15 min early. Free street parking.\n\nSAFETY: Professional guides 10+ years experience. Life jackets, stable double kayaks. No experience needed. Ages 8+, under 16 with adult.\n\nCANCELLATION: 24+ hours = full refund. Under 24h = reschedule or voucher. Weather = full refund or reschedule.\n\nGROUP DISCOUNTS: 6+ people get 5% off. Large groups contact us.\n\nGIFT VOUCHERS: Available for any tour, valid 12 months.\n\nSTYLE RULES:\n- Chat like a friendly local, not a corporate bot\n- Use hey, no worries, awesome, you will love it naturally\n- Keep it brief\n- Ask follow-up questions\n- Never make up info\n- Use occasional emojis naturally (1-2 per message max)\n- Vary your greetings and responses";
+
+Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
+
+  try {
+    var body = await req.json();
+    var messages = body.messages || [];
+    var userMsg = body.message || "";
+    var contents = [];
+
+    for (var m of messages) {
+      contents.push({ role: m.role === "user" ? "user" : "model", parts: [{ text: m.text }] });
+    }
+
+    if (userMsg) {
+      var lower = userMsg.toLowerCase();
+      var extra = "";
+
+      if (lower.includes("available") || lower.includes("space") || lower.includes("open") || lower.includes("slot") || lower.includes("tomorrow") || lower.includes("weekend") || lower.includes("next week") || lower.includes("saturday") || lower.includes("sunday")) {
+        var now = new Date();
+        var in14d = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
+        var { data: slots } = await supabase.from("slots").select("start_time, capacity_total, booked, held, tours(name)").eq("status", "OPEN").gt("start_time", now.toISOString()).lt("start_time", in14d.toISOString()).order("start_time", { ascending: true }).limit(20);
+
+        if (slots && slots.length > 0) {
+          extra = "\n\n[LIVE AVAILABILITY — share relevant ones naturally:\n";
+          for (var s of slots) {
+            var avail = s.capacity_total - s.booked - (s.held || 0);
+            if (avail > 0) {
+              var dt = new Date(s.start_time);
+              extra += dt.toLocaleDateString("en-ZA", { weekday: "short", day: "numeric", month: "short" }) + " " + dt.toLocaleTimeString("en-ZA", { hour: "2-digit", minute: "2-digit" }) + " — " + (s.tours as any)?.name + " (" + avail + " spots)\n";
+            }
+          }
+          extra += "]";
+        } else {
+          extra = "\n\n[No slots in next 2 weeks — suggest checking back or WhatsApp]";
+        }
+      }
+
+      contents.push({ role: "user", parts: [{ text: userMsg + extra }] });
+    }
+
+    var geminiRes = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + GEMINI_KEY, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+        contents: contents,
+        generationConfig: { temperature: 0.8, maxOutputTokens: 300, topP: 0.9 },
+      }),
+    });
+
+    var geminiData = await geminiRes.json();
+    var reply = "";
+
+    if (geminiData.candidates && geminiData.candidates[0] && geminiData.candidates[0].content && geminiData.candidates[0].content.parts && geminiData.candidates[0].content.parts[0]) {
+      reply = geminiData.candidates[0].content.parts[0].text;
+    } else {
+      console.error("GEMINI_ERR:" + JSON.stringify(geminiData));
+      reply = "Sorry, having a moment! Try again or WhatsApp us";
+    }
+
+    return new Response(JSON.stringify({ reply: reply }), { status: 200, headers: CORS });
+  } catch (err) {
+    console.error("CHAT_ERR:", err);
+    return new Response(JSON.stringify({ reply: "Oops, something went wrong. Try again!" }), { status: 500, headers: CORS });
+  }
+});
